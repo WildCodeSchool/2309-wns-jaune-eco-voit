@@ -1,0 +1,43 @@
+services:
+  backend:
+    # construit un image à partir du fichier /backend
+    build: ./backend
+    # A gauche le port en local, à droite celui dans docker
+    ports:
+      - 4000:4000
+    # persist les data en dehors du container et les partage entre local et container
+    # a gauche > local / a droite > container
+    volumes:
+      - ./backend/src:/app/src
+    # pour les utilisateurs de windows, sinon error
+    environment:
+      - WDS_SOCKET_HOST=127.0.0.1
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    # 'depends-on' > dit qu'un service dépend d'un autre
+    depends_on:
+      # Nom du service du quel backend dépend
+      db:
+        # La db doit avoir été démarrer et etre considérée comme healthy (voir health check dans db service)
+        condition: service_healthy
+
+  db:
+    # on utilise l'image officiel de postgres
+    image: postgres:lastest
+    # permet à la db de redémarrer en cas d'erreur/pb
+    restart: always
+    # "healthcheck" exécute des tests et renvoie l'état de santé de la DB (boolean).
+    healthcheck:
+      # les commandes à executer pour run le health check.
+      test: ["CMD-SHELL", "pg_isready -d ecovoit -U ecovoit_user"]
+      # le temps entre chaque execution du health check
+      interval: 5s
+      # Le temps max que doit prendre l'execution du health check
+      timeout: 5s
+      # Le nombre max d'essai consécutif. Après ça, le container est considéré comme unhealthy
+      retries: 10
+    env_file:
+      - ./backend/.env
+
+volumes:
+  eco-voit-data:
