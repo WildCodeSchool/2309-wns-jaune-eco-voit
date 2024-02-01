@@ -1,14 +1,15 @@
 services:
   backend:
-    # construit un image à partir du fichier /backend
-    build: ./backend
+    # construit un image à partir du fichier /back
+    build: ./back
     # A gauche le port en local, à droite celui dans docker
     ports:
       - 4000:4000
-    # persist les data en dehors du container et les partage entre local et container
+    # persist les datas en dehors du container et les partage entre local et container
+    # quand on modifie le fichier /back >>> modifie aussi le container
     # a gauche > local / a droite > container
     volumes:
-      - ./backend/src:/app/src
+      - ./back/src:/app/src
     # pour les utilisateurs de windows, sinon error
     environment:
       - WDS_SOCKET_HOST=127.0.0.1
@@ -38,6 +39,19 @@ services:
       retries: 10
     env_file:
       - ./backend/.env
+    ports:
+      - 5433:5432
+    volumes:
+      - ecovoit-data:/var/lib/postgresql/data
+  adminer:
+    image: adminer
+    depends_on:
+      - db
+    restart: always
+    ports:
+      - 8080:8080
+  # pgadmin:
+  # image: dpage/pgadmin4
 
 volumes:
-  eco-voit-data:
+  ecovoit-data:
