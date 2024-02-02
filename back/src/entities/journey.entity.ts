@@ -34,6 +34,14 @@ export class JourneyEntity {
   @ManyToOne(() => VehiculeEntity, (vehicule) => vehicule.journeys)
   vehicule: VehiculeEntity;
 
+  @Field(() => MessageEntity)
+  @OneToMany(() => MessageEntity, (message) => message.journey)
+  message: MessageEntity;
+
+  @Field(() => StepEntity)
+  @OneToMany(() => StepEntity, (step) => step.journey)
+  step: StepEntity;
+
   @Field()
   @Column({
     type: "text",
