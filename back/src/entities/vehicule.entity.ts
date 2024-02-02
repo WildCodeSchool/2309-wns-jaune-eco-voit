@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Length } from "class-validator";
 import { Field, ID, InputType, ObjectType } from "type-graphql";
 import {
@@ -81,3 +82,5 @@ export class UpdateVehiculeInput {
   @Field({ nullable: true })
   model: string;
 }
+=======
+>>>>>>> c042692c (entity)
