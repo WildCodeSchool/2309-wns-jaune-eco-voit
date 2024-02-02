@@ -9,7 +9,14 @@ import {
   ManyToOne,
   OneToMany,
 } from "typeorm"; // Pour définir les entités TypeORM
-import { Field, Float, ID, InputType, ObjectType } from "type-graphql"; // Pour définir les Types GraphQL
+import {
+  Field,
+  Float,
+  GraphQLISODateTime,
+  ID,
+  InputType,
+  ObjectType,
+} from "type-graphql"; // Pour définir les Types GraphQL
 import { Length, Min, min } from "class-validator"; // to add validators
 
 export type Status = "PENDING" | "REJECTED" | "CANCELLED" | "ACCEPTED";
@@ -55,24 +62,14 @@ export class BookingEntity {
   @OneToMany(() => RatingEntity, (rating) => rating.booking)
   ratings: RatingEntity[];
 
-  @Field()
+  @Field(() => GraphQLISODateTime)
   @CreateDateColumn()
   createdAt: Date;
 }
 
 // --------- INPUTS ------------ //
 @InputType()
-export class PartialStepInput {
-  @Field(() => ID)
-  id: string;
-}
-@InputType()
-export class PartialUserInput {
-  @Field(() => ID)
-  id: string;
-}
-@InputType()
-export class PartialJourneyInput {
+export class PartialBookingInput {
   @Field(() => ID)
   id: string;
 }
@@ -89,13 +86,13 @@ export class CreateBookingInput {
   status: Status;
 
   @Field()
-  steps: PartialStepInput[];
+  steps: PartialBookingInput[];
 
   @Field()
-  user: PartialUserInput;
+  user: PartialBookingInput;
 
   @Field()
-  journey: PartialJourneyInput;
+  journey: PartialBookingInput;
 }
 
 @InputType()
