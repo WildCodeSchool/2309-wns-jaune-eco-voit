@@ -13,6 +13,8 @@ import {
   ObjectType,
 } from "type-graphql"; // Pour définir les Types GraphQL
 
+import { CountryCode, PostalCode } from "graphql-scalars/typings/mocks";
+
 export type Status = "ACTIVE" | "ARCHIVED";
 
 @ObjectType() //pour TypeGraphQL
@@ -27,19 +29,19 @@ export class AddressEntity {
   streetNumber: number;
 
   @Field()
-  @Column({ type: "varchar", length: 250 })
+  @Column({ length: 250 })
   streetName: string;
 
-  @Field()
-  @Column({ type: "varchar", length: 5 })
+  @Field(() => PostalCode)
+  @Column({ length: 5 })
   postalCode: string;
 
   @Field()
-  @Column({ type: "varchar", length: 100 })
+  @Column({ length: 100 })
   city: string;
 
-  @Field()
-  @Column({ type: "varchar", length: 100 })
+  @Field(() => CountryCode)
+  @Column({ length: 100 })
   country: string;
 
   //To add an ENUM to a field use options in @Column()

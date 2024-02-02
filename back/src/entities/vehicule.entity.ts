@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { Length } from "class-validator";
 import { Field, ID, InputType, ObjectType } from "type-graphql";
 import {
@@ -7,9 +6,6 @@ import {
   CreateDateColumn,
   Column,
   ManyToOne,
-  JoinTable,
-  ManyToMany,
-  UpdateDateColumn,
   OneToMany,
 } from "typeorm";
 
@@ -62,6 +58,12 @@ export class VehiculeEntity {
  *?               Inputs
  *=============================================**/
 @InputType()
+export class PartialUserInput {
+  @Field(() => ID)
+  id: string;
+}
+
+@InputType()
 export class CreateVehiculeInput {
   @Field()
   registration: string;
@@ -69,6 +71,8 @@ export class CreateVehiculeInput {
   brand: string;
   @Field()
   model: string;
+  @Field(() => ID)
+  user: PartialUserInput;
 }
 
 @InputType()
@@ -82,5 +86,3 @@ export class UpdateVehiculeInput {
   @Field({ nullable: true })
   model: string;
 }
-=======
->>>>>>> c042692c (entity)
