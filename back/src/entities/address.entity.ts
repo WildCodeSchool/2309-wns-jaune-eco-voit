@@ -112,8 +112,5 @@ export class UpdateAddresseInput {
   country: string;
 
   @Field({ nullable: true })
-  user: PartialUserInput;
-
-  @Field({ nullable: true })
   status: Status;
 }
