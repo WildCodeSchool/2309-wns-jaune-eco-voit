@@ -12,7 +12,7 @@ import {
   OneToMany,
 } from "typeorm";
 
-type VehiculeStatus = "ARCHIVE" | "ADMIN";
+type VehiculeStatus = "ARCHIVE" | "ACTIVE";
 
 @ObjectType()
 @Entity()
@@ -72,6 +72,8 @@ export class CreateVehiculeInput {
 
 @InputType()
 export class UpdateVehiculeInput {
+  @Field()
+  id: string;
   @Field({ nullable: true })
   registration: string;
   @Field({ nullable: true })
