@@ -1,4 +1,3 @@
-import { Length } from "class-validator";
 import { Field, ID, InputType, ObjectType } from "type-graphql";
 import {
   Entity,
@@ -6,9 +5,6 @@ import {
   CreateDateColumn,
   Column,
   ManyToOne,
-  JoinTable,
-  ManyToMany,
-  UpdateDateColumn,
   OneToMany,
 } from "typeorm";
 import { VehiculeEntity } from "./vehicule.entity";
@@ -22,10 +18,6 @@ export class JourneyEntity {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Field()
-  @Column()
-  steps: string[];
-
   @Field(() => UserEntity)
   @ManyToOne(() => UserEntity, (user) => user.journeys)
   user: UserEntity;
@@ -34,13 +26,9 @@ export class JourneyEntity {
   @ManyToOne(() => VehiculeEntity, (vehicule) => vehicule.journeys)
   vehicule: VehiculeEntity;
 
-  @Field(() => MessageEntity)
+  @Field(() => MessageEntity[])
   @OneToMany(() => MessageEntity, (message) => message.journey)
-  message: MessageEntity;
-
-  @Field(() => StepEntity)
-  @OneToMany(() => StepEntity, (step) => step.journey)
-  step: StepEntity;
+  message: [MessageEntity];
 
   @Field()
   @Column({
@@ -77,8 +65,6 @@ export class PartialUserInput {
 @InputType()
 export class CreateJourneyInput {
   @Field()
-  steps: string[];
-  @Field()
   vehicule: PartialVehiculeInput;
   @Field()
   user: PartialUserInput;
@@ -89,7 +75,6 @@ export class CreateJourneyInput {
 @InputType()
 export class UpdateJourneyInput {
   @Field({ nullable: true })
-  steps: string[];
-  @Field({ nullable: true })
   status: JourneyStatus;
+  vehicule: PartialVehiculeInput
 }
