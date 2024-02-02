@@ -1,9 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
 import { Field, ObjectType, ID, Float, Int, InputType } from 'type-graphql';
 
-
-
 import { JourneyEntity } from "./journey.entity";
+
+export type StepStatus = "ACTIVE" | "ARCHIVED";
 
 @ObjectType()
 @Entity()
@@ -36,16 +36,23 @@ export class StepEntity {
   @Column('uuid')
   journey_id: string;
 
-  @Field(() => JourneyEntity)
-  @ManyToOne(() => JourneyEntity, j => j.steps)
-  journey: JourneyEntity;
-
   @Field(() => Int)
   @Column('int')
   available_seats: number;
 
   @CreateDateColumn()
   createdAt: string;
+
+  @Field()
+  @Column({
+    type: "text",
+    enum: ["ACTIVE", "ARCHIVED"]
+  })
+  status: StepStatus;
+
+  @Field(() => JourneyEntity)
+  @ManyToOne(() => JourneyEntity, j => j.steps)
+  journey: JourneyEntity;
 }
 
 // ----- INPUT-----
@@ -54,7 +61,6 @@ export class PartialJourneyInput {
   @Field(() => ID)
   id: string;
 }
-
 
 // CREATE
 @InputType()
@@ -104,5 +110,8 @@ export class UpdateStepInput {
 
   @Field(() => Int, { nullable: true })
   available_seats?: number;
+
+  @Field({ nullable: true })
+  StepStatus: StepStatus;
 
 }
