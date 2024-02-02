@@ -1,41 +1,56 @@
-import { Field, ID, InputType, InputType, ObjectType } from "type-graphql";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Field,
+  GraphQLISODateTime,
+  ID,
+  InputType,
+  ObjectType,
+} from "type-graphql";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
+import { BookingEntity } from "./booking.entity";
 
-
-export type Rate = "1" | "2" | "3" | "4" | "5"; 
-export type Status =  "ACTIVE" | "ARCHIVED";
+export type Rate = "1" | "2" | "3" | "4" | "5";
+export type Status = "ACTIVE" | "ARCHIVED";
 
 @ObjectType()
 @Entity()
-export class RatingEntity{
+export class RatingEntity {
+  @Field(() => ID)
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
-    @Field(() => ID)
-    @PrimaryGeneratedColumn('uuid')
-    id: string
+  @Field(() => GraphQLISODateTime)
+  @CreateDateColumn()
+  createdAt: Date;
 
-    @Field()
-    @Column()
-    createdAt: Date; 
+  @Field(() => GraphQLISODateTime)
+  @UpdateDateColumn()
+  updatedAt: Date;
 
-    @Field()
-    @Column({
-        type: "text",
-        enum: ["1", "2", "3", "4", "5"]
-        })
-    rate: Rate
+  @Field()
+  @Column({
+    type: "text",
+    enum: ["1", "2", "3", "4", "5"],
+  })
+  rate: Rate;
 
-    @Field()
-    @Column('uuid')
-    userRated: string
+  @Field()
+  @Column("uuid")
+  userRated: string;
 
-    @Field()
-    @Column('uuid')
-    userRater: string
+  @Field()
+  @Column("uuid")
+  userRater: string;
 
-    @Field(() => BookingEntity)
-    @ManyToOne(() => BookingEntity, (b) => b.RatingEntity)
-    bookingId : BookingEntity
-
+  @Field(() => BookingEntity)
+  @ManyToOne(() => BookingEntity, (b) => b.ratings)
+  booking: BookingEntity;
 }
 
 @InputType()
@@ -46,16 +61,15 @@ export class PartialBookingInput {
 
 @InputType()
 export class CreateRatingInput {
-    @Field()
-    rate: Rate; 
+  @Field()
+  rate: Rate;
 
-    @Field()
-    userRaterId: PartialBookingInput; 
+  @Field()
+  userRaterId: PartialBookingInput;
 
-    @Field()
-    userRatedId: PartialBookingInput; 
+  @Field()
+  userRatedId: PartialBookingInput;
 
-    @Field()
-    bookingId: PartialBookingInput
-    
+  @Field()
+  bookingId: PartialBookingInput;
 }

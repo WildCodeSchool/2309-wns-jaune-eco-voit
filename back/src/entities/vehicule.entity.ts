@@ -1,5 +1,11 @@
 import { Length } from "class-validator";
-import { Field, ID, InputType, ObjectType } from "type-graphql";
+import {
+  Field,
+  GraphQLISODateTime,
+  ID,
+  InputType,
+  ObjectType,
+} from "type-graphql";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -7,7 +13,10 @@ import {
   Column,
   ManyToOne,
   OneToMany,
+  UpdateDateColumn,
 } from "typeorm";
+import { UserEntity } from "./user.entity";
+import { JourneyEntity } from "./journey.entity";
 
 type VehiculeStatus = "ARCHIVE" | "ACTIVE";
 
@@ -37,7 +46,7 @@ export class VehiculeEntity {
   @ManyToOne(() => UserEntity, (user) => user.vehicules)
   user: UserEntity;
 
-  @Field(() => JourneyEntity)
+  @Field(() => [JourneyEntity])
   @OneToMany(() => JourneyEntity, (journey) => journey.vehicule)
   journeys: JourneyEntity[];
 
@@ -49,9 +58,13 @@ export class VehiculeEntity {
   })
   status: VehiculeStatus;
 
-  @Field()
+  @Field(() => GraphQLISODateTime)
   @CreateDateColumn()
   createdAt: Date;
+
+  @Field(() => GraphQLISODateTime)
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
 
 /**============================================

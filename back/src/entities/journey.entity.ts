@@ -1,4 +1,10 @@
-import { Field, ID, InputType, ObjectType } from "type-graphql";
+import {
+  Field,
+  GraphQLISODateTime,
+  ID,
+  InputType,
+  ObjectType,
+} from "type-graphql";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -6,8 +12,13 @@ import {
   Column,
   ManyToOne,
   OneToMany,
+  UpdateDateColumn,
 } from "typeorm";
 import { VehiculeEntity } from "./vehicule.entity";
+import { UserEntity } from "./user.entity";
+import { MessageEntity } from "./message.entity";
+import { StepEntity } from "./step.entity";
+import { BookingEntity } from "./booking.entity";
 
 type JourneyStatus = "PLANNED" | "CANCELLED" | "DONE";
 
@@ -19,16 +30,24 @@ export class JourneyEntity {
   id: string;
 
   @Field(() => UserEntity)
-  @ManyToOne(() => UserEntity, (user) => user.journeys)
+  @ManyToOne(() => UserEntity, (u) => u.journeys)
   user: UserEntity;
 
   @Field(() => VehiculeEntity)
-  @ManyToOne(() => VehiculeEntity, (vehicule) => vehicule.journeys)
+  @ManyToOne(() => VehiculeEntity, (v) => v.journeys)
   vehicule: VehiculeEntity;
 
-  @Field(() => MessageEntity[])
-  @OneToMany(() => MessageEntity, (message) => message.journey)
-  message: [MessageEntity];
+  @Field(() => [MessageEntity])
+  @OneToMany(() => MessageEntity, (m) => m.journey)
+  messages: MessageEntity[];
+
+  @Field(() => [StepEntity])
+  @OneToMany(() => StepEntity, (s) => s.journey)
+  steps: StepEntity[];
+
+  @Field(() => [BookingEntity])
+  @OneToMany(() => BookingEntity, (b) => b.journey)
+  bookings: BookingEntity[];
 
   @Field()
   @Column({
@@ -42,9 +61,13 @@ export class JourneyEntity {
   @Column()
   automaticAccept: boolean;
 
-  @Field()
+  @Field(() => GraphQLISODateTime)
   @CreateDateColumn()
   createdAt: Date;
+
+  @Field(() => GraphQLISODateTime)
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
 
 /**============================================
@@ -76,5 +99,5 @@ export class CreateJourneyInput {
 export class UpdateJourneyInput {
   @Field({ nullable: true })
   status: JourneyStatus;
-  vehicule: PartialVehiculeInput
+  vehicule: PartialVehiculeInput;
 }

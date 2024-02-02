@@ -1,11 +1,22 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne } from "typeorm";
-import { Field, InputType, ObjectType, ID, GraphQLISODateTime } from "type-graphql";
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+} from "typeorm";
+import {
+  Field,
+  InputType,
+  ObjectType,
+  ID,
+  GraphQLISODateTime,
+} from "type-graphql";
 import { Length } from "class-validator";
-
 
 import { UserEntity } from "./user.entity";
 import { JourneyEntity } from "./journey.entity";
-
 
 export type Status = "ACTIVE" | "ARCHIVED";
 
@@ -13,23 +24,24 @@ export type Status = "ACTIVE" | "ARCHIVED";
 @Entity()
 export class MessageEntity {
   @Field(() => ID)
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Field()
   @Column({ length: 500 })
   @Length(1, 500, {
-    message: "Le message doit contenir au minimum 1 caractères et au maximum 500 caractères",
+    message:
+      "Le message doit contenir au minimum 1 caractères et au maximum 500 caractères",
   })
   content: string;
 
   @Field(() => GraphQLISODateTime)
-  @UpdateDateColumn()
-  updatedAt: string;
+  @CreateDateColumn()
+  createdAt: Date;
 
   @Field(() => GraphQLISODateTime)
-  @CreateDateColumn()
-  createdAt: string;
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @Field()
   @Column({
@@ -39,10 +51,10 @@ export class MessageEntity {
   })
   status: Status;
 
-  @ManyToOne(() => UserEntity, u => u.messages)
+  @ManyToOne(() => UserEntity, (u) => u.messages)
   user: UserEntity;
 
-  @ManyToOne(() => JourneyEntity, j => j.messages)
+  @ManyToOne(() => JourneyEntity, (j) => j.messages)
   journey: JourneyEntity;
 }
 
@@ -58,11 +70,14 @@ export class PartialJourneyInput {
   id: string;
 }
 
-// CREATE 
+// CREATE
 @InputType()
 export class CreateMessageInput {
   @Field()
-  @Length(1, 500, { message: "Le message doit contenir au minimum 1 caractère et au maximum 500 caractères" })
+  @Length(1, 500, {
+    message:
+      "Le message doit contenir au minimum 1 caractère et au maximum 500 caractères",
+  })
   content: string;
 
   @Field(() => ID)
@@ -76,7 +91,10 @@ export class CreateMessageInput {
 @InputType()
 export class UpdateMessageInput {
   @Field()
-  @Length(1, 500, { message: "Le message doit contenir au minimum 1 caractère et au maximum 500 caractères" })
+  @Length(1, 500, {
+    message:
+      "Le message doit contenir au minimum 1 caractère et au maximum 500 caractères",
+  })
   content: string;
 
   @Field({ nullable: true })

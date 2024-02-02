@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   ManyToOne,
+  UpdateDateColumn,
 } from "typeorm"; // Pour définir les entités TypeORM
 import {
   Field,
@@ -14,6 +15,7 @@ import {
 } from "type-graphql"; // Pour définir les Types GraphQL
 
 import { CountryCode, PostalCode } from "graphql-scalars/typings/mocks";
+import { UserEntity } from "./user.entity";
 
 export type Status = "ACTIVE" | "ARCHIVED";
 
@@ -60,6 +62,10 @@ export class AddressEntity {
   @Field(() => GraphQLISODateTime)
   @CreateDateColumn()
   createdAt: Date;
+
+  @Field(() => GraphQLISODateTime)
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
 
 // --------- INPUTS ------------ //

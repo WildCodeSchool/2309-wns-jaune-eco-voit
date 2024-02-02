@@ -1,7 +1,25 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
-import { Field, ObjectType, ID, Float, Int, InputType } from 'type-graphql';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+  JoinTable,
+  ManyToMany,
+  UpdateDateColumn,
+} from "typeorm";
+import {
+  Field,
+  ObjectType,
+  ID,
+  Float,
+  Int,
+  InputType,
+  GraphQLISODateTime,
+} from "type-graphql";
 
 import { JourneyEntity } from "./journey.entity";
+import { BookingEntity } from "./booking.entity";
 
 export type StepStatus = "ACTIVE" | "ARCHIVED";
 
@@ -9,11 +27,11 @@ export type StepStatus = "ACTIVE" | "ARCHIVED";
 @Entity()
 export class StepEntity {
   @Field(() => ID)
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
   @Field(() => Float)
-  @Column('float')
+  @Column("float")
   price: number;
 
   @Field()
@@ -25,34 +43,44 @@ export class StepEntity {
   destination: string;
 
   @Field()
-  @Column('timestamp')
+  @Column("timestamp")
   departure_time: Date;
 
   @Field()
-  @Column('timestamp')
+  @Column("timestamp")
   arrival_time: Date;
 
   @Field(() => ID)
-  @Column('uuid')
+  @Column("uuid")
   journey_id: string;
 
   @Field(() => Int)
-  @Column('int')
+  @Column("int")
   available_seats: number;
 
+  @Field(() => GraphQLISODateTime)
   @CreateDateColumn()
-  createdAt: string;
+  createdAt: Date;
+
+  @Field(() => GraphQLISODateTime)
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @Field()
   @Column({
     type: "text",
-    enum: ["ACTIVE", "ARCHIVED"]
+    enum: ["ACTIVE", "ARCHIVED"],
   })
   status: StepStatus;
 
   @Field(() => JourneyEntity)
-  @ManyToOne(() => JourneyEntity, j => j.steps)
+  @ManyToOne(() => JourneyEntity, (j) => j.steps)
   journey: JourneyEntity;
+
+  @Field(() => [BookingEntity])
+  @JoinTable()
+  @ManyToMany(() => BookingEntity, (b) => b.steps)
+  bookings: BookingEntity[];
 }
 
 // ----- INPUT-----
@@ -113,5 +141,4 @@ export class UpdateStepInput {
 
   @Field({ nullable: true })
   StepStatus: StepStatus;
-
 }

@@ -8,6 +8,7 @@ import {
   JoinTable,
   ManyToOne,
   OneToMany,
+  UpdateDateColumn,
 } from "typeorm"; // Pour définir les entités TypeORM
 import {
   Field,
@@ -18,6 +19,10 @@ import {
   ObjectType,
 } from "type-graphql"; // Pour définir les Types GraphQL
 import { Length, Min, min } from "class-validator"; // to add validators
+import { StepEntity } from "./step.entity";
+import { UserEntity } from "./user.entity";
+import { JourneyEntity } from "./journey.entity";
+import { RatingEntity } from "./rating.entity";
 
 export type Status = "PENDING" | "REJECTED" | "CANCELLED" | "ACCEPTED";
 
@@ -47,15 +52,15 @@ export class BookingEntity {
 
   @Field(() => [StepEntity])
   @JoinTable()
-  @ManyToMany(() => StepEntity, (step) => step.bookings)
+  @ManyToMany(() => StepEntity, (s) => s.bookings)
   steps: StepEntity[];
 
   @Field(() => UserEntity)
-  @ManyToOne(() => UserEntity, (user) => user.bookings)
+  @ManyToOne(() => UserEntity, (u) => u.bookings)
   user: UserEntity;
 
   @Field(() => JourneyEntity)
-  @ManyToOne(() => JourneyEntity, (journey) => journey.bookings)
+  @ManyToOne(() => JourneyEntity, (j) => j.bookings)
   journey: JourneyEntity;
 
   @Field(() => [RatingEntity])
@@ -65,6 +70,10 @@ export class BookingEntity {
   @Field(() => GraphQLISODateTime)
   @CreateDateColumn()
   createdAt: Date;
+
+  @Field(() => GraphQLISODateTime)
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
 
 // --------- INPUTS ------------ //
