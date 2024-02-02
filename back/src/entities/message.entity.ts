@@ -1,6 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, In } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne } from "typeorm";
 import { Field, InputType, ObjectType, ID, GraphQLISODateTime } from "type-graphql";
-import { Length, Min } from "class-validator";
+import { Length } from "class-validator";
 
 
 import { UserEntity } from "./user.entity";
@@ -12,17 +12,20 @@ export type Status = "ACTIVE" | "ARCHIVED";
 @ObjectType()
 @Entity()
 export class MessageEntity {
-  @Field()
+  @Field(() => ID)
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Field()
-  @Column()
+  @Column({ length: 500 })
+  @Length(1, 500, {
+    message: "Le message doit contenir au minimum 1 caractères et au maximum 500 caractères",
+  })
   content: string;
 
   @Field(() => GraphQLISODateTime)
-  @CreateDateColumn()
-  modifiedAt: string;
+  @UpdateDateColumn()
+  updatedAt: string;
 
   @Field(() => GraphQLISODateTime)
   @CreateDateColumn()
@@ -36,7 +39,6 @@ export class MessageEntity {
   })
   status: Status;
 
-
   @ManyToOne(() => UserEntity, u => u.messages)
   user: UserEntity;
 
@@ -45,7 +47,6 @@ export class MessageEntity {
 }
 
 // INPUT PARTIALS
-
 @InputType()
 export class PartialUserInput {
   @Field(() => ID)
@@ -64,12 +65,6 @@ export class CreateMessageInput {
   @Length(1, 500, { message: "Le message doit contenir au minimum 1 caractère et au maximum 500 caractères" })
   content: string;
 
-  @Field(() => Date)
-  created_at: Date;
-
-  @Field(() => Date)
-  modifed_at: Date;
-
   @Field(() => ID)
   user: PartialUserInput;
 
@@ -86,9 +81,6 @@ export class UpdateMessageInput {
 
   @Field({ nullable: true })
   status: Status;
-
-  @Field(() => Date)
-  modifed_at: Date;
 
   @Field(() => ID)
   user: PartialUserInput;
