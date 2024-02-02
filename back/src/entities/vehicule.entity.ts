@@ -9,6 +9,7 @@ import {
   JoinTable,
   ManyToMany,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
 
 type VehiculeStatus = "ARCHIVE" | "ADMIN";
@@ -38,6 +39,10 @@ export class VehiculeEntity {
   @Field(() => UserEntity)
   @ManyToOne(() => UserEntity, (user) => user.vehicules)
   user: UserEntity;
+
+  @Field(() => JourneyEntity)
+  @OneToMany(() => JourneyEntity, (journey) => journey.vehicule)
+  journeys: JourneyEntity[];
 
   @Field()
   @Column({
