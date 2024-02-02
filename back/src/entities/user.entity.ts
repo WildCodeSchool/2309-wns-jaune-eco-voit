@@ -113,12 +113,14 @@ export class CreateUserInput {
     @Field()
     lastname: string; 
     @Field()
-    email: string; 
+    email: string;
+    @Field()
+    password: string
     @Field()
     dateOfBirth: string;
-    @Field()
+    @Field({nullable: true})
     phoneNumber: string;
-    @Field()
+    @Field({nullable: true})
     profilePicture: string; 
     @Field({nullable: true})
     role: Role;
@@ -127,12 +129,16 @@ export class CreateUserInput {
 
 @InputType()
 export class UpdateUserInput {
+    @Field(() => ID)
+    id: string;
     @Field({nullable: true})
     firstname: string;
     @Field({nullable: true})
     lastname: string; 
     @Field({nullable: true})
     email: string; 
+    @Field()
+    password: string;
     @Field({nullable: true})
     dateOfBirth: string;
     @Field({nullable: true})
