@@ -58,9 +58,9 @@ export class JourneyEntity {
     @Column('timestamp')
     arrival_time: Date
 
-    @Field(() => [BookingEntity])
+    @Field(() => [BookingEntity], { nullable: true })
     @OneToMany(() => BookingEntity, (b) => b.journey)
-    bookings: BookingEntity[]
+    bookings?: BookingEntity[]
 
     @Field()
     @Column({
@@ -78,9 +78,9 @@ export class JourneyEntity {
     @CreateDateColumn()
     createdAt: Date
 
-    @Field(() => GraphQLISODateTime)
+    @Field(() => GraphQLISODateTime, { nullable: true })
     @UpdateDateColumn()
-    updatedAt: Date
+    updatedAt?: Date
 }
 
 /**============================================

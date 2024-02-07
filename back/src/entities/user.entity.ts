@@ -50,11 +50,11 @@ export class UserEntity {
 
     @Field(() => GraphQLPhoneNumber)
     @Column()
-    phoneNumber: string
+    phoneNumber?: string
 
     @Field()
     @Column()
-    profilPicture: string
+    profilPicture?: string
 
     @Field()
     @Column({
@@ -74,11 +74,11 @@ export class UserEntity {
 
     @Field()
     @Column({ default: 0 })
-    tripsAsPassenger: number
+    tripsAsPassenger?: number
 
     @Field()
     @Column({ default: 0 })
-    tripsAsDriver: number
+    tripsAsDriver?: number
 
     @Field()
     @Column({
@@ -92,25 +92,25 @@ export class UserEntity {
     @CreateDateColumn()
     createdAt: Date
 
-    @Field(() => GraphQLISODateTime)
+    @Field(() => GraphQLISODateTime, { nullable: true })
     @UpdateDateColumn()
-    updatedAt: Date
+    updatedAt?: Date
 
     // @Field(() => [AddressEntity])
     // @OneToMany(() => AddressEntity, (a) => a.user)
     // addresses: AddressEntity[];
 
-    @Field(() => JourneyEntity)
+    @Field(() => JourneyEntity, { nullable: true })
     @OneToMany(() => JourneyEntity, (j) => j.user)
-    journeys: JourneyEntity[]
+    journeys?: JourneyEntity[]
 
     // @Field(() => [RatingEntity])
     // @OneToMany(() => RatingEntity, (r) => r.booking)
     // ratings: RatingEntity[];
 
-    @Field(() => [BookingEntity])
+    @Field(() => [BookingEntity], { nullable: true })
     @OneToMany(() => BookingEntity, (b) => b.user)
-    bookings: BookingEntity[]
+    bookings?: BookingEntity[]
 
     // @Field(() => [VehiculeEntity])
     // @OneToMany(() => VehiculeEntity, (v) => v.user)

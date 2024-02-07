@@ -64,9 +64,9 @@ export class BookingEntity {
     @CreateDateColumn()
     createdAt: Date
 
-    @Field(() => GraphQLISODateTime)
+    @Field(() => GraphQLISODateTime, { nullable: true })
     @UpdateDateColumn()
-    updatedAt: Date
+    updatedAt?: Date
 }
 
 // --------- INPUTS ------------ //
