@@ -15,8 +15,8 @@ import {
 } from "type-graphql";
 import { Length } from "class-validator";
 
-import { UserEntity } from "./user.entity";
-import { JourneyEntity } from "./journey.entity";
+import { UserEntity } from "../src/entities/user.entity";
+import { JourneyEntity } from "../src/entities/journey.entity";
 
 export type Status = "ACTIVE" | "ARCHIVED";
 

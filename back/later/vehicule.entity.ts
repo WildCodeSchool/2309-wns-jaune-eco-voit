@@ -15,8 +15,8 @@ import {
   OneToMany,
   UpdateDateColumn,
 } from "typeorm";
-import { UserEntity } from "./user.entity";
-import { JourneyEntity } from "./journey.entity";
+import { UserEntity } from "../src/entities/user.entity";
+import { JourneyEntity } from "../src/entities/journey.entity";
 
 type VehiculeStatus = "ARCHIVE" | "ACTIVE";
 

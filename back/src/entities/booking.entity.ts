@@ -19,10 +19,10 @@ import {
   ObjectType,
 } from "type-graphql"; // Pour définir les Types GraphQL
 import { Length, Min, min } from "class-validator"; // to add validators
-import { StepEntity } from "./step.entity";
+import { StepEntity } from "../../later/step.entity";
 import { UserEntity } from "./user.entity";
 import { JourneyEntity } from "./journey.entity";
-import { RatingEntity } from "./rating.entity";
+import { RatingEntity } from "../../later/rating.entity";
 
 export type Status = "PENDING" | "REJECTED" | "CANCELLED" | "ACCEPTED";
 

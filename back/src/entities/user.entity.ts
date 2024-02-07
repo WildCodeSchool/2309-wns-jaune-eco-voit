@@ -14,12 +14,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { MessageEntity } from "./message.entity";
-import { AddressEntity } from "./address.entity";
+import { MessageEntity } from "../../later/message.entity";
+import { AddressEntity } from "../../later/address.entity";
 import { JourneyEntity } from "./journey.entity";
-import { RatingEntity } from "./rating.entity";
+import { RatingEntity } from "../../later/rating.entity";
 import { BookingEntity } from "./booking.entity";
-import { VehiculeEntity } from "./vehicule.entity";
+import { VehiculeEntity } from "../../later/vehicule.entity";
 
 export type Role = "USER" | "ADMIN";
 export type Grade = "BEGINNER" | "CONFIRMED" | "AMBASSADOR";

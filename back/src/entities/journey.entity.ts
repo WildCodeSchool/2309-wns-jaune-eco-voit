@@ -14,10 +14,10 @@ import {
   OneToMany,
   UpdateDateColumn,
 } from "typeorm";
-import { VehiculeEntity } from "./vehicule.entity";
+import { VehiculeEntity } from "../../later/vehicule.entity";
 import { UserEntity } from "./user.entity";
-import { MessageEntity } from "./message.entity";
-import { StepEntity } from "./step.entity";
+import { MessageEntity } from "../../later/message.entity";
+import { StepEntity } from "../../later/step.entity";
 import { BookingEntity } from "./booking.entity";
 
 type JourneyStatus = "PLANNED" | "CANCELLED" | "DONE";
@@ -41,9 +41,25 @@ export class JourneyEntity {
   @OneToMany(() => MessageEntity, (m) => m.journey)
   messages: MessageEntity[];
 
-  @Field(() => [StepEntity])
-  @OneToMany(() => StepEntity, (s) => s.journey)
-  steps: StepEntity[];
+  // @Field(() => [StepEntity])
+  // @OneToMany(() => StepEntity, (s) => s.journey)
+  // steps: StepEntity[];
+
+  @Field()
+  @Column({ length: 50 })
+  origin: string;
+
+  @Field()
+  @Column({ length: 50 })
+  destination: string;
+
+  @Field()
+  @Column("timestamp")
+  departure_time: Date;
+
+  @Field()
+  @Column("timestamp")
+  arrival_time: Date;
 
   @Field(() => [BookingEntity])
   @OneToMany(() => BookingEntity, (b) => b.journey)

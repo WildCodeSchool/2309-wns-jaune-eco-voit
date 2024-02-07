@@ -15,7 +15,7 @@ import {
 } from "type-graphql"; // Pour définir les Types GraphQL
 
 import { CountryCode, PostalCode } from "graphql-scalars/typings/mocks";
-import { UserEntity } from "./user.entity";
+import { UserEntity } from "../src/entities/user.entity";
 
 export type Status = "ACTIVE" | "ARCHIVED";
 

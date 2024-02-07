@@ -18,8 +18,8 @@ import {
   GraphQLISODateTime,
 } from "type-graphql";
 
-import { JourneyEntity } from "./journey.entity";
-import { BookingEntity } from "./booking.entity";
+import { JourneyEntity } from "../src/entities/journey.entity";
+import { BookingEntity } from "../src/entities/booking.entity";
 
 export type StepStatus = "ACTIVE" | "ARCHIVED";
 

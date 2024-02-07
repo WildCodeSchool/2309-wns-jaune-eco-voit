@@ -13,7 +13,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { BookingEntity } from "./booking.entity";
+import { BookingEntity } from "../src/entities/booking.entity";
 
 export type Rate = "1" | "2" | "3" | "4" | "5";
 export type Status = "ACTIVE" | "ARCHIVED";
