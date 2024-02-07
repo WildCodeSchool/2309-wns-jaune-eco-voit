@@ -89,4 +89,20 @@ export default class UserResolver {
   async archiveUser(@Arg("id") id: string) {
     return new UsersService().updateUser(id, { status: "ARCHIVED" });
   }
+
+  @Mutation(() => UserEntity)
+  async increaseTripsAsPassenger(@Arg("id") id: string) {
+    const usersService = new UsersService()
+    const user = await usersService.findUserById(id)
+    if(!user) return new Error('Utilisateur inconnu')
+    return new UsersService().updateUser(id, { tripsAsPassenger: user.tripsAsPassenger ++ });
+  }
+
+  @Mutation(() => UserEntity)
+  async increaseTripsAsDriver(@Arg("id") id: string) {
+    const usersService = new UsersService()
+    const user = await usersService.findUserById(id)
+    if(!user) return new Error('Utilisateur inconnu')
+    return new UsersService().updateUser(id, { tripsAsDriver: user.tripsAsDriver ++ });
+  }
 }

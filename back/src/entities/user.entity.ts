@@ -146,37 +146,35 @@ export class CreateUserInput {
 @InputType()
 export class UpdateUserInput {
   @Field({ nullable: true })
-  firstname: string;
+  firstname?: string;
   @Field({ nullable: true })
-  lastname: string;
+  lastname?: string;
   @Field({ nullable: true })
-  email: string;
+  email?: string;
   @Field({ nullable: true })
-  password: string;
+  password?: string;
   @Field({ nullable: true })
-  dateOfBirth: string;
+  dateOfBirth?: string;
   @Field({ nullable: true })
-  phoneNumber: string;
+  phoneNumber?: string;
   @Field({ nullable: true })
-  profilePicture: string;
+  profilePicture?: string;
   @Field({ nullable: true })
-  role: Role;
+  role?: Role;
   @Field({ nullable: true })
-  grade: Grade;
+  grade?: Grade;
   @Field({ nullable: true })
-  status: Status;
+  status?: Status;
+  @Field({ nullable: true })
+  tripsAsPassenger?: number
+  @Field({ nullable: true })
+  tripsAsDriver?: number
 }
 
 @InputType()
 export class UpdateUserInputId extends UpdateUserInput {
   @Field(() => ID)
   id: string;
-}
-
-@InputType()
-export class ArchiveUserInput {
-  @Field()
-  status: "ARCHIVED";
 }
 
 @InputType()
