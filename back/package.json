@@ -4,7 +4,12 @@
   "description": "La meilleure app de covoiturage DU MONDE",
   "main": "index.ts",
   "scripts": {
-    "start": "ts-node-dev --watch ./src ./src/index.ts"
+    "start": "ts-node-dev --watch ./src ./src/index.ts",
+    "lint": "npx eslint src",
+    "lint:fix": "npm run lint -- --fix",
+    "prettier": "npx prettier src --check",
+    "prettier:fix": "npm run prettier -- --write",
+    "format": "npm run prettier:fix && npm run lint:fix"
   },
   "author": "Groupe 1",
   "license": "ISC",
@@ -32,6 +37,12 @@
     "@types/cors": "^2.8.14",
     "@types/express": "^4.17.17",
     "@types/node": "^20.8.9",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.33.2",
+    "prettier": "3.2.5",
     "typeorm-fixtures-cli": "^4.0.0",
     "typescript": "^5.2.2"
   }

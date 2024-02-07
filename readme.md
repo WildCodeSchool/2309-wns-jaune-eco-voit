@@ -13,3 +13,4 @@
   - L'assignee corrige
   - Le reviewer valide / se met d'accord avec l'assignee
   - L'assignee merge la MR sur master
+- Formater et linter le code avant de commit : "npm run format"
