@@ -98,7 +98,7 @@ export class UserEntity {
 
     // @Field(() => [AddressEntity])
     // @OneToMany(() => AddressEntity, (a) => a.user)
-    // addresses: AddressEntity[]
+    // addresses: AddressEntity[];
 
     @Field(() => JourneyEntity)
     @OneToMany(() => JourneyEntity, (j) => j.user)
@@ -106,7 +106,7 @@ export class UserEntity {
 
     // @Field(() => [RatingEntity])
     // @OneToMany(() => RatingEntity, (r) => r.booking)
-    // ratings: RatingEntity[]
+    // ratings: RatingEntity[];
 
     @Field(() => [BookingEntity])
     @OneToMany(() => BookingEntity, (b) => b.user)
@@ -114,11 +114,11 @@ export class UserEntity {
 
     // @Field(() => [VehiculeEntity])
     // @OneToMany(() => VehiculeEntity, (v) => v.user)
-    // vehicules: VehiculeEntity[]
+    // vehicules: VehiculeEntity[];
 
     // @Field(() => [MessageEntity])
     // @OneToMany(() => MessageEntity, (m) => m.user)
-    // messages: MessageEntity[]
+    // messages: MessageEntity[];
 }
 
 // -------------- INPUTS -------------- //
@@ -148,21 +148,49 @@ export class UpdateUserInput {
     @Field(() => ID)
     id: string
     @Field({ nullable: true })
-    firstname: string
+    firstname?: string
     @Field({ nullable: true })
-    lastname: string
+    lastname?: string
+    @Field(() => GraphQLEmailAddress, { nullable: true })
+    email?: string
     @Field({ nullable: true })
-    email: string
+    password?: string
+    @Field({ nullable: true })
+    dateOfBirth?: string
+    @Field(() => GraphQLPhoneNumber, { nullable: true })
+    phoneNumber?: string
+    @Field({ nullable: true })
+    profilePicture?: string
+    @Field({ nullable: true })
+    role?: Role
+    @Field({ nullable: true })
+    grade?: Grade
+    @Field({ nullable: true })
+    status?: Status
+    @Field({ nullable: true })
+    tripsAsPassenger?: number
+    @Field({ nullable: true })
+    tripsAsDriver?: number
+}
+
+@InputType()
+export class LoginInput {
     @Field()
+    email: string
     password: string
-    @Field({ nullable: true })
-    dateOfBirth: string
-    @Field({ nullable: true })
-    phoneNumber: string
-    @Field({ nullable: true })
-    profilePicture: string
-    @Field({ nullable: true })
-    role: Role
-    @Field({ nullable: true })
-    grade: Grade
+}
+
+@ObjectType()
+export class UserMessage {
+    @Field()
+    success: boolean
+
+    @Field()
+    message: string
+}
+
+@ObjectType()
+export class UserWithoutPassord implements Pick<UserEntity, 'email'> {
+    @Field(() => GraphQLEmailAddress)
+    email: string
 }
