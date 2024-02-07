@@ -20,8 +20,8 @@ import { JourneyEntity } from './journey.entity'
 
 export type Status = 'PENDING' | 'REJECTED' | 'CANCELLED' | 'ACCEPTED'
 
-@ObjectType() //pour TypeGraphQL
-@Entity() // pour TypeORM
+@ObjectType()
+@Entity()
 export class BookingEntity {
     @Field(() => ID) // pour GraphQL
     @PrimaryGeneratedColumn('uuid') // pour TypeORM
@@ -36,7 +36,6 @@ export class BookingEntity {
     @Column({ type: 'timestamptz' }) // Recommended for Date  typeORM
     departureTime: Date
 
-    //To add an ENUM to a field use options in @Column()
     @Field()
     @Column({
         type: 'text',
@@ -47,7 +46,7 @@ export class BookingEntity {
     // @Field(() => [StepEntity])
     // @JoinTable()
     // @ManyToMany(() => StepEntity, (s) => s.bookings)
-    // steps: StepEntity[]
+    // steps: StepEntity[];
 
     @Field(() => UserEntity)
     @ManyToOne(() => UserEntity, (u) => u.bookings)
@@ -59,7 +58,7 @@ export class BookingEntity {
 
     // @Field(() => [RatingEntity])
     // @OneToMany(() => RatingEntity, (rating) => rating.booking)
-    // ratings: RatingEntity[]
+    // ratings: RatingEntity[];
 
     @Field(() => GraphQLISODateTime)
     @CreateDateColumn()
@@ -71,6 +70,7 @@ export class BookingEntity {
 }
 
 // --------- INPUTS ------------ //
+@ObjectType()
 @InputType()
 export class PartialBookingInput {
     @Field(() => ID)
@@ -91,18 +91,15 @@ export class CreateBookingInput {
     @Field()
     steps: PartialBookingInput[]
 
-    @Field()
+    @Field(() => PartialBookingInput)
     user: PartialBookingInput
 
-    @Field()
+    @Field(() => PartialBookingInput)
     journey: PartialBookingInput
 }
 
 @InputType()
 export class UpdateBookingInput {
-    @Field(() => ID)
-    id: string
-
     @Field()
     status: Status
 }
