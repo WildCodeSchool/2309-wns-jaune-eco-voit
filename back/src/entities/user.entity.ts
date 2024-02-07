@@ -145,8 +145,6 @@ export class CreateUserInput {
 
 @InputType()
 export class UpdateUserInput {
-  @Field(() => ID)
-  id: string;
   @Field({ nullable: true })
   firstname: string;
   @Field({ nullable: true })
@@ -165,8 +163,6 @@ export class UpdateUserInput {
   role: Role;
   @Field({ nullable: true })
   grade: Grade;
-<<<<<<< HEAD
-=======
   @Field({ nullable: true })
   status: Status;
 }
@@ -181,7 +177,6 @@ export class UpdateUserInputId extends UpdateUserInput {
 export class ArchiveUserInput {
   @Field()
   status: "ARCHIVED";
->>>>>>> 559d9fab (correct)
 }
 
 @InputType()
