@@ -2,7 +2,7 @@ import { Arg, Mutation, Query, Resolver } from 'type-graphql'
 import {
     CreateUserInput,
     LoginInput,
-    UpdateUserInputId,
+    UpdateUserInput,
     UserEntity,
     UserMessage,
     UserWithoutPassord,
@@ -69,14 +69,13 @@ export default class UserResolver {
     }
 
     @Mutation(() => UserEntity)
-    async updateUser(@Arg('data') data: UpdateUserInputId) {
-        const { id, ...body } = data
-        return await new UsersService().updateUser(id, body)
+    async updateUser(@Arg('data') data: UpdateUserInput) {
+        return await new UsersService().updateUser(data)
     }
 
     @Mutation(() => UserEntity)
     async archiveUser(@Arg('id') id: string) {
-        return new UsersService().updateUser(id, { status: 'ARCHIVED' })
+        return new UsersService().updateUser({ id, status: 'ARCHIVED' })
     }
 
     @Mutation(() => UserEntity)
@@ -84,7 +83,8 @@ export default class UserResolver {
         const usersService = new UsersService()
         const user = await usersService.findUserById(id)
         if (!user) return new Error('Utilisateur inconnu')
-        return new UsersService().updateUser(id, {
+        return new UsersService().updateUser({
+            id,
             tripsAsPassenger: user.tripsAsPassenger++,
         })
     }
@@ -94,7 +94,8 @@ export default class UserResolver {
         const usersService = new UsersService()
         const user = await usersService.findUserById(id)
         if (!user) return new Error('Utilisateur inconnu')
-        return new UsersService().updateUser(id, {
+        return usersService.updateUser({
+            id,
             tripsAsDriver: user.tripsAsDriver++,
         })
     }

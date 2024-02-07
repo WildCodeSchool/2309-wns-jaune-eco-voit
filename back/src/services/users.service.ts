@@ -48,7 +48,9 @@ export default class UsersService {
         return await this.db.save(newUser)
     }
 
-    async updateUser(id: string, body: UpdateUserInput) {
+    async updateUser(data: UpdateUserInput) {
+        const { id, ...body } = data
+
         const userToUpdate = await this.db.findOneBy({ id })
 
         if (!userToUpdate) {

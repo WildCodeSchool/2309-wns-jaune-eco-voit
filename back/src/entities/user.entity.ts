@@ -145,6 +145,8 @@ export class CreateUserInput {
 
 @InputType()
 export class UpdateUserInput {
+    @Field(() => ID)
+    id: string
     @Field({ nullable: true })
     firstname?: string
     @Field({ nullable: true })
@@ -169,12 +171,6 @@ export class UpdateUserInput {
     tripsAsPassenger?: number
     @Field({ nullable: true })
     tripsAsDriver?: number
-}
-
-@InputType()
-export class UpdateUserInputId extends UpdateUserInput {
-    @Field(() => ID)
-    id: string
 }
 
 @InputType()
