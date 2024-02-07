@@ -7,6 +7,7 @@ import {
     UpdateDateColumn,
 } from 'typeorm' // Pour définir les entités TypeORM
 import {
+    ArgsType,
     Field,
     Float,
     GraphQLISODateTime,
@@ -99,9 +100,6 @@ export class CreateBookingInput {
 
 @InputType()
 export class UpdateBookingInput {
-    @Field(() => ID)
-    id: string
-
     @Field()
     status: Status
 }
