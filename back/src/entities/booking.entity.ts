@@ -7,7 +7,6 @@ import {
     UpdateDateColumn,
 } from 'typeorm' // Pour définir les entités TypeORM
 import {
-    ArgsType,
     Field,
     Float,
     GraphQLISODateTime,

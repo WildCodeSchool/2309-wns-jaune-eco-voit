@@ -1,4 +1,4 @@
-import { Arg, Args, Mutation, Query, Resolver } from 'type-graphql'
+import { Arg, Mutation, Query, Resolver } from 'type-graphql'
 import BookingService from '../services/bookings.service'
 import { BookingEntity, CreateBookingInput } from '../entities/booking.entity'
 
