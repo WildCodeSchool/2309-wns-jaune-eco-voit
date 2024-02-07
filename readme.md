@@ -2,7 +2,7 @@
 
 ## Règles
 
-- Ex nom de branch: `BACK-ECOVOIT-4156`
+- Ex nom de branch: `BACK-4156-nom-de-la-feature`
 - Ex num d'US :
   `[ECOVOIT-4156][FRONT] simplifier l'auto complete`
 - Etape de vie d'une US:
