@@ -177,6 +177,7 @@ export class UpdateUserInput {
 export class LoginInput {
     @Field()
     email: string
+    @Field()
     password: string
 }
 
