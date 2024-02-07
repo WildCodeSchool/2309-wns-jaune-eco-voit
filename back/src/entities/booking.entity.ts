@@ -70,6 +70,7 @@ export class BookingEntity {
 }
 
 // --------- INPUTS ------------ //
+@ObjectType()
 @InputType()
 export class PartialBookingInput {
     @Field(() => ID)
@@ -90,11 +91,19 @@ export class CreateBookingInput {
     @Field()
     steps: PartialBookingInput[]
 
+<<<<<<< HEAD
     @Field()
     user: PartialBookingInput
 
     @Field()
     journey: PartialBookingInput
+=======
+  @Field(() => PartialBookingInput)
+  user: PartialBookingInput;
+
+  @Field(() => PartialBookingInput)
+  journey: PartialBookingInput;
+>>>>>>> dc9b5eec (fin)
 }
 
 @InputType()
