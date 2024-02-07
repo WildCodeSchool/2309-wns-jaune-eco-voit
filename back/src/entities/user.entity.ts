@@ -153,7 +153,7 @@ export class UpdateUserInput {
   lastname: string;
   @Field({ nullable: true })
   email: string;
-  @Field()
+  @Field({ nullable: true })
   password: string;
   @Field({ nullable: true })
   dateOfBirth: string;
@@ -171,13 +171,10 @@ export class UpdateUserInput {
   status: Status;
 }
 
-@ArgsType()
-export class UpdateUserInputId {
-  @Field()
+@InputType()
+export class UpdateUserInputId extends UpdateUserInput {
+  @Field(() => ID)
   id: string;
-
-  @Field()
-  data: UpdateUserInput;
 }
 
 @InputType()
@@ -185,4 +182,20 @@ export class ArchiveUserInput {
   @Field()
   status: "ARCHIVED";
 >>>>>>> 559d9fab (correct)
+}
+
+@InputType()
+export class LoginInput {
+  @Field()
+  email: string;
+  password: string;
+}
+
+@ObjectType()
+export class UserMessage {
+  @Field()
+  success: boolean;
+
+  @Field()
+  message: string;
 }
