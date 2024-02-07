@@ -91,19 +91,11 @@ export class CreateBookingInput {
     @Field()
     steps: PartialBookingInput[]
 
-<<<<<<< HEAD
-    @Field()
+    @Field(() => PartialBookingInput)
     user: PartialBookingInput
 
-    @Field()
+    @Field(() => PartialBookingInput)
     journey: PartialBookingInput
-=======
-  @Field(() => PartialBookingInput)
-  user: PartialBookingInput;
-
-  @Field(() => PartialBookingInput)
-  journey: PartialBookingInput;
->>>>>>> dc9b5eec (fin)
 }
 
 @InputType()
