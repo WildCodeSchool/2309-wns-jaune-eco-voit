@@ -6,7 +6,6 @@ import { expressMiddleware } from '@apollo/server/express4'
 import cors from 'cors'
 
 import BookingResolver from './resolvers/booking.resolver'
-// import UserResolver from './resolvers/user.resolver'
 // import JourneyResolver from './resolvers/journey.resolver'
 import { ApolloServer } from '@apollo/server'
 import db from './db'
