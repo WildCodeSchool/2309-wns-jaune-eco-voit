@@ -36,7 +36,7 @@ export class JourneyResolver {
   // UPDATE JOURNEY
   @Mutation(() => JourneyEntity)
   async updateJourney(@Arg("id") id: string, @Arg("data") data: UpdateJourneyInput) {
-    console.log('DATA', id);
+    console.log('DATA', data);
     return await new JourneysService().updateJourney(id, data)
   }
 
