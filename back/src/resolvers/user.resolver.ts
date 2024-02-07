@@ -13,12 +13,7 @@ import UsersService from '../services/users.service'
 export default class UserResolver {
     @Query(() => [UserEntity])
     async listUsers() {
-        const users = await new UsersService().listUser()
-
-        if (!users) {
-            throw new Error('No data found')
-        }
-        return users
+        return await new UsersService().listUser()
     }
 
     @Query(() => UserEntity)
