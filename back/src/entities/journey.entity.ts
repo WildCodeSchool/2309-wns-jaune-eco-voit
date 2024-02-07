@@ -33,13 +33,13 @@ export class JourneyEntity {
   @ManyToOne(() => UserEntity, (u) => u.journeys)
   user: UserEntity;
 
-  @Field(() => VehiculeEntity)
-  @ManyToOne(() => VehiculeEntity, (v) => v.journeys)
-  vehicule: VehiculeEntity;
+  // @Field(() => VehiculeEntity)
+  // @ManyToOne(() => VehiculeEntity, (v) => v.journeys)
+  // vehicule: VehiculeEntity;
 
-  @Field(() => [MessageEntity])
-  @OneToMany(() => MessageEntity, (m) => m.journey)
-  messages: MessageEntity[];
+  // @Field(() => [MessageEntity])
+  // @OneToMany(() => MessageEntity, (m) => m.journey)
+  // messages: MessageEntity[];
 
   // @Field(() => [StepEntity])
   // @OneToMany(() => StepEntity, (s) => s.journey)
@@ -52,6 +52,10 @@ export class JourneyEntity {
   @Field()
   @Column({ length: 50 })
   destination: string;
+
+  @Field()
+  @Column()
+  price: number;
 
   @Field()
   @Column("timestamp")
@@ -89,11 +93,13 @@ export class JourneyEntity {
 /**============================================
  *?               Inputs
  *=============================================**/
-@InputType()
-export class PartialVehiculeInput {
-  @Field(() => ID)
-  id: string;
-}
+
+// Ne pas oublier d'enlever les commentaires
+// @InputType()
+// export class PartialVehiculeInput {
+//   @Field(() => ID)
+//   id: string;
+// }
 
 @InputType()
 export class PartialUserInput {
@@ -103,17 +109,54 @@ export class PartialUserInput {
 
 @InputType()
 export class CreateJourneyInput {
+  // @Field()
+  // vehicule: PartialVehiculeInput;
+
   @Field()
-  vehicule: PartialVehiculeInput;
+  departure_time: Date;
+
+  @Field()
+  arrival_time: Date;
+
+  @Field()
+  origin: string;
+
+  @Field()
+  destination: string;
+
+  @Field()
+  price: number;
+
+  @Field({ nullable: true })
+  automaticAccept: boolean;
+
   @Field()
   user: PartialUserInput;
-  @Field()
-  automaticAccept: boolean;
 }
 
 @InputType()
 export class UpdateJourneyInput {
+
+  @Field(() => ID)
+  id: string;
+
   @Field({ nullable: true })
-  status: JourneyStatus;
-  vehicule: PartialVehiculeInput;
+  departure_time: Date;
+
+  @Field({ nullable: true })
+  arrival_time: Date;
+
+  @Field({ nullable: true })
+  origin: string;
+
+  @Field({ nullable: true })
+  destination: string;
+
+  @Field({ nullable: true })
+  price: number;
+
+  @Field({ nullable: true })
+  automaticAccept: boolean;
+
+  // vehicule: PartialVehiculeInput;
 }
