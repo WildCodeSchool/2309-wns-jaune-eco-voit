@@ -96,29 +96,29 @@ export class UserEntity {
     @UpdateDateColumn()
     updatedAt: Date
 
-    // @Field(() => [AddressEntity])
-    // @OneToMany(() => AddressEntity, (a) => a.user)
-    // addresses: AddressEntity[]
+  // @Field(() => [AddressEntity])
+  // @OneToMany(() => AddressEntity, (a) => a.user)
+  // addresses: AddressEntity[];
 
     @Field(() => JourneyEntity)
     @OneToMany(() => JourneyEntity, (j) => j.user)
     journeys: JourneyEntity[]
 
-    // @Field(() => [RatingEntity])
-    // @OneToMany(() => RatingEntity, (r) => r.booking)
-    // ratings: RatingEntity[]
+  // @Field(() => [RatingEntity])
+  // @OneToMany(() => RatingEntity, (r) => r.booking)
+  // ratings: RatingEntity[];
 
     @Field(() => [BookingEntity])
     @OneToMany(() => BookingEntity, (b) => b.user)
     bookings: BookingEntity[]
 
-    // @Field(() => [VehiculeEntity])
-    // @OneToMany(() => VehiculeEntity, (v) => v.user)
-    // vehicules: VehiculeEntity[]
+  // @Field(() => [VehiculeEntity])
+  // @OneToMany(() => VehiculeEntity, (v) => v.user)
+  // vehicules: VehiculeEntity[];
 
-    // @Field(() => [MessageEntity])
-    // @OneToMany(() => MessageEntity, (m) => m.user)
-    // messages: MessageEntity[]
+  // @Field(() => [MessageEntity])
+  // @OneToMany(() => MessageEntity, (m) => m.user)
+  // messages: MessageEntity[];
 }
 
 // -------------- INPUTS -------------- //
@@ -145,24 +145,24 @@ export class CreateUserInput {
 
 @InputType()
 export class UpdateUserInput {
-    @Field(() => ID)
-    id: string
-    @Field({ nullable: true })
-    firstname: string
-    @Field({ nullable: true })
-    lastname: string
-    @Field({ nullable: true })
-    email: string
-    @Field()
-    password: string
-    @Field({ nullable: true })
-    dateOfBirth: string
-    @Field({ nullable: true })
-    phoneNumber: string
-    @Field({ nullable: true })
-    profilePicture: string
-    @Field({ nullable: true })
-    role: Role
-    @Field({ nullable: true })
-    grade: Grade
+  @Field(() => ID)
+  id: string;
+  @Field({ nullable: true })
+  firstname: string;
+  @Field({ nullable: true })
+  lastname: string;
+  @Field({ nullable: true })
+  email: string;
+  @Field()
+  password: string;
+  @Field({ nullable: true })
+  dateOfBirth: string;
+  @Field({ nullable: true })
+  phoneNumber: string;
+  @Field({ nullable: true })
+  profilePicture: string;
+  @Field({ nullable: true })
+  role: Role;
+  @Field({ nullable: true })
+  grade: Grade;
 }
