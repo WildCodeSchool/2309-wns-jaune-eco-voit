@@ -88,7 +88,7 @@ export class CreateBookingInput {
     @Field()
     status: Status
 
-    @Field()
+    @Field(() => [PartialBookingInput])
     steps: PartialBookingInput[]
 
     @Field(() => PartialBookingInput)
