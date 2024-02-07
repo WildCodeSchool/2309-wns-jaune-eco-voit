@@ -14,13 +14,15 @@ import {
   OneToMany,
   UpdateDateColumn,
 } from "typeorm";
-import { VehiculeEntity } from "../../later/vehicule.entity";
+// import { VehiculeEntity } from "../../later/vehicule.entity";
 import { UserEntity } from "./user.entity";
-import { MessageEntity } from "../../later/message.entity";
-import { StepEntity } from "../../later/step.entity";
+// import { MessageEntity } from "../../later/message.entity";
+// import { StepEntity } from "../../later/step.entity";
 import { BookingEntity } from "./booking.entity";
+import { Min } from "class-validator";
+import { Float } from "type-graphql";
 
-type JourneyStatus = "PLANNED" | "CANCELLED" | "DONE";
+export type JourneyStatus = "PLANNED" | "CANCELLED" | "DONE";
 
 @ObjectType()
 @Entity()
@@ -53,9 +55,10 @@ export class JourneyEntity {
   @Column({ length: 50 })
   destination: string;
 
-  @Field()
-  @Column()
-  price: number;
+  @Field(() => Float)
+  @Column({ type: 'float' })
+  @Min(0.1)
+  totalPrice: number
 
   @Field()
   @Column("timestamp")
@@ -124,13 +127,13 @@ export class CreateJourneyInput {
   @Field()
   destination: string;
 
-  @Field()
-  price: number;
+  @Field(() => Float)
+  totalPrice: number;
 
-  @Field({ nullable: true })
+  @Field()
   automaticAccept: boolean;
 
-  @Field()
+  @Field(() => PartialUserInput)
   user: PartialUserInput;
 }
 
@@ -141,22 +144,25 @@ export class UpdateJourneyInput {
   id: string;
 
   @Field({ nullable: true })
-  departure_time: Date;
+  departure_time?: Date;
 
   @Field({ nullable: true })
-  arrival_time: Date;
+  arrival_time?: Date;
 
   @Field({ nullable: true })
-  origin: string;
+  origin?: string;
 
   @Field({ nullable: true })
-  destination: string;
+  destination?: string;
+
+  @Field(() => Float, { nullable: true })
+  totalPrice?: number;
 
   @Field({ nullable: true })
-  price: number;
+  automaticAccept?: boolean;
 
   @Field({ nullable: true })
-  automaticAccept: boolean;
+  status: JourneyStatus;
 
   // vehicule: PartialVehiculeInput;
 }

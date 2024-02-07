@@ -1,7 +1,7 @@
 import { Repository } from "typeorm";
 
 import DataSource from "../db";
-import { JourneyEntity, CreateJourneyInput, UpdateJourneyInput } from "../entities/journey.entity";
+import { JourneyEntity, CreateJourneyInput, UpdateJourneyInput, JourneyStatus } from "../entities/journey.entity";
 import { validate } from "class-validator";
 
 
@@ -34,30 +34,27 @@ export default class JourneysService {
 
   }
 
-  async updateJourney(id: string, data: Omit<UpdateJourneyInput, 'id'>) {
-    const journey = await this.findJourneyById(id);
-    if (!journey) {
+  async updateJourney(data: UpdateJourneyInput) {
+    const { id, ...infos } = data;
+    const journeyToUpdate = await this.findJourneyById(id);
+    if (!journeyToUpdate) {
       throw new Error('Journey not found')
     }
-    Object.assign(journey, data);
 
-    const journeyToSave = this.db.merge(journey, {
-      ...data,
-      id: journey.id
-    })
+    const journeyToSave = this.db.merge(journeyToUpdate, infos)
 
     const errors = await validate(journeyToSave);
     if (errors.length > 0) {
       console.log(errors)
       throw new Error('Journey Update Validation failed');
     }
-    return await this.db.save(journey);
+    return await this.db.save(journeyToUpdate);
 
   }
 
-  async cancelJourney(id: string) {
+  async updateJourneyStatus(id: string, status: JourneyStatus) {
     const journey = await this.findJourneyById(id);
-    journey.status = 'CANCELLED';
+    journey.status = status;
     return this.db.save(journey);
   }
 }

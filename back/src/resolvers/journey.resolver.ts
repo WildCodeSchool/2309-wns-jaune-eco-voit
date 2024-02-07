@@ -1,24 +1,25 @@
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import JourneysService from "../services/journeys.service";
 
-import { JourneyEntity, CreateJourneyInput, UpdateJourneyInput } from "../entities/journey.entity";
+import { JourneyEntity, CreateJourneyInput, UpdateJourneyInput, JourneyStatus } from "../entities/journey.entity";
+
+
+type changeStatus = {
+  id: string,
+  statusFromData: JourneyStatus
+}
 
 @Resolver()
 export class JourneyResolver {
   // LIST ALL JOURNEYS
   @Query(() => [JourneyEntity])
   async listJourneys() {
-    const journeys = await new JourneysService().listJourneys();
-    return journeys;
+    return await new JourneysService().listJourneys();
   }
 
   // FIND JOURNEY BY ID
   @Query(() => JourneyEntity)
   async findJourneyById(@Arg("id") id: string) {
-
-    if (isNaN(+id)) {
-      throw new Error('Invalid id');
-    }
 
     const journey = await new JourneysService().findJourneyById(id);
     if (!journey) {
@@ -35,14 +36,15 @@ export class JourneyResolver {
 
   // UPDATE JOURNEY
   @Mutation(() => JourneyEntity)
-  async updateJourney(@Arg("id") id: string, @Arg("data") data: UpdateJourneyInput) {
-    console.log('DATA', data);
-    return await new JourneysService().updateJourney(id, data)
+  async updateJourney(@Arg("data") data: UpdateJourneyInput) {
+
+    return await new JourneysService().updateJourney(data)
   }
 
-  // CANCEL JOURNEY
+  // UPDATE JOURNEY STATUS
   @Mutation(() => JourneyEntity)
-  async cancelJourney(@Arg("id") id: string) {
-    return await new JourneysService().cancelJourney(id);
+  async updateJourneyStatus(@Arg("data") data: UpdateJourneyInput) {
+    const { id, status } = data;
+    return await new JourneysService().updateJourneyStatus(id, status);
   }
 }
