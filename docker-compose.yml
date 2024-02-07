@@ -16,15 +16,17 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
     # 'depends-on' > dit qu'un service dépend d'un autre
+    env_file:
+      - back/.env
     depends_on:
       # Nom du service du quel backend dépend
       db:
         # La db doit avoir été démarrer et etre considérée comme healthy (voir health check dans db service)
         condition: service_healthy
-
+    
   db:
     # on utilise l'image officiel de postgres
-    image: postgres:lastest
+    image: postgres:15
     # permet à la db de redémarrer en cas d'erreur/pb
     restart: always
     # "healthcheck" exécute des tests et renvoie l'état de santé de la DB (boolean).
@@ -38,15 +40,13 @@ services:
       # Le nombre max d'essai consécutif. Après ça, le container est considéré comme unhealthy
       retries: 10
     env_file:
-      - ./backend/.env
+      - back/.env
     ports:
       - 5433:5432
     volumes:
       - ecovoit-data:/var/lib/postgresql/data
   adminer:
     image: adminer
-    depends_on:
-      - db
     restart: always
     ports:
       - 8080:8080

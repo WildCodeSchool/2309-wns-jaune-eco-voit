@@ -1,4 +1,3 @@
-import { EmailAddress, PhoneNumber } from 'graphql-scalars/typings/mocks'
 import {
     Field,
     GraphQLISODateTime,
@@ -16,6 +15,7 @@ import {
 } from 'typeorm'
 import { JourneyEntity } from './journey.entity'
 import { BookingEntity } from './booking.entity'
+import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
 
 export type Role = 'USER' | 'ADMIN'
 export type Grade = 'BEGINNER' | 'CONFIRMED' | 'AMBASSADOR'
@@ -36,7 +36,7 @@ export class UserEntity {
     @Column({ length: 50 })
     lastname: string
 
-    @Field(() => EmailAddress)
+    @Field(() => GraphQLEmailAddress)
     @Column({ length: 50 })
     email: string
 
@@ -48,7 +48,7 @@ export class UserEntity {
     @Column({ type: 'timestamptz' })
     dateOfBirth: Date
 
-    @Field(() => PhoneNumber)
+    @Field(() => GraphQLPhoneNumber)
     @Column()
     phoneNumber: string
 
