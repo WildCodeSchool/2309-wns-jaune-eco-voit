@@ -74,11 +74,11 @@ export class UserEntity {
 
     @Field()
     @Column({ default: 0 })
-    tripsAsPassenger?: number
+    tripsAsPassenger: number
 
     @Field()
     @Column({ default: 0 })
-    tripsAsDriver?: number
+    tripsAsDriver: number
 
     @Field()
     @Column({

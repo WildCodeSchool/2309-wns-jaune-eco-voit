@@ -14,10 +14,15 @@ import {
     OneToMany,
     UpdateDateColumn,
 } from 'typeorm'
+// import { VehiculeEntity } from "../../later/vehicule.entity";
 import { UserEntity } from './user.entity'
+// import { MessageEntity } from "../../later/message.entity";
+// import { StepEntity } from "../../later/step.entity";
 import { BookingEntity } from './booking.entity'
+import { Min } from 'class-validator'
+import { Float } from 'type-graphql'
 
-type JourneyStatus = 'PLANNED' | 'CANCELLED' | 'DONE'
+export type JourneyStatus = 'PLANNED' | 'CANCELLED' | 'DONE'
 
 @ObjectType()
 @Entity()
@@ -32,11 +37,11 @@ export class JourneyEntity {
 
     // @Field(() => VehiculeEntity)
     // @ManyToOne(() => VehiculeEntity, (v) => v.journeys)
-    // vehicule: VehiculeEntity
+    // vehicule: VehiculeEntity;
 
     // @Field(() => [MessageEntity])
     // @OneToMany(() => MessageEntity, (m) => m.journey)
-    // messages: MessageEntity[]
+    // messages: MessageEntity[];
 
     // @Field(() => [StepEntity])
     // @OneToMany(() => StepEntity, (s) => s.journey)
@@ -50,6 +55,11 @@ export class JourneyEntity {
     @Column({ length: 50 })
     destination: string
 
+    @Field(() => Float)
+    @Column({ type: 'float' })
+    @Min(0.1)
+    totalPrice: number
+
     @Field()
     @Column('timestamp')
     departure_time: Date
@@ -58,7 +68,7 @@ export class JourneyEntity {
     @Column('timestamp')
     arrival_time: Date
 
-    @Field(() => [BookingEntity], { nullable: true })
+    @Field(() => [BookingEntity])
     @OneToMany(() => BookingEntity, (b) => b.journey)
     bookings?: BookingEntity[]
 
@@ -86,11 +96,13 @@ export class JourneyEntity {
 /**============================================
  *?               Inputs
  *=============================================**/
-@InputType()
-export class PartialVehiculeInput {
-    @Field(() => ID)
-    id: string
-}
+
+// Ne pas oublier d'enlever les commentaires
+// @InputType()
+// export class PartialVehiculeInput {
+//   @Field(() => ID)
+//   id: string;
+// }
 
 @InputType()
 export class PartialUserInput {
@@ -100,17 +112,64 @@ export class PartialUserInput {
 
 @InputType()
 export class CreateJourneyInput {
+    // @Field()
+    // vehicule: PartialVehiculeInput;
+
     @Field()
-    vehicule: PartialVehiculeInput
+    departure_time: Date
+
     @Field()
-    user: PartialUserInput
+    arrival_time: Date
+
+    @Field()
+    origin: string
+
+    @Field()
+    destination: string
+
+    @Field(() => Float)
+    totalPrice: number
+
     @Field()
     automaticAccept: boolean
+
+    @Field(() => PartialUserInput)
+    user: PartialUserInput
 }
 
 @InputType()
 export class UpdateJourneyInput {
+    @Field(() => ID)
+    id: string
+
     @Field({ nullable: true })
+    departure_time?: Date
+
+    @Field({ nullable: true })
+    arrival_time?: Date
+
+    @Field({ nullable: true })
+    origin?: string
+
+    @Field({ nullable: true })
+    destination?: string
+
+    @Field(() => Float, { nullable: true })
+    totalPrice?: number
+
+    @Field({ nullable: true })
+    automaticAccept?: boolean
+
+    @Field({ nullable: true })
+    status?: JourneyStatus
+
+    // vehicule: PartialVehiculeInput;
+}
+
+@InputType()
+export class UpdateJourneyStatusInput {
+    @Field(() => ID)
+    id: string
+    @Field()
     status: JourneyStatus
-    vehicule: PartialVehiculeInput
 }

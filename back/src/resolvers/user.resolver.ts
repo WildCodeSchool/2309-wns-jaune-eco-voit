@@ -83,6 +83,7 @@ export default class UserResolver {
         const usersService = new UsersService()
         const user = await usersService.findUserById(id)
         if (!user) return new Error('Utilisateur inconnu')
+
         return new UsersService().updateUser({
             id,
             tripsAsPassenger: user.tripsAsPassenger++,
