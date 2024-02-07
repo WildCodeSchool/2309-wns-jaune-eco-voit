@@ -165,4 +165,24 @@ export class UpdateUserInput {
   role: Role;
   @Field({ nullable: true })
   grade: Grade;
+<<<<<<< HEAD
+=======
+  @Field({ nullable: true })
+  status: Status;
+}
+
+@ArgsType()
+export class UpdateUserInputId {
+  @Field()
+  id: string;
+
+  @Field()
+  data: UpdateUserInput;
+}
+
+@InputType()
+export class ArchiveUserInput {
+  @Field()
+  status: "ARCHIVED";
+>>>>>>> 559d9fab (correct)
 }
