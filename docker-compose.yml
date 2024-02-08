@@ -23,7 +23,7 @@ services:
       db:
         # La db doit avoir été démarrer et etre considérée comme healthy (voir health check dans db service)
         condition: service_healthy
-    
+
   db:
     # on utilise l'image officiel de postgres
     image: postgres:15
@@ -32,7 +32,7 @@ services:
     # "healthcheck" exécute des tests et renvoie l'état de santé de la DB (boolean).
     healthcheck:
       # les commandes à executer pour run le health check.
-      test: ["CMD-SHELL", "pg_isready -d ecovoit -U ecovoit_user"]
+      test: [ "CMD-SHELL", "pg_isready -d ecovoit -U ecovoit_user" ]
       # le temps entre chaque execution du health check
       interval: 5s
       # Le temps max que doit prendre l'execution du health check
@@ -43,6 +43,27 @@ services:
       - back/.env
     ports:
       - 5433:5432
+    volumes:
+      - ecovoit-data:/var/lib/postgresql/data
+  db_test:
+    # on utilise l'image officiel de postgres
+    image: postgres:15
+    # permet à la db de redémarrer en cas d'erreur/pb
+    restart: always
+    # "healthcheck" exécute des tests et renvoie l'état de santé de la DB (boolean).
+    healthcheck:
+      # les commandes à executer pour run le health check.
+      test: [ "CMD-SHELL", "pg_isready -d ecovoit -U ecovoit_user" ]
+      # le temps entre chaque execution du health check
+      interval: 5s
+      # Le temps max que doit prendre l'execution du health check
+      timeout: 5s
+      # Le nombre max d'essai consécutif. Après ça, le container est considéré comme unhealthy
+      retries: 10
+    env_file:
+      - back/.env
+    ports:
+      - 5435:5432
     volumes:
       - ecovoit-data:/var/lib/postgresql/data
   adminer:

@@ -48,11 +48,11 @@ export class UserEntity {
     @Column({ type: 'timestamptz' })
     dateOfBirth: Date
 
-    @Field(() => GraphQLPhoneNumber)
+    @Field(() => GraphQLPhoneNumber, { nullable: true })
     @Column()
     phoneNumber?: string
 
-    @Field()
+    @Field({ nullable: true })
     @Column()
     profilPicture?: string
 
@@ -100,7 +100,7 @@ export class UserEntity {
     // @OneToMany(() => AddressEntity, (a) => a.user)
     // addresses: AddressEntity[];
 
-    @Field(() => JourneyEntity, { nullable: true })
+    @Field(() => [JourneyEntity], { nullable: true })
     @OneToMany(() => JourneyEntity, (j) => j.user)
     journeys?: JourneyEntity[]
 

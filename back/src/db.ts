@@ -8,6 +8,6 @@ export default new DataSource({
     password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_DB,
     synchronize: true, //en dev, en prod on préfera utiliser les migrations
-    logging: ['query', 'error'],
+    // logging: ['query', 'error'],
     entities: ['src/entities/*.ts'],
 })
