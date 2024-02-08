@@ -37,7 +37,7 @@ export class UserEntity {
     lastname: string
 
     @Field(() => GraphQLEmailAddress)
-    @Column({ length: 50 })
+    @Column({ length: 50, unique: true })
     email: string
 
     @Field()
