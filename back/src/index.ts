@@ -32,8 +32,11 @@ async function main() {
         expressMiddleware(server, {}) // intégre Apollo Server à Express
     )
     await db.initialize()
-    await new Promise<void>((resolve) =>
+
+    await new Promise<void>((resolve) => {
         httpServer.listen({ port: 4000 }, resolve)
+        console.log('Server is running on port', 4000)
+    }
     )
 }
 main()

@@ -65,7 +65,7 @@ services:
     ports:
       - 5435:5432
     volumes:
-      - ecovoit-data:/var/lib/postgresql/data
+      - ecovoit-data-test:/var/lib/postgresql/data
   adminer:
     image: adminer
     restart: always
@@ -76,3 +76,4 @@ services:
 
 volumes:
   ecovoit-data:
+  ecovoit-data-test:
