@@ -51,7 +51,7 @@ export default class UsersService {
     async updateUser(data: UpdateUserInput) {
         const { id, ...body } = data
 
-        const userToUpdate = await this.db.findOneBy({ id })
+        const userToUpdate = await this.findUserById(id)
 
         if (!userToUpdate) {
             throw new Error('User not found')
@@ -64,11 +64,6 @@ export default class UsersService {
             throw new Error('Something wrong with the body validation')
         }
 
-        await this.db.save(userUpdated)
-
-        return await this.db.findOne({
-            where: { id },
-            relations: { journeys: true, bookings: true },
-        })
+        return this.db.save(userUpdated)
     }
 }

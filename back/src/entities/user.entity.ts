@@ -37,7 +37,7 @@ export class UserEntity {
     lastname: string
 
     @Field(() => GraphQLEmailAddress)
-    @Column({ length: 50 })
+    @Column({ length: 50, unique: true })
     email: string
 
     @Field()
@@ -48,12 +48,12 @@ export class UserEntity {
     @Column({ type: 'timestamptz' })
     dateOfBirth: Date
 
-    @Field(() => GraphQLPhoneNumber)
-    @Column()
+    @Field(() => GraphQLPhoneNumber, { nullable: true })
+    @Column({ nullable: true })
     phoneNumber?: string
 
-    @Field()
-    @Column()
+    @Field({ nullable: true })
+    @Column({ nullable: true })
     profilPicture?: string
 
     @Field()
@@ -93,14 +93,14 @@ export class UserEntity {
     createdAt: Date
 
     @Field(() => GraphQLISODateTime, { nullable: true })
-    @UpdateDateColumn()
+    @UpdateDateColumn({ nullable: true })
     updatedAt?: Date
 
     // @Field(() => [AddressEntity])
     // @OneToMany(() => AddressEntity, (a) => a.user)
     // addresses: AddressEntity[];
 
-    @Field(() => JourneyEntity, { nullable: true })
+    @Field(() => [JourneyEntity], { nullable: true })
     @OneToMany(() => JourneyEntity, (j) => j.user)
     journeys?: JourneyEntity[]
 
@@ -133,14 +133,14 @@ export class CreateUserInput {
     email: string
     @Field()
     password: string
-    @Field()
-    dateOfBirth: string
+    @Field(() => GraphQLISODateTime)
+    dateOfBirth: Date
     @Field({ nullable: true })
-    phoneNumber: string
+    phoneNumber?: string
     @Field({ nullable: true })
-    profilePicture: string
+    profilePicture?: string
     @Field({ nullable: true })
-    role: Role
+    role?: Role
 }
 
 @InputType()
@@ -155,8 +155,8 @@ export class UpdateUserInput {
     email?: string
     @Field({ nullable: true })
     password?: string
-    @Field({ nullable: true })
-    dateOfBirth?: string
+    @Field(() => GraphQLISODateTime, { nullable: true })
+    dateOfBirth?: Date
     @Field(() => GraphQLPhoneNumber, { nullable: true })
     phoneNumber?: string
     @Field({ nullable: true })
