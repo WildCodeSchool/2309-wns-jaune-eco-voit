@@ -1,11 +1,27 @@
-import { ApolloServer } from "@apollo/server"
-import { buildSchemaSync } from "type-graphql";
-import UserResolver from "../src/resolvers/user.resolver";
-import { UserEntity } from "../src/entities/user.entity";
-import { addMocksToSchema } from "@graphql-tools/mock";
-import assert from "assert";
+import { ApolloServer } from '@apollo/server'
+import { buildSchemaSync } from 'type-graphql'
+import UserResolver from '../src/resolvers/user.resolver'
+import { UserEntity } from '../src/entities/user.entity'
+import { addMocksToSchema } from '@graphql-tools/mock'
+import assert from 'assert'
 
-let server: ApolloServer;
+type ResponseData = {
+    listUsers: UserEntity[]
+}
+
+type ResponseOneUser = {
+    findUserByIdId: UserEntity
+}
+
+let server: ApolloServer
+
+// to delete all Dates from the object (Jest doesn't accept to compare Dates)
+const mapData = (ary: UserEntity[]) => {
+    return ary.map((el) => {
+        const { dateOfBirth, createdAt, ...rest } = el
+        return rest
+    })
+}
 
 const baseSchema = buildSchemaSync({
     resolvers: [UserResolver],
@@ -27,7 +43,6 @@ query ListUsers {
     lastname
     email
     password
-    dateOfBirth
     # phoneNumber
     # profilPicture
     role
@@ -35,7 +50,6 @@ query ListUsers {
     tripsAsPassenger
     tripsAsDriver
     status
-    createdAt
     # updatedAt
     # journeys {
       
@@ -46,9 +60,22 @@ query ListUsers {
   }
 }`
 
-type ResponseData = {
-    users: UserEntity[]
-}
+export const FIND_USER_BY_ID = `#graphql
+query FindUserById($findUserByIdId: String!) {
+    findUserById(id: $findUserByIdId) {
+      id
+      firstname
+      lastname
+      email
+      password
+      role
+      grade
+      tripsAsPassenger
+      tripsAsDriver
+      status
+    }
+  }
+`
 
 const usersData: UserEntity[] = [
     {
@@ -81,33 +108,55 @@ const usersData: UserEntity[] = [
     },
 ]
 
-
-
+// On a laissé listUsers dans mocks, et on créé un resolvers pour findUserById puisqu'on a besoin de lui passer un paramètre.
 beforeAll(() => {
     const mocks = {
         Query: {
-            listUsers(){
+            listUsers() {
                 return usersData
-            }
-        }
+            },
+        },
     }
+    const resolvers = () => ({
+        Query: {
+            findUserById(_: any, args: { id: string }) {
+                return usersData.find((user) => user.id === args.id)
+            },
+        },
+    })
     // server = new ApolloServer({
     //     schema: baseSchema
     // })
     server = new ApolloServer({
-        schema: addMocksToSchema({ schema: baseSchema, mocks})
+        schema: addMocksToSchema({
+            schema: baseSchema,
+            mocks,
+            resolvers: resolvers as unknown as ReturnType<typeof resolvers> &
+                typeof mocks,
+        }),
     })
 })
 
-describe('Test sur les Users' , () => {
-    it("premier test", async () => {
+describe('Test sur les Users', () => {
+    it('premier test', async () => {
         const response = await server.executeOperation<ResponseData>({
-            query: LIST_USERS
+            query: LIST_USERS,
         })
-        console.log("RESPONSE LIST USER", JSON.stringify(response))
-        assert(response.body.kind === 'single');
+        assert(response.body.kind === 'single')
         expect(response.body.singleResult.data).toEqual({
-            users: usersData,
+            listUsers: mapData(usersData),
+        })
+    })
+    it('find user by id', async () => {
+        const response = await server.executeOperation<ResponseOneUser>({
+            query: FIND_USER_BY_ID,
+            variables: {
+                findUserByIdId: 'abcd',
+            },
+        })
+        assert(response.body.kind === 'single')
+        expect(response.body.singleResult.data).toEqual({
+            findUserById: mapData(usersData)[0],
         })
     })
 })
