@@ -49,11 +49,11 @@ export class UserEntity {
     dateOfBirth: Date
 
     @Field(() => GraphQLPhoneNumber, { nullable: true })
-    @Column()
+    @Column({ nullable: true })
     phoneNumber?: string
 
     @Field({ nullable: true })
-    @Column()
+    @Column({ nullable: true })
     profilPicture?: string
 
     @Field()
@@ -93,7 +93,7 @@ export class UserEntity {
     createdAt: Date
 
     @Field(() => GraphQLISODateTime, { nullable: true })
-    @UpdateDateColumn()
+    @UpdateDateColumn({ nullable: true })
     updatedAt?: Date
 
     // @Field(() => [AddressEntity])
