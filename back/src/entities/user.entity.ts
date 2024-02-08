@@ -133,14 +133,14 @@ export class CreateUserInput {
     email: string
     @Field()
     password: string
-    @Field()
-    dateOfBirth: string
+    @Field(() => GraphQLISODateTime)
+    dateOfBirth: Date
     @Field({ nullable: true })
-    phoneNumber: string
+    phoneNumber?: string
     @Field({ nullable: true })
-    profilePicture: string
+    profilePicture?: string
     @Field({ nullable: true })
-    role: Role
+    role?: Role
 }
 
 @InputType()
@@ -155,8 +155,8 @@ export class UpdateUserInput {
     email?: string
     @Field({ nullable: true })
     password?: string
-    @Field({ nullable: true })
-    dateOfBirth?: string
+    @Field(() => GraphQLISODateTime, { nullable: true })
+    dateOfBirth?: Date
     @Field(() => GraphQLPhoneNumber, { nullable: true })
     phoneNumber?: string
     @Field({ nullable: true })
