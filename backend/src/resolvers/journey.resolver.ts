@@ -8,14 +8,17 @@ import {
     UpdateJourneyStatusInput,
 } from '../entities/journey.entity'
 
-// Ajouter listJourneysByUser
-
 @Resolver()
 export class JourneyResolver {
     // LIST ALL JOURNEYS
     @Query(() => [JourneyEntity])
     async listJourneys() {
         return await new JourneysService().listJourneys()
+    }
+
+    @Query(() => [JourneyEntity])
+    async listJourneysByUser(@Arg('id') id: string) {
+        return await new JourneysService().listJourneysByUser(id)
     }
 
     // FIND JOURNEY BY ID
@@ -37,8 +40,7 @@ export class JourneyResolver {
     // UPDATE JOURNEY
     @Mutation(() => JourneyEntity)
     async updateJourney(@Arg('data') data: UpdateJourneyInput) {
-        // A terme il faudra vérifier qu'aucun booking n'existe sur cette journey
-
+        // TODO A terme il faudra vérifier qu'aucun booking n'existe sur cette journey
         return await new JourneysService().updateJourney(data)
     }
 

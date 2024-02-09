@@ -37,7 +37,7 @@ export default class UsersService {
         })
     }
 
-    async create(body: CreateUserInput) {
+    async createUser(body: CreateUserInput) {
         const newUser: UserEntity = this.db.create(body)
 
         const errors = await validate(newUser)
