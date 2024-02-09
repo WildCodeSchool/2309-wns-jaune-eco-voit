@@ -68,6 +68,10 @@ export class JourneyEntity {
     @Column('timestamp')
     arrival_time: Date
 
+    @Field()
+    @Column()
+    availableSeats: number
+
     @Field(() => [BookingEntity])
     @OneToMany(() => BookingEntity, (b) => b.journey)
     bookings?: BookingEntity[]
@@ -135,6 +139,9 @@ export class CreateJourneyInput {
 
     @Field(() => PartialUserInput)
     user: PartialUserInput
+
+    @Field()
+    availableSeats: number
 }
 
 @InputType()
@@ -162,6 +169,9 @@ export class UpdateJourneyInput {
 
     @Field({ nullable: true })
     status?: JourneyStatus
+
+    @Field({ nullable: true })
+    availableSeats?: number
 
     // vehicule: PartialVehiculeInput;
 }

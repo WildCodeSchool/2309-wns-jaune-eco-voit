@@ -40,6 +40,15 @@ export class JourneyResolver {
 
     // UPDATE JOURNEY STATUS
     @Mutation(() => JourneyEntity)
+    async decreaseAvailableSeats(@Arg('id') id: string) {
+        const journey = await new JourneysService().findJourneyById(id)
+        return await new JourneysService().updateJourney({
+            id,
+            availableSeats: journey.availableSeats - 1,
+        })
+    }
+
+    @Mutation(() => JourneyEntity)
     async updateJourneyStatus(@Arg('data') data: UpdateJourneyStatusInput) {
         const { id, status } = data
         return await new JourneysService().updateJourneyStatus(id, status)
