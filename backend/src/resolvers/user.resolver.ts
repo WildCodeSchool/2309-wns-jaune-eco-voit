@@ -65,7 +65,7 @@ export default class UserResolver {
             return message
         }
 
-        return await usersService.create(data)
+        return await usersService.createUser(data)
     }
 
     @Mutation(() => UserEntity)
