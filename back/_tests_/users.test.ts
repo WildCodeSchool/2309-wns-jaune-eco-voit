@@ -18,6 +18,7 @@ let server: ApolloServer
 // to delete all Dates from the object (Jest doesn't accept to compare Dates)
 const mapData = (ary: UserEntity[]) => {
     return ary.map((el) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { dateOfBirth, createdAt, ...rest } = el
         return rest
     })
@@ -119,7 +120,7 @@ beforeAll(() => {
     }
     const resolvers = () => ({
         Query: {
-            findUserById(_: any, args: { id: string }) {
+            findUserById(_: null, args: { id: string }) {
                 return usersData.find((user) => user.id === args.id)
             },
         },

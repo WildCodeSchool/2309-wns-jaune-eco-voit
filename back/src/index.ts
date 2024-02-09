@@ -36,7 +36,6 @@ async function main() {
     await new Promise<void>((resolve) => {
         httpServer.listen({ port: 4000 }, resolve)
         console.log('Server is running on port', 4000)
-    }
-    )
+    })
 }
 main()
