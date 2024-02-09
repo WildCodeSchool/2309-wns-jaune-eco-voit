@@ -1,10 +1,9 @@
-import Image from "next/image";
-import { Login } from "./ecovoit/login/login";
+"use client";
 
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <Login />
+      <h1>Accueil</h1>
     </main>
   );
 }

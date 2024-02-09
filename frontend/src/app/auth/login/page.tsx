@@ -1,12 +1,12 @@
 "use client";
 import { LoginInput, useLoginLazyQuery } from "@/types/graphql";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 
-export const Login = () => {
-  const router = useRouter();
+const Login = () => {
+  // const router = useRouter();
   const [login, { data, error }] = useLoginLazyQuery();
-  const [loginError, setLoginError] = useState("");
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   // Utiliser react hook form
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -17,11 +17,12 @@ export const Login = () => {
       login({
         variables: { data: { email: data.email, password: data.password } },
         onCompleted(data) {
+          console.log(data.login);
           if (!data.login.success) {
             setLoginError("Vérifiez vos informations");
             return;
           }
-          router.push("/");
+          setLoginError(null);
         },
       });
     }
@@ -42,8 +43,10 @@ export const Login = () => {
           />
         </div>
         <input type="submit" />
-        {loginError && loginError}
+        <div>{loginError && loginError}</div>
       </form>
     </div>
   );
 };
+
+export default Login;
