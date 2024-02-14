@@ -32,7 +32,7 @@ services:
     # "healthcheck" exécute des tests et renvoie l'état de santé de la DB (boolean).
     healthcheck:
       # les commandes à executer pour run le health check.
-      test: [ "CMD-SHELL", "pg_isready -d ecovoit -U ecovoit_user" ]
+      test: ["CMD-SHELL", "pg_isready -d ecovoit -U ecovoit_user"]
       # le temps entre chaque execution du health check
       interval: 5s
       # Le temps max que doit prendre l'execution du health check
@@ -45,6 +45,7 @@ services:
       - 5433:5432
     volumes:
       - ecovoit-data:/var/lib/postgresql/data
+
   db_test:
     # on utilise l'image officiel de postgres
     image: postgres:15
@@ -53,7 +54,7 @@ services:
     # "healthcheck" exécute des tests et renvoie l'état de santé de la DB (boolean).
     healthcheck:
       # les commandes à executer pour run le health check.
-      test: [ "CMD-SHELL", "pg_isready -d ecovoit -U ecovoit_user" ]
+      test: ["CMD-SHELL", "pg_isready -d ecovoit -U ecovoit_user"]
       # le temps entre chaque execution du health check
       interval: 5s
       # Le temps max que doit prendre l'execution du health check
@@ -66,6 +67,7 @@ services:
       - 5435:5432
     volumes:
       - ecovoit-data-test:/var/lib/postgresql/data
+
   adminer:
     image: adminer
     restart: always
@@ -73,6 +75,20 @@ services:
       - 8080:8080
   # pgadmin:
   # image: dpage/pgadmin4
+
+  frontend:
+    build: ./front
+    ports:
+      - 3000:3000
+    volumes:
+      - ./front/src:/app/src
+    environment:
+      - WDS_SOCKET_HOST=127.0.0.1
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+    # depends_on:
+    #   backend:
+    #     condition: service_healthy
 
 volumes:
   ecovoit-data:
