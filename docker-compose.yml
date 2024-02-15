@@ -79,7 +79,7 @@ services:
   frontend:
     build: ./front
     ports:
-      - 3000:3000
+      - 3002:3000
     volumes:
       - ./front/src:/app/src
     environment:

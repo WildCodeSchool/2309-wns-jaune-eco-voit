@@ -6,6 +6,7 @@ import {
     ObjectType,
 } from 'type-graphql'
 import {
+    BeforeInsert,
     Column,
     CreateDateColumn,
     Entity,
@@ -16,6 +17,7 @@ import {
 import { JourneyEntity } from './journey.entity'
 import { BookingEntity } from './booking.entity'
 import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
+import argon2 from 'argon2'
 
 export type Role = 'USER' | 'ADMIN'
 export type Grade = 'BEGINNER' | 'CONFIRMED' | 'AMBASSADOR'
@@ -24,6 +26,10 @@ export type Status = 'ARCHIVED' | 'ACTIVE'
 @ObjectType()
 @Entity()
 export class UserEntity {
+    @BeforeInsert()
+    private async hashPassword() {
+        this.password = await argon2.hash(this.password)
+    }
     @Field(() => ID)
     @PrimaryGeneratedColumn('uuid')
     id: string
@@ -191,7 +197,15 @@ export class UserMessage {
 }
 
 @ObjectType()
-export class UserWithoutPassord implements Pick<UserEntity, 'email'> {
+export class UserWithoutPassord
+    implements Pick<UserEntity, 'email' | 'firstname' | 'lastname'>
+{
+    @Field()
+    firstname: string
+
+    @Field()
+    lastname: string
+
     @Field(() => GraphQLEmailAddress)
     email: string
 }

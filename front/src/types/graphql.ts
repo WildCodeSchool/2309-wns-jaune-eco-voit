@@ -56,6 +56,7 @@ export type JourneyEntity = {
   __typename?: 'JourneyEntity';
   arrival_time: Scalars['DateTimeISO']['output'];
   automaticAccept: Scalars['Boolean']['output'];
+  availableSeats: Scalars['Float']['output'];
   bookings: Array<BookingEntity>;
   createdAt: Scalars['DateTimeISO']['output'];
   departure_time: Scalars['DateTimeISO']['output'];
