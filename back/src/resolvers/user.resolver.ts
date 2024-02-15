@@ -8,6 +8,7 @@ import {
     UserWithoutPassord,
 } from '../entities/user.entity'
 import UsersService from '../services/users.service'
+import argon2 from 'argon2'
 
 @Resolver(() => UserEntity)
 export default class UserResolver {
@@ -33,23 +34,25 @@ export default class UserResolver {
     @Query(() => UserMessage)
     async login(@Arg('data') data: LoginInput) {
         const userService = new UsersService()
+
         const user = await userService.findUserByEmail(data.email)
 
         const errorMessage = new UserMessage()
         errorMessage.success = false
         errorMessage.message = 'Vérifier vos informations'
 
+        if (!user) return errorMessage
+
+        const isPasswordValid = await argon2.verify(
+            user.password,
+            data.password
+        )
+
         const successMessage = new UserMessage()
         successMessage.success = true
         successMessage.message = 'Bienvenue !'
 
-        if (!user) {
-            return errorMessage
-        }
-
-        const isPasswordOk = data.password === user.password
-
-        return isPasswordOk ? successMessage : errorMessage
+        return isPasswordValid ? successMessage : errorMessage
     }
 
     @Mutation(() => UserWithoutPassord || UserMessage)
