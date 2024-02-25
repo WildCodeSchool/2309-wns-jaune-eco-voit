@@ -79,7 +79,6 @@ export default class UserResolver {
         const userExists = await usersService.findUserByEmailWitoutAsserting(
             data.email
         )
-
         if (userExists) throw new Error('This email is already used')
 
         return await new UsersService().create(data)
