@@ -27,7 +27,7 @@ export type Status = 'ARCHIVED' | 'ACTIVE'
 @Entity()
 export class UserEntity {
     @BeforeInsert()
-    private async hashPassword() {
+    protected async beforeInsert() {
         this.password = await argon2.hash(this.password)
     }
     @Field(() => ID)
@@ -194,6 +194,11 @@ export class UserMessage {
 
     @Field()
     message: string
+
+    constructor(success: boolean, message: string) {
+        this.success = success
+        this.message = message
+    }
 }
 
 @ObjectType()

@@ -9,12 +9,7 @@ import JourneysService from '../services/journeys.service'
 export default class BookingResolver {
     @Query(() => [BookingEntity])
     async listBookings() {
-        const bookings = await new BookingService().listBookings()
-
-        if (!bookings) {
-            throw new Error('No data found')
-        }
-        return bookings
+        return await new BookingService().listBookings()
     }
 
     @Query(() => BookingEntity)

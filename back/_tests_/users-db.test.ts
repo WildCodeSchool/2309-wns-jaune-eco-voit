@@ -112,7 +112,7 @@ describe('Test sur les users avec la base de données', () => {
         })
         assert(response.body.kind === 'single')
         expect(response.body.singleResult.data).toEqual({
-            login: { message: 'Bienvenue !', success: true },
+            login: { message: 'Welcome back !', success: true },
         })
     })
 

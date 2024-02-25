@@ -16,9 +16,11 @@ type ResponseOneUser = {
 let server: ApolloServer
 
 // to delete all Dates from the object (Jest doesn't accept to compare Dates)
-const mapData = (ary: UserEntity[]) => {
+const mapData = (ary: Omit<UserEntity, 'hashPassword'>[]) => {
     return ary.map((el) => {
         const { dateOfBirth, createdAt, ...rest } = el
+        // I used console.log() to avoid the non used error
+        console.log(dateOfBirth, createdAt)
         return rest
     })
 }
@@ -77,7 +79,7 @@ query FindUserById($findUserByIdId: String!) {
   }
 `
 
-const usersData: UserEntity[] = [
+const usersData: Omit<UserEntity, 'hashPassword'>[] = [
     {
         id: 'abcd',
         email: 'user1@yopmail.fr',
@@ -119,7 +121,7 @@ beforeAll(() => {
     }
     const resolvers = () => ({
         Query: {
-            findUserById(_: any, args: { id: string }) {
+            findUserById(_: null, args: { id: string }) {
                 return usersData.find((user) => user.id === args.id)
             },
         },

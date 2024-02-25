@@ -39,14 +39,13 @@ export default class UserResolver {
 
         const user = await userService.findUserByEmail(email)
 
-        const errorMessage = new UserMessage()
-        errorMessage.success = false
-        errorMessage.message = 'Vérifier vos informations'
+        const errorMessage = new UserMessage(false, 'Check your informations')
 
         if (!user) return errorMessage
 
         const isPasswordValid = await argon2.verify(user.password, password)
 
+<<<<<<< HEAD
         if (isPasswordValid) {
             const token = await new SignJWT({ email })
                 // alg = algorithme à utiliser pour hasher la signature
@@ -61,6 +60,9 @@ export default class UserResolver {
                 // car sign() attend en premier argument un Uint8Array et non une string, d'ou l'utilisation de TextEncoder
                 .sign(new TextEncoder().encode(`${process.env.SECRET_KEY}`))
             console.log(token)
+=======
+        const successMessage = new UserMessage(true, 'Welcome back !')
+>>>>>>> 4d01abfe (Correction test)
 
             // On crée une instance de la classe Cookies en lui passant la req et la res du context crée dans l'expressMiddleware (index.ts)
             const cookies = new Cookies(req, res)
@@ -85,10 +87,7 @@ export default class UserResolver {
         const userExist = await usersService.findUserByEmail(data.email)
 
         if (userExist) {
-            const message = new UserMessage()
-            message.success = false
-            message.message = "L'utilisateur existe déjà"
-            return message
+            return new UserMessage(false, 'This user already exists')
         }
 
         return await usersService.create(data)
