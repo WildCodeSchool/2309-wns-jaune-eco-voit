@@ -34,10 +34,11 @@ export default class UsersService {
     }
 
     async findUserByEmail(email: string) {
-        const user = await this.db.findOne({
+        return await this.db.findOne({
             where: { email },
             relations,
         })
+<<<<<<< HEAD
         assertDataExists(user)
 
         return user
@@ -53,16 +54,16 @@ export default class UsersService {
         })
 
         return user as UserEntity
+=======
+>>>>>>> 9a5c85e0 (class validator)
     }
 
     async create(body: CreateUserInput) {
         const doesUserExists = await this.findUserByEmail(body.email)
         if (doesUserExists) throw new Error('This email is already used')
 
-        const newUser: UserEntity = this.db.create(body)
-
-        validateData(newUser)
-
+        const newUser = this.db.create(body)
+        await validateData(newUser)
         return await this.db.save(newUser)
     }
 
@@ -71,7 +72,7 @@ export default class UsersService {
 
         const userUpdated = this.db.merge(userToUpdate, body)
 
-        validateData(userUpdated)
+        await validateData(userUpdated)
 
         return this.db.save(userUpdated)
     }

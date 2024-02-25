@@ -14,7 +14,7 @@ import {
     InputType,
     ObjectType,
 } from 'type-graphql' // Pour définir les Types GraphQL
-import { Min } from 'class-validator' // to add validators
+import { Min, IsDate } from 'class-validator' // to add validators
 import { UserEntity } from './user.entity'
 import { JourneyEntity } from './journey.entity'
 
@@ -29,11 +29,12 @@ export class BookingEntity {
 
     @Field(() => Float)
     @Column({ type: 'float' })
-    @Min(0.1)
+    @Min(0.1, { message: 'Price must be greater than 0' })
     totalPrice: number
 
     @Field()
     @Column({ type: 'timestamptz' }) // Recommended for Date  typeORM
+    @IsDate({ message: 'Departure time must be a valide date' })
     departureTime: Date
 
     @Field()
@@ -42,6 +43,7 @@ export class BookingEntity {
         enum: ['PENDING', 'REJECTED', 'ACCEPTED', 'CANCELLED'],
         default: ['PENDING'],
     })
+    @IsDate({ message: 'Arrival time must be a valide date' })
     status: Status // Type créé pour le Statut
 
     // @Field(() => [StepEntity])

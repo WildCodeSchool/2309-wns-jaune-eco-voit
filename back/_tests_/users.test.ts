@@ -16,10 +16,10 @@ type ResponseOneUser = {
 let server: ApolloServer
 
 // to delete all Dates from the object (Jest doesn't accept to compare Dates)
-const mapData = (ary: Omit<UserEntity, 'hashPassword'>[]) => {
-    return ary.map((el) => {
+const mapData = (dataArray: Omit<UserEntity, 'hashPassword'>[]) => {
+    return dataArray.map((el) => {
         const { dateOfBirth, createdAt, ...rest } = el
-        // I used console.log() to avoid the non used error
+        // log to avoid non used error
         console.log(dateOfBirth, createdAt)
         return rest
     })

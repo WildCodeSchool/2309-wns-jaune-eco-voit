@@ -49,7 +49,7 @@ type ResponseRegisterData = {
     email: string
 }
 
-type ResponseLoginData = { login: UserMessage }
+// type ResponseLoginData = { login: UserMessage }
 
 type ResponseListUsers = {
     listUsers: UserEntity[]
@@ -73,7 +73,7 @@ beforeAll(async () => {
     )
 
     await datasource.initialize() //initialisation de la datasource
-    // await datasource.getRepository(UserEntity).clear();//vidage de la table et non drop de la base de donnée complète
+    // await datasource.getRepository(UserEntityWithoutPassword).clear();//vidage de la table et non drop de la base de donnée complète
 })
 afterAll(async () => {
     await datasource.dropDatabase() //suppression de la base de donnée
@@ -97,6 +97,7 @@ describe('Test sur les users avec la base de données', () => {
 
         console.log(JSON.stringify(response.body))
         assert(response.body.kind === 'single')
+        console.log(response.body)
         expect(response.body.singleResult.data).toEqual({
             register: { email: 'olivier@yopmail.fr' },
         })

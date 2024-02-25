@@ -6,14 +6,13 @@ import { expressMiddleware } from '@apollo/server/express4'
 import cors from 'cors'
 
 import BookingResolver from './resolvers/booking.resolver'
-// import JourneyResolver from './resolvers/journey.resolver'
+import JourneyResolver from './resolvers/journey.resolver'
 import { ApolloServer } from '@apollo/server'
 import db from './db'
 import UserResolver from './resolvers/user.resolver'
 import Cookies from 'cookies'
 import { jwtVerify } from 'jose'
 import { UserEntity } from './entities/user.entity'
-import { JourneyEntity } from './entities/journey.entity'
 import UsersService from './services/users.service'
 
 export interface MyContext {
@@ -31,8 +30,8 @@ const httpServer = http.createServer(app) // on créer un server HTTP à partir 
 
 async function main() {
     const schema = await buildSchema({
-        resolvers: [BookingResolver, UserResolver, JourneyEntity],
-        validate: false,
+        resolvers: [BookingResolver, UserResolver, JourneyResolver],
+        validate: true,
     })
     const server = new ApolloServer<MyContext>({
         schema,
@@ -62,9 +61,10 @@ async function main() {
                             new TextEncoder().encode(process.env.SECRET_KEY)
                         )
                         console.log(token)
-                        user = await new UsersService().findUserByEmailForJWT(
-                            verify.payload.email
-                        )
+                        user =
+                            await new UsersService().findUserByEmailWitoutAsserting(
+                                verify.payload.email
+                            )
                     } catch (err) {
                         // TODO GERER L'ERREUR
                         // (token expiré (renouvellement ou pas), user non existant...)

@@ -10,7 +10,7 @@ import {
 import UsersService from '../services/users.service'
 
 @Resolver()
-export class JourneyResolver {
+export default class JourneyResolver {
     @Query(() => [JourneyEntity])
     async listJourneys() {
         return await new JourneysService().listJourneys()

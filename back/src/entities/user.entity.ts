@@ -18,6 +18,15 @@ import { JourneyEntity } from './journey.entity'
 import { BookingEntity } from './booking.entity'
 import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
 import argon2 from 'argon2'
+import {
+    IsDate,
+    IsEmail,
+    IsInt,
+    IsMobilePhone,
+    IsOptional,
+    IsString,
+    Length,
+} from 'class-validator'
 
 export type Role = 'USER' | 'ADMIN'
 export type Grade = 'BEGINNER' | 'CONFIRMED' | 'AMBASSADOR'
@@ -30,32 +39,44 @@ export class UserEntity {
     protected async beforeInsert() {
         this.password = await argon2.hash(this.password)
     }
+
     @Field(() => ID)
     @PrimaryGeneratedColumn('uuid')
     id: string
 
     @Field()
     @Column({ length: 50 })
+    @IsString({ message: 'Firstname must be a string' })
+    @Length(2, 50, { message: 'Firstname must be between 2 and 50 characters' })
     firstname: string
 
     @Field()
     @Column({ length: 50 })
+    @IsString({ message: 'Lastname must be a string' })
+    @Length(2, 50, { message: 'Lastname must be between 2 and 50 characters' })
     lastname: string
 
     @Field(() => GraphQLEmailAddress)
     @Column({ length: 50, unique: true })
+    @IsEmail({}, { message: 'Email must be a valid email address' })
     email: string
 
     @Field()
     @Column()
+    @Length(0, 500)
     password: string
 
     @Field(() => GraphQLISODateTime)
     @Column({ type: 'timestamptz' })
+    @IsDate({ message: 'Date of birth must be a valid date' })
     dateOfBirth: Date
 
     @Field(() => GraphQLPhoneNumber, { nullable: true })
     @Column({ nullable: true })
+    @IsOptional()
+    @IsMobilePhone(undefined, undefined, {
+        message: 'Please provide a valid phone number',
+    })
     phoneNumber?: string
 
     @Field({ nullable: true })
@@ -68,25 +89,29 @@ export class UserEntity {
         enum: ['ADMIN', 'USER'],
         default: 'USER',
     })
-    role: Role
+    role?: Role
 
-    @Field()
+    @Field({ nullable: true })
     @Column({
         type: 'text',
         enum: ['BEGINNER', 'CONFIRMED', 'AMBASSADOR'],
         default: 'BEGINNER',
     })
-    grade: Grade
+    grade?: Grade
 
     @Field()
     @Column({ default: 0 })
+    @IsOptional()
+    @IsInt({ message: 'trips as passenger must be an integer' })
     tripsAsPassenger: number
 
     @Field()
     @Column({ default: 0 })
+    @IsOptional()
+    @IsInt({ message: 'trips as driver must be an integer' })
     tripsAsDriver: number
 
-    @Field()
+    @Field({ nullable: true })
     @Column({
         type: 'text',
         enum: ['ACTIVE', 'ARCHIVED'],

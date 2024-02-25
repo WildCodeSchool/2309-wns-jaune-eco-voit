@@ -81,7 +81,7 @@ export default class UserResolver {
         )
         if (userExists) throw new Error('This email is already used')
 
-        return await new UsersService().create(data)
+        return await usersService.create(data)
     }
 
     @Mutation(() => UserEntity)
