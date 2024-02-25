@@ -22,7 +22,7 @@ export default class BookingResolver {
         @Arg('userId') userId: string,
         @Ctx() { req, res, user }: MyContext
     ) {
-        // On vérifie l'id envoyé en argument correspond bien à un user existant
+        // On vérifie l'id envoyé en argument correspond bien à un user existant dans la DB
         // Si ce n'est pas le cas, une erreur sera envoyé directement depuis la méthode findUserById du userService
         // Donc pas besoin de le gérer ici
         // On n'a pas besoin de créer de stocker la data dans une variable puisque le but ici est simplement de vérifier que le user existe

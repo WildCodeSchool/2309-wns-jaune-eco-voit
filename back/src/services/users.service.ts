@@ -38,7 +38,6 @@ export default class UsersService {
             where: { email },
             relations,
         })
-
         assertDataExists(user)
 
         return user
@@ -57,6 +56,9 @@ export default class UsersService {
     }
 
     async create(body: CreateUserInput) {
+        const doesUserExists = await this.findUserByEmail(body.email)
+        if (doesUserExists) throw new Error('This email is already used')
+
         const newUser: UserEntity = this.db.create(body)
 
         validateData(newUser)
