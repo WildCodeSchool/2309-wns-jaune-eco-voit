@@ -1,11 +1,13 @@
 import { Repository } from 'typeorm'
 import datasource from '../db'
-import { validate } from 'class-validator'
 import {
     BookingEntity,
     CreateBookingInput,
     UpdateBookingInput,
 } from '../entities/booking.entity'
+import { validateData, assertDataExists } from '../utils/errorHandlers'
+
+const relations = { journey: true, user: true }
 
 export default class BookingsService {
     db: Repository<BookingEntity>
@@ -16,39 +18,41 @@ export default class BookingsService {
 
     async listBookings() {
         return await this.db.find({
-            relations: {
-                journey: true,
-                user: true,
-            },
+            relations,
         })
     }
 
     async findBookingById(id: string) {
-        return await this.db.findOne({
+        const book = await this.db.findOne({
             where: { id },
-            relations: { journey: true, user: true },
+            relations,
         })
+
+        assertDataExists(book)
+
+        return book as BookingEntity
     }
 
-    async listBookingsFilter(options: { journeyId?: string; userId?: string }) {
-        const { userId, journeyId } = options
+    async listBookingsFilter({
+        journeyId,
+        userId,
+    }: {
+        journeyId?: string
+        userId?: string
+    }) {
         return await this.db.find({
             where: {
                 user: { id: userId ?? undefined },
                 journey: { id: journeyId ?? undefined },
             },
+            relations,
         })
     }
 
     async create(body: CreateBookingInput) {
         const newBooking: BookingEntity = this.db.create(body)
 
-        const errors = await validate(newBooking)
-
-        if (errors.length !== 0) {
-            console.log(errors)
-            throw new Error('Something wrong with the validation')
-        }
+        await validateData(newBooking)
 
         const bookingSaved = await this.db.save(newBooking)
 
@@ -56,16 +60,11 @@ export default class BookingsService {
     }
 
     async updateBooking(id: string, body: UpdateBookingInput) {
-        const bookingToUpdate = await this.db.findOneBy({ id })
-        if (!bookingToUpdate) {
-            throw new Error('Data not found')
-        }
-        const bookingUpdated = this.db.merge(bookingToUpdate, body)
-        const errors = await validate(bookingUpdated)
+        const bookingToUpdate = await this.findBookingById(id)
 
-        if (errors.length !== 0) {
-            throw new Error('Something wrong with the body')
-        }
+        const bookingUpdated = this.db.merge(bookingToUpdate, body)
+
+        await validateData(bookingUpdated)
 
         const bookingSaved = await this.db.save(bookingUpdated)
 

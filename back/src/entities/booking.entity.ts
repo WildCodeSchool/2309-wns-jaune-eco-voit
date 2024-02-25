@@ -40,6 +40,7 @@ export class BookingEntity {
     @Column({
         type: 'text',
         enum: ['PENDING', 'REJECTED', 'ACCEPTED', 'CANCELLED'],
+        default: ['PENDING'],
     })
     status: Status // Type créé pour le Statut
 

@@ -14,6 +14,7 @@ import Cookies from 'cookies'
 import { jwtVerify } from 'jose'
 import { UserEntity } from './entities/user.entity'
 import { JourneyEntity } from './entities/journey.entity'
+import UsersService from './services/users.service'
 
 export interface MyContext {
     req: express.Request
@@ -61,8 +62,7 @@ async function main() {
                             new TextEncoder().encode(process.env.SECRET_KEY)
                         )
                         console.log(token)
-                        // TODO A VERIFIER APRES MERGE DE LA GESTION DES ERREURS
-                        user = await new UserResolver().findUserByEmail(
+                        user = await new UsersService().findUserByEmailForJWT(
                             verify.payload.email
                         )
                     } catch (err) {

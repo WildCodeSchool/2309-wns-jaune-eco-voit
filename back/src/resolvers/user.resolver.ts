@@ -22,16 +22,12 @@ export default class UserResolver {
 
     @Query(() => UserEntity)
     async findUserById(@Arg('id') id: string) {
-        const user = await new UsersService().findUserById(id)
-        if (!user) throw new Error('No data found')
-        return user
+        return await new UsersService().findUserById(id)
     }
 
     @Query(() => UserEntity)
     async findUserByEmail(@Arg('email') email: string) {
-        const user = await new UsersService().findUserByEmail(email)
-        if (!user) throw new Error('No data found')
-        return user
+        return await new UsersService().findUserById(email)
     }
 
     @Query(() => UserMessage)
@@ -105,29 +101,28 @@ export default class UserResolver {
 
     @Mutation(() => UserEntity)
     async archiveUser(@Arg('id') id: string) {
-        return new UsersService().updateUser({ id, status: 'ARCHIVED' })
+        return await new UsersService().updateUser({ id, status: 'ARCHIVED' })
     }
 
     @Mutation(() => UserEntity)
     async increaseTripsAsPassenger(@Arg('id') id: string) {
         const usersService = new UsersService()
-        const user = await usersService.findUserById(id)
-        if (!user) return new Error('Utilisateur inconnu')
 
+        const { tripsAsPassenger } = await usersService.findUserById(id)
         return new UsersService().updateUser({
             id,
-            tripsAsPassenger: user.tripsAsPassenger++,
+            tripsAsPassenger: tripsAsPassenger + 1,
         })
     }
 
     @Mutation(() => UserEntity)
     async increaseTripsAsDriver(@Arg('id') id: string) {
         const usersService = new UsersService()
-        const user = await usersService.findUserById(id)
-        if (!user) return new Error('Utilisateur inconnu')
+
+        const { tripsAsDriver } = await usersService.findUserById(id)
         return usersService.updateUser({
             id,
-            tripsAsDriver: user.tripsAsDriver++,
+            tripsAsDriver: tripsAsDriver + 1,
         })
     }
 }
