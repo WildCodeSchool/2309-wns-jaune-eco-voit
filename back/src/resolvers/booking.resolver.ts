@@ -1,6 +1,7 @@
-import { Arg, Mutation, Query, Resolver } from 'type-graphql'
+import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql'
 import BookingService from '../services/bookings.service'
 import { BookingEntity, CreateBookingInput } from '../entities/booking.entity'
+import { MyContext } from '..'
 
 @Resolver(() => BookingEntity)
 export default class BookingResolver {
@@ -22,11 +23,21 @@ export default class BookingResolver {
     }
 
     @Query(() => [BookingEntity])
-    async findBookingByUser(@Arg('id') id: string) {
+    async findBookingByUserId(
+        @Arg('id') id: string,
+        @Ctx() { req, res, user }: MyContext
+    ) {
+        console.log('coucou')
+        if (!user) throw new Error('Veuillez vous connecter')
+
+        if (user?.id !== id) throw new Error('Accès impossible')
+
         const bookings = await new BookingService().listBookingsFilter({
             userId: id,
         })
+
         if (!bookings) throw new Error('No data found')
+
         return bookings
     }
 

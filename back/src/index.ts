@@ -10,16 +10,30 @@ import BookingResolver from './resolvers/booking.resolver'
 import { ApolloServer } from '@apollo/server'
 import db from './db'
 import UserResolver from './resolvers/user.resolver'
+import Cookies from 'cookies'
+import { jwtVerify } from 'jose'
+import { UserEntity } from './entities/user.entity'
+import { JourneyEntity } from './entities/journey.entity'
+
+export interface MyContext {
+    req: express.Request
+    res: express.Response
+    user: UserEntity | null
+}
+
+export interface Payload {
+    email: string
+}
 
 const app = express()
 const httpServer = http.createServer(app) // on créer un server HTTP à partir de la bibliothéque d'express, pour avoir Req et Res (pour les middlwares)
 
 async function main() {
     const schema = await buildSchema({
-        resolvers: [BookingResolver, UserResolver],
+        resolvers: [BookingResolver, UserResolver, JourneyEntity],
         validate: false,
     })
-    const server = new ApolloServer({
+    const server = new ApolloServer<MyContext>({
         schema,
         plugins: [ApolloServerPluginDrainHttpServer({ httpServer })], // Informe Apollo Server, qu'il utilisera le server Http créer plus haut
     })
@@ -27,16 +41,45 @@ async function main() {
     await server.start()
     app.use(
         '/',
-        cors<cors.CorsRequest>({ origin: '*' }), // autorise toutes les origines à accéder à l'API. En spécifiant { origin: "*" }, cela permet à n'importe quel domaine d'accéder à l'API
+        // autorise toutes les origines à accéder à l'API. En spécifiant { origin: "*" }, cela permet à n'importe quel domaine d'accéder à l'API
+        cors<cors.CorsRequest>({ origin: '*' }),
         express.json(),
-        expressMiddleware(server, {}) // intégre Apollo Server à Express
+        // intégre Apollo Server à Express
+        expressMiddleware(server, {
+            // On passe dans ce callback à chaque requette
+            // On retourne un objet un objet contenant res et req à tous les resolvers
+            context: async ({ req, res }) => {
+                let user: UserEntity | null = null
+
+                const cookies = new Cookies(req, res)
+                const token = cookies.get('token')
+
+                if (token) {
+                    try {
+                        const verify = await jwtVerify<Payload>(
+                            token,
+                            new TextEncoder().encode(process.env.SECRET_KEY)
+                        )
+                        console.log(token)
+                        // TODO A VERIFIER APRES MERGE DE LA GESTION DES ERREURS
+                        user = await new UserResolver().findUserByEmail(
+                            verify.payload.email
+                        )
+                    } catch (err) {
+                        // TODO GERER L'ERREUR
+                        // (token expiré (renouvellement ou pas), user non existant...)
+                        console.log(err)
+                    }
+                }
+                return { req, res, user }
+            },
+        })
     )
     await db.initialize()
 
     await new Promise<void>((resolve) => {
         httpServer.listen({ port: 4000 }, resolve)
         console.log('Server is running on port', 4000)
-    }
-    )
+    })
 }
 main()
