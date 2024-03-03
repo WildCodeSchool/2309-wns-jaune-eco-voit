@@ -34,28 +34,23 @@ export default class UsersService {
     }
 
     async findUserByEmail(email: string) {
-        return await this.db.findOne({
+        const user = await this.db.findOne({
             where: { email },
             relations,
         })
-<<<<<<< HEAD
         assertDataExists(user)
 
-        return user
+        return user as UserEntity
     }
 
     // Fonction créée parce qu'on a besoin d'un findUserByEmail qui ne renvoie pas d'erreur si le user n'existe pas, pour:
     // L'appel de la fonction dans le middleware express dans index.ts utilisé pour le JWT
     // La création d'une nouveau user, on doit vérifier justement qu'il n'existe pas donc il ne faut pas renvoyer d'erreur si c'est le cas
     async findUserByEmailWitoutAsserting(email: string) {
-        const user = await this.db.findOne({
+        return (await this.db.findOne({
             where: { email },
             relations,
-        })
-
-        return user as UserEntity
-=======
->>>>>>> 9a5c85e0 (class validator)
+        })) as UserEntity
     }
 
     async create(body: CreateUserInput) {
