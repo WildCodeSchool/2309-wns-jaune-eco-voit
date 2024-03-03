@@ -11,6 +11,6 @@ export const validateData = async (dataToValidate: object) => {
 
 export const assertDataExists = (data: object | null) => {
     if (!data) {
-        throw new Error('Journey not found')
+        throw new Error('Data not found')
     }
 }

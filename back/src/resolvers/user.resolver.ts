@@ -45,7 +45,6 @@ export default class UserResolver {
 
         const isPasswordValid = await argon2.verify(user.password, password)
 
-<<<<<<< HEAD
         if (isPasswordValid) {
             const token = await new SignJWT({ email })
                 // alg = algorithme à utiliser pour hasher la signature
@@ -59,10 +58,6 @@ export default class UserResolver {
                 // La méthode encode() de la classe TextEncoder permet d'obtenir un flux d'octets encodés en utf-8 à partir d'une chaine de caractère
                 // car sign() attend en premier argument un Uint8Array et non une string, d'ou l'utilisation de TextEncoder
                 .sign(new TextEncoder().encode(`${process.env.SECRET_KEY}`))
-            console.log(token)
-=======
-        const successMessage = new UserMessage(true, 'Welcome back !')
->>>>>>> 4d01abfe (Correction test)
 
             // On crée une instance de la classe Cookies en lui passant la req et la res du context crée dans l'expressMiddleware (index.ts)
             const cookies = new Cookies(req, res)
@@ -71,26 +66,23 @@ export default class UserResolver {
             // Evite les attaques cross site scripting (XSS)
             cookies.set('token', token, { httpOnly: true })
 
-            const successMessage = new UserMessage()
-            successMessage.success = true
-            successMessage.message = 'Bienvenue !'
-            return successMessage
+            return new UserMessage(true, 'Welcome back !')
         }
 
         return errorMessage
     }
 
-    @Mutation(() => UserWithoutPassord || UserMessage)
+    @Mutation(() => UserWithoutPassord)
     async register(@Arg('data') data: CreateUserInput) {
         const usersService = new UsersService()
 
-        const userExist = await usersService.findUserByEmail(data.email)
+        const userExists = await usersService.findUserByEmailWitoutAsserting(
+            data.email
+        )
 
-        if (userExist) {
-            return new UserMessage(false, 'This user already exists')
-        }
+        if (userExists) throw new Error('This email is already used')
 
-        return await usersService.create(data)
+        return await new UsersService().create(data)
     }
 
     @Mutation(() => UserEntity)
