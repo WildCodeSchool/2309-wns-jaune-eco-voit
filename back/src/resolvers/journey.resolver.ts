@@ -10,6 +10,7 @@ import {
 
 @Resolver()
 export class JourneyResolver {
+    //TODO AJOUTER GETJOUNEYBYUSER
     // LIST ALL JOURNEYS
     @Query(() => [JourneyEntity])
     async listJourneys() {
