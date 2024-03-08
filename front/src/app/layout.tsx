@@ -3,7 +3,7 @@
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 /* Assets */
 import "./globals.css";
-import { gatwick, stolzl } from "./theme/ThemeRegistery";
+import { gatwick, stolzl } from "./theme/ThemeOption";
 import ThemeRegistery from "./theme/ThemeRegistery";
 
 // export const metadata: Metadata = {
