@@ -18,8 +18,8 @@ export type MakeEmpty<
 export type Incremental<T> =
   | T
   | {
-      [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never;
-    };
+    [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never;
+  };
 const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -160,8 +160,12 @@ export type QueryFindBookingByJourneyArgs = {
   id: Scalars["String"]["input"];
 };
 
-export type QueryFindBookingByUserArgs = {
-  id: Scalars["String"]["input"];
+
+
+
+export type QueryFindBookingByUserIdArgs = {
+  id: Scalars['String']['input'];
+
 };
 
 export type QueryFindUserByEmailArgs = {
@@ -219,9 +223,13 @@ export type UserMessage = {
   success: Scalars["Boolean"]["output"];
 };
 
+
 export type UserWithoutPassword = {
   __typename?: "UserWithoutPassword";
   email: Scalars["EmailAddress"]["output"];
+  firstname: Scalars['String']['output'];
+  lastname: Scalars['String']['output'];
+
 };
 
 export type LoginQueryVariables = Exact<{
