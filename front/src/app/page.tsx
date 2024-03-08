@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 
 export default function Home() {
   return (
-    <main className="flex flex-col gap-6 min-h-screen items-center justify-center bg-primary10">
+    <div className="flex flex-col gap-6 h-full items-center justify-center bg-primary10">
       <h1>Il faut rouler cool!</h1>
       <h3 className="font-medium uppercase tracking-widest">Ecovoit</h3>
       <div className="flex gap-3">
@@ -17,6 +17,6 @@ export default function Home() {
           Contained
         </Button>
       </div>
-    </main>
+    </div>
   );
 }

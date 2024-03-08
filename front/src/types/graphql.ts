@@ -140,7 +140,7 @@ export type Query = {
   __typename?: 'Query';
   findBookingById: BookingEntity;
   findBookingByJourney: Array<BookingEntity>;
-  findBookingByUser: Array<BookingEntity>;
+  findBookingByUserId: Array<BookingEntity>;
   findUserByEmail: UserEntity;
   findUserById: UserEntity;
   listBookings: Array<BookingEntity>;
@@ -159,7 +159,7 @@ export type QueryFindBookingByJourneyArgs = {
 };
 
 
-export type QueryFindBookingByUserArgs = {
+export type QueryFindBookingByUserIdArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -224,6 +224,8 @@ export type UserMessage = {
 export type UserWithoutPassord = {
   __typename?: 'UserWithoutPassord';
   email: Scalars['EmailAddress']['output'];
+  firstname: Scalars['String']['output'];
+  lastname: Scalars['String']['output'];
 };
 
 export type LoginQueryVariables = Exact<{
