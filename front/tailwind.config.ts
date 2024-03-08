@@ -5,6 +5,7 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/theme/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   important: "#__next",
   theme: {
@@ -20,6 +21,7 @@ const config: Config = {
         dark60: "#9695A3",
         dark40: "#CECED6",
         dark20: "#EAE9ED",
+        primary180: "#2D294F",
         primary150: "#3B3579",
         primary120: "#554DB4",
         primary100: "#8D84EF",
@@ -37,9 +39,3 @@ const config: Config = {
   plugins: [],
 };
 export default config;
-
-module.exports = {
-  corePlugins: {
-    preflight: false,
-  },
-};

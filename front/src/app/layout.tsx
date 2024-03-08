@@ -24,11 +24,11 @@ export default function RootLayout({
 
   return (
     <ApolloProvider client={client}>
-      <html lang="en" className={`${stolzl.variable} ${gatwick.variable}`}>
-        <body className="font-stolzl">
-          <ThemeRegistery>{children}</ThemeRegistery>
-        </body>
-      </html>
+      <ThemeRegistery>
+        <html lang="en" className={`${stolzl.variable} ${gatwick.variable}`}>
+          <body className="font-stolzl min-h-screen w-screen">{children}</body>
+        </html>
+      </ThemeRegistery>
     </ApolloProvider>
   );
 }
