@@ -1,37 +1,10 @@
 "use client";
 /* chore */
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import Head from "next/head";
 /* Assets */
 import "./globals.css";
-import localFont from "next/font/local";
-
-//Add custom fonts
-const gatwick = localFont({
-  src: "../fonts/gatwick-600.otf",
-  variable: "--font-gatwick",
-});
-
-const stolzl = localFont({
-  src: [
-    {
-      path: "../fonts/stolzl-400.otf",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../fonts/stolzl-500.otf",
-      weight: "500",
-      style: "normal",
-    },
-    {
-      path: "../fonts/stolzl-600.otf",
-      weight: "600",
-      style: "normal",
-    },
-  ],
-  variable: "--font-stolzl",
-});
+import { gatwick, stolzl } from "./theme/ThemeRegistery";
+import ThemeRegistery from "./theme/ThemeRegistery";
 
 // export const metadata: Metadata = {
 //   title: "Create Next App",
@@ -52,7 +25,9 @@ export default function RootLayout({
   return (
     <ApolloProvider client={client}>
       <html lang="en" className={`${stolzl.variable} ${gatwick.variable}`}>
-        <body className="font-stolzl">{children}</body>
+        <body className="font-stolzl">
+          <ThemeRegistery>{children}</ThemeRegistery>
+        </body>
       </html>
     </ApolloProvider>
   );
