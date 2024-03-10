@@ -3,13 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-  .font-gatwick {
-    font-family: var(--font-gatwick);
-  }
-
-  .font-stolzl {
-    font-family: var(--font-stolzl);
-  }
 
   h1 {
     @apply text-5xl font-gatwick;
@@ -21,5 +14,13 @@
 
   h3 {
     @apply text-xl;
+  }
+
+  .font-gatwick {
+    font-family: var(--font-gatwick);
+  }
+
+  .font-stolzl {
+    font-family: var(--font-stolzl);
   }
 }
