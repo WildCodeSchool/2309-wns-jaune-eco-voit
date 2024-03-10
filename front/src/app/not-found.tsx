@@ -17,7 +17,7 @@ const NotFound = () => {
         variant="outlined"
         onClick={() => router.push(`${routes["home"].pathname}`)}
       >
-        Retourner à l'accueil
+        Retourner à l&apos;accueil
       </Button>
     </div>
   );
