@@ -144,7 +144,7 @@ export type Query = {
   __typename?: "Query";
   findBookingById: BookingEntity;
   findBookingByJourney: Array<BookingEntity>;
-  findBookingByUser: Array<BookingEntity>;
+  findBookingByUserId: Array<BookingEntity>;
   findUserByEmail: UserEntity;
   findUserById: UserEntity;
   listBookings: Array<BookingEntity>;

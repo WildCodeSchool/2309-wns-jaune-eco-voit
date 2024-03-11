@@ -6,6 +6,7 @@ export const gatwick = localFont({
   src: "../../fonts/gatwick-600.otf",
   variable: "--font-gatwick",
 });
+
 export const stolzl = localFont({
   src: [
     {
@@ -58,7 +59,7 @@ export const themeOptions: ThemeOptions = {
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: "capitalize",
+          textTransform: "none",
           padding: "0.55em 1.5em",
           borderRadius: ".4em",
         },

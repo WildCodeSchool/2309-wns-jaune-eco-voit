@@ -5,6 +5,8 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import "./globals.css";
 import { gatwick, stolzl } from "./theme/ThemeOption";
 import ThemeRegistery from "./theme/ThemeRegistery";
+import Header from "./components/layout/Header";
+import Footer from "./components/layout/Footer";
 
 // export const metadata: Metadata = {
 //   title: "Create Next App",
@@ -24,11 +26,17 @@ export default function RootLayout({
 
   return (
     <ApolloProvider client={client}>
-      <html lang="en" className={`${stolzl.variable} ${gatwick.variable}`}>
-        <body className="font-stolzl">
-          <ThemeRegistery>{children}</ThemeRegistery>
-        </body>
-      </html>
+      <ThemeRegistery>
+        <html lang="en" className={`${stolzl.variable} ${gatwick.variable}`}>
+          <body className="font-stolzl">
+            <main className="min-h-screen flex flex-col justify-between">
+              <Header />
+              {children}
+              <Footer />
+            </main>
+          </body>
+        </html>
+      </ThemeRegistery>
     </ApolloProvider>
   );
 }
