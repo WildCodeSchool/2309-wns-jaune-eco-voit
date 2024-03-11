@@ -15,8 +15,12 @@ const Header = () => {
         <Image src={logo} alt="Ecovoit" height={45} />
       </Link>
       <nav className="flex gap-3">
+        <Link href='/auth/login'>
         <Button>Connexion</Button>
+        </Link>
+         <Link href='/auth/subscribe'>
         <Button variant="contained">S&apos;inscrire</Button>
+        </Link>
       </nav>
     </header>
   );
