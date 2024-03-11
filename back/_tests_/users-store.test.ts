@@ -23,7 +23,7 @@ const schemaString = printSchema(baseSchema)
 // Transforme la chain de caractère en un schéma exécutable
 const schema = makeExecutableSchema({ typeDefs: schemaString })
 
-const usersData: UserEntity[] = [
+const usersData: Omit<UserEntity, 'hashPassword'>[] = [
     {
         id: 'abcd',
         email: 'user1@yopmail.fr',

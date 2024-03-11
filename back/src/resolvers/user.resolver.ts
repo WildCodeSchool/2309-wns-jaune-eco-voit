@@ -22,16 +22,12 @@ export default class UserResolver {
 
     @Query(() => UserEntity)
     async findUserById(@Arg('id') id: string) {
-        const user = await new UsersService().findUserById(id)
-        if (!user) throw new Error('No data found')
-        return user
+        return await new UsersService().findUserById(id)
     }
 
     @Query(() => UserEntity)
     async findUserByEmail(@Arg('email') email: string) {
-        const user = await new UsersService().findUserByEmail(email)
-        if (!user) throw new Error('No data found')
-        return user
+        return await new UsersService().findUserById(email)
     }
 
     @Query(() => UserMessage)
@@ -43,9 +39,7 @@ export default class UserResolver {
 
         const user = await userService.findUserByEmail(email)
 
-        const errorMessage = new UserMessage()
-        errorMessage.success = false
-        errorMessage.message = 'Vérifier vos informations'
+        const errorMessage = new UserMessage(false, 'Check your informations')
 
         if (!user) return errorMessage
 
@@ -64,7 +58,6 @@ export default class UserResolver {
                 // La méthode encode() de la classe TextEncoder permet d'obtenir un flux d'octets encodés en utf-8 à partir d'une chaine de caractère
                 // car sign() attend en premier argument un Uint8Array et non une string, d'ou l'utilisation de TextEncoder
                 .sign(new TextEncoder().encode(`${process.env.SECRET_KEY}`))
-            console.log(token)
 
             // On crée une instance de la classe Cookies en lui passant la req et la res du context crée dans l'expressMiddleware (index.ts)
             const cookies = new Cookies(req, res)
@@ -73,27 +66,20 @@ export default class UserResolver {
             // Evite les attaques cross site scripting (XSS)
             cookies.set('token', token, { httpOnly: true })
 
-            const successMessage = new UserMessage()
-            successMessage.success = true
-            successMessage.message = 'Bienvenue !'
-            return successMessage
+            return new UserMessage(true, 'Welcome back !')
         }
 
         return errorMessage
     }
 
-    @Mutation(() => UserWithoutPassord || UserMessage)
+    @Mutation(() => UserWithoutPassord)
     async register(@Arg('data') data: CreateUserInput) {
         const usersService = new UsersService()
 
-        const userExist = await usersService.findUserByEmail(data.email)
-
-        if (userExist) {
-            const message = new UserMessage()
-            message.success = false
-            message.message = "L'utilisateur existe déjà"
-            return message
-        }
+        const userExists = await usersService.findUserByEmailWitoutAsserting(
+            data.email
+        )
+        if (userExists) throw new Error('This email is already used')
 
         return await usersService.create(data)
     }
@@ -105,29 +91,28 @@ export default class UserResolver {
 
     @Mutation(() => UserEntity)
     async archiveUser(@Arg('id') id: string) {
-        return new UsersService().updateUser({ id, status: 'ARCHIVED' })
+        return await new UsersService().updateUser({ id, status: 'ARCHIVED' })
     }
 
     @Mutation(() => UserEntity)
     async increaseTripsAsPassenger(@Arg('id') id: string) {
         const usersService = new UsersService()
-        const user = await usersService.findUserById(id)
-        if (!user) return new Error('Utilisateur inconnu')
 
+        const { tripsAsPassenger } = await usersService.findUserById(id)
         return new UsersService().updateUser({
             id,
-            tripsAsPassenger: user.tripsAsPassenger++,
+            tripsAsPassenger: tripsAsPassenger + 1,
         })
     }
 
     @Mutation(() => UserEntity)
     async increaseTripsAsDriver(@Arg('id') id: string) {
         const usersService = new UsersService()
-        const user = await usersService.findUserById(id)
-        if (!user) return new Error('Utilisateur inconnu')
+
+        const { tripsAsDriver } = await usersService.findUserById(id)
         return usersService.updateUser({
             id,
-            tripsAsDriver: user.tripsAsDriver++,
+            tripsAsDriver: tripsAsDriver + 1,
         })
     }
 }

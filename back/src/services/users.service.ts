@@ -1,11 +1,13 @@
 import { Repository } from 'typeorm'
 import datasource from '../db'
-import { validate } from 'class-validator'
 import {
     CreateUserInput,
     UpdateUserInput,
     UserEntity,
 } from '../entities/user.entity'
+import { assertDataExists, validateData } from '../utils/errorHandlers'
+
+const relations = { journeys: true, bookings: true }
 
 export default class UsersService {
     db: Repository<UserEntity>
@@ -16,53 +18,56 @@ export default class UsersService {
 
     async listUser() {
         return await this.db.find({
-            relations: {
-                bookings: true,
-                journeys: true,
-            },
+            relations,
         })
     }
 
     async findUserById(id: string) {
-        return await this.db.findOne({
+        const user = await this.db.findOne({
             where: { id },
-            relations: { bookings: true, journeys: true },
+            relations,
         })
+
+        assertDataExists(user)
+
+        return user as UserEntity
     }
 
     async findUserByEmail(email: string) {
-        return await this.db.findOne({
+        const user = await this.db.findOne({
             where: { email },
-            relations: { bookings: true, journeys: true },
+            relations,
         })
+        assertDataExists(user)
+
+        return user as UserEntity
+    }
+
+    // Fonction créée parce qu'on a besoin d'un findUserByEmail qui ne renvoie pas d'erreur si le user n'existe pas, pour:
+    // L'appel de la fonction dans le middleware express dans index.ts utilisé pour le JWT
+    // La création d'une nouveau user, on doit vérifier justement qu'il n'existe pas donc il ne faut pas renvoyer d'erreur si c'est le cas
+    async findUserByEmailWitoutAsserting(email: string) {
+        return (await this.db.findOne({
+            where: { email },
+            relations,
+        })) as UserEntity
     }
 
     async create(body: CreateUserInput) {
-        const newUser: UserEntity = this.db.create(body)
+        const doesUserExists = await this.findUserByEmail(body.email)
+        if (doesUserExists) throw new Error('This email is already used')
 
-        const errors = await validate(newUser)
-        if (errors.length !== 0) {
-            console.log(errors)
-            throw new Error('Something wrong with the body validation')
-        }
+        const newUser = this.db.create(body)
+        await validateData(newUser)
         return await this.db.save(newUser)
     }
 
-    async updateUser(data: UpdateUserInput) {
-        const { id, ...body } = data
-
+    async updateUser({ id, ...body }: UpdateUserInput) {
         const userToUpdate = await this.findUserById(id)
 
-        if (!userToUpdate) {
-            throw new Error('User not found')
-        }
-
         const userUpdated = this.db.merge(userToUpdate, body)
-        const errors = await validate(userUpdated)
 
-        if (errors.length !== 0) {
-            throw new Error('Something wrong with the body validation')
-        }
+        await validateData(userUpdated)
 
         return this.db.save(userUpdated)
     }

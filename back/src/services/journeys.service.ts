@@ -5,9 +5,10 @@ import {
     JourneyEntity,
     CreateJourneyInput,
     UpdateJourneyInput,
-    JourneyStatus,
 } from '../entities/journey.entity'
-import { validate } from 'class-validator'
+import { validateData, assertDataExists } from '../utils/errorHandlers'
+
+const relations = { user: true, booking: true }
 
 export default class JourneysService {
     db: Repository<JourneyEntity>
@@ -16,46 +17,46 @@ export default class JourneysService {
     }
 
     async findJourneyById(id: string) {
-        const journey = await this.db.findOneBy({ id })
-        if (!journey) {
-            throw new Error('Journey not found')
-        }
-        return journey
+        const journey = await this.db.findOne({
+            where: { id },
+            relations,
+        })
+
+        assertDataExists(journey)
+
+        return journey as JourneyEntity
     }
 
     async listJourneys() {
-        return await this.db.find()
+        return await this.db.find({ relations })
     }
 
-    async listJourneysByUser(id: string) {
-        return await this.db.find({ where: { user: { id } } })
+    async listJourneysFilter({ userId }: { userId?: string }) {
+        return await this.db.find({
+            where: {
+                user: { id: userId ?? undefined },
+            },
+            relations,
+        })
     }
 
     async createJourney(data: CreateJourneyInput) {
-        const journey = this.db.create(data)
-        return await this.db.save(journey)
+        const newJourney: JourneyEntity = this.db.create(data)
+
+        await validateData(newJourney)
+
+        const journeySaved = await this.db.save(newJourney)
+
+        return this.findJourneyById(journeySaved.id)
     }
 
-    async updateJourney(data: UpdateJourneyInput) {
-        const { id, ...infos } = data
+    async updateJourney({ id, ...body }: UpdateJourneyInput) {
         const journeyToUpdate = await this.findJourneyById(id)
-        if (!journeyToUpdate) {
-            throw new Error('Journey not found')
-        }
 
-        const journeyToSave = this.db.merge(journeyToUpdate, infos)
+        const journeyToSave = this.db.merge(journeyToUpdate, body)
 
-        const errors = await validate(journeyToSave)
-        if (errors.length > 0) {
-            console.log(errors)
-            throw new Error('Journey Update Validation failed')
-        }
+        await validateData(journeyToSave)
+
         return await this.db.save(journeyToUpdate)
-    }
-
-    async updateJourneyStatus(id: string, status: JourneyStatus) {
-        const journey = await this.findJourneyById(id)
-        journey.status = status
-        return this.db.save(journey)
     }
 }

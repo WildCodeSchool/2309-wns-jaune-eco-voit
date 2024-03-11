@@ -19,7 +19,15 @@ import { UserEntity } from './user.entity'
 // import { MessageEntity } from "../../later/message.entity";
 // import { StepEntity } from "../../later/step.entity";
 import { BookingEntity } from './booking.entity'
-import { Min } from 'class-validator'
+import {
+    IsBoolean,
+    IsDate,
+    IsInt,
+    IsString,
+    Length,
+    Max,
+    Min,
+} from 'class-validator'
 import { Float } from 'type-graphql'
 
 export type JourneyStatus = 'PLANNED' | 'CANCELLED' | 'DONE'
@@ -32,7 +40,7 @@ export class JourneyEntity {
     id: string
 
     @Field(() => UserEntity)
-    @ManyToOne(() => UserEntity, (u) => u.journeys)
+    @ManyToOne(() => UserEntity, (user) => user.journeys)
     user: UserEntity
 
     // @Field(() => VehiculeEntity)
@@ -49,27 +57,39 @@ export class JourneyEntity {
 
     @Field()
     @Column({ length: 50 })
+    @Length(10, 50, {
+        message: 'Origin place must be between 10 and 50 characters.',
+    })
     origin: string
 
     @Field()
     @Column({ length: 50 })
+    @Length(10, 50, {
+        message: 'Destination place must be between 10 and 50 characters.',
+    })
     destination: string
 
     @Field(() => Float)
     @Column({ type: 'float' })
-    @Min(0.1)
+    @Min(0.1, { message: 'Total price must be greater than zero.' })
     totalPrice: number
 
     @Field()
     @Column('timestamp')
+    @IsDate({ message: 'Departure time must be a valide date' })
     departure_time: Date
 
     @Field()
     @Column('timestamp')
+    @IsDate({ message: 'Arrival time must be a valide date' })
     arrival_time: Date
 
     @Field()
     @Column()
+    @IsInt({ message: 'Avalaible seats must e a number' })
+    // Min to 0 cause when the journey will be full, the number of available seats will be 0
+    @Min(0)
+    @Max(4, { message: 'Max vailable seats is 4' })
     availableSeats: number
 
     @Field(() => [BookingEntity])
@@ -82,10 +102,12 @@ export class JourneyEntity {
         enum: ['PLANNED', 'CANCELLED', 'DONE'],
         default: ['PLANNED'],
     })
+    @IsString({ message: 'Journey status must be a string' })
     status: JourneyStatus
 
     @Field()
     @Column()
+    @IsBoolean({ message: 'AutomaticAccept must be a boolean' })
     automaticAccept: boolean
 
     @Field(() => GraphQLISODateTime)

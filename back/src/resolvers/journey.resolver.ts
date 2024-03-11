@@ -7,51 +7,66 @@ import {
     UpdateJourneyInput,
     UpdateJourneyStatusInput,
 } from '../entities/journey.entity'
+import UsersService from '../services/users.service'
 
 @Resolver()
-export class JourneyResolver {
-    //TODO AJOUTER GETJOUNEYBYUSER
-    // LIST ALL JOURNEYS
+export default class JourneyResolver {
     @Query(() => [JourneyEntity])
     async listJourneys() {
         return await new JourneysService().listJourneys()
     }
 
-    // FIND JOURNEY BY ID
     @Query(() => JourneyEntity)
     async findJourneyById(@Arg('id') id: string) {
-        const journey = await new JourneysService().findJourneyById(id)
-        if (!journey) {
-            throw new Error('Journey not found')
-        }
-        return journey
+        return await new JourneysService().findJourneyById(id)
     }
 
-    // CREATE JOURNEY
+    @Query(() => [JourneyEntity])
+    async listJourneysByUser(@Arg('userId') userId: string) {
+        // On vérifie l'id envoyé en argument correspond bien à un user existant
+        // Si ce n'est pas le cas, une erreur sera envoyé directement depuis la méthode findUserById du userService
+        // Donc pas besoin de le gérer ici
+        // On n'a pas besoin de créer de stocker la data dans une variable puisque le but ici est simplement de vérifier que le user existe
+        await new UsersService().findUserById(userId)
+        return await new JourneysService().listJourneysFilter({
+            userId,
+        })
+    }
+
     @Mutation(() => JourneyEntity)
     async createJourney(@Arg('data') data: CreateJourneyInput) {
         return await new JourneysService().createJourney(data)
     }
 
-    // UPDATE JOURNEY
     @Mutation(() => JourneyEntity)
     async updateJourney(@Arg('data') data: UpdateJourneyInput) {
         return await new JourneysService().updateJourney(data)
     }
 
-    // UPDATE JOURNEY STATUS
     @Mutation(() => JourneyEntity)
     async decreaseAvailableSeats(@Arg('id') id: string) {
-        const journey = await new JourneysService().findJourneyById(id)
+        const { availableSeats } = await new JourneysService().findJourneyById(
+            id
+        )
         return await new JourneysService().updateJourney({
             id,
-            availableSeats: journey.availableSeats - 1,
+            availableSeats: availableSeats - 1,
+        })
+    }
+
+    @Mutation(() => JourneyEntity)
+    async increaseAvailableSeats(@Arg('id') id: string) {
+        const { availableSeats } = await new JourneysService().findJourneyById(
+            id
+        )
+        return await new JourneysService().updateJourney({
+            id,
+            availableSeats: availableSeats + 1,
         })
     }
 
     @Mutation(() => JourneyEntity)
     async updateJourneyStatus(@Arg('data') data: UpdateJourneyStatusInput) {
-        const { id, status } = data
-        return await new JourneysService().updateJourneyStatus(id, status)
+        return await new JourneysService().updateJourney(data)
     }
 }
