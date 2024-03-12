@@ -1,21 +1,30 @@
 "use client";
-import { LoginInput, useLoginLazyQuery } from "@/types/graphql";
-import { useRouter } from "next/router";
+
+import { LOGIN } from "@/requetes/queries/auth.queries";
+import { LoginInput, LoginQuery, useLoginLazyQuery, LoginQueryVariables  } from "@/types/graphql";
+import { useLazyQuery } from "@apollo/client";
+
+
 import { FormEvent, useState } from "react";
 
-import{ Box, Container, TextField, Card, Stack, Button, Typography, IconButton, InputAdornment, FormControl, Divider} from '@mui/material';
-import Link from "next/link";
+import{ Box, Container, TextField, Card, Stack, Button, Typography, IconButton, InputAdornment, FormControl, Link} from '@mui/material';
+
 import { alpha, useTheme } from '@mui/material/styles';
 
 
 
 const Login = () => {
+  const theme = useTheme();
   // const router = useRouter();
-  const [login, { data, error }] = useLoginLazyQuery();
-  const [loginError, setLoginError] = useState<string | null>(null);
+  // const [login, { data, error }] = useLoginLazyQuery(); // Désolé I'm stupid, si ça se trouve ça fait la même qu'en dessous
+    const [login, { data, error }] = useLazyQuery<
+    LoginQuery,
+    LoginQueryVariables
+  >(LOGIN);
+   const [loginError, setLoginError] = useState<string | null>(null);
    const [showPassword, setShowPassword] = useState<Boolean>(false);
    const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+   const [password, setPassword] = useState('');
    
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -23,10 +32,9 @@ const Login = () => {
     event.preventDefault();
   };
 
-    const theme = useTheme();
 
   // Utiliser react hook form
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData) as LoginInput;
@@ -46,6 +54,7 @@ const Login = () => {
       console.log('login', loginError);
     }
   };
+
   return (
   <Container>
     <Box
@@ -86,13 +95,11 @@ const Login = () => {
 
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
            Vous n&apos;avez pas de compte ?
-            <Link href='/auth/subscription'>
-              <Typography variant="body2" sx={{ color: alpha(theme.palette.primary.main, 0.8), textDecoration: 'underline' }} >
-              En créer un
-              </Typography>
+            <Link href='/auth/register' variant="body2" sx={{ color: alpha(theme.palette.primary.main, 0.8), textDecoration: 'underline', ml:2 }}>
+             Créer son compte
             </Link>
           </Typography>
-        <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
           <Stack spacing={3}>
             <FormControl>
               <TextField name="email" label="Email" onChange={e => setEmail(e.target.value)} />
@@ -109,7 +116,8 @@ const Login = () => {
                           onClick={handleClickShowPassword}
                           onMouseDown={handleMouseDownPassword}
                           edge="end">
-                              {showPassword ? 'a' : 'b'}
+                              {showPassword ? 'a' : 'b'} 
+                              {/* Remplacer a et b par component d'icon après le choix du module d'icone */}
                             </IconButton>
                       </InputAdornment>
                     ),
@@ -121,10 +129,8 @@ const Login = () => {
 
           <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{ my: 3 }}>
             <Typography variant="subtitle2">
-            <Link href="/">
-                <Typography variant="body2" sx={{ color: alpha(theme.palette.primary.main, 0.8), textDecoration: 'underline' }} >
+            <Link href="/" variant="body2" sx={{ color: alpha(theme.palette.primary.main, 0.8), textDecoration: 'underline' }}>
                  Mot de passe oublié?
-                </Typography>
             </Link>
             </Typography>
           </Stack>
