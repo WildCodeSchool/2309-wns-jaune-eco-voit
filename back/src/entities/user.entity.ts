@@ -89,7 +89,7 @@ export class UserEntity {
         enum: ['ADMIN', 'USER'],
         default: 'USER',
     })
-    role?: Role
+    role: Role
 
     @Field({ nullable: true })
     @Column({

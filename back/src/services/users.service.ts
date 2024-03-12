@@ -7,8 +7,6 @@ import {
 } from '../entities/user.entity'
 import { assertDataExists, validateData } from '../utils/errorHandlers'
 
-const relations = { journeys: true, bookings: true }
-
 export default class UsersService {
     db: Repository<UserEntity>
 
@@ -18,14 +16,14 @@ export default class UsersService {
 
     async listUser() {
         return await this.db.find({
-            relations,
+            relations: { journeys: true, bookings: true },
         })
     }
 
     async findUserById(id: string) {
         const user = await this.db.findOne({
             where: { id },
-            relations,
+            relations: { journeys: true, bookings: true },
         })
 
         assertDataExists(user)
@@ -36,7 +34,7 @@ export default class UsersService {
     async findUserByEmail(email: string) {
         const user = await this.db.findOne({
             where: { email },
-            relations,
+            relations: { journeys: true, bookings: true },
         })
         assertDataExists(user)
 
@@ -49,13 +47,17 @@ export default class UsersService {
     async findUserByEmailWitoutAsserting(email: string) {
         return (await this.db.findOne({
             where: { email },
-            relations,
         })) as UserEntity
     }
 
     async create(body: CreateUserInput) {
-        const doesUserExists = await this.findUserByEmail(body.email)
-        if (doesUserExists) throw new Error('This email is already used')
+        const usersService = new UsersService()
+
+        const userExists = await usersService.findUserByEmailWitoutAsserting(
+            body.email
+        )
+
+        if (userExists) throw new Error('This email is already used')
 
         const newUser = this.db.create(body)
         await validateData(newUser)

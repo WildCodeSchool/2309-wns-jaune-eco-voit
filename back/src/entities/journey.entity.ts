@@ -19,15 +19,7 @@ import { UserEntity } from './user.entity'
 // import { MessageEntity } from "../../later/message.entity";
 // import { StepEntity } from "../../later/step.entity";
 import { BookingEntity } from './booking.entity'
-import {
-    IsBoolean,
-    IsDate,
-    IsInt,
-    IsString,
-    Length,
-    Max,
-    Min,
-} from 'class-validator'
+import { IsBoolean, IsDate, IsInt, Length, Max, Min } from 'class-validator'
 import { Float } from 'type-graphql'
 
 export type JourneyStatus = 'PLANNED' | 'CANCELLED' | 'DONE'
@@ -57,15 +49,15 @@ export class JourneyEntity {
 
     @Field()
     @Column({ length: 50 })
-    @Length(10, 50, {
-        message: 'Origin place must be between 10 and 50 characters.',
+    @Length(3, 50, {
+        message: 'Origin place must be between 3 and 50 characters.',
     })
     origin: string
 
     @Field()
     @Column({ length: 50 })
-    @Length(10, 50, {
-        message: 'Destination place must be between 10 and 50 characters.',
+    @Length(3, 50, {
+        message: 'Destination place must be between 3 and 50 characters.',
     })
     destination: string
 
@@ -89,7 +81,7 @@ export class JourneyEntity {
     @IsInt({ message: 'Avalaible seats must e a number' })
     // Min to 0 cause when the journey will be full, the number of available seats will be 0
     @Min(0)
-    @Max(4, { message: 'Max vailable seats is 4' })
+    @Max(4, { message: 'Max available seats is 4' })
     availableSeats: number
 
     @Field(() => [BookingEntity])
@@ -102,7 +94,6 @@ export class JourneyEntity {
         enum: ['PLANNED', 'CANCELLED', 'DONE'],
         default: ['PLANNED'],
     })
-    @IsString({ message: 'Journey status must be a string' })
     status: JourneyStatus
 
     @Field()
