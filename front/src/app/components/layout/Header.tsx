@@ -18,7 +18,7 @@ const Header = () => {
         <Link href='/auth/login'>
         <Button>Connexion</Button>
         </Link>
-         <Link href='/auth/subscribe'>
+         <Link href='/auth/register'>
         <Button variant="contained">S&apos;inscrire</Button>
         </Link>
       </nav>
