@@ -11,9 +11,10 @@ import { ApolloServer } from '@apollo/server'
 import db from './db'
 import UserResolver from './resolvers/user.resolver'
 import Cookies from 'cookies'
-import { jwtVerify } from 'jose'
+import { jwtVerify, errors } from 'jose'
 import { UserEntity } from './entities/user.entity'
 import UsersService from './services/users.service'
+import { customAuthChecker } from './lib/authChecker'
 
 export interface MyContext {
     req: express.Request
@@ -32,6 +33,7 @@ async function main() {
     const schema = await buildSchema({
         resolvers: [BookingResolver, UserResolver, JourneyResolver],
         validate: true,
+        authChecker: customAuthChecker,
     })
     const server = new ApolloServer<MyContext>({
         schema,
@@ -60,14 +62,11 @@ async function main() {
                             token,
                             new TextEncoder().encode(process.env.SECRET_KEY)
                         )
-                        console.log(token)
                         user =
                             await new UsersService().findUserByEmailWitoutAsserting(
                                 verify.payload.email
                             )
                     } catch (err) {
-                        // TODO GERER L'ERREUR
-                        // (token expiré (renouvellement ou pas), user non existant...)
                         console.log(err)
                     }
                 }

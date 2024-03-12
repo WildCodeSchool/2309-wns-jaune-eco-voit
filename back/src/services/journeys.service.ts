@@ -7,8 +7,7 @@ import {
     UpdateJourneyInput,
 } from '../entities/journey.entity'
 import { validateData, assertDataExists } from '../utils/errorHandlers'
-
-const relations = { user: true, booking: true }
+import BookingsService from './bookings.service'
 
 export default class JourneysService {
     db: Repository<JourneyEntity>
@@ -19,7 +18,7 @@ export default class JourneysService {
     async findJourneyById(id: string) {
         const journey = await this.db.findOne({
             where: { id },
-            relations,
+            relations: { user: true, bookings: true },
         })
 
         assertDataExists(journey)
@@ -28,7 +27,7 @@ export default class JourneysService {
     }
 
     async listJourneys() {
-        return await this.db.find({ relations })
+        return await this.db.find({ relations: { user: true, bookings: true } })
     }
 
     async listJourneysFilter({ userId }: { userId?: string }) {
@@ -36,7 +35,7 @@ export default class JourneysService {
             where: {
                 user: { id: userId ?? undefined },
             },
-            relations,
+            relations: { user: true, bookings: true },
         })
     }
 

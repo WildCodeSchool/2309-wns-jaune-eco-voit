@@ -1,4 +1,4 @@
-import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql'
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
 import {
     CreateUserInput,
     LoginInput,
@@ -12,9 +12,11 @@ import argon2 from 'argon2'
 import { SignJWT } from 'jose'
 import { MyContext } from '..'
 import Cookies from 'cookies'
+import { userAuthorized } from '../utils/userAuthorized'
 
 @Resolver(() => UserEntity)
 export default class UserResolver {
+    @Authorized(['ADMIN'])
     @Query(() => [UserEntity])
     async listUsers() {
         return await new UsersService().listUser()
@@ -25,10 +27,11 @@ export default class UserResolver {
         return await new UsersService().findUserById(id)
     }
 
-    @Query(() => UserEntity)
-    async findUserByEmail(@Arg('email') email: string) {
-        return await new UsersService().findUserById(email)
-    }
+    // @Authorized()
+    // @Query(() => UserEntity)
+    // async findUserByEmail(@Arg('email') email: string) {
+    //     return await new UsersService().findUserById(email)
+    // }
 
     @Query(() => UserMessage)
     async login(
@@ -46,7 +49,7 @@ export default class UserResolver {
         const isPasswordValid = await argon2.verify(user.password, password)
 
         if (isPasswordValid) {
-            const token = await new SignJWT({ email })
+            const token = await new SignJWT({ email: `aa${email}` })
                 // alg = algorithme à utiliser pour hasher la signature
                 // typ = le type de token qui est généré
                 .setProtectedHeader({
@@ -54,7 +57,7 @@ export default class UserResolver {
                     typ: 'jwt',
                 })
                 // Durée de validité du token
-                .setExpirationTime('2h')
+                .setExpirationTime('10 s')
                 // La méthode encode() de la classe TextEncoder permet d'obtenir un flux d'octets encodés en utf-8 à partir d'une chaine de caractère
                 // car sign() attend en premier argument un Uint8Array et non une string, d'ou l'utilisation de TextEncoder
                 .sign(new TextEncoder().encode(`${process.env.SECRET_KEY}`))
@@ -74,45 +77,39 @@ export default class UserResolver {
 
     @Mutation(() => UserWithoutPassord)
     async register(@Arg('data') data: CreateUserInput) {
-        const usersService = new UsersService()
-
-        const userExists = await usersService.findUserByEmailWitoutAsserting(
-            data.email
-        )
-        if (userExists) throw new Error('This email is already used')
-
-        return await usersService.create(data)
+        return await new UsersService().create(data)
     }
 
+    @Query(() => UserMessage)
+    async logout(@Ctx() { req, res, user }: MyContext) {
+        if (user) {
+            const cookies = new Cookies(req, res)
+            console.log('ici')
+
+            cookies.set('token') // sans valeur, le cookie token sera supprimé
+        }
+        return new UserMessage(true, 'Vous avez été déconnecté')
+    }
+
+    @Authorized()
     @Mutation(() => UserEntity)
-    async updateUser(@Arg('data') data: UpdateUserInput) {
+    async updateUser(
+        @Arg('data') data: UpdateUserInput,
+        @Ctx() { req, res, user }: MyContext
+    ) {
+        userAuthorized([data.id], user)
+
         return await new UsersService().updateUser(data)
     }
 
+    @Authorized()
     @Mutation(() => UserEntity)
-    async archiveUser(@Arg('id') id: string) {
+    async archiveUser(
+        @Arg('id') id: string,
+        @Ctx() { req, res, user }: MyContext
+    ) {
+        userAuthorized([id], user)
+
         return await new UsersService().updateUser({ id, status: 'ARCHIVED' })
-    }
-
-    @Mutation(() => UserEntity)
-    async increaseTripsAsPassenger(@Arg('id') id: string) {
-        const usersService = new UsersService()
-
-        const { tripsAsPassenger } = await usersService.findUserById(id)
-        return new UsersService().updateUser({
-            id,
-            tripsAsPassenger: tripsAsPassenger + 1,
-        })
-    }
-
-    @Mutation(() => UserEntity)
-    async increaseTripsAsDriver(@Arg('id') id: string) {
-        const usersService = new UsersService()
-
-        const { tripsAsDriver } = await usersService.findUserById(id)
-        return usersService.updateUser({
-            id,
-            tripsAsDriver: tripsAsDriver + 1,
-        })
     }
 }

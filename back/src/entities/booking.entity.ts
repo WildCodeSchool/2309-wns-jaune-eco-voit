@@ -38,12 +38,16 @@ export class BookingEntity {
     departureTime: Date
 
     @Field()
+    @Column({ type: 'timestamptz' }) // Recommended for Date  typeORM
+    @IsDate({ message: 'Arrival time must be a valide date' })
+    arrivalTime: Date
+
+    @Field()
     @Column({
         type: 'text',
         enum: ['PENDING', 'REJECTED', 'ACCEPTED', 'CANCELLED'],
         default: ['PENDING'],
     })
-    @IsDate({ message: 'Arrival time must be a valide date' })
     status: Status // Type créé pour le Statut
 
     // @Field(() => [StepEntity])
@@ -89,16 +93,16 @@ export class CreateBookingInput {
     departureTime: Date
 
     @Field()
-    status: Status
-
-    @Field(() => [PartialBookingInput])
-    steps: PartialBookingInput[]
+    arrivalTime: Date
 
     @Field(() => PartialBookingInput)
     user: PartialBookingInput
 
     @Field(() => PartialBookingInput)
     journey: PartialBookingInput
+
+    @Field({ nullable: true })
+    status?: Status
 }
 
 @InputType()

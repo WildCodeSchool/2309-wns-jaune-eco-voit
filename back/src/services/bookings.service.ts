@@ -7,8 +7,6 @@ import {
 } from '../entities/booking.entity'
 import { validateData, assertDataExists } from '../utils/errorHandlers'
 
-const relations = { journey: true, user: true }
-
 export default class BookingsService {
     db: Repository<BookingEntity>
 
@@ -18,19 +16,26 @@ export default class BookingsService {
 
     async listBookings() {
         return await this.db.find({
-            relations,
+            relations: { user: true, journey: true },
         })
     }
 
     async findBookingById(id: string) {
         const book = await this.db.findOne({
             where: { id },
-            relations,
+            relations: { user: true, journey: true },
         })
 
         assertDataExists(book)
 
         return book as BookingEntity
+    }
+
+    async listBookingsByJourneyId(id: string) {
+        return await this.db.find({
+            where: { journey: { id } },
+            relations: { user: true, journey: true },
+        })
     }
 
     async listBookingsFilter({
@@ -45,11 +50,11 @@ export default class BookingsService {
                 user: { id: userId ?? undefined },
                 journey: { id: journeyId ?? undefined },
             },
-            relations,
+            relations: { user: true, journey: true },
         })
     }
 
-    async create(body: CreateBookingInput) {
+    async createBooking(body: CreateBookingInput) {
         const newBooking: BookingEntity = this.db.create(body)
 
         await validateData(newBooking)
