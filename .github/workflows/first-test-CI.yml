@@ -7,4 +7,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🤗 Hello CI 
-        run: echo  'This job's status is ${{ job.status }}.'
+        run: echo  "This job's status is ${{ job.status }}."
