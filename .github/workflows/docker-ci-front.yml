@@ -1,0 +1,36 @@
+name: 🐳 docker-CI
+
+on:
+  push:
+    branches: ["CI-0001-creation"]
+
+
+jobs:
+    test-ci-Docker:
+        runs-on: ubuntu-latest
+        steps:
+            - name: 🤗 Hello CI
+              run: echo  "This job's status is ${{ job.status }}."
+
+    docker:
+        needs: test-ci-Docker
+        runs-on: ubuntu-latest
+        steps:
+          - name: 🦅 Set up QEMU
+            uses: docker/setup-qemu-action@v2
+
+          - name: 🐳 Set up Docker Buildx
+            uses: docker/setup-buildx-action@v2
+
+          - name: 🔐 Login to Docker Hub
+            uses: docker/login-action@v2
+            with:
+              username: ${{ secrets.DOCKERHUB_USERNAME }}
+              password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+          - name: 🔨 Build and push
+            uses: docker/build-push-action@v4
+            with:
+              push: true
+              context: "{{defaultContext}}:front"
+              tags: "${{ secrets.DOCKERHUB_USERNAME }}/test-docker-ci:latest"
