@@ -1,8 +1,8 @@
 name: 🐳 docker-CI
 
 on:
-  push:
-    branches: ["CI-0001-creation"]
+  push
+   
 
 
 jobs:
