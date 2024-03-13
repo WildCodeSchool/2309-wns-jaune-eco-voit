@@ -29,5 +29,5 @@ jobs:
             uses: docker/build-push-action@v4
             with:
               push: true
-              context: "{{defaultContext}}"
+              context: "{{defaultContext}}:back"
               tags: "${{ secrets.DOCKERHUB_USERNAME }}/test-docker-ci:latest"
