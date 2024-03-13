@@ -76,4 +76,4 @@ jobs:
           with:
             push: true
             context: "{{defaultContext}}:front"
-            tags: "${{ secrets.DOCKERHUB_USERNAME }}/test-docker-ci:latest
+            tags: "${{ secrets.DOCKERHUB_USERNAME }}/test-docker-ci:latest"
