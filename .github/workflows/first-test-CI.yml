@@ -1,0 +1,8 @@
+name: first test CI 
+on: [ push ]
+jobs: 
+    first_test_CI:
+        run-on: unbuntu-latest
+        steps:
+            - name: 🤗 Hello CI  
+            run: Echo  "This job's status is ${{ job.status }}."
