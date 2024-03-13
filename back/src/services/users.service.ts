@@ -57,7 +57,7 @@ export default class UsersService {
             body.email
         )
 
-        if (userExists) throw new Error('This email is already used')
+        if (userExists) throw new Error('Cet email est déjà utilisé')
 
         const newUser = this.db.create(body)
         await validateData(newUser)

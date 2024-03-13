@@ -3,4 +3,8 @@ export const routes = {
     pathname: "/",
     title: "Accueil",
   },
+  login: {
+    pathname: "/auth/login",
+    title: "Connexion",
+  },
 };

@@ -9,9 +9,16 @@ import {
   Stack,
   Button,
   Typography,
+  IconButton,
+  InputAdornment,
   FormControl,
   Divider,
+  Avatar,
 } from "@mui/material";
+
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+
 
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -35,6 +42,13 @@ function Register() {
   const router = useRouter();
   const theme = useTheme();
 
+  const [showPassword, setShowPassword] = useState<Boolean>(false);
+  const handleClickShowPassword = () => setShowPassword((show) => !show); 
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordsMatch, setPasswordsMatch] = useState(true);
@@ -46,8 +60,12 @@ function Register() {
 
   const [register, { error }] = useRegisterMutation({
     onCompleted(data) {
-      router.push(routes.home.pathname);
+      router.push(routes.login.pathname);
       console.log(data);
+    },
+     onError(error) {
+      console.log(error);
+      setLoginError(error.message);
     },
   });
 
@@ -64,6 +82,7 @@ function Register() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (password !== confirmPassword) {
       setPasswordsMatch(false);
       setLoginError("Les mots de passe ne correspondent pas");
@@ -74,10 +93,10 @@ function Register() {
     console.log("data", data);
 
     if (
-      data.email ||
-      data.password ||
-      data.firstname ||
-      data.lastname ||
+      data.email &&
+      data.password &&
+      data.firstname &&
+      data.lastname &&
       data.dateOfBirth
     ) {
       const birthdate = dayjs(data.dateOfBirth, "DD/MM/YYYY").toISOString();
@@ -130,8 +149,22 @@ function Register() {
                 <TextField
                   name="password"
                   label="Mot de passe"
-                  type="password"
+                   type={showPassword ? "text" : "password"}
                   value={password}
+                  InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                           {showPassword ? <VisibilityOutlinedIcon color="primary"/> : <VisibilityOffOutlinedIcon color="primary" />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </FormControl>
@@ -139,7 +172,7 @@ function Register() {
                 <TextField
                   name="confirmPassword"
                   label="Confirmer le mot de passe"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   error={!passwordsMatch}
@@ -180,7 +213,7 @@ function Register() {
               S&apos;inscrire
             </Button>
           </form>
-          {loginError || (
+          {loginError && (
             <Typography variant="body2" color="error" sx={{ mt: 2 }}>
               {loginError}
             </Typography>
