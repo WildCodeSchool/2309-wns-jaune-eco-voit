@@ -41,7 +41,7 @@ jobs:
         
     # Test:
     #   needs: run-linters
-    #   name: 👤 test users
+    #   name: 👤 Test
     #   runs-on: ubuntu-latest
 
     #   steps: 
@@ -50,6 +50,7 @@ jobs:
     
     docker:
       # needs: Test
+      name: 🐳 Push on Docker
       runs-on: ubuntu-latest
       steps:
         - name: 🦅 Set up QEMU
