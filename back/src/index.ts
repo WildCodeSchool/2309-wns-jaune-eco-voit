@@ -24,6 +24,8 @@ export interface MyContext {
 
 export interface Payload {
     email: string
+    role: string
+    firstname: string
 }
 
 const app = express()

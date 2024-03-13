@@ -18,6 +18,7 @@ services:
     # 'depends-on' > dit qu'un service dépend d'un autre
     env_file:
       - back/.env
+      - ./secret.env
     depends_on:
       # Nom du service du quel backend dépend
       db:
@@ -78,6 +79,8 @@ services:
 
   frontend:
     build: ./front
+    env_file:
+      - ./secret.env
     ports:
       - 3002:3000
     volumes:

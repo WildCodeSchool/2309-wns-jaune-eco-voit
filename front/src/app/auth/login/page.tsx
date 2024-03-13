@@ -51,7 +51,7 @@ const Login = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData) as LoginInput;
-    console.log("data", data);
+
     if (data.email && data.password) {
       login({
         variables: { data: { email: data.email, password: data.password } },
