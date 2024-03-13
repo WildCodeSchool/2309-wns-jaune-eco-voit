@@ -9,4 +9,4 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
       - name: 🤗 Hello CI 
-        run: Echo  "This job's status is ${{ job.status }}."
+        run: Echo  "This job's status is sucess}."
