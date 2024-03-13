@@ -6,7 +6,5 @@ jobs:
   test-CI:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
-        uses: actions/checkout@v2
       - name: 🤗 Hello CI 
-        run: Echo  "This job's status is sucess}."
+        run: Echo  `This job's status is ${{ job.status }}.`
