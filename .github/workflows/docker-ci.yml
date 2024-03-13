@@ -1,6 +1,9 @@
 name: 🐳 docker-CI
 
-on: push
+on:
+  push:
+    branches: ["CI-0001-creation-back ]"]
+
 
 jobs:
     test-ci-Docker:
