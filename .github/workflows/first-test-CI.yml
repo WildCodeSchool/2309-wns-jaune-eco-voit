@@ -17,7 +17,11 @@ jobs:
              node-version: 18
   
          - name: 🎯 Install Node.js dependencies
-           run: npm i
+           run: |
+            cd back
+            npm i
+            cd ../front
+            npm i
   
          - name: 🏃🏽Run linters
            uses: wearerequired/lint-action@v2
