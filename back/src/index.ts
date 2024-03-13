@@ -11,7 +11,7 @@ import { ApolloServer } from '@apollo/server'
 import db from './db'
 import UserResolver from './resolvers/user.resolver'
 import Cookies from 'cookies'
-import { jwtVerify, errors } from 'jose'
+import { jwtVerify } from 'jose'
 import { UserEntity } from './entities/user.entity'
 import UsersService from './services/users.service'
 import { customAuthChecker } from './lib/authChecker'
@@ -24,6 +24,8 @@ export interface MyContext {
 
 export interface Payload {
     email: string
+    role: string
+    firstname: string
 }
 
 const app = express()
@@ -44,7 +46,13 @@ async function main() {
     app.use(
         '/',
         // autorise toutes les origines à accéder à l'API. En spécifiant { origin: "*" }, cela permet à n'importe quel domaine d'accéder à l'API
-        cors<cors.CorsRequest>({ origin: '*' }),
+        cors<cors.CorsRequest>({
+            origin: [
+                'http://localhost:3002',
+                'https://studio.apollographql.com',
+            ],
+            credentials: true,
+        }),
         express.json(),
         // intégre Apollo Server à Express
         expressMiddleware(server, {

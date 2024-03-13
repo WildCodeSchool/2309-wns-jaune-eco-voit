@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const client = new ApolloClient({
-    uri: "http://backend:4000",
+    uri: "http://localhost:4000",
     cache: new InMemoryCache(),
     credentials: "include",
   });

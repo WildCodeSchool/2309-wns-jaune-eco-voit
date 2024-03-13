@@ -57,7 +57,19 @@ export class UserEntity {
     lastname: string
 
     @Field(() => GraphQLEmailAddress)
-    @Column({ length: 50, unique: true })
+    @Column({
+        length: 50,
+        unique: true,
+        //transformer permet de formater la donnée à la volée (ici on passe tout en lowercase)
+        transformer: {
+            from(value: string) {
+                return value.toLowerCase()
+            },
+            to(value: string) {
+                return value.toLowerCase()
+            },
+        },
+    })
     @IsEmail({}, { message: 'Email must be a valid email address' })
     email: string
 
