@@ -40,9 +40,9 @@ export default class UserResolver {
     ) {
         const userService = new UsersService()
 
-        const user = await userService.findUserByEmail(email)
+        const user = await userService.findUserByEmailWitoutAsserting(email)
 
-        const errorMessage = new UserMessage(false, 'Check your informations')
+        const errorMessage = new UserMessage(false, 'Vérifiez vos informations')
 
         if (!user) return errorMessage
 
@@ -57,7 +57,7 @@ export default class UserResolver {
                     typ: 'jwt',
                 })
                 // Durée de validité du token
-                .setExpirationTime('10 s')
+                .setExpirationTime('120 s')
                 // La méthode encode() de la classe TextEncoder permet d'obtenir un flux d'octets encodés en utf-8 à partir d'une chaine de caractère
                 // car sign() attend en premier argument un Uint8Array et non une string, d'ou l'utilisation de TextEncoder
                 .sign(new TextEncoder().encode(`${process.env.SECRET_KEY}`))
@@ -69,7 +69,7 @@ export default class UserResolver {
             // Evite les attaques cross site scripting (XSS)
             cookies.set('token', token, { httpOnly: true })
 
-            return new UserMessage(true, 'Welcome back !')
+            return new UserMessage(true, 'Bienvenue')
         }
 
         return errorMessage

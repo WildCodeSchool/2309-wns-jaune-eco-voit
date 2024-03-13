@@ -26,15 +26,14 @@ import {
 } from "@mui/material";
 
 import { alpha, useTheme } from "@mui/material/styles";
+import { useRouter } from "next/navigation";
+import { routes } from "@/app/lib/routes";
 
 const Login = () => {
   const theme = useTheme();
-  // const router = useRouter();
-  // const [login, { data, error }] = useLoginLazyQuery(); // Désolé I'm stupid, si ça se trouve ça fait la même qu'en dessous
-  const [login, { data, error }] = useLazyQuery<
-    LoginQuery,
-    LoginQueryVariables
-  >(LOGIN);
+  const router = useRouter();
+  const [login, { data, error }] = useLoginLazyQuery();
+
   const [loginError, setLoginError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState<Boolean>(false);
   const [email, setEmail] = useState("");
@@ -48,7 +47,6 @@ const Login = () => {
     event.preventDefault();
   };
 
-  // Utiliser react hook form
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -59,14 +57,14 @@ const Login = () => {
         variables: { data: { email: data.email, password: data.password } },
         onCompleted(data) {
           console.log(data.login);
+          router.push(routes.home.pathname);
           if (!data.login.success) {
-            setLoginError("Vérifiez vos informations");
+            setLoginError(data.login.message);
             return;
           }
           setLoginError(null);
         },
       });
-      console.log("login", loginError);
     }
   };
 
@@ -80,22 +78,6 @@ const Login = () => {
         gap={4}
         p={2}
       >
-        {/* <form onSubmit={handleSubmit} className="justify-center">
-            <h1 className="font-bold text-lg mb-8">Connexion</h1>
-            <div>
-              <input type="text" name="email" placeholder="Indiquez votre email" />
-            </div>
-            <div>
-              <input
-                type="password"
-                name="password"
-                placeholder="Indiquez votre mot de passe"
-              />
-            </div>
-            <input type="submit" />
-            <div>{loginError && loginError}</div>
-          </form> */}
-
         <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
           <Card
             sx={{
