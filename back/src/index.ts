@@ -44,7 +44,13 @@ async function main() {
     app.use(
         '/',
         // autorise toutes les origines à accéder à l'API. En spécifiant { origin: "*" }, cela permet à n'importe quel domaine d'accéder à l'API
-        cors<cors.CorsRequest>({ origin: '*' }),
+        cors<cors.CorsRequest>({
+            origin: [
+                'http://localhost:3002',
+                'https://studio.apollographql.com',
+            ],
+            credentials: true,
+        }),
         express.json(),
         // intégre Apollo Server à Express
         expressMiddleware(server, {

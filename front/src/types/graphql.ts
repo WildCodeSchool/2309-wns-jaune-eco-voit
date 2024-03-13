@@ -18,8 +18,8 @@ export type MakeEmpty<
 export type Incremental<T> =
   | T
   | {
-    [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never;
-  };
+      [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never;
+    };
 const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -35,6 +35,7 @@ export type Scalars = {
 
 export type BookingEntity = {
   __typename?: "BookingEntity";
+  arrivalTime: Scalars["DateTimeISO"]["output"];
   createdAt: Scalars["DateTimeISO"]["output"];
   departureTime: Scalars["DateTimeISO"]["output"];
   id: Scalars["ID"]["output"];
@@ -46,12 +47,23 @@ export type BookingEntity = {
 };
 
 export type CreateBookingInput = {
+  arrivalTime: Scalars["DateTimeISO"]["input"];
   departureTime: Scalars["DateTimeISO"]["input"];
   journey: PartialBookingInput;
-  status: Scalars["String"]["input"];
-  steps: Array<PartialBookingInput>;
+  status?: InputMaybe<Scalars["String"]["input"]>;
   totalPrice: Scalars["Float"]["input"];
   user: PartialBookingInput;
+};
+
+export type CreateJourneyInput = {
+  arrival_time: Scalars["DateTimeISO"]["input"];
+  automaticAccept: Scalars["Boolean"]["input"];
+  availableSeats: Scalars["Float"]["input"];
+  departure_time: Scalars["DateTimeISO"]["input"];
+  destination: Scalars["String"]["input"];
+  origin: Scalars["String"]["input"];
+  totalPrice: Scalars["Float"]["input"];
+  user: PartialUserInput;
 };
 
 export type CreateUserInput = {
@@ -87,14 +99,12 @@ export type LoginInput = {
   password: Scalars["String"]["input"];
 };
 export type RegisterInput = {
-  email: Scalars['String']['input'];
-  password: Scalars['String']['input'];
-  firstname: Scalars['String']['input'];
-  lastname: Scalars['String']['input'];
-  dateOfBirth: Scalars['DateTimeISO']['input'];
+  email: Scalars["String"]["input"];
+  password: Scalars["String"]["input"];
+  firstname: Scalars["String"]["input"];
+  lastname: Scalars["String"]["input"];
+  dateOfBirth: Scalars["DateTimeISO"]["input"];
 };
-
-
 
 export type Mutation = {
   __typename?: "Mutation";
@@ -102,10 +112,13 @@ export type Mutation = {
   archiveUser: UserEntity;
   cancelBooking: BookingEntity;
   createBooking: BookingEntity;
-  increaseTripsAsDriver: UserEntity;
-  increaseTripsAsPassenger: UserEntity;
-  register: UserWithoutPassword;
+  createJourney: JourneyEntity;
+  decreaseAvailableSeats: JourneyEntity;
+  increaseAvailableSeats: JourneyEntity;
+  register: UserWithoutPassord;
   rejectBooking: BookingEntity;
+  updateJourney: JourneyEntity;
+  updateJourneyStatus: JourneyEntity;
   updateUser: UserEntity;
 };
 
@@ -125,11 +138,15 @@ export type MutationCreateBookingArgs = {
   data: CreateBookingInput;
 };
 
-export type MutationIncreaseTripsAsDriverArgs = {
+export type MutationCreateJourneyArgs = {
+  data: CreateJourneyInput;
+};
+
+export type MutationDecreaseAvailableSeatsArgs = {
   id: Scalars["String"]["input"];
 };
 
-export type MutationIncreaseTripsAsPassengerArgs = {
+export type MutationIncreaseAvailableSeatsArgs = {
   id: Scalars["String"]["input"];
 };
 
@@ -141,6 +158,14 @@ export type MutationRejectBookingArgs = {
   id: Scalars["String"]["input"];
 };
 
+export type MutationUpdateJourneyArgs = {
+  data: UpdateJourneyInput;
+};
+
+export type MutationUpdateJourneyStatusArgs = {
+  data: UpdateJourneyStatusInput;
+};
+
 export type MutationUpdateUserArgs = {
   data: UpdateUserInput;
 };
@@ -149,32 +174,35 @@ export type PartialBookingInput = {
   id: Scalars["ID"]["input"];
 };
 
+export type PartialUserInput = {
+  id: Scalars["ID"]["input"];
+};
+
 export type Query = {
   __typename?: "Query";
   findBookingById: BookingEntity;
-  findBookingByJourney: Array<BookingEntity>;
-  findBookingByUserId: Array<BookingEntity>;
-  findUserByEmail: UserEntity;
+  findJourneyById: JourneyEntity;
   findUserById: UserEntity;
   listBookings: Array<BookingEntity>;
+  listBookingsByJourney: Array<BookingEntity>;
+  listBookingsByUser: Array<BookingEntity>;
+  listJourneys: Array<JourneyEntity>;
+  listJourneysByUser: Array<JourneyEntity>;
   listUsers: Array<UserEntity>;
   login: UserMessage;
+  logout: UserMessage;
 };
 
 export type QueryFindBookingByIdArgs = {
   id: Scalars["String"]["input"];
 };
 
-export type QueryFindBookingByJourneyArgs = {
+export type QueryFindJourneyByIdArgs = {
   id: Scalars["String"]["input"];
 };
 
-
-
-
 export type QueryFindBookingByUserIdArgs = {
-  id: Scalars['String']['input'];
-
+  id: Scalars["String"]["input"];
 };
 
 export type QueryFindUserByEmailArgs = {
@@ -185,8 +213,37 @@ export type QueryFindUserByIdArgs = {
   id: Scalars["String"]["input"];
 };
 
+export type QueryListBookingsByJourneyArgs = {
+  journeyId: Scalars["String"]["input"];
+};
+
+export type QueryListBookingsByUserArgs = {
+  userId: Scalars["String"]["input"];
+};
+
+export type QueryListJourneysByUserArgs = {
+  userId: Scalars["String"]["input"];
+};
+
 export type QueryLoginArgs = {
   data: LoginInput;
+};
+
+export type UpdateJourneyInput = {
+  arrival_time?: InputMaybe<Scalars["DateTimeISO"]["input"]>;
+  automaticAccept?: InputMaybe<Scalars["Boolean"]["input"]>;
+  availableSeats?: InputMaybe<Scalars["Float"]["input"]>;
+  departure_time?: InputMaybe<Scalars["DateTimeISO"]["input"]>;
+  destination?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["ID"]["input"];
+  origin?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<Scalars["String"]["input"]>;
+  totalPrice?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type UpdateJourneyStatusInput = {
+  id: Scalars["ID"]["input"];
+  status: Scalars["String"]["input"];
 };
 
 export type UpdateUserInput = {
@@ -212,7 +269,7 @@ export type UserEntity = {
   dateOfBirth: Scalars["DateTimeISO"]["output"];
   email: Scalars["EmailAddress"]["output"];
   firstname: Scalars["String"]["output"];
-  grade: Scalars["String"]["output"];
+  grade?: Maybe<Scalars["String"]["output"]>;
   id: Scalars["ID"]["output"];
   journeys?: Maybe<Array<JourneyEntity>>;
   lastname: Scalars["String"]["output"];
@@ -220,7 +277,7 @@ export type UserEntity = {
   phoneNumber?: Maybe<Scalars["PhoneNumber"]["output"]>;
   profilPicture?: Maybe<Scalars["String"]["output"]>;
   role: Scalars["String"]["output"];
-  status: Scalars["String"]["output"];
+  status?: Maybe<Scalars["String"]["output"]>;
   tripsAsDriver: Scalars["Float"]["output"];
   tripsAsPassenger: Scalars["Float"]["output"];
   updatedAt?: Maybe<Scalars["DateTimeISO"]["output"]>;
@@ -232,31 +289,28 @@ export type UserMessage = {
   success: Scalars["Boolean"]["output"];
 };
 
-
 export type UserWithoutPassword = {
   __typename?: "UserWithoutPassword";
   email: Scalars["EmailAddress"]["output"];
-  firstname: Scalars['String']['output'];
-  lastname: Scalars['String']['output'];
-
+  firstname: Scalars["String"]["output"];
+  lastname: Scalars["String"]["output"];
 };
 
-
-
-
 export type UserWithoutPassord = {
-  __typename?: 'UserWithoutPassord';
-  email: Scalars['EmailAddress']['output'];
-  firstname: Scalars['String']['output'];
-  lastname: Scalars['String']['output'];
+  __typename?: "UserWithoutPassord";
+  email: Scalars["EmailAddress"]["output"];
+  firstname: Scalars["String"]["output"];
+  lastname: Scalars["String"]["output"];
 };
 
 export type RegisterMutationVariables = Exact<{
   infos: CreateUserInput;
 }>;
 
-
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserWithoutPassword', id: string, email: string } };
+export type RegisterMutation = {
+  __typename?: "Mutation";
+  register: { __typename?: "UserWithoutPassword"; id: string; email: string };
+};
 
 export type LoginQueryVariables = Exact<{
   data: LoginInput;
@@ -267,21 +321,17 @@ export type LoginQuery = {
   login: { __typename?: "UserMessage"; success: boolean; message: string };
 };
 
-
-
-
-
 export const RegisterDocument = gql`
-    mutation Register($infos: RegisterInput!) {
-  register(infos: $infos) {
-    id
-    email,
-    firstname,
-    lastname
-    dataOfBirth
+  mutation Register($infos: RegisterInput!) {
+    register(infos: $infos) {
+      id
+      email
+      firstname
+      lastname
+      dataOfBirth
+    }
   }
-}
-    `;
+`;
 
 export const LoginDocument = gql`
   query Login($data: LoginInput!) {
@@ -292,8 +342,10 @@ export const LoginDocument = gql`
   }
 `;
 
-
-export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, RegisterMutationVariables>;
+export type RegisterMutationFn = Apollo.MutationFunction<
+  RegisterMutation,
+  RegisterMutationVariables
+>;
 
 /**
  * __useRegisterMutation__
@@ -312,15 +364,24 @@ export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, Regis
  *   },
  * });
  */
-export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, options);
+export function useRegisterMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RegisterMutation,
+    RegisterMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(
+    RegisterDocument,
+    options
+  );
 }
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
-export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
-
-
+export type RegisterMutationOptions = Apollo.BaseMutationOptions<
+  RegisterMutation,
+  RegisterMutationVariables
+>;
 
 /**
  * __useLoginQuery__
@@ -338,17 +399,33 @@ export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutatio
  *   },
  * });
  */
-export function useLoginQuery(baseOptions: Apollo.QueryHookOptions<LoginQuery, LoginQueryVariables> & ({ variables: LoginQueryVariables; skip?: boolean; } | { skip: boolean; })) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
+export function useLoginQuery(
+  baseOptions: Apollo.QueryHookOptions<LoginQuery, LoginQueryVariables> &
+    ({ variables: LoginQueryVariables; skip?: boolean } | { skip: boolean })
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<LoginQuery, LoginQueryVariables>(
+    LoginDocument,
+    options
+  );
 }
-export function useLoginLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LoginQuery, LoginQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useLazyQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
+export function useLoginLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<LoginQuery, LoginQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<LoginQuery, LoginQueryVariables>(
+    LoginDocument,
+    options
+  );
 }
-export function useLoginSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<LoginQuery, LoginQueryVariables>) {
-  const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useSuspenseQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
+export function useLoginSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<LoginQuery, LoginQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<LoginQuery, LoginQueryVariables>(
+    LoginDocument,
+    options
+  );
 }
 export type LoginQueryHookResult = ReturnType<typeof useLoginQuery>;
 export type LoginLazyQueryHookResult = ReturnType<typeof useLoginLazyQuery>;
