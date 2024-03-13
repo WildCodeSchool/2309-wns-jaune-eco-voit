@@ -23,10 +23,11 @@ jobs:
             cd ../front
             npm i
   
-         - name: 🏃🏽Run linters
+         - name: 🏃🏽 Run linters
            uses: wearerequired/lint-action@v2
            with:
-             eslint: true
+            eslint_dir: ./back
+            eslint: true
 
          - name: 🤗 Hello CI 
            run: echo  "This job's status is ${{ job.status }}."
