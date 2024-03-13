@@ -1,6 +1,7 @@
 name: Linter 
 
 on: push 
+    
             
 jobs:
     run-linters:
@@ -46,4 +47,3 @@ jobs:
     #     - name: 
         
 
-      
