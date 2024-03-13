@@ -49,7 +49,11 @@ export default class UserResolver {
         const isPasswordValid = await argon2.verify(user.password, password)
 
         if (isPasswordValid) {
-            const token = await new SignJWT({ email: `aa${email}` })
+            const token = await new SignJWT({
+                email,
+                firstname: user.firstname,
+                role: user.role,
+            })
                 // alg = algorithme à utiliser pour hasher la signature
                 // typ = le type de token qui est généré
                 .setProtectedHeader({

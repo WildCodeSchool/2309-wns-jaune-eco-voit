@@ -200,7 +200,6 @@ export type QueryFindUserByIdArgs = {
   id: Scalars['String']['input'];
 };
 
-
 export type QueryListBookingsByJourneyArgs = {
   journeyId: Scalars['String']['input'];
 };
@@ -382,7 +381,6 @@ export function useLoginSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOpti
 export type LoginQueryHookResult = ReturnType<typeof useLoginQuery>;
 export type LoginLazyQueryHookResult = ReturnType<typeof useLoginLazyQuery>;
 export type LoginSuspenseQueryHookResult = ReturnType<typeof useLoginSuspenseQuery>;
-export type LoginQueryResult = Apollo.QueryResult<LoginQuery, LoginQueryVariables>;
 export const LogoutDocument = gql`
     query Logout {
   logout {
@@ -423,3 +421,5 @@ export type LogoutQueryHookResult = ReturnType<typeof useLogoutQuery>;
 export type LogoutLazyQueryHookResult = ReturnType<typeof useLogoutLazyQuery>;
 export type LogoutSuspenseQueryHookResult = ReturnType<typeof useLogoutSuspenseQuery>;
 export type LogoutQueryResult = Apollo.QueryResult<LogoutQuery, LogoutQueryVariables>;
+export type LoginQueryResult = Apollo.QueryResult<LoginQuery, LoginQueryVariables>;
+

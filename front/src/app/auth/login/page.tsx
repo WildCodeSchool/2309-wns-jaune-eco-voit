@@ -9,6 +9,7 @@ import {
 
 import { useState } from "react";
 
+
 import {
   Box,
   Container,
@@ -22,7 +23,6 @@ import {
   FormControl,
   Link,
 } from "@mui/material";
-
 
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
@@ -53,7 +53,6 @@ const Login = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData) as LoginInput;
-    console.log("data", data);
     if (data.email && data.password) {
       login({
         variables: { data: { email: data.email, password: data.password } },

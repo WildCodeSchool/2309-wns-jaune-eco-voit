@@ -1,7 +1,7 @@
 "use client";
 
 import { CreateUserInput, useRegisterMutation } from "@/types/graphql";
-
+<
 import {
   Container,
   TextField,
@@ -18,6 +18,7 @@ import {
 
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+
 
 
 import dayjs from "dayjs";
@@ -42,6 +43,7 @@ function Register() {
   const router = useRouter();
   const theme = useTheme();
 
+
   const [showPassword, setShowPassword] = useState<Boolean>(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show); 
   const handleMouseDownPassword = (
@@ -49,6 +51,7 @@ function Register() {
   ) => {
     event.preventDefault();
   };
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordsMatch, setPasswordsMatch] = useState(true);
