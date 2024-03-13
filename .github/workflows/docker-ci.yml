@@ -31,4 +31,3 @@ jobs:
               push: true
               context: "{{defaultContext}}"
               tags: "${{ secrets.DOCKERHUB_USERNAME }}/test-docker-ci:latest"
-			  
