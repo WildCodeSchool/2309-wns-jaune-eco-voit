@@ -1,6 +1,6 @@
 name: Linter 
 
-on: push
+on: push 
             
 jobs:
     run-linters:
@@ -28,6 +28,12 @@ jobs:
            with:
             eslint_dir: ./back
             eslint: true
+        
+         - name: 🏃🏽 Run linters
+           uses: wearerequired/lint-action@v2
+           with:
+             eslint_dir: ./front
+             eslint: true
 
          - name: 🤗 Hello CI 
            run: echo  "This job's status is ${{ job.status }}."
