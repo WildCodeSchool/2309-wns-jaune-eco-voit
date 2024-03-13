@@ -95,6 +95,7 @@ export type RegisterInput = {
 };
 
 
+
 export type Mutation = {
   __typename?: "Mutation";
   acceptBooking: BookingEntity;
@@ -240,6 +241,16 @@ export type UserWithoutPassword = {
 
 };
 
+
+
+
+export type UserWithoutPassord = {
+  __typename?: 'UserWithoutPassord';
+  email: Scalars['EmailAddress']['output'];
+  firstname: Scalars['String']['output'];
+  lastname: Scalars['String']['output'];
+};
+
 export type RegisterMutationVariables = Exact<{
   infos: CreateUserInput;
 }>;
@@ -255,6 +266,9 @@ export type LoginQuery = {
   __typename?: "Query";
   login: { __typename?: "UserMessage"; success: boolean; message: string };
 };
+
+
+
 
 
 export const RegisterDocument = gql`
@@ -336,7 +350,6 @@ export function useLoginSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOpti
   const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useSuspenseQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
 }
-
 export type LoginQueryHookResult = ReturnType<typeof useLoginQuery>;
 export type LoginLazyQueryHookResult = ReturnType<typeof useLoginLazyQuery>;
 export type LoginSuspenseQueryHookResult = ReturnType<
