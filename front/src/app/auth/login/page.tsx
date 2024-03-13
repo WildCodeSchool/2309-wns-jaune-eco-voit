@@ -3,13 +3,12 @@
 import { LOGIN } from "@/requetes/queries/auth.queries";
 import {
   LoginInput,
-  LoginQuery,
   useLoginLazyQuery,
-  LoginQueryVariables,
 } from "@/types/graphql";
-import { useLazyQuery } from "@apollo/client";
 
-import { FormEvent, useState } from "react";
+
+import { useState } from "react";
+
 
 import {
   Box,
@@ -24,6 +23,9 @@ import {
   FormControl,
   Link,
 } from "@mui/material";
+
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 
 import { alpha, useTheme } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
@@ -51,7 +53,6 @@ const Login = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData) as LoginInput;
-
     if (data.email && data.password) {
       login({
         variables: { data: { email: data.email, password: data.password } },
@@ -127,8 +128,7 @@ const Login = () => {
                             onMouseDown={handleMouseDownPassword}
                             edge="end"
                           >
-                            {showPassword ? "a" : "b"}
-                            {/* Remplacer a et b par component d'icon après le choix du module d'icone */}
+                           {showPassword ? <VisibilityOutlinedIcon color="primary"/> : <VisibilityOffOutlinedIcon color="primary" />}
                           </IconButton>
                         </InputAdornment>
                       ),
