@@ -1,8 +1,12 @@
-name: first test CI 
-on: [ push ]
-jobs: 
-    first_test_CI:
-        run-on: unbuntu-latest
-        steps:
-            - name: 🤗 Hello CI  
-            run: Echo  "This job's status is ${{ job.status }}."
+name: client-tests-workflow
+
+on: pull_request
+            
+jobs:
+  test-CI:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: 🤗 Hello CI 
+        run: Echo  "This job's status is ${{ job.status }}."
