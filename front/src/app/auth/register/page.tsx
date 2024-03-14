@@ -1,7 +1,7 @@
 "use client";
 
 import { CreateUserInput, useRegisterMutation } from "@/types/graphql";
-<
+
 import {
   Container,
   TextField,

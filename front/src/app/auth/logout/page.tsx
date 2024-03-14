@@ -3,16 +3,21 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useLogoutLazyQuery } from "@/types/graphql";
 
+
 function Logout() {
   const router = useRouter();
   const [logout, { loading, data }] = useLogoutLazyQuery();
 
+  
+
   useEffect(() => {
     logout();
+    console.log('logout', logout);
+    console.log('data', data);
     setTimeout(() => {
       router.push("/");
     }, 2000);
-  }, []);
+  }, [data, logout, router]);
 
   return (
     <main className={`flex min-h-screen flex-col items-center justify-between p-24`}>

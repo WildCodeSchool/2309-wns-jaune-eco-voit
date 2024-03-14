@@ -25,12 +25,13 @@ const Header = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const email = getCookie("email");
-      const role = getCookie("role");
-      const firstname = getCookie("firstname");
+      const email = getCookie("email") ?? "";
+      const firstname = getCookie("firstname") ?? "";
+      const role = getCookie("role") ?? "";
       setUserInfos({ email, role, firstname });
     }
   }, []);
+  
   return (
     <header className="flex justify-between items-center py-6 px-6">
       <Link href={`${routes["home"].pathname}`}>
