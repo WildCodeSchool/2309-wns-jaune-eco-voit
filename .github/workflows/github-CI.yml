@@ -5,6 +5,7 @@ on:
     branches:
        - 'FRONT*'
        - 'BACK*'
+       - 'CI*'
 
 
 jobs:
