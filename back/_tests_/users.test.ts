@@ -27,7 +27,7 @@ const mapData = (dataArray: Omit<UserEntity, 'hashPassword'>[]) => {
 
 const baseSchema = buildSchemaSync({
     resolvers: [UserResolver],
-    authChecker: () => true,
+    authChecker: () => true, 
 })
 
 export const CREATE_USER = `#graphql
