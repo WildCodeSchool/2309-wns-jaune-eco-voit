@@ -200,6 +200,10 @@ export type QueryFindUserByIdArgs = {
   id: Scalars['String']['input'];
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> f1e25cfdb36d6400044d02f8db7cdd102e91f1ae
 export type QueryListBookingsByJourneyArgs = {
   journeyId: Scalars['String']['input'];
 };
@@ -297,6 +301,7 @@ export type LoginQueryVariables = Exact<{
   data: LoginInput;
 }>;
 
+<<<<<<< HEAD
 
 export type LoginQuery = { __typename?: 'Query', login: { __typename?: 'UserMessage', success: boolean, message: string } };
 
@@ -349,6 +354,20 @@ export const LoginDocument = gql`
   }
 }
     `;
+=======
+
+export type LoginQuery = { __typename?: 'Query', login: { __typename?: 'UserMessage', success: boolean, message: string } };
+
+
+export const LoginDocument = gql`
+    query Login($data: LoginInput!) {
+  login(data: $data) {
+    success
+    message
+  }
+}
+    `;
+>>>>>>> f1e25cfdb36d6400044d02f8db7cdd102e91f1ae
 
 /**
  * __useLoginQuery__
@@ -381,6 +400,7 @@ export function useLoginSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOpti
 export type LoginQueryHookResult = ReturnType<typeof useLoginQuery>;
 export type LoginLazyQueryHookResult = ReturnType<typeof useLoginLazyQuery>;
 export type LoginSuspenseQueryHookResult = ReturnType<typeof useLoginSuspenseQuery>;
+<<<<<<< HEAD
 export const LogoutDocument = gql`
     query Logout {
   logout {
@@ -423,3 +443,6 @@ export type LogoutSuspenseQueryHookResult = ReturnType<typeof useLogoutSuspenseQ
 export type LogoutQueryResult = Apollo.QueryResult<LogoutQuery, LogoutQueryVariables>;
 export type LoginQueryResult = Apollo.QueryResult<LoginQuery, LoginQueryVariables>;
 
+=======
+export type LoginQueryResult = Apollo.QueryResult<LoginQuery, LoginQueryVariables>;
+>>>>>>> f1e25cfdb36d6400044d02f8db7cdd102e91f1ae

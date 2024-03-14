@@ -1,0 +1,80 @@
+name: CI EcoVoit 
+
+on: push
+    
+            
+jobs:
+    run-linters:
+        name: 🧼 Run linters
+        runs-on: ubuntu-latest
+        
+        steps:
+         - name: 📌 Check out Git repository # Verif du repository
+           uses: actions/checkout@v3
+        
+         - name: 🛠️ Set up Node.js # mis en place de node
+           uses: actions/setup-node@v1
+           with:
+             node-version: 18
+  
+         - name: 🎯 Install Node.js dependencies
+           run: |
+            cd back
+            npm i
+            cd ../front
+            npm i
+  
+         - name: 🏃🏽 Run linters back
+           uses: wearerequired/lint-action@v2
+           with:
+            eslint_dir: ./back
+            eslint: true
+        
+         - name: 🏃🏽 Run linters front
+           uses: wearerequired/lint-action@v2
+           with:
+             eslint_dir: ./front
+             eslint: true
+
+         - name: 🤗 Hello CI 
+           run: echo  "This job's status is ${{ job.status }}."
+        
+    # Test:
+    #   needs: run-linters
+    #   name: 👤 Test
+    #   runs-on: ubuntu-latest
+
+    #   steps: 
+    #     - name: 
+    
+    
+    docker:
+      # needs: Test
+      name: 🐳 Push on Docker
+      runs-on: ubuntu-latest
+      steps:
+        - name: 🦅 Set up QEMU
+          uses: docker/setup-qemu-action@v2
+
+        - name: 🐳 Set up Docker Buildx
+          uses: docker/setup-buildx-action@v2
+
+        - name: 🔐 Login to Docker Hub
+          uses: docker/login-action@v2
+          with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+        - name: 🔨 Build and push back
+          uses: docker/build-push-action@v4
+          with:
+            push: true
+            context: "{{defaultContext}}:back"
+            tags: "${{ secrets.DOCKERHUB_USERNAME }}/test-docker-ci:latest"
+        
+        - name: 🔨 Build and push front
+          uses: docker/build-push-action@v4
+          with:
+            push: true
+            context: "{{defaultContext}}:front"
+            tags: "${{ secrets.DOCKERHUB_USERNAME }}/test-docker-ci:latest"
