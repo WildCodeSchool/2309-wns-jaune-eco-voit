@@ -51,7 +51,7 @@ jobs:
         - name: 🗂️ Check out code # récupération du code source
           uses: actions/checkout@v2
         - name: 🧐 Go to tests and run test 
-          run: cd ./back && npm run test-ci
+          run: cd ./back && npm i && npm run test-ci
     
     
     docker:
