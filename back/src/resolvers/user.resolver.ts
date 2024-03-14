@@ -16,7 +16,7 @@ import { userAuthorized } from '../utils/userAuthorized'
 
 @Resolver(() => UserEntity)
 export default class UserResolver {
-    // @Authorized(['ADMIN'])
+    @Authorized(['ADMIN'])
     @Query(() => [UserEntity])
     async listUsers() {
         return await new UsersService().listUser()
@@ -95,7 +95,7 @@ export default class UserResolver {
         return new UserMessage(true, 'Vous avez été déconnecté')
     }
 
-    // @Authorized()
+    @Authorized()
     @Mutation(() => UserEntity)
     async updateUser(
         @Arg('data') data: UpdateUserInput,
@@ -106,7 +106,7 @@ export default class UserResolver {
         return await new UsersService().updateUser(data)
     }
 
-    // @Authorized()
+    @Authorized()
     @Mutation(() => UserEntity)
     async archiveUser(
         @Arg('id') id: string,
