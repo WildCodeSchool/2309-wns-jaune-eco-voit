@@ -1,6 +1,9 @@
-name: CI EcoVoit 
+name: 🚗 CI EcoVoit 
 
-on: push
+on:
+  push:
+    branches:
+       - 'FRONT*'
 
 
 jobs:
@@ -47,7 +50,7 @@ jobs:
       # needs: run-linters
       name: 👤 Test
       runs-on: ubuntu-latest
-      services:
+      services: # SERVICE CONTAINER créer une DB le temporaire de la CI puis est supprimé
         # Label used to access the service container
         postgres:
           # Docker Hub image
@@ -64,13 +67,19 @@ jobs:
             --health-timeout 5s
             --health-retries 5
           ports:
-            # Maps tcp port 5432 on service container to the host
+            # Maps tcp port 5435 on service container to the host 54
             - 5435:5432
       steps: 
         - name: 🗂️ Check out code # récupération du code source
           uses: actions/checkout@v2
         - name: 🧐 Go to tests and run test 
           run: cd ./back && npm i && npm run test-ci
+      
+       steps: 
+         - name: 🗂️ Check out code # récupération du code source
+           uses: actions/checkout@v2
+         - name: 🧐 Go to tests and run test 
+           run: cd ./front && npm i && npm run test-ci
     
     
     docker:
