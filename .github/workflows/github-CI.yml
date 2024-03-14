@@ -51,11 +51,11 @@ jobs:
         - name: 🗂️ Check out code # récupération du code source
           uses: actions/checkout@v2
         - name: 🧐 Go to tests and run test 
-          run: cd ./back && npm test-ci
+          run: cd ./back && npm run test-ci
     
     
     docker:
-      # needs: Test
+      needs: Test
       name: 🐳 Push on Docker
       runs-on: ubuntu-latest
       steps:
