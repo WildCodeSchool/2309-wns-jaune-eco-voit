@@ -54,9 +54,9 @@ jobs:
           image: postgres
           # Provide the password for postgres
           env:
-            POSTGRES_USER: "ecovoit_user"
-            POSTGRES_PASSWORD: "ecovoit_password"
-            POSTGRES_DB: "ecovoit"
+            POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+            POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+            POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
           # Set health checks to wait until postgres has started
           options: >-
             --health-cmd pg_isready
