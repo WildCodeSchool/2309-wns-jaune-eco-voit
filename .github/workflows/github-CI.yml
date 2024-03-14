@@ -73,7 +73,7 @@ jobs:
     needs: Test
     name: 🐳 Push on Docker
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' # Exécuter uniquement pour les PR
+    if: github.event_name == 'pull_request' 
     
     steps:
       - name: 🦅 Set up QEMU
