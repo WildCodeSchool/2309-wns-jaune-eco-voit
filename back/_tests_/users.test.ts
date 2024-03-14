@@ -110,8 +110,26 @@ const usersData: Omit<UserEntity, 'hashPassword'>[] = [
     },
 ]
 
+
+// const authenticate = async () => {
+//     // Simulation de l'authentification
+//     // Ici vous pouvez implémenter votre logique d'authentification
+
+  
+//     // Retourner un jeton d'authentification
+//     return 'myAuthToken';
+//   };
+
 // On a laissé listUsers dans mocks, et on créé un resolvers pour findUserById puisqu'on a besoin de lui passer un paramètre.
-beforeAll(() => {
+beforeAll(async () => {
+//     const token = await authenticate();
+
+//     // Injecter le jeton dans les en-têtes d'autorisation
+//   server.context = ({ req }) => ({
+//     headers: {
+//       authorization: token ? `Bearer ${token}` : '',
+//     },
+//   });
     const mocks = {
         Query: {
             listUsers() {
@@ -119,6 +137,7 @@ beforeAll(() => {
             },
         },
     }
+
     const resolvers = () => ({
         Query: {
             findUserById(_: null, args: { id: string }) {
