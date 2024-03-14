@@ -9,9 +9,11 @@ on:
 
 
 jobs:
-    run-linters:
-        name: 🧼 Run linters
-        runs-on: ubuntu-latest
+linters:
+    name: 🧼 Run linters
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/BACK' # Condition spécifique à ce job
+    
         # on: push
             # push:
             #     branches: [`$`]
@@ -73,19 +75,16 @@ jobs:
           ports:
             # Maps tcp port 5435 on service container to the host 54
             - 5435:5432
-        steps: 
-          - name: 🗂️ Check out code # récupération du code source
-            uses: actions/checkout@v2
-          - name: 🧐 Go to tests and run test 
-            run: cd ./back && npm i && npm run test-ci
+      steps: 
+        - name: 🗂️ Check out code # récupération du code source
+          uses: actions/checkout@v2
+        - name: 🧐 Go to tests and run test 
+          run: cd ./back && npm i && npm run test-ci
           if: github.ref == 'refs/heads/BACK'
         
-        steps:
-          - name: 🗂️ Check out code
-            uses: actions/checkout@v2
-          - name: 🧐 Go to tests and run test 
-            run: cd ./front && npm i && npm run test-ci
-            if: github.ref == 'refs/heads/CI'
+        - name: 🧐 Go to tests and run test 
+          run: cd ./front && npm i && npm run test-ci
+          if: github.ref == 'refs/heads/FRONT'
         
     
     docker:
