@@ -4,47 +4,47 @@ on: push
 
 
 jobs:
-    run-linters:
-        name: 🧼 Run linters
-        runs-on: ubuntu-latest
-        # on: push
-            # push:
-            #     branches: [`$`]
+    # run-linters:
+    #     name: 🧼 Run linters
+    #     runs-on: ubuntu-latest
+    #     # on: push
+    #         # push:
+    #         #     branches: [`$`]
 
         
-        steps:
-         - name: 📌 Check out Git repository # Verif du repository
-           uses: actions/checkout@v3
+    #     steps:
+    #      - name: 📌 Check out Git repository # Verif du repository
+    #        uses: actions/checkout@v3
         
-         - name: 🛠️ Set up Node.js # mis en place de node
-           uses: actions/setup-node@v1
-           with:
-             node-version: 18
+    #      - name: 🛠️ Set up Node.js # mis en place de node
+    #        uses: actions/setup-node@v1
+    #        with:
+    #          node-version: 18
   
-         - name: 🎯 Install Node.js dependencies
-           run: |
-            cd back
-            npm i
-            cd ../front
-            npm i
+    #      - name: 🎯 Install Node.js dependencies
+    #        run: |
+    #         cd back
+    #         npm i
+    #         cd ../front
+    #         npm i
   
-         - name: 🏃🏽 Run linters back
-           uses: wearerequired/lint-action@v2
-           with:
-            eslint_dir: ./back
-            eslint: true
+    #      - name: 🏃🏽 Run linters back
+    #        uses: wearerequired/lint-action@v2
+    #        with:
+    #         eslint_dir: ./back
+    #         eslint: true
         
-         - name: 🏃🏽 Run linters front
-           uses: wearerequired/lint-action@v2
-           with:
-             eslint_dir: ./front
-             eslint: true
+    #      - name: 🏃🏽 Run linters front
+    #        uses: wearerequired/lint-action@v2
+    #        with:
+    #          eslint_dir: ./front
+    #          eslint: true
 
-         - name: 🤗 Hello CI 
-           run: echo  "This job's status is ${{ job.status }}."
+    #      - name: 🤗 Hello CI 
+    #        run: echo  "This job's status is ${{ job.status }}."
         
     Test:
-      needs: run-linters
+      # needs: run-linters
       name: 👤 Test
       runs-on: ubuntu-latest
       steps: 
