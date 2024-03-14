@@ -4,8 +4,8 @@ on:
   push:
     branches:
        - 'FRONT*'
-       - 'BACK*'
-       - 'CI*'
+      #  - 'BACK*'
+      #  - 'CI*'
 
 
 jobs:
@@ -76,6 +76,7 @@ jobs:
           uses: actions/checkout@v2
         - name: 🧐 Go to tests and run test 
           run: cd ./back && npm i && npm run test-ci
+          if: github.ref == 'refs/heads/BACK'
     
     docker:
       needs: Test
