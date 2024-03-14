@@ -3,7 +3,7 @@ name: 🚗 CI EcoVoit
 on:
   push:
     branches:
-      - 'FRONT*'
+      - 'CI*'
 
   pull_request:
     branches:
