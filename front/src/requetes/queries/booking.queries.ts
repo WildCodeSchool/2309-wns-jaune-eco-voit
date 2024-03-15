@@ -133,8 +133,8 @@ export const LIST_BOOKINGS_BY_JOURNEY = gql`
 `;
 
 export const FIND_BOOKING_BY_ID = gql`
-  query FindBookingById($findBookingByIdId: String!) {
-    findBookingById(id: $findBookingByIdId) {
+  query FindBookingById($findBookingById: String!) {
+    findBookingById(id: $findBookingById) {
       id
       totalPrice
       departureTime

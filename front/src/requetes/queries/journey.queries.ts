@@ -89,8 +89,8 @@ export const LIST_JOURNEYS_BY_USER = gql`
 `;
 
 export const FIND_JOURNEY_BY_ID = gql`
-  query findJourneyById($findJourneyByIdId: String!) {
-    findJourneyById(id: $findJourneyByIdId) {
+  query findJourneyById($findJourneyById: String!) {
+    findJourneyById(id: $findJourneyById) {
       id
       origin
       destination
