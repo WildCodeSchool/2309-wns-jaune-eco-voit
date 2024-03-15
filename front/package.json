@@ -7,11 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-<<<<<<< HEAD
     "test": "jest --watch",
-=======
-    "test": "jest",
->>>>>>> b5a0051f (commit)
     "test-ci": "jest",
     "generate": "graphql-codegen --watch"
   },

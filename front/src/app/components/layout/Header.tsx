@@ -42,6 +42,7 @@ const Header = () => {
   useEffect(() => {
     console.log(user);
     const userIdCookie = getCookie("id");
+    console.log(userIdCookie);
 
     if (!userIdCookie && !user) return;
 

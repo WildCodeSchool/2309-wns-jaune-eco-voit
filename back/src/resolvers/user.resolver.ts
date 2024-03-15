@@ -49,7 +49,6 @@ export default class UserResolver {
         if (isPasswordValid) {
             const token = await new SignJWT({
                 email,
-                firstname: user.firstname,
                 role: user.role,
                 id: user.id,
             })
