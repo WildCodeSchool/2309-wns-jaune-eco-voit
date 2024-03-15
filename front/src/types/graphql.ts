@@ -200,6 +200,10 @@ export type QueryFindUserByIdArgs = {
   id: Scalars['String']['input'];
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> f66f065c (Latest graphQL code gen  + modif readme)
 export type QueryListBookingsByJourneyArgs = {
   journeyId: Scalars['String']['input'];
 };
@@ -297,6 +301,7 @@ export type LoginQueryVariables = Exact<{
   data: LoginInput;
 }>;
 
+<<<<<<< HEAD
 
 export type LoginQuery = { __typename?: 'Query', login: { __typename?: 'UserMessage', success: boolean, message: string } };
 
@@ -349,6 +354,20 @@ export const LoginDocument = gql`
   }
 }
     `;
+=======
+
+export type LoginQuery = { __typename?: 'Query', login: { __typename?: 'UserMessage', success: boolean, message: string } };
+
+
+export const LoginDocument = gql`
+    query Login($data: LoginInput!) {
+  login(data: $data) {
+    success
+    message
+  }
+}
+    `;
+>>>>>>> f66f065c (Latest graphQL code gen  + modif readme)
 
 /**
  * __useLoginQuery__
@@ -366,6 +385,7 @@ export const LoginDocument = gql`
  *   },
  * });
  */
+<<<<<<< HEAD
 export function useLoginQuery(baseOptions: Apollo.QueryHookOptions<LoginQuery, LoginQueryVariables> & ({ variables: LoginQueryVariables; skip?: boolean; } | { skip: boolean; })) {
   const options = { ...defaultOptions, ...baseOptions }
   return Apollo.useQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
@@ -423,3 +443,21 @@ export type LogoutSuspenseQueryHookResult = ReturnType<typeof useLogoutSuspenseQ
 export type LogoutQueryResult = Apollo.QueryResult<LogoutQuery, LogoutQueryVariables>;
 export type LoginQueryResult = Apollo.QueryResult<LoginQuery, LoginQueryVariables>;
 
+=======
+export function useLoginQuery(baseOptions: Apollo.QueryHookOptions<LoginQuery, LoginQueryVariables> & ({ variables: LoginQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
+      }
+export function useLoginLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LoginQuery, LoginQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
+        }
+export function useLoginSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<LoginQuery, LoginQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
+        }
+export type LoginQueryHookResult = ReturnType<typeof useLoginQuery>;
+export type LoginLazyQueryHookResult = ReturnType<typeof useLoginLazyQuery>;
+export type LoginSuspenseQueryHookResult = ReturnType<typeof useLoginSuspenseQuery>;
+export type LoginQueryResult = Apollo.QueryResult<LoginQuery, LoginQueryVariables>;
+>>>>>>> f66f065c (Latest graphQL code gen  + modif readme)
