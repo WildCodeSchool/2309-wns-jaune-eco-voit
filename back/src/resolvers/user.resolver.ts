@@ -33,7 +33,7 @@ export default class UserResolver {
     //     return await new UsersService().findUserById(email)
     // }
 
-    @Query(() => UserMessage)
+    @Query(() => UserEntity)
     async login(
         @Arg('data') { email, password }: LoginInput,
         @Ctx() { req, res }: MyContext
@@ -42,9 +42,7 @@ export default class UserResolver {
 
         const user = await userService.findUserByEmailWitoutAsserting(email)
 
-        const errorMessage = new UserMessage(false, 'Vérifiez vos informations')
-
-        if (!user) return errorMessage
+        if (!user) throw new Error('Vérifiez vos informations')
 
         const isPasswordValid = await argon2.verify(user.password, password)
 
@@ -53,6 +51,7 @@ export default class UserResolver {
                 email,
                 firstname: user.firstname,
                 role: user.role,
+                id: user.id,
             })
                 // alg = algorithme à utiliser pour hasher la signature
                 // typ = le type de token qui est généré
@@ -61,7 +60,7 @@ export default class UserResolver {
                     typ: 'jwt',
                 })
                 // Durée de validité du token
-                .setExpirationTime('120 s')
+                .setExpirationTime('2 h')
                 // La méthode encode() de la classe TextEncoder permet d'obtenir un flux d'octets encodés en utf-8 à partir d'une chaine de caractère
                 // car sign() attend en premier argument un Uint8Array et non une string, d'ou l'utilisation de TextEncoder
                 .sign(new TextEncoder().encode(`${process.env.SECRET_KEY}`))
@@ -73,10 +72,10 @@ export default class UserResolver {
             // Evite les attaques cross site scripting (XSS)
             cookies.set('token', token, { httpOnly: true })
 
-            return new UserMessage(true, 'Bienvenue')
+            return user
         }
 
-        return errorMessage
+        throw new Error('Vérifiez vos informations')
     }
 
     @Mutation(() => UserWithoutPassord)

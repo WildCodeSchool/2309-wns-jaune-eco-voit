@@ -1,15 +1,10 @@
 "use client";
-
-import { LOGIN } from "@/requetes/queries/auth.queries";
-import {
-  LoginInput,
-  useLoginLazyQuery,
-} from "@/types/graphql";
-
-
-import { useState } from "react";
-
-
+//cores
+import { useState, useContext } from "react";
+import { useRouter } from "next/navigation";
+//graphQL
+import { LoginInput, useLoginLazyQuery } from "@/types/graphql";
+//
 import {
   Box,
   Container,
@@ -24,12 +19,12 @@ import {
   Link,
 } from "@mui/material";
 
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 import { alpha, useTheme } from "@mui/material/styles";
-import { useRouter } from "next/navigation";
 import { routes } from "@/app/lib/routes";
+import { AuthContext } from "@/context/authContext";
 
 const Login = () => {
   const theme = useTheme();
@@ -40,6 +35,8 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState<Boolean>(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const { updateUser } = useContext(AuthContext);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -58,12 +55,11 @@ const Login = () => {
         variables: { data: { email: data.email, password: data.password } },
         onCompleted(data) {
           console.log(data.login);
+          updateUser(data.login);
           router.push(routes.home.pathname);
-          if (!data.login.success) {
-            setLoginError(data.login.message);
-            return;
-          }
-          setLoginError(null);
+        },
+        onError(error) {
+          console.log(error);
         },
       });
     }
@@ -128,7 +124,11 @@ const Login = () => {
                             onMouseDown={handleMouseDownPassword}
                             edge="end"
                           >
-                           {showPassword ? <VisibilityOutlinedIcon color="primary"/> : <VisibilityOffOutlinedIcon color="primary" />}
+                            {showPassword ? (
+                              <VisibilityOutlinedIcon color="primary" />
+                            ) : (
+                              <VisibilityOffOutlinedIcon color="primary" />
+                            )}
                           </IconButton>
                         </InputAdornment>
                       ),

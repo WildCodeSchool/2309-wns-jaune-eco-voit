@@ -1,36 +1,69 @@
 "use client";
 //chore
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
-import { getCookie, CookieValueTypes } from "cookies-next";
 //Assets
-// import logo from "@/assets/Logo.webp";
-import { Avatar, Button } from "@mui/material";
+import logo from "@/assets/Logo.webp";
+import {
+  Avatar,
+  Button,
+  Divider,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
+} from "@mui/material";
 import Link from "next/link";
 import { routes } from "@/app/lib/routes";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-
-export type UserInfos = {
-  email: CookieValueTypes;
-  role: CookieValueTypes;
-  firstname: CookieValueTypes;
-};
-
+import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
+import DirectionsCarFilledOutlinedIcon from "@mui/icons-material/DirectionsCarFilledOutlined";
+import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
+import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { useFindUserByIdLazyQuery } from "@/types/graphql";
+import { getCookie } from "cookies-next";
+import { AuthContext } from "@/context/authContext";
+import { useRouter } from "next/navigation";
 const Header = () => {
-  const [userInfos, setUserInfos] = useState<UserInfos>({
-    email: "",
-    role: "",
-    firstname: "",
-  });
+  const router = useRouter();
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const [findUser, { data, error }] = useFindUserByIdLazyQuery();
+
+  const { user, updateUser, logout } = useContext(AuthContext);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const email = getCookie("email") ?? "";
-      const firstname = getCookie("firstname") ?? "";
-      const role = getCookie("role") ?? "";
-      setUserInfos({ email, role, firstname });
+    console.log(user);
+    const userIdCookie = getCookie("id");
+
+    if (!userIdCookie && !user) return;
+
+    if (!userIdCookie && user) {
+      console.log("no cookies");
+      logout();
+      return;
     }
-  }, []);
+
+    if (user?.id !== userIdCookie) {
+      findUser({
+        variables: { findUserById: userIdCookie as string },
+        onCompleted(data) {
+          console.log(data);
+          updateUser(data.findUserById);
+        },
+      });
+    }
+  }, [findUser, user, logout, updateUser]);
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
 
   return (
     <header className="flex justify-between items-center py-6 px-6">
@@ -38,28 +71,90 @@ const Header = () => {
         {/* <Image src={logo} alt="Ecovoit" height={45} /> */}
       </Link>
       <nav className="flex gap-4 items-center">
-        {!userInfos?.email ? (
+        {!user ? (
           <>
-            <Link href="/auth/login">
-              <Button>Connexion</Button>
-            </Link>
-            <Link href="/auth/register">
-              <Button variant="contained">S&apos;inscrire</Button>
-            </Link>
+            <Button onClick={() => router.push(routes.login.pathname)}>
+              Connexion
+            </Button>
+            <Button
+              onClick={() => router.push(routes.register.pathname)}
+              variant="contained"
+            >
+              S&apos;inscrire
+            </Button>
           </>
         ) : (
           <>
-            <Link href="#" className="flex items-center gap-1">
+            <Button
+              href="#"
+              variant="text"
+              className="flex items-center gap-4"
+              onClick={() => router.push(routes.publish.pathname)}
+            >
               <AddCircleOutlineOutlinedIcon />
               <p className="font-medium text-sm">Publier un trajet</p>
-            </Link>
-            <Link href="/auth/logout">
-              <Button variant="contained">Déconnexion</Button>
-            </Link>
-            <Avatar
-              alt="profile picture"
-              src="https://www.santelog.com/sites/santelog.com/www.santelog.com/files/styles/large/public/images/accroche/adobestock_276208008_lama.jpeg?itok=d2steNiv"
-            />
+            </Button>
+
+            <Tooltip title="Profile">
+              <IconButton
+                onClick={(e) => {
+                  setAnchorEl(e.currentTarget);
+                }}
+                color="inherit"
+              >
+                <Avatar
+                  alt="profile picture"
+                  src="https://www.santelog.com/sites/santelog.com/www.santelog.com/files/styles/large/public/images/accroche/adobestock_276208008_lama.jpeg?itok=d2steNiv"
+                />
+              </IconButton>
+            </Tooltip>
+
+            <Menu
+              id="profile-menu"
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleCloseMenu}
+              onClick={handleCloseMenu}
+              transformOrigin={{ horizontal: "right", vertical: "top" }}
+              anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+              className="m-4"
+            >
+              <MenuItem onClick={() => router.push(routes.profile.pathname)}>
+                <div className="w-72 flex justify-between">
+                  <PersonRoundedIcon /> <p>Mon profil</p>{" "}
+                  <KeyboardArrowRightOutlinedIcon />
+                </div>
+              </MenuItem>
+
+              <Divider />
+
+              <MenuItem onClick={() => router.push(routes.journeys.pathname)}>
+                <div className="w-72 flex justify-between">
+                  <DirectionsCarFilledOutlinedIcon /> <p>Mes trajets</p>
+                  <KeyboardArrowRightOutlinedIcon />
+                </div>
+              </MenuItem>
+
+              <Divider />
+
+              <MenuItem onClick={() => router.push(routes.messaging.pathname)}>
+                <div className="w-72 flex justify-between">
+                  <ModeCommentOutlinedIcon />
+                  <p>Ma messagerie</p>
+                  <KeyboardArrowRightOutlinedIcon />
+                </div>
+              </MenuItem>
+
+              <Divider />
+
+              <MenuItem onClick={() => router.push(routes.logout.pathname)}>
+                <div className="w-72 flex justify-between">
+                  <CloseOutlinedIcon />
+                  <p>Déconnexion</p>
+                  <KeyboardArrowRightOutlinedIcon />
+                </div>
+              </MenuItem>
+            </Menu>
           </>
         )}
       </nav>

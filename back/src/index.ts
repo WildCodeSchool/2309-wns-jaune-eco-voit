@@ -26,6 +26,7 @@ export interface Payload {
     email: string
     role: string
     firstname: string
+    id: string
 }
 
 const app = express()

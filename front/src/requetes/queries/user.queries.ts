@@ -45,8 +45,8 @@ export const LIST_USERS = gql`
 `;
 
 export const FIND_USER_BY_ID = gql`
-  query findUserById($findUserByIdId: String!) {
-    findUserById(id: $findUserByIdId) {
+  query findUserById($findUserById: String!) {
+    findUserById(id: $findUserById) {
       id
       firstname
       lastname
@@ -56,8 +56,8 @@ export const FIND_USER_BY_ID = gql`
       phoneNumber
       profilPicture
       role
-      grade
       tripsAsPassenger
+      grade
       tripsAsDriver
       status
       createdAt

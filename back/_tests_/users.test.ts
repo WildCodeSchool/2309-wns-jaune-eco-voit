@@ -156,7 +156,7 @@ describe('Test sur les Users', () => {
         const response = await server.executeOperation<ResponseOneUser>({
             query: FIND_USER_BY_ID,
             variables: {
-                findUserByIdId: 'abcd',
+                findUserById: 'abcd',
             },
         })
         assert(response.body.kind === 'single')
