@@ -16,10 +16,8 @@ import {
   Avatar,
 } from "@mui/material";
 
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
-
-
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -43,9 +41,8 @@ function Register() {
   const router = useRouter();
   const theme = useTheme();
 
-
   const [showPassword, setShowPassword] = useState<Boolean>(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show); 
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -66,7 +63,7 @@ function Register() {
       router.push(routes.login.pathname);
       console.log(data);
     },
-     onError(error) {
+    onError(error) {
       console.log(error);
       setLoginError(error.message);
     },
@@ -152,22 +149,26 @@ function Register() {
                 <TextField
                   name="password"
                   label="Mot de passe"
-                   type={showPassword ? "text" : "password"}
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={handleClickShowPassword}
-                            onMouseDown={handleMouseDownPassword}
-                            edge="end"
-                          >
-                           {showPassword ? <VisibilityOutlinedIcon color="primary"/> : <VisibilityOffOutlinedIcon color="primary" />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? (
+                            <VisibilityOutlinedIcon color="primary" />
+                          ) : (
+                            <VisibilityOffOutlinedIcon color="primary" />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </FormControl>

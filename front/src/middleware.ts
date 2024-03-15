@@ -5,7 +5,7 @@ import { routes } from "@/app/lib/routes";
 interface Payload {
   email: string;
   role: string;
-  firstname: string;
+  id: string;
 }
 
 const SECRET_KEY = process.env.SECRET_KEY || "";
@@ -17,7 +17,6 @@ export default async function middleware(request: NextRequest) {
   const token = cookies.get("token");
 
   return await checkToken(token?.value, request);
-
 }
 
 //Fonction de vérification du token
@@ -40,15 +39,14 @@ async function checkToken(token: string | undefined, request: NextRequest) {
     //On delete les cookies existants
     response.cookies.delete("email");
     response.cookies.delete("role");
-    response.cookies.delete("firstname");
+    response.cookies.delete("id");
 
-    return response
+    return response;
   }
   try {
-    const { email, role, firstname } = await verify(token);
+    const { email, role, id } = await verify(token);
 
-    if (firstname && email && role) {
-
+    if (id && email && role) {
       //On vérifie que le role de l'utilisateur est "ADMIN" pour les routes "ADMIN"
       if (currentRoute?.protected === "ADMIN" && role !== "ADMIN") {
         response = NextResponse.redirect(new URL("/error", request.url)); // Créer une page "Access denied"
@@ -56,7 +54,7 @@ async function checkToken(token: string | undefined, request: NextRequest) {
       //On ajoute des cookie avec les infos du user
       response.cookies.set("email", email);
       response.cookies.set("role", role);
-      response.cookies.set("firstname", firstname);
+      response.cookies.set("id", id);
 
       return response;
     }
@@ -78,13 +76,13 @@ async function checkToken(token: string | undefined, request: NextRequest) {
 
 function findRouteByPathname(url: string) {
   if (url === "/") {
-    return routes.home
+    return routes.home;
   }
-  const routeKeys = Object.keys(routes).filter(e => e !== "home")
+  const routeKeys = Object.keys(routes).filter((e) => e !== "home");
   for (const key of routeKeys) {
     if (url.includes(routes[key].pathname)) {
-      return routes[key]
+      return routes[key];
     }
   }
-  return null
+  return null;
 }

@@ -7,6 +7,10 @@ import { gatwick, stolzl } from "./theme/ThemeOption";
 import ThemeRegistery from "./theme/ThemeRegistery";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
+import { createContext, useContext, useEffect, useState } from "react";
+import { getCookie } from "cookies-next";
+
+import { AuthContext, AuthProvider } from "@/context/authContext";
 
 // export const metadata: Metadata = {
 //   title: "Create Next App",
@@ -26,17 +30,19 @@ export default function RootLayout({
 
   return (
     <ApolloProvider client={client}>
-      <ThemeRegistery>
-        <html lang="en" className={`${stolzl.variable} ${gatwick.variable}`}>
-          <body className="font-stolzl">
-            <main className="min-h-screen flex flex-col justify-between">
-              <Header />
-              {children}
-              <Footer />
-            </main>
-          </body>
-        </html>
-      </ThemeRegistery>
+      <AuthProvider>
+        <ThemeRegistery>
+          <html lang="en" className={`${stolzl.variable} ${gatwick.variable}`}>
+            <body className="font-stolzl">
+              <main className="min-h-screen flex flex-col justify-between">
+                <Header />
+                {children}
+                <Footer />
+              </main>
+            </body>
+          </html>
+        </ThemeRegistery>
+      </AuthProvider>
     </ApolloProvider>
   );
 }

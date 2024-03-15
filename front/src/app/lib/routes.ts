@@ -32,9 +32,25 @@ export const routes: { [key: string]: Route } = {
     title: "Admin",
     protected: "ADMIN",
   },
-  compte: {
-    pathname: "/compte/votre-compte",
+  profil: {
+    pathname: "/profile/my-profile",
     title: "Votre compte",
     protected: "PRIVATE",
-  }
+  },
+  journeys: {
+    pathname: "/profile/my-journeys",
+    title: "Vos trajets",
+    protected: "PRIVATE",
+  },
+  messagerie: {
+    pathname: "/profile/messaging",
+    title: "Messagerie",
+    protected: "PRIVATE",
+  },
+  publier: {
+    pathname: "/publish",
+    title: "Publier un trajet",
+    protected: "PRIVATE",
+  },
+
 };
