@@ -31,7 +31,7 @@ const Header = () => {
       setUserInfos({ email, role, firstname });
     }
   }, []);
-  
+
   return (
     <header className="flex justify-between items-center py-6 px-6">
       <Link href={`${routes["home"].pathname}`}>
