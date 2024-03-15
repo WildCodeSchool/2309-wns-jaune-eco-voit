@@ -63,10 +63,6 @@ const Header = () => {
     }
   }, [findUser, user, logout, updateUser]);
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
-
   return (
     <header className="flex justify-between items-center py-6 px-6">
       <Link href={`${routes["home"].pathname}`}>

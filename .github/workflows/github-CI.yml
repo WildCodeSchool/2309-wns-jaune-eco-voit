@@ -4,7 +4,10 @@ on:
   push: # Lors du push sur toutes les branches
     branches:
       - "*"
-  pull_request: # Lors d'une PR sur la main
+  pull_request: # Lors d'une PR merge
+    branches:
+      - "main"
+  pull_request_target: # Lors d'une PR merge
     branches:
       - "main"
 
@@ -79,8 +82,7 @@ jobs:
     needs: Test
     name: 🐳 Push on Docker
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-
+    if: github.event_name == 'pull_request_target' || github.event_name == 'pull_request'
     steps:
       - name: 🦅 Set up QEMU
         uses: docker/setup-qemu-action@v2
