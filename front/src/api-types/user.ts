@@ -1,9 +1,15 @@
 import { BookingEntity } from "./booking";
 import { JourneyEntity } from "./journey";
 
+<<<<<<< HEAD
 type Role = "USER" | "ADMIN";
 type Grade = "BEGINNER" | "CONFIRMED" | "AMBASSADOR";
 type Status = "ARCHIVED" | "ACTIVE";
+=======
+// type Role = "USER" | "ADMIN";
+// type Grade = "BEGINNER" | "CONFIRMED" | "AMBASSADOR";
+// type Status = "ARCHIVED" | "ACTIVE";
+>>>>>>> a615dc78 (FRONT creation type)
 
 export type UserEntity = {
   id: string;

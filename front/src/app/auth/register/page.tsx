@@ -63,22 +63,15 @@ function Register() {
       router.push(routes.login.pathname);
       console.log(data);
     },
+<<<<<<< HEAD
     onError(error) {
+=======
+    onError(error: any) {
+>>>>>>> a615dc78 (FRONT creation type)
       console.log(error);
       setLoginError(error.message);
     },
   });
-
-  // useEffect(() => {
-  //   if (confirmPassword !== "" && password !== "") {
-  //     setPasswordsMatch(PWD_REGEX.test(password));
-  //     setValidPassword(password === confirmPassword);
-  //   }
-  //   if (confirmPassword === "" || password === "") {
-  //     setPasswordsMatch(false);
-  //     setValidPassword(false);
-  //   }
-  // }, [password, confirmPassword]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
