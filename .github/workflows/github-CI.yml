@@ -1,23 +1,23 @@
 name: 🚗 CI EcoVoit 
 
 on:
-  push:
+  push:   # Lors du push sur tout les branches
     branches:
       - '*'
-  pull_request:
+  pull_request: # Lors d'une PR sur la main
     branches:
       - 'main'
 
 jobs:
-  run-linters:
+  run-linters: 
     name: 🧼 Run linters
     runs-on: ubuntu-latest
         
     steps:
-      - name: 📌 Check out Git repository
+      - name: 📌 Check out Git repository # Vérifie le repo
         uses: actions/checkout@v3
         
-      - name: 🛠️ Set up Node.js
+      - name: 🛠️ Set up Node.js # Le met en place
         uses: actions/setup-node@v1
         with:
           node-version: 18
@@ -29,14 +29,14 @@ jobs:
           cd ../front
           npm i
   
-      - name: 🏃🏽 Run linters back
+      - name: 🏃🏽 Run linters back # Si la branche commence par "back", alors il fait cette étape
         uses: wearerequired/lint-action@v2
         with:
           eslint_dir: ./back
           eslint: true
         if: startsWith(github.ref, 'refs/heads/back')  
         
-      - name: 🏃🏽 Run linters front
+      - name: 🏃🏽 Run linters front # Si la branche commence par "back", alors il fait cette étape
         uses: wearerequired/lint-action@v2
         with:
           eslint_dir: ./front
@@ -71,7 +71,7 @@ jobs:
         run: |
           if [[ "startsWith(github.ref, 'refs/heads/back')" ]]; then
             cd ./back && npm i && npm run test-ci
-          elif [[ "${{ github.ref }}" == "refs/heads/FRONT" ]]; then
+          elif [[ "startsWith(github.ref, 'refs/heads/front')" ]]; then
             cd ./front && npm i && npm run test-ci
           fi
 
