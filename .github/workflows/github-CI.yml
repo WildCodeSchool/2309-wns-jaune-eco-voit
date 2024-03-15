@@ -4,7 +4,7 @@ on:
   push: # Lors du push sur toutes les branches
     branches:
       - "*"
-  pull_request_target: # Lors d'une PR merge
+  pull_request: # Lors d'une PR merge
     branches:
       - "main"
     types:
