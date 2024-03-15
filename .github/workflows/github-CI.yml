@@ -1,43 +1,49 @@
-name: 🚗 CI EcoVoit 
+name: 🚗 CI EcoVoit
 
-on: push
+on:
+  push: # Lors du push sur toutes les branches
+    branches:
+      - "*"
+  pull_request: # Lors d'une PR sur la main
+    branches:
+      - "main"
 
 jobs:
   run-linters:
     name: 🧼 Run linters
     runs-on: ubuntu-latest
-        
+
     steps:
       - name: 📌 Check out Git repository
         uses: actions/checkout@v3
-        
+
       - name: 🛠️ Set up Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 18
-  
+
       - name: 🎯 Install Node.js dependencies
         run: |
           cd back
           npm i
           cd ../front
           npm i
-  
+
       - name: 🏃🏽 Run linters back
         uses: wearerequired/lint-action@v2
         with:
           eslint_dir: ./back
           eslint: true
-        if: github.ref == 'refs/heads/BACK'
-        
+        if: startsWith(github.ref, 'refs/heads/back')
+
       - name: 🏃🏽 Run linters front
         uses: wearerequired/lint-action@v2
         with:
           eslint_dir: ./front
           eslint: true
-        if: github.ref == 'refs/heads/FRONT'
+        if: startsWith(github.ref, 'refs/heads/front')
 
-      - name: 🤗 Hello CI 
+      - name: 🤗 Hello CI
         run: echo "This job's status is ${{ job.status }}."
 
   Test:
@@ -63,9 +69,9 @@ jobs:
         uses: actions/checkout@v2
       - name: 🧐 Go to tests and run test
         run: |
-          if [[ "${{ github.ref }}" == "refs/heads/BACK" ]]; then
+          if [[ "startsWith(github.ref, 'refs/heads/back')" ]]; then
             cd ./back && npm i && npm run test-ci
-          elif [[ "${{ github.ref }}" == "refs/heads/FRONT" ]]; then
+          elif [[ "startsWith(github.ref, 'refs/heads/front')" ]]; then
             cd ./front && npm i && npm run test-ci
           fi
 
@@ -73,8 +79,8 @@ jobs:
     needs: Test
     name: 🐳 Push on Docker
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' 
-    
+    if: github.event_name == 'pull_request'
+
     steps:
       - name: 🦅 Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -94,7 +100,7 @@ jobs:
           push: true
           context: "{{defaultContext}}:back"
           tags: "${{ secrets.DOCKERHUB_USERNAME }}/test-docker-ci:latest"
-        
+
       - name: 🔨 Build and push front
         uses: docker/build-push-action@v4
         with:
