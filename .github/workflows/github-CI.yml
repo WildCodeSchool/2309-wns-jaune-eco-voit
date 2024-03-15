@@ -1,0 +1,103 @@
+name: 🚗 CI EcoVoit 
+
+on: push
+
+jobs:
+  run-linters:
+    name: 🧼 Run linters
+    runs-on: ubuntu-latest
+        
+    steps:
+      - name: 📌 Check out Git repository
+        uses: actions/checkout@v3
+        
+      - name: 🛠️ Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18
+  
+      - name: 🎯 Install Node.js dependencies
+        run: |
+          cd back
+          npm i
+          cd ../front
+          npm i
+  
+      - name: 🏃🏽 Run linters back
+        uses: wearerequired/lint-action@v2
+        with:
+          eslint_dir: ./back
+          eslint: true
+        if: github.ref == 'refs/heads/BACK'
+        
+      - name: 🏃🏽 Run linters front
+        uses: wearerequired/lint-action@v2
+        with:
+          eslint_dir: ./front
+          eslint: true
+        if: github.ref == 'refs/heads/FRONT'
+
+      - name: 🤗 Hello CI 
+        run: echo "This job's status is ${{ job.status }}."
+
+  Test:
+    needs: run-linters
+    name: 👤 Test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5435:5432
+    steps:
+      - name: 🗂️ Check out code
+        uses: actions/checkout@v2
+      - name: 🧐 Go to tests and run test
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/BACK" ]]; then
+            cd ./back && npm i && npm run test-ci
+          elif [[ "${{ github.ref }}" == "refs/heads/FRONT" ]]; then
+            cd ./front && npm i && npm run test-ci
+          fi
+
+  docker:
+    needs: Test
+    name: 🐳 Push on Docker
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' 
+    
+    steps:
+      - name: 🦅 Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: 🐳 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: 🔐 Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: 🔨 Build and push back
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          context: "{{defaultContext}}:back"
+          tags: "${{ secrets.DOCKERHUB_USERNAME }}/test-docker-ci:latest"
+        
+      - name: 🔨 Build and push front
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          context: "{{defaultContext}}:front"
+          tags: "${{ secrets.DOCKERHUB_USERNAME }}/test-docker-ci:latest"

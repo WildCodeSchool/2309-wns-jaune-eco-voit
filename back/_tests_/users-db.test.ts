@@ -59,6 +59,7 @@ type ResponseUpdateData = { updatedUser: UserEntity }
 
 const baseSchema = buildSchemaSync({
     resolvers: [UserResolver],
+    authChecker: () => true, 
 })
 
 let server: ApolloServer
@@ -95,9 +96,9 @@ describe('Test sur les users avec la base de données', () => {
             },
         })
 
-        console.log(JSON.stringify(response.body))
+        // console.log(JSON.stringify(response.body))
         assert(response.body.kind === 'single')
-        console.log(response.body)
+        // console.log(response.body)
         expect(response.body.singleResult.data).toEqual({
             register: { email: 'olivier@yopmail.fr' },
         })
