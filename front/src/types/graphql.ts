@@ -1,93 +1,106 @@
-import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
+import { gql } from "@apollo/client";
+import * as Apollo from "@apollo/client";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
+export type MakeEmpty<
+  T extends { [key: string]: unknown },
+  K extends keyof T
+> = { [_ in K]?: never };
+export type Incremental<T> =
+  | T
+  | {
+      [P in keyof T]?: P extends " $fragmentName" | "__typename" ? T[P] : never;
+    };
 const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-  DateTimeISO: { input: any; output: any; }
-  EmailAddress: { input: any; output: any; }
-  PhoneNumber: { input: any; output: any; }
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  DateTimeISO: { input: any; output: any };
+  EmailAddress: { input: any; output: any };
+  PhoneNumber: { input: any; output: any };
 };
 
 export type BookingEntity = {
-  __typename?: 'BookingEntity';
-  arrivalTime: Scalars['DateTimeISO']['output'];
-  createdAt: Scalars['DateTimeISO']['output'];
-  departureTime: Scalars['DateTimeISO']['output'];
-  id: Scalars['ID']['output'];
+  __typename?: "BookingEntity";
+  arrivalTime: Scalars["DateTimeISO"]["output"];
+  createdAt: Scalars["DateTimeISO"]["output"];
+  departureTime: Scalars["DateTimeISO"]["output"];
+  id: Scalars["ID"]["output"];
   journey: JourneyEntity;
-  status: Scalars['String']['output'];
-  totalPrice: Scalars['Float']['output'];
-  updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  status: Scalars["String"]["output"];
+  totalPrice: Scalars["Float"]["output"];
+  updatedAt?: Maybe<Scalars["DateTimeISO"]["output"]>;
   user: UserEntity;
 };
 
 export type CreateBookingInput = {
-  arrivalTime: Scalars['DateTimeISO']['input'];
-  departureTime: Scalars['DateTimeISO']['input'];
+  arrivalTime: Scalars["DateTimeISO"]["input"];
+  departureTime: Scalars["DateTimeISO"]["input"];
   journey: PartialBookingInput;
-  status?: InputMaybe<Scalars['String']['input']>;
-  totalPrice: Scalars['Float']['input'];
+  status?: InputMaybe<Scalars["String"]["input"]>;
+  totalPrice: Scalars["Float"]["input"];
   user: PartialBookingInput;
 };
 
 export type CreateJourneyInput = {
-  arrival_time: Scalars['DateTimeISO']['input'];
-  automaticAccept: Scalars['Boolean']['input'];
-  availableSeats: Scalars['Float']['input'];
-  departure_time: Scalars['DateTimeISO']['input'];
-  destination: Scalars['String']['input'];
-  origin: Scalars['String']['input'];
-  totalPrice: Scalars['Float']['input'];
+  arrival_time: Scalars["DateTimeISO"]["input"];
+  automaticAccept: Scalars["Boolean"]["input"];
+  availableSeats: Scalars["Float"]["input"];
+  departure_time: Scalars["DateTimeISO"]["input"];
+  destination: Scalars["String"]["input"];
+  origin: Scalars["String"]["input"];
+  totalPrice: Scalars["Float"]["input"];
   user: PartialUserInput;
 };
 
 export type CreateUserInput = {
-  dateOfBirth: Scalars['DateTimeISO']['input'];
-  email: Scalars['String']['input'];
-  firstname: Scalars['String']['input'];
-  lastname: Scalars['String']['input'];
-  password: Scalars['String']['input'];
-  phoneNumber?: InputMaybe<Scalars['String']['input']>;
-  profilePicture?: InputMaybe<Scalars['String']['input']>;
-  role?: InputMaybe<Scalars['String']['input']>;
+  dateOfBirth: Scalars["DateTimeISO"]["input"];
+  email: Scalars["String"]["input"];
+  firstname: Scalars["String"]["input"];
+  lastname: Scalars["String"]["input"];
+  password: Scalars["String"]["input"];
+  phoneNumber?: InputMaybe<Scalars["String"]["input"]>;
+  profilePicture?: InputMaybe<Scalars["String"]["input"]>;
+  role?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type JourneyEntity = {
-  __typename?: 'JourneyEntity';
-  arrival_time: Scalars['DateTimeISO']['output'];
-  automaticAccept: Scalars['Boolean']['output'];
-  availableSeats: Scalars['Float']['output'];
+  __typename?: "JourneyEntity";
+  arrival_time: Scalars["DateTimeISO"]["output"];
+  automaticAccept: Scalars["Boolean"]["output"];
+  availableSeats: Scalars["Float"]["output"];
   bookings: Array<BookingEntity>;
-  createdAt: Scalars['DateTimeISO']['output'];
-  departure_time: Scalars['DateTimeISO']['output'];
-  destination: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  origin: Scalars['String']['output'];
-  status: Scalars['String']['output'];
-  totalPrice: Scalars['Float']['output'];
-  updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  createdAt: Scalars["DateTimeISO"]["output"];
+  departure_time: Scalars["DateTimeISO"]["output"];
+  destination: Scalars["String"]["output"];
+  id: Scalars["ID"]["output"];
+  origin: Scalars["String"]["output"];
+  status: Scalars["String"]["output"];
+  totalPrice: Scalars["Float"]["output"];
+  updatedAt?: Maybe<Scalars["DateTimeISO"]["output"]>;
   user: UserEntity;
 };
 
 export type LoginInput = {
-  email: Scalars['String']['input'];
-  password: Scalars['String']['input'];
+  email: Scalars["String"]["input"];
+  password: Scalars["String"]["input"];
 };
 
 export type Mutation = {
-  __typename?: 'Mutation';
+  __typename?: "Mutation";
   acceptBooking: BookingEntity;
   archiveUser: UserEntity;
   cancelBooking: BookingEntity;
@@ -102,76 +115,64 @@ export type Mutation = {
   updateUser: UserEntity;
 };
 
-
 export type MutationAcceptBookingArgs = {
-  id: Scalars['String']['input'];
+  id: Scalars["String"]["input"];
 };
-
 
 export type MutationArchiveUserArgs = {
-  id: Scalars['String']['input'];
+  id: Scalars["String"]["input"];
 };
-
 
 export type MutationCancelBookingArgs = {
-  id: Scalars['String']['input'];
+  id: Scalars["String"]["input"];
 };
-
 
 export type MutationCreateBookingArgs = {
   data: CreateBookingInput;
 };
 
-
 export type MutationCreateJourneyArgs = {
   data: CreateJourneyInput;
 };
 
-
 export type MutationDecreaseAvailableSeatsArgs = {
-  id: Scalars['String']['input'];
+  id: Scalars["String"]["input"];
 };
-
 
 export type MutationIncreaseAvailableSeatsArgs = {
-  id: Scalars['String']['input'];
+  id: Scalars["String"]["input"];
 };
-
 
 export type MutationRegisterArgs = {
   data: CreateUserInput;
 };
 
-
 export type MutationRejectBookingArgs = {
-  id: Scalars['String']['input'];
+  id: Scalars["String"]["input"];
 };
-
 
 export type MutationUpdateJourneyArgs = {
   data: UpdateJourneyInput;
 };
 
-
 export type MutationUpdateJourneyStatusArgs = {
   data: UpdateJourneyStatusInput;
 };
-
 
 export type MutationUpdateUserArgs = {
   data: UpdateUserInput;
 };
 
 export type PartialBookingInput = {
-  id: Scalars['ID']['input'];
+  id: Scalars["ID"]["input"];
 };
 
 export type PartialUserInput = {
-  id: Scalars['ID']['input'];
+  id: Scalars["ID"]["input"];
 };
 
 export type Query = {
-  __typename?: 'Query';
+  __typename?: "Query";
   findBookingById: BookingEntity;
   findJourneyById: JourneyEntity;
   findUserById: UserEntity;
@@ -185,237 +186,905 @@ export type Query = {
   logout: UserMessage;
 };
 
-
 export type QueryFindBookingByIdArgs = {
-  id: Scalars['String']['input'];
+  id: Scalars["String"]["input"];
 };
-
 
 export type QueryFindJourneyByIdArgs = {
-  id: Scalars['String']['input'];
+  id: Scalars["String"]["input"];
 };
-
 
 export type QueryFindUserByIdArgs = {
-  id: Scalars['String']['input'];
+  id: Scalars["String"]["input"];
 };
-
 
 export type QueryListBookingsByJourneyArgs = {
-  journeyId: Scalars['String']['input'];
+  journeyId: Scalars["String"]["input"];
 };
-
 
 export type QueryListBookingsByUserArgs = {
-  userId: Scalars['String']['input'];
+  userId: Scalars["String"]["input"];
 };
-
 
 export type QueryListJourneysByUserArgs = {
-  userId: Scalars['String']['input'];
+  userId: Scalars["String"]["input"];
 };
-
 
 export type QueryLoginArgs = {
   data: LoginInput;
 };
 
 export type UpdateJourneyInput = {
-  arrival_time?: InputMaybe<Scalars['DateTimeISO']['input']>;
-  automaticAccept?: InputMaybe<Scalars['Boolean']['input']>;
-  availableSeats?: InputMaybe<Scalars['Float']['input']>;
-  departure_time?: InputMaybe<Scalars['DateTimeISO']['input']>;
-  destination?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['ID']['input'];
-  origin?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
-  totalPrice?: InputMaybe<Scalars['Float']['input']>;
+  arrival_time?: InputMaybe<Scalars["DateTimeISO"]["input"]>;
+  automaticAccept?: InputMaybe<Scalars["Boolean"]["input"]>;
+  availableSeats?: InputMaybe<Scalars["Float"]["input"]>;
+  departure_time?: InputMaybe<Scalars["DateTimeISO"]["input"]>;
+  destination?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["ID"]["input"];
+  origin?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<Scalars["String"]["input"]>;
+  totalPrice?: InputMaybe<Scalars["Float"]["input"]>;
 };
 
 export type UpdateJourneyStatusInput = {
-  id: Scalars['ID']['input'];
-  status: Scalars['String']['input'];
+  id: Scalars["ID"]["input"];
+  status: Scalars["String"]["input"];
 };
 
 export type UpdateUserInput = {
-  dateOfBirth?: InputMaybe<Scalars['DateTimeISO']['input']>;
-  email?: InputMaybe<Scalars['EmailAddress']['input']>;
-  firstname?: InputMaybe<Scalars['String']['input']>;
-  grade?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['ID']['input'];
-  lastname?: InputMaybe<Scalars['String']['input']>;
-  password?: InputMaybe<Scalars['String']['input']>;
-  phoneNumber?: InputMaybe<Scalars['PhoneNumber']['input']>;
-  profilePicture?: InputMaybe<Scalars['String']['input']>;
-  role?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
-  tripsAsDriver?: InputMaybe<Scalars['Float']['input']>;
-  tripsAsPassenger?: InputMaybe<Scalars['Float']['input']>;
+  dateOfBirth?: InputMaybe<Scalars["DateTimeISO"]["input"]>;
+  email?: InputMaybe<Scalars["EmailAddress"]["input"]>;
+  firstname?: InputMaybe<Scalars["String"]["input"]>;
+  grade?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["ID"]["input"];
+  lastname?: InputMaybe<Scalars["String"]["input"]>;
+  password?: InputMaybe<Scalars["String"]["input"]>;
+  phoneNumber?: InputMaybe<Scalars["PhoneNumber"]["input"]>;
+  profilePicture?: InputMaybe<Scalars["String"]["input"]>;
+  role?: InputMaybe<Scalars["String"]["input"]>;
+  status?: InputMaybe<Scalars["String"]["input"]>;
+  tripsAsDriver?: InputMaybe<Scalars["Float"]["input"]>;
+  tripsAsPassenger?: InputMaybe<Scalars["Float"]["input"]>;
 };
 
 export type UserEntity = {
-  __typename?: 'UserEntity';
+  __typename?: "UserEntity";
   bookings?: Maybe<Array<BookingEntity>>;
-  createdAt: Scalars['DateTimeISO']['output'];
-  dateOfBirth: Scalars['DateTimeISO']['output'];
-  email: Scalars['EmailAddress']['output'];
-  firstname: Scalars['String']['output'];
-  grade?: Maybe<Scalars['String']['output']>;
-  id: Scalars['ID']['output'];
+  createdAt: Scalars["DateTimeISO"]["output"];
+  dateOfBirth: Scalars["DateTimeISO"]["output"];
+  email: Scalars["EmailAddress"]["output"];
+  firstname: Scalars["String"]["output"];
+  grade?: Maybe<Scalars["String"]["output"]>;
+  id: Scalars["ID"]["output"];
   journeys?: Maybe<Array<JourneyEntity>>;
-  lastname: Scalars['String']['output'];
-  password: Scalars['String']['output'];
-  phoneNumber?: Maybe<Scalars['PhoneNumber']['output']>;
-  profilPicture?: Maybe<Scalars['String']['output']>;
-  role: Scalars['String']['output'];
-  status?: Maybe<Scalars['String']['output']>;
-  tripsAsDriver: Scalars['Float']['output'];
-  tripsAsPassenger: Scalars['Float']['output'];
-  updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  lastname: Scalars["String"]["output"];
+  password: Scalars["String"]["output"];
+  phoneNumber?: Maybe<Scalars["PhoneNumber"]["output"]>;
+  profilPicture?: Maybe<Scalars["String"]["output"]>;
+  role: Scalars["String"]["output"];
+  status?: Maybe<Scalars["String"]["output"]>;
+  tripsAsDriver: Scalars["Float"]["output"];
+  tripsAsPassenger: Scalars["Float"]["output"];
+  updatedAt?: Maybe<Scalars["DateTimeISO"]["output"]>;
 };
 
 export type UserMessage = {
-  __typename?: 'UserMessage';
-  message: Scalars['String']['output'];
-  success: Scalars['Boolean']['output'];
+  __typename?: "UserMessage";
+  message: Scalars["String"]["output"];
+  success: Scalars["Boolean"]["output"];
 };
 
 export type UserWithoutPassord = {
-  __typename?: 'UserWithoutPassord';
-  email: Scalars['EmailAddress']['output'];
-  firstname: Scalars['String']['output'];
-  lastname: Scalars['String']['output'];
+  __typename?: "UserWithoutPassord";
+  email: Scalars["EmailAddress"]["output"];
+  firstname: Scalars["String"]["output"];
+  lastname: Scalars["String"]["output"];
 };
 
 export type RegisterMutationVariables = Exact<{
   data: CreateUserInput;
 }>;
 
-
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserWithoutPassord', firstname: string, lastname: string, email: any } };
+export type RegisterMutation = {
+  __typename?: "Mutation";
+  register: {
+    __typename?: "UserWithoutPassord";
+    firstname: string;
+    lastname: string;
+    email: any;
+  };
+};
 
 export type CreateBookingMutationVariables = Exact<{
   data: CreateBookingInput;
 }>;
 
-
-export type CreateBookingMutation = { __typename?: 'Mutation', createBooking: { __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: any | null, profilPicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } } };
+export type CreateBookingMutation = {
+  __typename?: "Mutation";
+  createBooking: {
+    __typename?: "BookingEntity";
+    id: string;
+    totalPrice: number;
+    departureTime: any;
+    arrivalTime: any;
+    status: string;
+    createdAt: any;
+    updatedAt?: any | null;
+    user: {
+      __typename?: "UserEntity";
+      id: string;
+      firstname: string;
+      lastname: string;
+      email: any;
+      password: string;
+      dateOfBirth: any;
+      phoneNumber?: any | null;
+      profilPicture?: string | null;
+      role: string;
+      grade?: string | null;
+      tripsAsPassenger: number;
+      tripsAsDriver: number;
+      status?: string | null;
+      createdAt: any;
+      updatedAt?: any | null;
+    };
+    journey: {
+      __typename?: "JourneyEntity";
+      id: string;
+      origin: string;
+      destination: string;
+      totalPrice: number;
+      departure_time: any;
+      arrival_time: any;
+      availableSeats: number;
+      status: string;
+      automaticAccept: boolean;
+      createdAt: any;
+      updatedAt?: any | null;
+    };
+  };
+};
 
 export type AcceptBookingMutationVariables = Exact<{
-  acceptBookingId: Scalars['String']['input'];
+  acceptBookingId: Scalars["String"]["input"];
 }>;
 
-
-export type AcceptBookingMutation = { __typename?: 'Mutation', acceptBooking: { __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: any | null, profilPicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } } };
+export type AcceptBookingMutation = {
+  __typename?: "Mutation";
+  acceptBooking: {
+    __typename?: "BookingEntity";
+    id: string;
+    totalPrice: number;
+    departureTime: any;
+    arrivalTime: any;
+    status: string;
+    createdAt: any;
+    updatedAt?: any | null;
+    user: {
+      __typename?: "UserEntity";
+      id: string;
+      firstname: string;
+      lastname: string;
+      email: any;
+      password: string;
+      dateOfBirth: any;
+      phoneNumber?: any | null;
+      profilPicture?: string | null;
+      role: string;
+      grade?: string | null;
+      tripsAsPassenger: number;
+      tripsAsDriver: number;
+      status?: string | null;
+      createdAt: any;
+      updatedAt?: any | null;
+    };
+    journey: {
+      __typename?: "JourneyEntity";
+      id: string;
+      origin: string;
+      destination: string;
+      totalPrice: number;
+      departure_time: any;
+      arrival_time: any;
+      availableSeats: number;
+      status: string;
+      automaticAccept: boolean;
+      createdAt: any;
+      updatedAt?: any | null;
+    };
+  };
+};
 
 export type RejectBookingMutationVariables = Exact<{
-  rejectBookingId: Scalars['String']['input'];
+  rejectBookingId: Scalars["String"]["input"];
 }>;
 
-
-export type RejectBookingMutation = { __typename?: 'Mutation', rejectBooking: { __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: any | null, profilPicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } } };
+export type RejectBookingMutation = {
+  __typename?: "Mutation";
+  rejectBooking: {
+    __typename?: "BookingEntity";
+    id: string;
+    totalPrice: number;
+    departureTime: any;
+    arrivalTime: any;
+    status: string;
+    createdAt: any;
+    updatedAt?: any | null;
+    user: {
+      __typename?: "UserEntity";
+      id: string;
+      firstname: string;
+      lastname: string;
+      email: any;
+      password: string;
+      dateOfBirth: any;
+      phoneNumber?: any | null;
+      profilPicture?: string | null;
+      role: string;
+      grade?: string | null;
+      tripsAsPassenger: number;
+      tripsAsDriver: number;
+      status?: string | null;
+      createdAt: any;
+      updatedAt?: any | null;
+    };
+    journey: {
+      __typename?: "JourneyEntity";
+      id: string;
+      origin: string;
+      destination: string;
+      totalPrice: number;
+      departure_time: any;
+      arrival_time: any;
+      availableSeats: number;
+      status: string;
+      automaticAccept: boolean;
+      createdAt: any;
+      updatedAt?: any | null;
+    };
+  };
+};
 
 export type CancelBookingMutationVariables = Exact<{
-  cancelBookingId: Scalars['String']['input'];
+  cancelBookingId: Scalars["String"]["input"];
 }>;
 
-
-export type CancelBookingMutation = { __typename?: 'Mutation', cancelBooking: { __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: any | null, profilPicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } } };
+export type CancelBookingMutation = {
+  __typename?: "Mutation";
+  cancelBooking: {
+    __typename?: "BookingEntity";
+    id: string;
+    totalPrice: number;
+    departureTime: any;
+    arrivalTime: any;
+    status: string;
+    createdAt: any;
+    updatedAt?: any | null;
+    user: {
+      __typename?: "UserEntity";
+      id: string;
+      firstname: string;
+      lastname: string;
+      email: any;
+      password: string;
+      dateOfBirth: any;
+      phoneNumber?: any | null;
+      profilPicture?: string | null;
+      role: string;
+      grade?: string | null;
+      tripsAsPassenger: number;
+      tripsAsDriver: number;
+      status?: string | null;
+      createdAt: any;
+      updatedAt?: any | null;
+    };
+    journey: {
+      __typename?: "JourneyEntity";
+      id: string;
+      origin: string;
+      destination: string;
+      totalPrice: number;
+      departure_time: any;
+      arrival_time: any;
+      availableSeats: number;
+      status: string;
+      automaticAccept: boolean;
+      createdAt: any;
+      updatedAt?: any | null;
+    };
+  };
+};
 
 export type UpdateUserMutationVariables = Exact<{
   data: UpdateUserInput;
 }>;
 
-
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: any | null, profilPicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null, journeys?: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null }> | null, bookings?: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }> | null } };
+export type UpdateUserMutation = {
+  __typename?: "Mutation";
+  updateUser: {
+    __typename?: "UserEntity";
+    id: string;
+    firstname: string;
+    lastname: string;
+    email: any;
+    password: string;
+    dateOfBirth: any;
+    phoneNumber?: any | null;
+    profilPicture?: string | null;
+    role: string;
+    grade?: string | null;
+    tripsAsPassenger: number;
+    tripsAsDriver: number;
+    status?: string | null;
+    createdAt: any;
+    updatedAt?: any | null;
+    journeys?: Array<{
+      __typename?: "JourneyEntity";
+      id: string;
+      origin: string;
+      destination: string;
+      totalPrice: number;
+      departure_time: any;
+      arrival_time: any;
+      availableSeats: number;
+      status: string;
+      automaticAccept: boolean;
+      createdAt: any;
+      updatedAt?: any | null;
+    }> | null;
+    bookings?: Array<{
+      __typename?: "BookingEntity";
+      id: string;
+      totalPrice: number;
+      departureTime: any;
+      arrivalTime: any;
+      status: string;
+      createdAt: any;
+      updatedAt?: any | null;
+    }> | null;
+  };
+};
 
 export type ArchiveUserMutationVariables = Exact<{
-  archiveUserId: Scalars['String']['input'];
+  archiveUserId: Scalars["String"]["input"];
 }>;
 
-
-export type ArchiveUserMutation = { __typename?: 'Mutation', archiveUser: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: any | null, profilPicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null, journeys?: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null }> | null, bookings?: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }> | null } };
+export type ArchiveUserMutation = {
+  __typename?: "Mutation";
+  archiveUser: {
+    __typename?: "UserEntity";
+    id: string;
+    firstname: string;
+    lastname: string;
+    email: any;
+    password: string;
+    dateOfBirth: any;
+    phoneNumber?: any | null;
+    profilPicture?: string | null;
+    role: string;
+    grade?: string | null;
+    tripsAsPassenger: number;
+    tripsAsDriver: number;
+    status?: string | null;
+    createdAt: any;
+    updatedAt?: any | null;
+    journeys?: Array<{
+      __typename?: "JourneyEntity";
+      id: string;
+      origin: string;
+      destination: string;
+      totalPrice: number;
+      departure_time: any;
+      arrival_time: any;
+      availableSeats: number;
+      status: string;
+      automaticAccept: boolean;
+      createdAt: any;
+      updatedAt?: any | null;
+    }> | null;
+    bookings?: Array<{
+      __typename?: "BookingEntity";
+      id: string;
+      totalPrice: number;
+      departureTime: any;
+      arrivalTime: any;
+      status: string;
+      createdAt: any;
+      updatedAt?: any | null;
+    }> | null;
+  };
+};
 
 export type LoginQueryVariables = Exact<{
   data: LoginInput;
 }>;
 
+export type LoginQuery = {
+  __typename?: "Query";
+  login: {
+    __typename?: "UserEntity";
+    id: string;
+    firstname: string;
+    lastname: string;
+    email: any;
+    password: string;
+    dateOfBirth: any;
+    phoneNumber?: any | null;
+    profilPicture?: string | null;
+    role: string;
+    grade?: string | null;
+    tripsAsPassenger: number;
+    status?: string | null;
+    tripsAsDriver: number;
+    createdAt: any;
+    updatedAt?: any | null;
+  };
+};
 
-export type LoginQuery = { __typename?: 'Query', login: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: any | null, profilPicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, status?: string | null, tripsAsDriver: number, createdAt: any, updatedAt?: any | null } };
+export type LogoutQueryVariables = Exact<{ [key: string]: never }>;
 
-export type LogoutQueryVariables = Exact<{ [key: string]: never; }>;
+export type LogoutQuery = {
+  __typename?: "Query";
+  logout: { __typename?: "UserMessage"; success: boolean; message: string };
+};
 
+export type ListBookingsQueryVariables = Exact<{ [key: string]: never }>;
 
-export type LogoutQuery = { __typename?: 'Query', logout: { __typename?: 'UserMessage', success: boolean, message: string } };
-
-export type ListBookingsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type ListBookingsQuery = { __typename?: 'Query', listBookings: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: any | null, profilPicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } }> };
+export type ListBookingsQuery = {
+  __typename?: "Query";
+  listBookings: Array<{
+    __typename?: "BookingEntity";
+    id: string;
+    totalPrice: number;
+    departureTime: any;
+    arrivalTime: any;
+    status: string;
+    createdAt: any;
+    updatedAt?: any | null;
+    user: {
+      __typename?: "UserEntity";
+      id: string;
+      firstname: string;
+      lastname: string;
+      email: any;
+      password: string;
+      dateOfBirth: any;
+      phoneNumber?: any | null;
+      profilPicture?: string | null;
+      role: string;
+      grade?: string | null;
+      tripsAsPassenger: number;
+      tripsAsDriver: number;
+      status?: string | null;
+      createdAt: any;
+      updatedAt?: any | null;
+    };
+    journey: {
+      __typename?: "JourneyEntity";
+      id: string;
+      origin: string;
+      destination: string;
+      totalPrice: number;
+      departure_time: any;
+      arrival_time: any;
+      availableSeats: number;
+      status: string;
+      automaticAccept: boolean;
+      createdAt: any;
+      updatedAt?: any | null;
+    };
+  }>;
+};
 
 export type ListBookingsByUserQueryVariables = Exact<{
-  userId: Scalars['String']['input'];
+  userId: Scalars["String"]["input"];
 }>;
 
-
-export type ListBookingsByUserQuery = { __typename?: 'Query', listBookingsByUser: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: any | null, profilPicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } }> };
+export type ListBookingsByUserQuery = {
+  __typename?: "Query";
+  listBookingsByUser: Array<{
+    __typename?: "BookingEntity";
+    id: string;
+    totalPrice: number;
+    departureTime: any;
+    arrivalTime: any;
+    status: string;
+    createdAt: any;
+    updatedAt?: any | null;
+    user: {
+      __typename?: "UserEntity";
+      id: string;
+      firstname: string;
+      lastname: string;
+      email: any;
+      password: string;
+      dateOfBirth: any;
+      phoneNumber?: any | null;
+      profilPicture?: string | null;
+      role: string;
+      grade?: string | null;
+      tripsAsPassenger: number;
+      tripsAsDriver: number;
+      status?: string | null;
+      createdAt: any;
+      updatedAt?: any | null;
+    };
+    journey: {
+      __typename?: "JourneyEntity";
+      id: string;
+      origin: string;
+      destination: string;
+      totalPrice: number;
+      departure_time: any;
+      arrival_time: any;
+      availableSeats: number;
+      status: string;
+      automaticAccept: boolean;
+      createdAt: any;
+      updatedAt?: any | null;
+    };
+  }>;
+};
 
 export type ListBookingsByJourneyQueryVariables = Exact<{
-  journeyId: Scalars['String']['input'];
+  journeyId: Scalars["String"]["input"];
 }>;
 
-
-export type ListBookingsByJourneyQuery = { __typename?: 'Query', listBookingsByJourney: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: any | null, profilPicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } }> };
+export type ListBookingsByJourneyQuery = {
+  __typename?: "Query";
+  listBookingsByJourney: Array<{
+    __typename?: "BookingEntity";
+    id: string;
+    totalPrice: number;
+    departureTime: any;
+    arrivalTime: any;
+    status: string;
+    createdAt: any;
+    updatedAt?: any | null;
+    user: {
+      __typename?: "UserEntity";
+      id: string;
+      firstname: string;
+      lastname: string;
+      email: any;
+      password: string;
+      dateOfBirth: any;
+      phoneNumber?: any | null;
+      profilPicture?: string | null;
+      role: string;
+      grade?: string | null;
+      tripsAsPassenger: number;
+      tripsAsDriver: number;
+      status?: string | null;
+      createdAt: any;
+      updatedAt?: any | null;
+    };
+    journey: {
+      __typename?: "JourneyEntity";
+      id: string;
+      origin: string;
+      destination: string;
+      totalPrice: number;
+      departure_time: any;
+      arrival_time: any;
+      availableSeats: number;
+      status: string;
+      automaticAccept: boolean;
+      createdAt: any;
+      updatedAt?: any | null;
+    };
+  }>;
+};
 
 export type FindBookingByIdQueryVariables = Exact<{
-  findBookingByIdId: Scalars['String']['input'];
+  findBookingById: Scalars["String"]["input"];
 }>;
 
+export type FindBookingByIdQuery = {
+  __typename?: "Query";
+  findBookingById: {
+    __typename?: "BookingEntity";
+    id: string;
+    totalPrice: number;
+    departureTime: any;
+    arrivalTime: any;
+    status: string;
+    createdAt: any;
+    updatedAt?: any | null;
+    user: {
+      __typename?: "UserEntity";
+      id: string;
+      firstname: string;
+      lastname: string;
+      email: any;
+      password: string;
+      dateOfBirth: any;
+      phoneNumber?: any | null;
+      profilPicture?: string | null;
+      role: string;
+      grade?: string | null;
+      tripsAsPassenger: number;
+      tripsAsDriver: number;
+      status?: string | null;
+      createdAt: any;
+      updatedAt?: any | null;
+    };
+    journey: {
+      __typename?: "JourneyEntity";
+      id: string;
+      origin: string;
+      destination: string;
+      totalPrice: number;
+      departure_time: any;
+      arrival_time: any;
+      availableSeats: number;
+      status: string;
+      automaticAccept: boolean;
+      createdAt: any;
+      updatedAt?: any | null;
+    };
+  };
+};
 
-export type FindBookingByIdQuery = { __typename?: 'Query', findBookingById: { __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: any | null, profilPicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } } };
+export type ListJourneysQueryVariables = Exact<{ [key: string]: never }>;
 
-export type ListJourneysQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type ListJourneysQuery = { __typename?: 'Query', listJourneys: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: any | null, profilPicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, bookings: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }> }> };
+export type ListJourneysQuery = {
+  __typename?: "Query";
+  listJourneys: Array<{
+    __typename?: "JourneyEntity";
+    id: string;
+    origin: string;
+    destination: string;
+    totalPrice: number;
+    departure_time: any;
+    arrival_time: any;
+    availableSeats: number;
+    status: string;
+    automaticAccept: boolean;
+    createdAt: any;
+    updatedAt?: any | null;
+    user: {
+      __typename?: "UserEntity";
+      id: string;
+      firstname: string;
+      lastname: string;
+      email: any;
+      password: string;
+      dateOfBirth: any;
+      phoneNumber?: any | null;
+      profilPicture?: string | null;
+      role: string;
+      grade?: string | null;
+      tripsAsPassenger: number;
+      tripsAsDriver: number;
+      status?: string | null;
+      createdAt: any;
+      updatedAt?: any | null;
+    };
+    bookings: Array<{
+      __typename?: "BookingEntity";
+      id: string;
+      totalPrice: number;
+      departureTime: any;
+      arrivalTime: any;
+      status: string;
+      createdAt: any;
+      updatedAt?: any | null;
+    }>;
+  }>;
+};
 
 export type ListJourneysByUserQueryVariables = Exact<{
-  userId: Scalars['String']['input'];
+  userId: Scalars["String"]["input"];
 }>;
 
-
-export type ListJourneysByUserQuery = { __typename?: 'Query', listJourneysByUser: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: any | null, profilPicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, bookings: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }> }> };
+export type ListJourneysByUserQuery = {
+  __typename?: "Query";
+  listJourneysByUser: Array<{
+    __typename?: "JourneyEntity";
+    id: string;
+    origin: string;
+    destination: string;
+    totalPrice: number;
+    departure_time: any;
+    arrival_time: any;
+    availableSeats: number;
+    status: string;
+    automaticAccept: boolean;
+    createdAt: any;
+    updatedAt?: any | null;
+    user: {
+      __typename?: "UserEntity";
+      id: string;
+      firstname: string;
+      lastname: string;
+      email: any;
+      password: string;
+      dateOfBirth: any;
+      phoneNumber?: any | null;
+      profilPicture?: string | null;
+      role: string;
+      grade?: string | null;
+      tripsAsPassenger: number;
+      tripsAsDriver: number;
+      status?: string | null;
+      createdAt: any;
+      updatedAt?: any | null;
+    };
+    bookings: Array<{
+      __typename?: "BookingEntity";
+      id: string;
+      totalPrice: number;
+      departureTime: any;
+      arrivalTime: any;
+      status: string;
+      createdAt: any;
+      updatedAt?: any | null;
+    }>;
+  }>;
+};
 
 export type FindJourneyByIdQueryVariables = Exact<{
-  findJourneyByIdId: Scalars['String']['input'];
+  findJourneyById: Scalars["String"]["input"];
 }>;
 
+export type FindJourneyByIdQuery = {
+  __typename?: "Query";
+  findJourneyById: {
+    __typename?: "JourneyEntity";
+    id: string;
+    origin: string;
+    destination: string;
+    totalPrice: number;
+    departure_time: any;
+    arrival_time: any;
+    availableSeats: number;
+    status: string;
+    automaticAccept: boolean;
+    createdAt: any;
+    updatedAt?: any | null;
+    bookings: Array<{
+      __typename?: "BookingEntity";
+      id: string;
+      totalPrice: number;
+      departureTime: any;
+      arrivalTime: any;
+      status: string;
+      createdAt: any;
+      updatedAt?: any | null;
+    }>;
+    user: {
+      __typename?: "UserEntity";
+      id: string;
+      firstname: string;
+      lastname: string;
+      email: any;
+      password: string;
+      dateOfBirth: any;
+      phoneNumber?: any | null;
+      profilPicture?: string | null;
+      role: string;
+      grade?: string | null;
+      tripsAsPassenger: number;
+      tripsAsDriver: number;
+      status?: string | null;
+      createdAt: any;
+      updatedAt?: any | null;
+    };
+  };
+};
 
-export type FindJourneyByIdQuery = { __typename?: 'Query', findJourneyById: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, bookings: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }>, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: any | null, profilPicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null } } };
+export type ListUsersQueryVariables = Exact<{ [key: string]: never }>;
 
-export type ListUsersQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type ListUsersQuery = { __typename?: 'Query', listUsers: Array<{ __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: any | null, profilPicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null, journeys?: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null }> | null, bookings?: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }> | null }> };
+export type ListUsersQuery = {
+  __typename?: "Query";
+  listUsers: Array<{
+    __typename?: "UserEntity";
+    id: string;
+    firstname: string;
+    lastname: string;
+    email: any;
+    password: string;
+    dateOfBirth: any;
+    phoneNumber?: any | null;
+    profilPicture?: string | null;
+    role: string;
+    grade?: string | null;
+    tripsAsPassenger: number;
+    tripsAsDriver: number;
+    status?: string | null;
+    createdAt: any;
+    updatedAt?: any | null;
+    journeys?: Array<{
+      __typename?: "JourneyEntity";
+      id: string;
+      origin: string;
+      destination: string;
+      totalPrice: number;
+      departure_time: any;
+      arrival_time: any;
+      availableSeats: number;
+      status: string;
+      automaticAccept: boolean;
+      createdAt: any;
+      updatedAt?: any | null;
+    }> | null;
+    bookings?: Array<{
+      __typename?: "BookingEntity";
+      id: string;
+      totalPrice: number;
+      departureTime: any;
+      arrivalTime: any;
+      status: string;
+      createdAt: any;
+      updatedAt?: any | null;
+    }> | null;
+  }>;
+};
 
 export type FindUserByIdQueryVariables = Exact<{
-  findUserById: Scalars['String']['input'];
+  findUserById: Scalars["String"]["input"];
 }>;
 
-
-export type FindUserByIdQuery = { __typename?: 'Query', findUserById: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: any | null, profilPicture?: string | null, role: string, tripsAsPassenger: number, grade?: string | null, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null, journeys?: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null }> | null, bookings?: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }> | null } };
-
+export type FindUserByIdQuery = {
+  __typename?: "Query";
+  findUserById: {
+    __typename?: "UserEntity";
+    id: string;
+    firstname: string;
+    lastname: string;
+    email: any;
+    password: string;
+    dateOfBirth: any;
+    phoneNumber?: any | null;
+    profilPicture?: string | null;
+    role: string;
+    tripsAsPassenger: number;
+    grade?: string | null;
+    tripsAsDriver: number;
+    status?: string | null;
+    createdAt: any;
+    updatedAt?: any | null;
+    journeys?: Array<{
+      __typename?: "JourneyEntity";
+      id: string;
+      origin: string;
+      destination: string;
+      totalPrice: number;
+      departure_time: any;
+      arrival_time: any;
+      availableSeats: number;
+      status: string;
+      automaticAccept: boolean;
+      createdAt: any;
+      updatedAt?: any | null;
+    }> | null;
+    bookings?: Array<{
+      __typename?: "BookingEntity";
+      id: string;
+      totalPrice: number;
+      departureTime: any;
+      arrivalTime: any;
+      status: string;
+      createdAt: any;
+      updatedAt?: any | null;
+    }> | null;
+  };
+};
 
 export const RegisterDocument = gql`
-    mutation register($data: CreateUserInput!) {
-  register(data: $data) {
-    firstname
-    lastname
-    email
+  mutation register($data: CreateUserInput!) {
+    register(data: $data) {
+      firstname
+      lastname
+      email
+    }
   }
-}
-    `;
-export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, RegisterMutationVariables>;
+`;
+export type RegisterMutationFn = Apollo.MutationFunction<
+  RegisterMutation,
+  RegisterMutationVariables
+>;
 
 /**
  * __useRegisterMutation__
@@ -434,57 +1103,71 @@ export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, Regis
  *   },
  * });
  */
-export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, options);
-      }
+export function useRegisterMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RegisterMutation,
+    RegisterMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(
+    RegisterDocument,
+    options
+  );
+}
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
-export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export type RegisterMutationOptions = Apollo.BaseMutationOptions<
+  RegisterMutation,
+  RegisterMutationVariables
+>;
 export const CreateBookingDocument = gql`
-    mutation createBooking($data: CreateBookingInput!) {
-  createBooking(data: $data) {
-    id
-    totalPrice
-    departureTime
-    arrivalTime
-    status
-    createdAt
-    updatedAt
-    user {
+  mutation createBooking($data: CreateBookingInput!) {
+    createBooking(data: $data) {
       id
-      firstname
-      lastname
-      email
-      password
-      dateOfBirth
-      phoneNumber
-      profilPicture
-      role
-      grade
-      tripsAsPassenger
-      tripsAsDriver
-      status
-      createdAt
-      updatedAt
-    }
-    journey {
-      id
-      origin
-      destination
       totalPrice
-      departure_time
-      arrival_time
-      availableSeats
+      departureTime
+      arrivalTime
       status
-      automaticAccept
       createdAt
       updatedAt
+      user {
+        id
+        firstname
+        lastname
+        email
+        password
+        dateOfBirth
+        phoneNumber
+        profilPicture
+        role
+        grade
+        tripsAsPassenger
+        tripsAsDriver
+        status
+        createdAt
+        updatedAt
+      }
+      journey {
+        id
+        origin
+        destination
+        totalPrice
+        departure_time
+        arrival_time
+        availableSeats
+        status
+        automaticAccept
+        createdAt
+        updatedAt
+      }
     }
   }
-}
-    `;
-export type CreateBookingMutationFn = Apollo.MutationFunction<CreateBookingMutation, CreateBookingMutationVariables>;
+`;
+export type CreateBookingMutationFn = Apollo.MutationFunction<
+  CreateBookingMutation,
+  CreateBookingMutationVariables
+>;
 
 /**
  * __useCreateBookingMutation__
@@ -503,57 +1186,74 @@ export type CreateBookingMutationFn = Apollo.MutationFunction<CreateBookingMutat
  *   },
  * });
  */
-export function useCreateBookingMutation(baseOptions?: Apollo.MutationHookOptions<CreateBookingMutation, CreateBookingMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateBookingMutation, CreateBookingMutationVariables>(CreateBookingDocument, options);
-      }
-export type CreateBookingMutationHookResult = ReturnType<typeof useCreateBookingMutation>;
-export type CreateBookingMutationResult = Apollo.MutationResult<CreateBookingMutation>;
-export type CreateBookingMutationOptions = Apollo.BaseMutationOptions<CreateBookingMutation, CreateBookingMutationVariables>;
+export function useCreateBookingMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateBookingMutation,
+    CreateBookingMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateBookingMutation,
+    CreateBookingMutationVariables
+  >(CreateBookingDocument, options);
+}
+export type CreateBookingMutationHookResult = ReturnType<
+  typeof useCreateBookingMutation
+>;
+export type CreateBookingMutationResult =
+  Apollo.MutationResult<CreateBookingMutation>;
+export type CreateBookingMutationOptions = Apollo.BaseMutationOptions<
+  CreateBookingMutation,
+  CreateBookingMutationVariables
+>;
 export const AcceptBookingDocument = gql`
-    mutation acceptBooking($acceptBookingId: String!) {
-  acceptBooking(id: $acceptBookingId) {
-    id
-    totalPrice
-    departureTime
-    arrivalTime
-    status
-    createdAt
-    updatedAt
-    user {
+  mutation acceptBooking($acceptBookingId: String!) {
+    acceptBooking(id: $acceptBookingId) {
       id
-      firstname
-      lastname
-      email
-      password
-      dateOfBirth
-      phoneNumber
-      profilPicture
-      role
-      grade
-      tripsAsPassenger
-      tripsAsDriver
-      status
-      createdAt
-      updatedAt
-    }
-    journey {
-      id
-      origin
-      destination
       totalPrice
-      departure_time
-      arrival_time
-      availableSeats
+      departureTime
+      arrivalTime
       status
-      automaticAccept
       createdAt
       updatedAt
+      user {
+        id
+        firstname
+        lastname
+        email
+        password
+        dateOfBirth
+        phoneNumber
+        profilPicture
+        role
+        grade
+        tripsAsPassenger
+        tripsAsDriver
+        status
+        createdAt
+        updatedAt
+      }
+      journey {
+        id
+        origin
+        destination
+        totalPrice
+        departure_time
+        arrival_time
+        availableSeats
+        status
+        automaticAccept
+        createdAt
+        updatedAt
+      }
     }
   }
-}
-    `;
-export type AcceptBookingMutationFn = Apollo.MutationFunction<AcceptBookingMutation, AcceptBookingMutationVariables>;
+`;
+export type AcceptBookingMutationFn = Apollo.MutationFunction<
+  AcceptBookingMutation,
+  AcceptBookingMutationVariables
+>;
 
 /**
  * __useAcceptBookingMutation__
@@ -572,57 +1272,74 @@ export type AcceptBookingMutationFn = Apollo.MutationFunction<AcceptBookingMutat
  *   },
  * });
  */
-export function useAcceptBookingMutation(baseOptions?: Apollo.MutationHookOptions<AcceptBookingMutation, AcceptBookingMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AcceptBookingMutation, AcceptBookingMutationVariables>(AcceptBookingDocument, options);
-      }
-export type AcceptBookingMutationHookResult = ReturnType<typeof useAcceptBookingMutation>;
-export type AcceptBookingMutationResult = Apollo.MutationResult<AcceptBookingMutation>;
-export type AcceptBookingMutationOptions = Apollo.BaseMutationOptions<AcceptBookingMutation, AcceptBookingMutationVariables>;
+export function useAcceptBookingMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AcceptBookingMutation,
+    AcceptBookingMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    AcceptBookingMutation,
+    AcceptBookingMutationVariables
+  >(AcceptBookingDocument, options);
+}
+export type AcceptBookingMutationHookResult = ReturnType<
+  typeof useAcceptBookingMutation
+>;
+export type AcceptBookingMutationResult =
+  Apollo.MutationResult<AcceptBookingMutation>;
+export type AcceptBookingMutationOptions = Apollo.BaseMutationOptions<
+  AcceptBookingMutation,
+  AcceptBookingMutationVariables
+>;
 export const RejectBookingDocument = gql`
-    mutation rejectBooking($rejectBookingId: String!) {
-  rejectBooking(id: $rejectBookingId) {
-    id
-    totalPrice
-    departureTime
-    arrivalTime
-    status
-    createdAt
-    updatedAt
-    user {
+  mutation rejectBooking($rejectBookingId: String!) {
+    rejectBooking(id: $rejectBookingId) {
       id
-      firstname
-      lastname
-      email
-      password
-      dateOfBirth
-      phoneNumber
-      profilPicture
-      role
-      grade
-      tripsAsPassenger
-      tripsAsDriver
-      status
-      createdAt
-      updatedAt
-    }
-    journey {
-      id
-      origin
-      destination
       totalPrice
-      departure_time
-      arrival_time
-      availableSeats
+      departureTime
+      arrivalTime
       status
-      automaticAccept
       createdAt
       updatedAt
+      user {
+        id
+        firstname
+        lastname
+        email
+        password
+        dateOfBirth
+        phoneNumber
+        profilPicture
+        role
+        grade
+        tripsAsPassenger
+        tripsAsDriver
+        status
+        createdAt
+        updatedAt
+      }
+      journey {
+        id
+        origin
+        destination
+        totalPrice
+        departure_time
+        arrival_time
+        availableSeats
+        status
+        automaticAccept
+        createdAt
+        updatedAt
+      }
     }
   }
-}
-    `;
-export type RejectBookingMutationFn = Apollo.MutationFunction<RejectBookingMutation, RejectBookingMutationVariables>;
+`;
+export type RejectBookingMutationFn = Apollo.MutationFunction<
+  RejectBookingMutation,
+  RejectBookingMutationVariables
+>;
 
 /**
  * __useRejectBookingMutation__
@@ -641,57 +1358,74 @@ export type RejectBookingMutationFn = Apollo.MutationFunction<RejectBookingMutat
  *   },
  * });
  */
-export function useRejectBookingMutation(baseOptions?: Apollo.MutationHookOptions<RejectBookingMutation, RejectBookingMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RejectBookingMutation, RejectBookingMutationVariables>(RejectBookingDocument, options);
-      }
-export type RejectBookingMutationHookResult = ReturnType<typeof useRejectBookingMutation>;
-export type RejectBookingMutationResult = Apollo.MutationResult<RejectBookingMutation>;
-export type RejectBookingMutationOptions = Apollo.BaseMutationOptions<RejectBookingMutation, RejectBookingMutationVariables>;
+export function useRejectBookingMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RejectBookingMutation,
+    RejectBookingMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    RejectBookingMutation,
+    RejectBookingMutationVariables
+  >(RejectBookingDocument, options);
+}
+export type RejectBookingMutationHookResult = ReturnType<
+  typeof useRejectBookingMutation
+>;
+export type RejectBookingMutationResult =
+  Apollo.MutationResult<RejectBookingMutation>;
+export type RejectBookingMutationOptions = Apollo.BaseMutationOptions<
+  RejectBookingMutation,
+  RejectBookingMutationVariables
+>;
 export const CancelBookingDocument = gql`
-    mutation cancelBooking($cancelBookingId: String!) {
-  cancelBooking(id: $cancelBookingId) {
-    id
-    totalPrice
-    departureTime
-    arrivalTime
-    status
-    createdAt
-    updatedAt
-    user {
+  mutation cancelBooking($cancelBookingId: String!) {
+    cancelBooking(id: $cancelBookingId) {
       id
-      firstname
-      lastname
-      email
-      password
-      dateOfBirth
-      phoneNumber
-      profilPicture
-      role
-      grade
-      tripsAsPassenger
-      tripsAsDriver
-      status
-      createdAt
-      updatedAt
-    }
-    journey {
-      id
-      origin
-      destination
       totalPrice
-      departure_time
-      arrival_time
-      availableSeats
+      departureTime
+      arrivalTime
       status
-      automaticAccept
       createdAt
       updatedAt
+      user {
+        id
+        firstname
+        lastname
+        email
+        password
+        dateOfBirth
+        phoneNumber
+        profilPicture
+        role
+        grade
+        tripsAsPassenger
+        tripsAsDriver
+        status
+        createdAt
+        updatedAt
+      }
+      journey {
+        id
+        origin
+        destination
+        totalPrice
+        departure_time
+        arrival_time
+        availableSeats
+        status
+        automaticAccept
+        createdAt
+        updatedAt
+      }
     }
   }
-}
-    `;
-export type CancelBookingMutationFn = Apollo.MutationFunction<CancelBookingMutation, CancelBookingMutationVariables>;
+`;
+export type CancelBookingMutationFn = Apollo.MutationFunction<
+  CancelBookingMutation,
+  CancelBookingMutationVariables
+>;
 
 /**
  * __useCancelBookingMutation__
@@ -710,57 +1444,74 @@ export type CancelBookingMutationFn = Apollo.MutationFunction<CancelBookingMutat
  *   },
  * });
  */
-export function useCancelBookingMutation(baseOptions?: Apollo.MutationHookOptions<CancelBookingMutation, CancelBookingMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CancelBookingMutation, CancelBookingMutationVariables>(CancelBookingDocument, options);
-      }
-export type CancelBookingMutationHookResult = ReturnType<typeof useCancelBookingMutation>;
-export type CancelBookingMutationResult = Apollo.MutationResult<CancelBookingMutation>;
-export type CancelBookingMutationOptions = Apollo.BaseMutationOptions<CancelBookingMutation, CancelBookingMutationVariables>;
+export function useCancelBookingMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CancelBookingMutation,
+    CancelBookingMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CancelBookingMutation,
+    CancelBookingMutationVariables
+  >(CancelBookingDocument, options);
+}
+export type CancelBookingMutationHookResult = ReturnType<
+  typeof useCancelBookingMutation
+>;
+export type CancelBookingMutationResult =
+  Apollo.MutationResult<CancelBookingMutation>;
+export type CancelBookingMutationOptions = Apollo.BaseMutationOptions<
+  CancelBookingMutation,
+  CancelBookingMutationVariables
+>;
 export const UpdateUserDocument = gql`
-    mutation updateUser($data: UpdateUserInput!) {
-  updateUser(data: $data) {
-    id
-    firstname
-    lastname
-    email
-    password
-    dateOfBirth
-    phoneNumber
-    profilPicture
-    role
-    grade
-    tripsAsPassenger
-    tripsAsDriver
-    status
-    createdAt
-    updatedAt
-    journeys {
+  mutation updateUser($data: UpdateUserInput!) {
+    updateUser(data: $data) {
       id
-      origin
-      destination
-      totalPrice
-      departure_time
-      arrival_time
-      availableSeats
-      status
-      automaticAccept
-      createdAt
-      updatedAt
-    }
-    bookings {
-      id
-      totalPrice
-      departureTime
-      arrivalTime
+      firstname
+      lastname
+      email
+      password
+      dateOfBirth
+      phoneNumber
+      profilPicture
+      role
+      grade
+      tripsAsPassenger
+      tripsAsDriver
       status
       createdAt
       updatedAt
+      journeys {
+        id
+        origin
+        destination
+        totalPrice
+        departure_time
+        arrival_time
+        availableSeats
+        status
+        automaticAccept
+        createdAt
+        updatedAt
+      }
+      bookings {
+        id
+        totalPrice
+        departureTime
+        arrivalTime
+        status
+        createdAt
+        updatedAt
+      }
     }
   }
-}
-    `;
-export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
+`;
+export type UpdateUserMutationFn = Apollo.MutationFunction<
+  UpdateUserMutation,
+  UpdateUserMutationVariables
+>;
 
 /**
  * __useUpdateUserMutation__
@@ -779,57 +1530,74 @@ export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, U
  *   },
  * });
  */
-export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
-      }
-export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
-export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
-export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export function useUpdateUserMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateUserMutation,
+    UpdateUserMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(
+    UpdateUserDocument,
+    options
+  );
+}
+export type UpdateUserMutationHookResult = ReturnType<
+  typeof useUpdateUserMutation
+>;
+export type UpdateUserMutationResult =
+  Apollo.MutationResult<UpdateUserMutation>;
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<
+  UpdateUserMutation,
+  UpdateUserMutationVariables
+>;
 export const ArchiveUserDocument = gql`
-    mutation archiveUser($archiveUserId: String!) {
-  archiveUser(id: $archiveUserId) {
-    id
-    firstname
-    lastname
-    email
-    password
-    dateOfBirth
-    phoneNumber
-    profilPicture
-    role
-    grade
-    tripsAsPassenger
-    tripsAsDriver
-    status
-    createdAt
-    updatedAt
-    journeys {
+  mutation archiveUser($archiveUserId: String!) {
+    archiveUser(id: $archiveUserId) {
       id
-      origin
-      destination
-      totalPrice
-      departure_time
-      arrival_time
-      availableSeats
-      status
-      automaticAccept
-      createdAt
-      updatedAt
-    }
-    bookings {
-      id
-      totalPrice
-      departureTime
-      arrivalTime
+      firstname
+      lastname
+      email
+      password
+      dateOfBirth
+      phoneNumber
+      profilPicture
+      role
+      grade
+      tripsAsPassenger
+      tripsAsDriver
       status
       createdAt
       updatedAt
+      journeys {
+        id
+        origin
+        destination
+        totalPrice
+        departure_time
+        arrival_time
+        availableSeats
+        status
+        automaticAccept
+        createdAt
+        updatedAt
+      }
+      bookings {
+        id
+        totalPrice
+        departureTime
+        arrivalTime
+        status
+        createdAt
+        updatedAt
+      }
     }
   }
-}
-    `;
-export type ArchiveUserMutationFn = Apollo.MutationFunction<ArchiveUserMutation, ArchiveUserMutationVariables>;
+`;
+export type ArchiveUserMutationFn = Apollo.MutationFunction<
+  ArchiveUserMutation,
+  ArchiveUserMutationVariables
+>;
 
 /**
  * __useArchiveUserMutation__
@@ -848,34 +1616,48 @@ export type ArchiveUserMutationFn = Apollo.MutationFunction<ArchiveUserMutation,
  *   },
  * });
  */
-export function useArchiveUserMutation(baseOptions?: Apollo.MutationHookOptions<ArchiveUserMutation, ArchiveUserMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<ArchiveUserMutation, ArchiveUserMutationVariables>(ArchiveUserDocument, options);
-      }
-export type ArchiveUserMutationHookResult = ReturnType<typeof useArchiveUserMutation>;
-export type ArchiveUserMutationResult = Apollo.MutationResult<ArchiveUserMutation>;
-export type ArchiveUserMutationOptions = Apollo.BaseMutationOptions<ArchiveUserMutation, ArchiveUserMutationVariables>;
-export const LoginDocument = gql`
-    query Login($data: LoginInput!) {
-  login(data: $data) {
-    id
-    firstname
-    lastname
-    email
-    password
-    dateOfBirth
-    phoneNumber
-    profilPicture
-    role
-    grade
-    tripsAsPassenger
-    status
-    tripsAsDriver
-    createdAt
-    updatedAt
-  }
+export function useArchiveUserMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    ArchiveUserMutation,
+    ArchiveUserMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<ArchiveUserMutation, ArchiveUserMutationVariables>(
+    ArchiveUserDocument,
+    options
+  );
 }
-    `;
+export type ArchiveUserMutationHookResult = ReturnType<
+  typeof useArchiveUserMutation
+>;
+export type ArchiveUserMutationResult =
+  Apollo.MutationResult<ArchiveUserMutation>;
+export type ArchiveUserMutationOptions = Apollo.BaseMutationOptions<
+  ArchiveUserMutation,
+  ArchiveUserMutationVariables
+>;
+export const LoginDocument = gql`
+  query Login($data: LoginInput!) {
+    login(data: $data) {
+      id
+      firstname
+      lastname
+      email
+      password
+      dateOfBirth
+      phoneNumber
+      profilPicture
+      role
+      grade
+      tripsAsPassenger
+      status
+      tripsAsDriver
+      createdAt
+      updatedAt
+    }
+  }
+`;
 
 /**
  * __useLoginQuery__
@@ -893,30 +1675,51 @@ export const LoginDocument = gql`
  *   },
  * });
  */
-export function useLoginQuery(baseOptions: Apollo.QueryHookOptions<LoginQuery, LoginQueryVariables> & ({ variables: LoginQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
-      }
-export function useLoginLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LoginQuery, LoginQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
-        }
-export function useLoginSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<LoginQuery, LoginQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<LoginQuery, LoginQueryVariables>(LoginDocument, options);
-        }
+export function useLoginQuery(
+  baseOptions: Apollo.QueryHookOptions<LoginQuery, LoginQueryVariables> &
+    ({ variables: LoginQueryVariables; skip?: boolean } | { skip: boolean })
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<LoginQuery, LoginQueryVariables>(
+    LoginDocument,
+    options
+  );
+}
+export function useLoginLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<LoginQuery, LoginQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<LoginQuery, LoginQueryVariables>(
+    LoginDocument,
+    options
+  );
+}
+export function useLoginSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<LoginQuery, LoginQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<LoginQuery, LoginQueryVariables>(
+    LoginDocument,
+    options
+  );
+}
 export type LoginQueryHookResult = ReturnType<typeof useLoginQuery>;
 export type LoginLazyQueryHookResult = ReturnType<typeof useLoginLazyQuery>;
-export type LoginSuspenseQueryHookResult = ReturnType<typeof useLoginSuspenseQuery>;
-export type LoginQueryResult = Apollo.QueryResult<LoginQuery, LoginQueryVariables>;
+export type LoginSuspenseQueryHookResult = ReturnType<
+  typeof useLoginSuspenseQuery
+>;
+export type LoginQueryResult = Apollo.QueryResult<
+  LoginQuery,
+  LoginQueryVariables
+>;
 export const LogoutDocument = gql`
-    query Logout {
-  logout {
-    success
-    message
+  query Logout {
+    logout {
+      success
+      message
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useLogoutQuery__
@@ -933,65 +1736,88 @@ export const LogoutDocument = gql`
  *   },
  * });
  */
-export function useLogoutQuery(baseOptions?: Apollo.QueryHookOptions<LogoutQuery, LogoutQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<LogoutQuery, LogoutQueryVariables>(LogoutDocument, options);
-      }
-export function useLogoutLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LogoutQuery, LogoutQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<LogoutQuery, LogoutQueryVariables>(LogoutDocument, options);
-        }
-export function useLogoutSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<LogoutQuery, LogoutQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<LogoutQuery, LogoutQueryVariables>(LogoutDocument, options);
-        }
+export function useLogoutQuery(
+  baseOptions?: Apollo.QueryHookOptions<LogoutQuery, LogoutQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<LogoutQuery, LogoutQueryVariables>(
+    LogoutDocument,
+    options
+  );
+}
+export function useLogoutLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<LogoutQuery, LogoutQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<LogoutQuery, LogoutQueryVariables>(
+    LogoutDocument,
+    options
+  );
+}
+export function useLogoutSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    LogoutQuery,
+    LogoutQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<LogoutQuery, LogoutQueryVariables>(
+    LogoutDocument,
+    options
+  );
+}
 export type LogoutQueryHookResult = ReturnType<typeof useLogoutQuery>;
 export type LogoutLazyQueryHookResult = ReturnType<typeof useLogoutLazyQuery>;
-export type LogoutSuspenseQueryHookResult = ReturnType<typeof useLogoutSuspenseQuery>;
-export type LogoutQueryResult = Apollo.QueryResult<LogoutQuery, LogoutQueryVariables>;
+export type LogoutSuspenseQueryHookResult = ReturnType<
+  typeof useLogoutSuspenseQuery
+>;
+export type LogoutQueryResult = Apollo.QueryResult<
+  LogoutQuery,
+  LogoutQueryVariables
+>;
 export const ListBookingsDocument = gql`
-    query ListBookings {
-  listBookings {
-    id
-    totalPrice
-    departureTime
-    arrivalTime
-    status
-    createdAt
-    updatedAt
-    user {
+  query ListBookings {
+    listBookings {
       id
-      firstname
-      lastname
-      email
-      password
-      dateOfBirth
-      phoneNumber
-      profilPicture
-      role
-      grade
-      tripsAsPassenger
-      tripsAsDriver
-      status
-      createdAt
-      updatedAt
-    }
-    journey {
-      id
-      origin
-      destination
       totalPrice
-      departure_time
-      arrival_time
-      availableSeats
+      departureTime
+      arrivalTime
       status
-      automaticAccept
       createdAt
       updatedAt
+      user {
+        id
+        firstname
+        lastname
+        email
+        password
+        dateOfBirth
+        phoneNumber
+        profilPicture
+        role
+        grade
+        tripsAsPassenger
+        tripsAsDriver
+        status
+        createdAt
+        updatedAt
+      }
+      journey {
+        id
+        origin
+        destination
+        totalPrice
+        departure_time
+        arrival_time
+        availableSeats
+        status
+        automaticAccept
+        createdAt
+        updatedAt
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useListBookingsQuery__
@@ -1008,65 +1834,98 @@ export const ListBookingsDocument = gql`
  *   },
  * });
  */
-export function useListBookingsQuery(baseOptions?: Apollo.QueryHookOptions<ListBookingsQuery, ListBookingsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ListBookingsQuery, ListBookingsQueryVariables>(ListBookingsDocument, options);
-      }
-export function useListBookingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListBookingsQuery, ListBookingsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ListBookingsQuery, ListBookingsQueryVariables>(ListBookingsDocument, options);
-        }
-export function useListBookingsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListBookingsQuery, ListBookingsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<ListBookingsQuery, ListBookingsQueryVariables>(ListBookingsDocument, options);
-        }
-export type ListBookingsQueryHookResult = ReturnType<typeof useListBookingsQuery>;
-export type ListBookingsLazyQueryHookResult = ReturnType<typeof useListBookingsLazyQuery>;
-export type ListBookingsSuspenseQueryHookResult = ReturnType<typeof useListBookingsSuspenseQuery>;
-export type ListBookingsQueryResult = Apollo.QueryResult<ListBookingsQuery, ListBookingsQueryVariables>;
+export function useListBookingsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    ListBookingsQuery,
+    ListBookingsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ListBookingsQuery, ListBookingsQueryVariables>(
+    ListBookingsDocument,
+    options
+  );
+}
+export function useListBookingsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ListBookingsQuery,
+    ListBookingsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ListBookingsQuery, ListBookingsQueryVariables>(
+    ListBookingsDocument,
+    options
+  );
+}
+export function useListBookingsSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    ListBookingsQuery,
+    ListBookingsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<ListBookingsQuery, ListBookingsQueryVariables>(
+    ListBookingsDocument,
+    options
+  );
+}
+export type ListBookingsQueryHookResult = ReturnType<
+  typeof useListBookingsQuery
+>;
+export type ListBookingsLazyQueryHookResult = ReturnType<
+  typeof useListBookingsLazyQuery
+>;
+export type ListBookingsSuspenseQueryHookResult = ReturnType<
+  typeof useListBookingsSuspenseQuery
+>;
+export type ListBookingsQueryResult = Apollo.QueryResult<
+  ListBookingsQuery,
+  ListBookingsQueryVariables
+>;
 export const ListBookingsByUserDocument = gql`
-    query ListBookingsByUser($userId: String!) {
-  listBookingsByUser(userId: $userId) {
-    id
-    totalPrice
-    departureTime
-    arrivalTime
-    status
-    createdAt
-    updatedAt
-    user {
+  query ListBookingsByUser($userId: String!) {
+    listBookingsByUser(userId: $userId) {
       id
-      firstname
-      lastname
-      email
-      password
-      dateOfBirth
-      phoneNumber
-      profilPicture
-      role
-      grade
-      tripsAsPassenger
-      tripsAsDriver
-      status
-      createdAt
-      updatedAt
-    }
-    journey {
-      id
-      origin
-      destination
       totalPrice
-      departure_time
-      arrival_time
-      availableSeats
+      departureTime
+      arrivalTime
       status
-      automaticAccept
       createdAt
       updatedAt
+      user {
+        id
+        firstname
+        lastname
+        email
+        password
+        dateOfBirth
+        phoneNumber
+        profilPicture
+        role
+        grade
+        tripsAsPassenger
+        tripsAsDriver
+        status
+        createdAt
+        updatedAt
+      }
+      journey {
+        id
+        origin
+        destination
+        totalPrice
+        departure_time
+        arrival_time
+        availableSeats
+        status
+        automaticAccept
+        createdAt
+        updatedAt
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useListBookingsByUserQuery__
@@ -1084,65 +1943,102 @@ export const ListBookingsByUserDocument = gql`
  *   },
  * });
  */
-export function useListBookingsByUserQuery(baseOptions: Apollo.QueryHookOptions<ListBookingsByUserQuery, ListBookingsByUserQueryVariables> & ({ variables: ListBookingsByUserQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ListBookingsByUserQuery, ListBookingsByUserQueryVariables>(ListBookingsByUserDocument, options);
-      }
-export function useListBookingsByUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListBookingsByUserQuery, ListBookingsByUserQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ListBookingsByUserQuery, ListBookingsByUserQueryVariables>(ListBookingsByUserDocument, options);
-        }
-export function useListBookingsByUserSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListBookingsByUserQuery, ListBookingsByUserQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<ListBookingsByUserQuery, ListBookingsByUserQueryVariables>(ListBookingsByUserDocument, options);
-        }
-export type ListBookingsByUserQueryHookResult = ReturnType<typeof useListBookingsByUserQuery>;
-export type ListBookingsByUserLazyQueryHookResult = ReturnType<typeof useListBookingsByUserLazyQuery>;
-export type ListBookingsByUserSuspenseQueryHookResult = ReturnType<typeof useListBookingsByUserSuspenseQuery>;
-export type ListBookingsByUserQueryResult = Apollo.QueryResult<ListBookingsByUserQuery, ListBookingsByUserQueryVariables>;
+export function useListBookingsByUserQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ListBookingsByUserQuery,
+    ListBookingsByUserQueryVariables
+  > &
+    (
+      | { variables: ListBookingsByUserQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    ListBookingsByUserQuery,
+    ListBookingsByUserQueryVariables
+  >(ListBookingsByUserDocument, options);
+}
+export function useListBookingsByUserLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ListBookingsByUserQuery,
+    ListBookingsByUserQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    ListBookingsByUserQuery,
+    ListBookingsByUserQueryVariables
+  >(ListBookingsByUserDocument, options);
+}
+export function useListBookingsByUserSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    ListBookingsByUserQuery,
+    ListBookingsByUserQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    ListBookingsByUserQuery,
+    ListBookingsByUserQueryVariables
+  >(ListBookingsByUserDocument, options);
+}
+export type ListBookingsByUserQueryHookResult = ReturnType<
+  typeof useListBookingsByUserQuery
+>;
+export type ListBookingsByUserLazyQueryHookResult = ReturnType<
+  typeof useListBookingsByUserLazyQuery
+>;
+export type ListBookingsByUserSuspenseQueryHookResult = ReturnType<
+  typeof useListBookingsByUserSuspenseQuery
+>;
+export type ListBookingsByUserQueryResult = Apollo.QueryResult<
+  ListBookingsByUserQuery,
+  ListBookingsByUserQueryVariables
+>;
 export const ListBookingsByJourneyDocument = gql`
-    query listBookingsByJourney($journeyId: String!) {
-  listBookingsByJourney(journeyId: $journeyId) {
-    id
-    totalPrice
-    departureTime
-    arrivalTime
-    status
-    createdAt
-    updatedAt
-    user {
+  query listBookingsByJourney($journeyId: String!) {
+    listBookingsByJourney(journeyId: $journeyId) {
       id
-      firstname
-      lastname
-      email
-      password
-      dateOfBirth
-      phoneNumber
-      profilPicture
-      role
-      grade
-      tripsAsPassenger
-      tripsAsDriver
-      status
-      createdAt
-      updatedAt
-    }
-    journey {
-      id
-      origin
-      destination
       totalPrice
-      departure_time
-      arrival_time
-      availableSeats
+      departureTime
+      arrivalTime
       status
-      automaticAccept
       createdAt
       updatedAt
+      user {
+        id
+        firstname
+        lastname
+        email
+        password
+        dateOfBirth
+        phoneNumber
+        profilPicture
+        role
+        grade
+        tripsAsPassenger
+        tripsAsDriver
+        status
+        createdAt
+        updatedAt
+      }
+      journey {
+        id
+        origin
+        destination
+        totalPrice
+        departure_time
+        arrival_time
+        availableSeats
+        status
+        automaticAccept
+        createdAt
+        updatedAt
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useListBookingsByJourneyQuery__
@@ -1160,65 +2056,102 @@ export const ListBookingsByJourneyDocument = gql`
  *   },
  * });
  */
-export function useListBookingsByJourneyQuery(baseOptions: Apollo.QueryHookOptions<ListBookingsByJourneyQuery, ListBookingsByJourneyQueryVariables> & ({ variables: ListBookingsByJourneyQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ListBookingsByJourneyQuery, ListBookingsByJourneyQueryVariables>(ListBookingsByJourneyDocument, options);
-      }
-export function useListBookingsByJourneyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListBookingsByJourneyQuery, ListBookingsByJourneyQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ListBookingsByJourneyQuery, ListBookingsByJourneyQueryVariables>(ListBookingsByJourneyDocument, options);
-        }
-export function useListBookingsByJourneySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListBookingsByJourneyQuery, ListBookingsByJourneyQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<ListBookingsByJourneyQuery, ListBookingsByJourneyQueryVariables>(ListBookingsByJourneyDocument, options);
-        }
-export type ListBookingsByJourneyQueryHookResult = ReturnType<typeof useListBookingsByJourneyQuery>;
-export type ListBookingsByJourneyLazyQueryHookResult = ReturnType<typeof useListBookingsByJourneyLazyQuery>;
-export type ListBookingsByJourneySuspenseQueryHookResult = ReturnType<typeof useListBookingsByJourneySuspenseQuery>;
-export type ListBookingsByJourneyQueryResult = Apollo.QueryResult<ListBookingsByJourneyQuery, ListBookingsByJourneyQueryVariables>;
+export function useListBookingsByJourneyQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ListBookingsByJourneyQuery,
+    ListBookingsByJourneyQueryVariables
+  > &
+    (
+      | { variables: ListBookingsByJourneyQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    ListBookingsByJourneyQuery,
+    ListBookingsByJourneyQueryVariables
+  >(ListBookingsByJourneyDocument, options);
+}
+export function useListBookingsByJourneyLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ListBookingsByJourneyQuery,
+    ListBookingsByJourneyQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    ListBookingsByJourneyQuery,
+    ListBookingsByJourneyQueryVariables
+  >(ListBookingsByJourneyDocument, options);
+}
+export function useListBookingsByJourneySuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    ListBookingsByJourneyQuery,
+    ListBookingsByJourneyQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    ListBookingsByJourneyQuery,
+    ListBookingsByJourneyQueryVariables
+  >(ListBookingsByJourneyDocument, options);
+}
+export type ListBookingsByJourneyQueryHookResult = ReturnType<
+  typeof useListBookingsByJourneyQuery
+>;
+export type ListBookingsByJourneyLazyQueryHookResult = ReturnType<
+  typeof useListBookingsByJourneyLazyQuery
+>;
+export type ListBookingsByJourneySuspenseQueryHookResult = ReturnType<
+  typeof useListBookingsByJourneySuspenseQuery
+>;
+export type ListBookingsByJourneyQueryResult = Apollo.QueryResult<
+  ListBookingsByJourneyQuery,
+  ListBookingsByJourneyQueryVariables
+>;
 export const FindBookingByIdDocument = gql`
-    query FindBookingById($findBookingByIdId: String!) {
-  findBookingById(id: $findBookingByIdId) {
-    id
-    totalPrice
-    departureTime
-    arrivalTime
-    status
-    createdAt
-    updatedAt
-    user {
+  query FindBookingById($findBookingById: String!) {
+    findBookingById(id: $findBookingById) {
       id
-      firstname
-      lastname
-      email
-      password
-      dateOfBirth
-      phoneNumber
-      profilPicture
-      role
-      grade
-      tripsAsPassenger
-      tripsAsDriver
-      status
-      createdAt
-      updatedAt
-    }
-    journey {
-      id
-      origin
-      destination
       totalPrice
-      departure_time
-      arrival_time
-      availableSeats
+      departureTime
+      arrivalTime
       status
-      automaticAccept
       createdAt
       updatedAt
+      user {
+        id
+        firstname
+        lastname
+        email
+        password
+        dateOfBirth
+        phoneNumber
+        profilPicture
+        role
+        grade
+        tripsAsPassenger
+        tripsAsDriver
+        status
+        createdAt
+        updatedAt
+      }
+      journey {
+        id
+        origin
+        destination
+        totalPrice
+        departure_time
+        arrival_time
+        availableSeats
+        status
+        automaticAccept
+        createdAt
+        updatedAt
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useFindBookingByIdQuery__
@@ -1232,69 +2165,106 @@ export const FindBookingByIdDocument = gql`
  * @example
  * const { data, loading, error } = useFindBookingByIdQuery({
  *   variables: {
- *      findBookingByIdId: // value for 'findBookingByIdId'
+ *      findBookingById: // value for 'findBookingById'
  *   },
  * });
  */
-export function useFindBookingByIdQuery(baseOptions: Apollo.QueryHookOptions<FindBookingByIdQuery, FindBookingByIdQueryVariables> & ({ variables: FindBookingByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<FindBookingByIdQuery, FindBookingByIdQueryVariables>(FindBookingByIdDocument, options);
-      }
-export function useFindBookingByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindBookingByIdQuery, FindBookingByIdQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<FindBookingByIdQuery, FindBookingByIdQueryVariables>(FindBookingByIdDocument, options);
-        }
-export function useFindBookingByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<FindBookingByIdQuery, FindBookingByIdQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<FindBookingByIdQuery, FindBookingByIdQueryVariables>(FindBookingByIdDocument, options);
-        }
-export type FindBookingByIdQueryHookResult = ReturnType<typeof useFindBookingByIdQuery>;
-export type FindBookingByIdLazyQueryHookResult = ReturnType<typeof useFindBookingByIdLazyQuery>;
-export type FindBookingByIdSuspenseQueryHookResult = ReturnType<typeof useFindBookingByIdSuspenseQuery>;
-export type FindBookingByIdQueryResult = Apollo.QueryResult<FindBookingByIdQuery, FindBookingByIdQueryVariables>;
+export function useFindBookingByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    FindBookingByIdQuery,
+    FindBookingByIdQueryVariables
+  > &
+    (
+      | { variables: FindBookingByIdQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<FindBookingByIdQuery, FindBookingByIdQueryVariables>(
+    FindBookingByIdDocument,
+    options
+  );
+}
+export function useFindBookingByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FindBookingByIdQuery,
+    FindBookingByIdQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    FindBookingByIdQuery,
+    FindBookingByIdQueryVariables
+  >(FindBookingByIdDocument, options);
+}
+export function useFindBookingByIdSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    FindBookingByIdQuery,
+    FindBookingByIdQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    FindBookingByIdQuery,
+    FindBookingByIdQueryVariables
+  >(FindBookingByIdDocument, options);
+}
+export type FindBookingByIdQueryHookResult = ReturnType<
+  typeof useFindBookingByIdQuery
+>;
+export type FindBookingByIdLazyQueryHookResult = ReturnType<
+  typeof useFindBookingByIdLazyQuery
+>;
+export type FindBookingByIdSuspenseQueryHookResult = ReturnType<
+  typeof useFindBookingByIdSuspenseQuery
+>;
+export type FindBookingByIdQueryResult = Apollo.QueryResult<
+  FindBookingByIdQuery,
+  FindBookingByIdQueryVariables
+>;
 export const ListJourneysDocument = gql`
-    query listJourneys {
-  listJourneys {
-    id
-    origin
-    destination
-    totalPrice
-    departure_time
-    arrival_time
-    availableSeats
-    status
-    automaticAccept
-    createdAt
-    updatedAt
-    user {
+  query listJourneys {
+    listJourneys {
       id
-      firstname
-      lastname
-      email
-      password
-      dateOfBirth
-      phoneNumber
-      profilPicture
-      role
-      grade
-      tripsAsPassenger
-      tripsAsDriver
-      status
-      createdAt
-      updatedAt
-    }
-    bookings {
-      id
+      origin
+      destination
       totalPrice
-      departureTime
-      arrivalTime
+      departure_time
+      arrival_time
+      availableSeats
       status
+      automaticAccept
       createdAt
       updatedAt
+      user {
+        id
+        firstname
+        lastname
+        email
+        password
+        dateOfBirth
+        phoneNumber
+        profilPicture
+        role
+        grade
+        tripsAsPassenger
+        tripsAsDriver
+        status
+        createdAt
+        updatedAt
+      }
+      bookings {
+        id
+        totalPrice
+        departureTime
+        arrivalTime
+        status
+        createdAt
+        updatedAt
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useListJourneysQuery__
@@ -1311,65 +2281,98 @@ export const ListJourneysDocument = gql`
  *   },
  * });
  */
-export function useListJourneysQuery(baseOptions?: Apollo.QueryHookOptions<ListJourneysQuery, ListJourneysQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ListJourneysQuery, ListJourneysQueryVariables>(ListJourneysDocument, options);
-      }
-export function useListJourneysLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListJourneysQuery, ListJourneysQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ListJourneysQuery, ListJourneysQueryVariables>(ListJourneysDocument, options);
-        }
-export function useListJourneysSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListJourneysQuery, ListJourneysQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<ListJourneysQuery, ListJourneysQueryVariables>(ListJourneysDocument, options);
-        }
-export type ListJourneysQueryHookResult = ReturnType<typeof useListJourneysQuery>;
-export type ListJourneysLazyQueryHookResult = ReturnType<typeof useListJourneysLazyQuery>;
-export type ListJourneysSuspenseQueryHookResult = ReturnType<typeof useListJourneysSuspenseQuery>;
-export type ListJourneysQueryResult = Apollo.QueryResult<ListJourneysQuery, ListJourneysQueryVariables>;
+export function useListJourneysQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    ListJourneysQuery,
+    ListJourneysQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ListJourneysQuery, ListJourneysQueryVariables>(
+    ListJourneysDocument,
+    options
+  );
+}
+export function useListJourneysLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ListJourneysQuery,
+    ListJourneysQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ListJourneysQuery, ListJourneysQueryVariables>(
+    ListJourneysDocument,
+    options
+  );
+}
+export function useListJourneysSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    ListJourneysQuery,
+    ListJourneysQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<ListJourneysQuery, ListJourneysQueryVariables>(
+    ListJourneysDocument,
+    options
+  );
+}
+export type ListJourneysQueryHookResult = ReturnType<
+  typeof useListJourneysQuery
+>;
+export type ListJourneysLazyQueryHookResult = ReturnType<
+  typeof useListJourneysLazyQuery
+>;
+export type ListJourneysSuspenseQueryHookResult = ReturnType<
+  typeof useListJourneysSuspenseQuery
+>;
+export type ListJourneysQueryResult = Apollo.QueryResult<
+  ListJourneysQuery,
+  ListJourneysQueryVariables
+>;
 export const ListJourneysByUserDocument = gql`
-    query listJourneysByUser($userId: String!) {
-  listJourneysByUser(userId: $userId) {
-    id
-    origin
-    destination
-    totalPrice
-    departure_time
-    arrival_time
-    availableSeats
-    status
-    automaticAccept
-    createdAt
-    updatedAt
-    user {
+  query listJourneysByUser($userId: String!) {
+    listJourneysByUser(userId: $userId) {
       id
-      firstname
-      lastname
-      email
-      password
-      dateOfBirth
-      phoneNumber
-      profilPicture
-      role
-      grade
-      tripsAsPassenger
-      tripsAsDriver
-      status
-      createdAt
-      updatedAt
-    }
-    bookings {
-      id
+      origin
+      destination
       totalPrice
-      departureTime
-      arrivalTime
+      departure_time
+      arrival_time
+      availableSeats
       status
+      automaticAccept
       createdAt
       updatedAt
+      user {
+        id
+        firstname
+        lastname
+        email
+        password
+        dateOfBirth
+        phoneNumber
+        profilPicture
+        role
+        grade
+        tripsAsPassenger
+        tripsAsDriver
+        status
+        createdAt
+        updatedAt
+      }
+      bookings {
+        id
+        totalPrice
+        departureTime
+        arrivalTime
+        status
+        createdAt
+        updatedAt
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useListJourneysByUserQuery__
@@ -1387,46 +2390,175 @@ export const ListJourneysByUserDocument = gql`
  *   },
  * });
  */
-export function useListJourneysByUserQuery(baseOptions: Apollo.QueryHookOptions<ListJourneysByUserQuery, ListJourneysByUserQueryVariables> & ({ variables: ListJourneysByUserQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ListJourneysByUserQuery, ListJourneysByUserQueryVariables>(ListJourneysByUserDocument, options);
-      }
-export function useListJourneysByUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListJourneysByUserQuery, ListJourneysByUserQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ListJourneysByUserQuery, ListJourneysByUserQueryVariables>(ListJourneysByUserDocument, options);
-        }
-export function useListJourneysByUserSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListJourneysByUserQuery, ListJourneysByUserQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<ListJourneysByUserQuery, ListJourneysByUserQueryVariables>(ListJourneysByUserDocument, options);
-        }
-export type ListJourneysByUserQueryHookResult = ReturnType<typeof useListJourneysByUserQuery>;
-export type ListJourneysByUserLazyQueryHookResult = ReturnType<typeof useListJourneysByUserLazyQuery>;
-export type ListJourneysByUserSuspenseQueryHookResult = ReturnType<typeof useListJourneysByUserSuspenseQuery>;
-export type ListJourneysByUserQueryResult = Apollo.QueryResult<ListJourneysByUserQuery, ListJourneysByUserQueryVariables>;
+export function useListJourneysByUserQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    ListJourneysByUserQuery,
+    ListJourneysByUserQueryVariables
+  > &
+    (
+      | { variables: ListJourneysByUserQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<
+    ListJourneysByUserQuery,
+    ListJourneysByUserQueryVariables
+  >(ListJourneysByUserDocument, options);
+}
+export function useListJourneysByUserLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ListJourneysByUserQuery,
+    ListJourneysByUserQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    ListJourneysByUserQuery,
+    ListJourneysByUserQueryVariables
+  >(ListJourneysByUserDocument, options);
+}
+export function useListJourneysByUserSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    ListJourneysByUserQuery,
+    ListJourneysByUserQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    ListJourneysByUserQuery,
+    ListJourneysByUserQueryVariables
+  >(ListJourneysByUserDocument, options);
+}
+export type ListJourneysByUserQueryHookResult = ReturnType<
+  typeof useListJourneysByUserQuery
+>;
+export type ListJourneysByUserLazyQueryHookResult = ReturnType<
+  typeof useListJourneysByUserLazyQuery
+>;
+export type ListJourneysByUserSuspenseQueryHookResult = ReturnType<
+  typeof useListJourneysByUserSuspenseQuery
+>;
+export type ListJourneysByUserQueryResult = Apollo.QueryResult<
+  ListJourneysByUserQuery,
+  ListJourneysByUserQueryVariables
+>;
 export const FindJourneyByIdDocument = gql`
-    query findJourneyById($findJourneyByIdId: String!) {
-  findJourneyById(id: $findJourneyByIdId) {
-    id
-    origin
-    destination
-    totalPrice
-    departure_time
-    arrival_time
-    availableSeats
-    status
-    automaticAccept
-    createdAt
-    updatedAt
-    bookings {
+  query findJourneyById($findJourneyById: String!) {
+    findJourneyById(id: $findJourneyById) {
       id
+      origin
+      destination
       totalPrice
-      departureTime
-      arrivalTime
+      departure_time
+      arrival_time
+      availableSeats
       status
+      automaticAccept
       createdAt
       updatedAt
+      bookings {
+        id
+        totalPrice
+        departureTime
+        arrivalTime
+        status
+        createdAt
+        updatedAt
+      }
+      user {
+        id
+        firstname
+        lastname
+        email
+        password
+        dateOfBirth
+        phoneNumber
+        profilPicture
+        role
+        grade
+        tripsAsPassenger
+        tripsAsDriver
+        status
+        createdAt
+        updatedAt
+      }
     }
-    user {
+  }
+`;
+
+/**
+ * __useFindJourneyByIdQuery__
+ *
+ * To run a query within a React component, call `useFindJourneyByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindJourneyByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindJourneyByIdQuery({
+ *   variables: {
+ *      findJourneyById: // value for 'findJourneyById'
+ *   },
+ * });
+ */
+export function useFindJourneyByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    FindJourneyByIdQuery,
+    FindJourneyByIdQueryVariables
+  > &
+    (
+      | { variables: FindJourneyByIdQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<FindJourneyByIdQuery, FindJourneyByIdQueryVariables>(
+    FindJourneyByIdDocument,
+    options
+  );
+}
+export function useFindJourneyByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FindJourneyByIdQuery,
+    FindJourneyByIdQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<
+    FindJourneyByIdQuery,
+    FindJourneyByIdQueryVariables
+  >(FindJourneyByIdDocument, options);
+}
+export function useFindJourneyByIdSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    FindJourneyByIdQuery,
+    FindJourneyByIdQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<
+    FindJourneyByIdQuery,
+    FindJourneyByIdQueryVariables
+  >(FindJourneyByIdDocument, options);
+}
+export type FindJourneyByIdQueryHookResult = ReturnType<
+  typeof useFindJourneyByIdQuery
+>;
+export type FindJourneyByIdLazyQueryHookResult = ReturnType<
+  typeof useFindJourneyByIdLazyQuery
+>;
+export type FindJourneyByIdSuspenseQueryHookResult = ReturnType<
+  typeof useFindJourneyByIdSuspenseQuery
+>;
+export type FindJourneyByIdQueryResult = Apollo.QueryResult<
+  FindJourneyByIdQuery,
+  FindJourneyByIdQueryVariables
+>;
+export const ListUsersDocument = gql`
+  query listUsers {
+    listUsers {
       id
       firstname
       lastname
@@ -1442,86 +2574,31 @@ export const FindJourneyByIdDocument = gql`
       status
       createdAt
       updatedAt
-    }
-  }
-}
-    `;
-
-/**
- * __useFindJourneyByIdQuery__
- *
- * To run a query within a React component, call `useFindJourneyByIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindJourneyByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFindJourneyByIdQuery({
- *   variables: {
- *      findJourneyByIdId: // value for 'findJourneyByIdId'
- *   },
- * });
- */
-export function useFindJourneyByIdQuery(baseOptions: Apollo.QueryHookOptions<FindJourneyByIdQuery, FindJourneyByIdQueryVariables> & ({ variables: FindJourneyByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<FindJourneyByIdQuery, FindJourneyByIdQueryVariables>(FindJourneyByIdDocument, options);
+      journeys {
+        id
+        origin
+        destination
+        totalPrice
+        departure_time
+        arrival_time
+        availableSeats
+        status
+        automaticAccept
+        createdAt
+        updatedAt
       }
-export function useFindJourneyByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindJourneyByIdQuery, FindJourneyByIdQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<FindJourneyByIdQuery, FindJourneyByIdQueryVariables>(FindJourneyByIdDocument, options);
-        }
-export function useFindJourneyByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<FindJourneyByIdQuery, FindJourneyByIdQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<FindJourneyByIdQuery, FindJourneyByIdQueryVariables>(FindJourneyByIdDocument, options);
-        }
-export type FindJourneyByIdQueryHookResult = ReturnType<typeof useFindJourneyByIdQuery>;
-export type FindJourneyByIdLazyQueryHookResult = ReturnType<typeof useFindJourneyByIdLazyQuery>;
-export type FindJourneyByIdSuspenseQueryHookResult = ReturnType<typeof useFindJourneyByIdSuspenseQuery>;
-export type FindJourneyByIdQueryResult = Apollo.QueryResult<FindJourneyByIdQuery, FindJourneyByIdQueryVariables>;
-export const ListUsersDocument = gql`
-    query listUsers {
-  listUsers {
-    id
-    firstname
-    lastname
-    email
-    password
-    dateOfBirth
-    phoneNumber
-    profilPicture
-    role
-    grade
-    tripsAsPassenger
-    tripsAsDriver
-    status
-    createdAt
-    updatedAt
-    journeys {
-      id
-      origin
-      destination
-      totalPrice
-      departure_time
-      arrival_time
-      availableSeats
-      status
-      automaticAccept
-      createdAt
-      updatedAt
-    }
-    bookings {
-      id
-      totalPrice
-      departureTime
-      arrivalTime
-      status
-      createdAt
-      updatedAt
+      bookings {
+        id
+        totalPrice
+        departureTime
+        arrivalTime
+        status
+        createdAt
+        updatedAt
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useListUsersQuery__
@@ -1538,65 +2615,93 @@ export const ListUsersDocument = gql`
  *   },
  * });
  */
-export function useListUsersQuery(baseOptions?: Apollo.QueryHookOptions<ListUsersQuery, ListUsersQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ListUsersQuery, ListUsersQueryVariables>(ListUsersDocument, options);
-      }
-export function useListUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListUsersQuery, ListUsersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ListUsersQuery, ListUsersQueryVariables>(ListUsersDocument, options);
-        }
-export function useListUsersSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListUsersQuery, ListUsersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<ListUsersQuery, ListUsersQueryVariables>(ListUsersDocument, options);
-        }
+export function useListUsersQuery(
+  baseOptions?: Apollo.QueryHookOptions<ListUsersQuery, ListUsersQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ListUsersQuery, ListUsersQueryVariables>(
+    ListUsersDocument,
+    options
+  );
+}
+export function useListUsersLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ListUsersQuery,
+    ListUsersQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ListUsersQuery, ListUsersQueryVariables>(
+    ListUsersDocument,
+    options
+  );
+}
+export function useListUsersSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    ListUsersQuery,
+    ListUsersQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<ListUsersQuery, ListUsersQueryVariables>(
+    ListUsersDocument,
+    options
+  );
+}
 export type ListUsersQueryHookResult = ReturnType<typeof useListUsersQuery>;
-export type ListUsersLazyQueryHookResult = ReturnType<typeof useListUsersLazyQuery>;
-export type ListUsersSuspenseQueryHookResult = ReturnType<typeof useListUsersSuspenseQuery>;
-export type ListUsersQueryResult = Apollo.QueryResult<ListUsersQuery, ListUsersQueryVariables>;
+export type ListUsersLazyQueryHookResult = ReturnType<
+  typeof useListUsersLazyQuery
+>;
+export type ListUsersSuspenseQueryHookResult = ReturnType<
+  typeof useListUsersSuspenseQuery
+>;
+export type ListUsersQueryResult = Apollo.QueryResult<
+  ListUsersQuery,
+  ListUsersQueryVariables
+>;
 export const FindUserByIdDocument = gql`
-    query findUserById($findUserById: String!) {
-  findUserById(id: $findUserById) {
-    id
-    firstname
-    lastname
-    email
-    password
-    dateOfBirth
-    phoneNumber
-    profilPicture
-    role
-    tripsAsPassenger
-    grade
-    tripsAsDriver
-    status
-    createdAt
-    updatedAt
-    journeys {
+  query findUserById($findUserById: String!) {
+    findUserById(id: $findUserById) {
       id
-      origin
-      destination
-      totalPrice
-      departure_time
-      arrival_time
-      availableSeats
-      status
-      automaticAccept
-      createdAt
-      updatedAt
-    }
-    bookings {
-      id
-      totalPrice
-      departureTime
-      arrivalTime
+      firstname
+      lastname
+      email
+      password
+      dateOfBirth
+      phoneNumber
+      profilPicture
+      role
+      tripsAsPassenger
+      grade
+      tripsAsDriver
       status
       createdAt
       updatedAt
+      journeys {
+        id
+        origin
+        destination
+        totalPrice
+        departure_time
+        arrival_time
+        availableSeats
+        status
+        automaticAccept
+        createdAt
+        updatedAt
+      }
+      bookings {
+        id
+        totalPrice
+        departureTime
+        arrivalTime
+        status
+        createdAt
+        updatedAt
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useFindUserByIdQuery__
@@ -1614,19 +2719,56 @@ export const FindUserByIdDocument = gql`
  *   },
  * });
  */
-export function useFindUserByIdQuery(baseOptions: Apollo.QueryHookOptions<FindUserByIdQuery, FindUserByIdQueryVariables> & ({ variables: FindUserByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<FindUserByIdQuery, FindUserByIdQueryVariables>(FindUserByIdDocument, options);
-      }
-export function useFindUserByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindUserByIdQuery, FindUserByIdQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<FindUserByIdQuery, FindUserByIdQueryVariables>(FindUserByIdDocument, options);
-        }
-export function useFindUserByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<FindUserByIdQuery, FindUserByIdQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<FindUserByIdQuery, FindUserByIdQueryVariables>(FindUserByIdDocument, options);
-        }
-export type FindUserByIdQueryHookResult = ReturnType<typeof useFindUserByIdQuery>;
-export type FindUserByIdLazyQueryHookResult = ReturnType<typeof useFindUserByIdLazyQuery>;
-export type FindUserByIdSuspenseQueryHookResult = ReturnType<typeof useFindUserByIdSuspenseQuery>;
-export type FindUserByIdQueryResult = Apollo.QueryResult<FindUserByIdQuery, FindUserByIdQueryVariables>;
+export function useFindUserByIdQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    FindUserByIdQuery,
+    FindUserByIdQueryVariables
+  > &
+    (
+      | { variables: FindUserByIdQueryVariables; skip?: boolean }
+      | { skip: boolean }
+    )
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<FindUserByIdQuery, FindUserByIdQueryVariables>(
+    FindUserByIdDocument,
+    options
+  );
+}
+export function useFindUserByIdLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    FindUserByIdQuery,
+    FindUserByIdQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<FindUserByIdQuery, FindUserByIdQueryVariables>(
+    FindUserByIdDocument,
+    options
+  );
+}
+export function useFindUserByIdSuspenseQuery(
+  baseOptions?: Apollo.SuspenseQueryHookOptions<
+    FindUserByIdQuery,
+    FindUserByIdQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useSuspenseQuery<FindUserByIdQuery, FindUserByIdQueryVariables>(
+    FindUserByIdDocument,
+    options
+  );
+}
+export type FindUserByIdQueryHookResult = ReturnType<
+  typeof useFindUserByIdQuery
+>;
+export type FindUserByIdLazyQueryHookResult = ReturnType<
+  typeof useFindUserByIdLazyQuery
+>;
+export type FindUserByIdSuspenseQueryHookResult = ReturnType<
+  typeof useFindUserByIdSuspenseQuery
+>;
+export type FindUserByIdQueryResult = Apollo.QueryResult<
+  FindUserByIdQuery,
+  FindUserByIdQueryVariables
+>;

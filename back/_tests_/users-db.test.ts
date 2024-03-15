@@ -1,7 +1,7 @@
 import { buildSchemaSync } from 'type-graphql'
 import UserResolver from '../src/resolvers/user.resolver'
 import { ApolloServer } from '@apollo/server'
-import { UserEntity, UserMessage } from '../src/entities/user.entity'
+import { UserEntity } from '../src/entities/user.entity'
 import assert from 'assert'
 
 import datasource from '../src/db_test'
@@ -59,7 +59,7 @@ type ResponseUpdateData = { updatedUser: UserEntity }
 
 const baseSchema = buildSchemaSync({
     resolvers: [UserResolver],
-    authChecker: () => true, 
+    authChecker: () => true,
 })
 
 let server: ApolloServer
