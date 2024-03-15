@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 //Assets
 import logo from "@/assets/Logo.webp";
+<<<<<<< HEAD
 import {
   Avatar,
   Button,
@@ -13,6 +14,9 @@ import {
   MenuItem,
   Tooltip,
 } from "@mui/material";
+=======
+import { Avatar, Button } from "@mui/material";
+>>>>>>> a615dc78 (FRONT creation type)
 import Link from "next/link";
 import { routes } from "@/app/lib/routes";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";

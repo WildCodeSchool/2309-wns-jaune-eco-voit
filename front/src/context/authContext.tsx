@@ -1,12 +1,5 @@
 import { UserEntity } from "@/api-types/user";
-import { useFindUserByIdLazyQuery } from "@/types/graphql";
-import {
-  JSXElementConstructor,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useMemo, useState } from "react";
 import { createContext } from "react";
 
 export const AuthContext = createContext<{

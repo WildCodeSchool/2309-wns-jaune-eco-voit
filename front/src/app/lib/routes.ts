@@ -2,7 +2,7 @@ export type Route = {
   pathname: string;
   title: string;
   protected: Protected;
-}
+};
 
 export type Protected = "ADMIN" | "PRIVATE" | "PUBLIC";
 
@@ -10,7 +10,7 @@ export const routes: { [key: string]: Route } = {
   home: {
     pathname: "/",
     title: "Accueil",
-    protected: "PUBLIC"
+    protected: "PUBLIC",
   },
   login: {
     pathname: "/auth/login",
@@ -52,5 +52,9 @@ export const routes: { [key: string]: Route } = {
     title: "Publier un trajet",
     protected: "PRIVATE",
   },
+<<<<<<< HEAD
 
 };
+=======
+};
+>>>>>>> a615dc78 (FRONT creation type)
