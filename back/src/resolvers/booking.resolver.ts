@@ -16,10 +16,7 @@ export default class BookingResolver {
 
     @Authorized()
     @Query(() => BookingEntity)
-    async findBookingById(
-        @Arg('id') id: string,
-        @Ctx() { req, res, user }: MyContext
-    ) {
+    async findBookingById(@Arg('id') id: string, @Ctx() { user }: MyContext) {
         const booking = await new BookingService().findBookingById(id)
         userAuthorized([booking.user.id, booking.journey.user.id], user)
         return booking
@@ -29,7 +26,7 @@ export default class BookingResolver {
     @Query(() => [BookingEntity])
     async listBookingsByUser(
         @Arg('userId') userId: string,
-        @Ctx() { req, res, user }: MyContext
+        @Ctx() { user }: MyContext
     ) {
         // On vérifie l'id envoyé en argument correspond bien à un user existant dans la DB
         // Si ce n'est pas le cas, une erreur sera envoyé directement depuis la méthode findUserById du userService
@@ -49,7 +46,7 @@ export default class BookingResolver {
     @Query(() => [BookingEntity])
     async listBookingsByJourney(
         @Arg('journeyId') journeyId: string,
-        @Ctx() { req, res, user }: MyContext
+        @Ctx() { user }: MyContext
     ) {
         // On vérifie que la journeyId envoyé existe
         // Si ce n'est pas le cas, l'erreur sera envoyé directement depuis la fonciton findJourneyById du JourneysService
@@ -79,7 +76,7 @@ export default class BookingResolver {
     @Mutation(() => BookingEntity)
     async createBooking(
         @Arg('data') data: CreateBookingInput,
-        @Ctx() { req, res, user }: MyContext
+        @Ctx() { user }: MyContext
     ) {
         userAuthorized([data.user.id], user)
 
@@ -106,10 +103,7 @@ export default class BookingResolver {
 
     @Authorized()
     @Mutation(() => BookingEntity)
-    async acceptBooking(
-        @Arg('id') id: string,
-        @Ctx() { req, res, user }: MyContext
-    ) {
+    async acceptBooking(@Arg('id') id: string, @Ctx() { user }: MyContext) {
         const bookingService = new BookingService()
 
         const { journey } = await bookingService.findBookingById(id)
@@ -136,10 +130,7 @@ export default class BookingResolver {
 
     @Authorized()
     @Mutation(() => BookingEntity)
-    async rejectBooking(
-        @Arg('id') id: string,
-        @Ctx() { req, res, user }: MyContext
-    ) {
+    async rejectBooking(@Arg('id') id: string, @Ctx() { user }: MyContext) {
         const bookingService = new BookingService()
 
         const { journey } = await bookingService.findBookingById(id)
@@ -156,10 +147,7 @@ export default class BookingResolver {
 
     @Authorized()
     @Mutation(() => BookingEntity)
-    async cancelBooking(
-        @Arg('id') id: string,
-        @Ctx() { req, res, user }: MyContext
-    ) {
+    async cancelBooking(@Arg('id') id: string, @Ctx() { user }: MyContext) {
         const bookingService = new BookingService()
 
         const { journey, user: userBooking } =
