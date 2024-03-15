@@ -27,7 +27,7 @@ const mapData = (dataArray: Omit<UserEntity, 'hashPassword'>[]) => {
 
 const baseSchema = buildSchemaSync({
     resolvers: [UserResolver],
-    // authChecker: () => true,
+    authChecker: () => true, 
 })
 
 export const CREATE_USER = `#graphql
@@ -110,8 +110,10 @@ const usersData: Omit<UserEntity, 'hashPassword'>[] = [
     },
 ]
 
+
 // On a laissé listUsers dans mocks, et on créé un resolvers pour findUserById puisqu'on a besoin de lui passer un paramètre.
-beforeAll(() => {
+beforeAll(async () => {
+
     const mocks = {
         Query: {
             listUsers() {
@@ -119,6 +121,7 @@ beforeAll(() => {
             },
         },
     }
+
     const resolvers = () => ({
         Query: {
             findUserById(_: null, args: { id: string }) {

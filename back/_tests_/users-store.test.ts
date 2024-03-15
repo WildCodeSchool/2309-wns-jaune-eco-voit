@@ -15,7 +15,7 @@ let server: ApolloServer
 
 const baseSchema = buildSchemaSync({
     resolvers: [UserResolver],
-    // authChecker: () => true,
+    authChecker: () => true,
 })
 
 // Transforme le schéma en chaine de caractère
