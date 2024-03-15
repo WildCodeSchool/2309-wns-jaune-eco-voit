@@ -10,7 +10,7 @@ type ResponseData = {
 }
 
 type ResponseOneUser = {
-    findUserByIdId: UserEntity
+    findUserById: UserEntity
 }
 
 let server: ApolloServer
@@ -27,7 +27,7 @@ const mapData = (dataArray: Omit<UserEntity, 'hashPassword'>[]) => {
 
 const baseSchema = buildSchemaSync({
     resolvers: [UserResolver],
-    authChecker: () => true, 
+    authChecker: () => true,
 })
 
 export const CREATE_USER = `#graphql
@@ -63,8 +63,8 @@ query ListUsers {
 }`
 
 export const FIND_USER_BY_ID = `#graphql
-query FindUserById($findUserByIdId: String!) {
-    findUserById(id: $findUserByIdId) {
+query FindUserById($findUserById: String!) {
+    findUserById(id: $findUserById) {
       id
       firstname
       lastname
@@ -110,10 +110,8 @@ const usersData: Omit<UserEntity, 'hashPassword'>[] = [
     },
 ]
 
-
 // On a laissé listUsers dans mocks, et on créé un resolvers pour findUserById puisqu'on a besoin de lui passer un paramètre.
 beforeAll(async () => {
-
     const mocks = {
         Query: {
             listUsers() {

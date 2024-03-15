@@ -368,7 +368,7 @@ export type ListBookingsByJourneyQueryVariables = Exact<{
 export type ListBookingsByJourneyQuery = { __typename?: 'Query', listBookingsByJourney: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: any | null, profilPicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } }> };
 
 export type FindBookingByIdQueryVariables = Exact<{
-  findBookingByIdId: Scalars['String']['input'];
+  findBookingById: Scalars['String']['input'];
 }>;
 
 
@@ -387,7 +387,7 @@ export type ListJourneysByUserQueryVariables = Exact<{
 export type ListJourneysByUserQuery = { __typename?: 'Query', listJourneysByUser: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: any | null, profilPicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, bookings: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }> }> };
 
 export type FindJourneyByIdQueryVariables = Exact<{
-  findJourneyByIdId: Scalars['String']['input'];
+  findJourneyById: Scalars['String']['input'];
 }>;
 
 
@@ -1177,8 +1177,8 @@ export type ListBookingsByJourneyLazyQueryHookResult = ReturnType<typeof useList
 export type ListBookingsByJourneySuspenseQueryHookResult = ReturnType<typeof useListBookingsByJourneySuspenseQuery>;
 export type ListBookingsByJourneyQueryResult = Apollo.QueryResult<ListBookingsByJourneyQuery, ListBookingsByJourneyQueryVariables>;
 export const FindBookingByIdDocument = gql`
-    query FindBookingById($findBookingByIdId: String!) {
-  findBookingById(id: $findBookingByIdId) {
+    query FindBookingById($findBookingById: String!) {
+  findBookingById(id: $findBookingById) {
     id
     totalPrice
     departureTime
@@ -1232,7 +1232,7 @@ export const FindBookingByIdDocument = gql`
  * @example
  * const { data, loading, error } = useFindBookingByIdQuery({
  *   variables: {
- *      findBookingByIdId: // value for 'findBookingByIdId'
+ *      findBookingById: // value for 'findBookingById'
  *   },
  * });
  */
@@ -1404,8 +1404,8 @@ export type ListJourneysByUserLazyQueryHookResult = ReturnType<typeof useListJou
 export type ListJourneysByUserSuspenseQueryHookResult = ReturnType<typeof useListJourneysByUserSuspenseQuery>;
 export type ListJourneysByUserQueryResult = Apollo.QueryResult<ListJourneysByUserQuery, ListJourneysByUserQueryVariables>;
 export const FindJourneyByIdDocument = gql`
-    query findJourneyById($findJourneyByIdId: String!) {
-  findJourneyById(id: $findJourneyByIdId) {
+    query findJourneyById($findJourneyById: String!) {
+  findJourneyById(id: $findJourneyById) {
     id
     origin
     destination
@@ -1459,7 +1459,7 @@ export const FindJourneyByIdDocument = gql`
  * @example
  * const { data, loading, error } = useFindJourneyByIdQuery({
  *   variables: {
- *      findJourneyByIdId: // value for 'findJourneyByIdId'
+ *      findJourneyById: // value for 'findJourneyById'
  *   },
  * });
  */

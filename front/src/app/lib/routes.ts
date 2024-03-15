@@ -52,9 +52,4 @@ export const routes: { [key: string]: Route } = {
     title: "Publier un trajet",
     protected: "PRIVATE",
   },
-<<<<<<< HEAD
-
 };
-=======
-};
->>>>>>> a615dc78 (FRONT creation type)
