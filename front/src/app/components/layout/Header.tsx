@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 //Assets
-import logo from "@/assets/Logo.webp";
+// import logo from "@/assets/Logo.webp";
 import {
   Avatar,
   Button,

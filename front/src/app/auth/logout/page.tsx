@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useLogoutLazyQuery } from "@/types/graphql";
@@ -12,10 +12,12 @@ function Logout() {
     setTimeout(() => {
       router.push("/");
     }, 2000);
-  }, []);
+  }, [logout, router]);
 
   return (
-    <main className={`flex min-h-screen flex-col items-center justify-between p-24`}>
+    <main
+      className={`flex min-h-screen flex-col items-center justify-between p-24`}
+    >
       {loading ? "Veuillez patienter..." : "Vous êtes déconnectés!"}
     </main>
   );
