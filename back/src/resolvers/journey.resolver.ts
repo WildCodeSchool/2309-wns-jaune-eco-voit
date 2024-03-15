@@ -28,7 +28,7 @@ export default class JourneyResolver {
     @Query(() => [JourneyEntity])
     async listJourneysByUser(
         @Arg('userId') userId: string,
-        @Ctx() { req, res, user }: MyContext
+        @Ctx() { user }: MyContext
     ) {
         // On vérifie l'id envoyé en argument correspond bien à un user existant
         // Si ce n'est pas le cas, une erreur sera envoyé directement depuis la méthode findUserById du userService
@@ -48,7 +48,7 @@ export default class JourneyResolver {
     @Mutation(() => JourneyEntity)
     async createJourney(
         @Arg('data') data: CreateJourneyInput,
-        @Ctx() { req, res, user }: MyContext
+        @Ctx() { user }: MyContext
     ) {
         userAuthorized([data.user.id], user)
 
@@ -59,7 +59,7 @@ export default class JourneyResolver {
     @Mutation(() => JourneyEntity)
     async updateJourney(
         @Arg('data') data: UpdateJourneyInput,
-        @Ctx() { req, res, user }: MyContext
+        @Ctx() { user }: MyContext
     ) {
         const journeyService = new JourneysService()
 
@@ -76,7 +76,7 @@ export default class JourneyResolver {
     @Mutation(() => JourneyEntity)
     async decreaseAvailableSeats(
         @Arg('id') id: string,
-        @Ctx() { req, res, user }: MyContext
+        @Ctx() { user }: MyContext
     ) {
         const { availableSeats, user: journeyUser } =
             await new JourneysService().findJourneyById(id)
@@ -97,7 +97,7 @@ export default class JourneyResolver {
     @Mutation(() => JourneyEntity)
     async increaseAvailableSeats(
         @Arg('id') id: string,
-        @Ctx() { req, res, user }: MyContext
+        @Ctx() { user }: MyContext
     ) {
         const {
             availableSeats,
@@ -126,7 +126,7 @@ export default class JourneyResolver {
     @Mutation(() => JourneyEntity)
     async updateJourneyStatus(
         @Arg('data') data: UpdateJourneyStatusInput,
-        @Ctx() { req, res, user }: MyContext
+        @Ctx() { user }: MyContext
     ) {
         const journeyService = new JourneysService()
         const bookingService = new BookingsService()

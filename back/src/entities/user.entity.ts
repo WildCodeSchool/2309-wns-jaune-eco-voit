@@ -22,7 +22,6 @@ import {
     IsDate,
     IsEmail,
     IsInt,
-    IsMobilePhone,
     IsOptional,
     IsString,
     Length,
@@ -83,12 +82,14 @@ export class UserEntity {
     @IsDate({ message: 'Date of birth must be a valid date' })
     dateOfBirth: Date
 
-    @Field(() => GraphQLPhoneNumber, { nullable: true })
+    //TODO formatage phone number
+    // @Field(() => GraphQLPhoneNumber, { nullable: true })
+    @Field({ nullable: true })
     @Column({ nullable: true })
     @IsOptional()
-    @IsMobilePhone(undefined, undefined, {
-        message: 'Please provide a valid phone number',
-    })
+    // @IsMobilePhone(undefined, undefined, {
+    //     message: 'Please provide a valid phone number',
+    // })
     phoneNumber?: string
 
     @Field({ nullable: true })

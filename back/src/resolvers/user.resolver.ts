@@ -86,7 +86,6 @@ export default class UserResolver {
     async logout(@Ctx() { req, res, user }: MyContext) {
         if (user) {
             const cookies = new Cookies(req, res)
-            console.log('ici')
 
             cookies.set('token') // sans valeur, le cookie token sera supprimé
         }
@@ -97,7 +96,7 @@ export default class UserResolver {
     @Mutation(() => UserEntity)
     async updateUser(
         @Arg('data') data: UpdateUserInput,
-        @Ctx() { req, res, user }: MyContext
+        @Ctx() { user }: MyContext
     ) {
         userAuthorized([data.id], user)
 
@@ -106,10 +105,7 @@ export default class UserResolver {
 
     @Authorized()
     @Mutation(() => UserEntity)
-    async archiveUser(
-        @Arg('id') id: string,
-        @Ctx() { req, res, user }: MyContext
-    ) {
+    async archiveUser(@Arg('id') id: string, @Ctx() { user }: MyContext) {
         userAuthorized([id], user)
 
         return await new UsersService().updateUser({ id, status: 'ARCHIVED' })

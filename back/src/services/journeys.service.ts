@@ -7,7 +7,6 @@ import {
     UpdateJourneyInput,
 } from '../entities/journey.entity'
 import { validateData, assertDataExists } from '../utils/errorHandlers'
-import BookingsService from './bookings.service'
 
 export default class JourneysService {
     db: Repository<JourneyEntity>
