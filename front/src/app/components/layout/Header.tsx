@@ -25,6 +25,7 @@ import { useFindUserByIdLazyQuery } from "@/types/graphql";
 import { getCookie } from "cookies-next";
 import { AuthContext } from "@/context/authContext";
 import { useRouter } from "next/navigation";
+
 const Header = () => {
   const router = useRouter();
 
