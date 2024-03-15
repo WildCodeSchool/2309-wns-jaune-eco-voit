@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - 'FRONT*'
-      - 'BACK*'
+      - 'Back*'
       - 'CI*'
   pull_request:
     branches:
