@@ -36,14 +36,14 @@ jobs:
         with:
           eslint_dir: ./back
           eslint: true
-        if: github.ref == 'refs/heads/BACK'
+        if: startsWith(github.ref, 'refs/heads/back')  
         
       - name: 🏃🏽 Run linters front
         uses: wearerequired/lint-action@v2
         with:
           eslint_dir: ./front
           eslint: true
-        if: github.ref == 'refs/heads/FRONT'
+        if: startsWith(github.ref, 'refs/heads/front')
 
       - name: 🤗 Hello CI 
         run: echo "This job's status is ${{ job.status }}."
