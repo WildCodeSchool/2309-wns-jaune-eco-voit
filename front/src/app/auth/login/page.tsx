@@ -1,6 +1,6 @@
 "use client";
 //cores
-import { useState, useContext } from "react";
+import { useState, useContext, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 //graphQL
 import { LoginInput, useLoginLazyQuery } from "@/types/graphql";
@@ -54,9 +54,11 @@ const Login = () => {
       login({
         variables: { data: { email: data.email, password: data.password } },
         onCompleted(data) {
-          console.log(data.login);
-          updateUser(data.login);
+          console.log('loggin', data.login.id);
+          updateUser(data.login.id);
+          setTimeout(() => {
           router.push(routes.home.pathname);
+          },1000)
         },
         onError(error) {
           console.log(error);
@@ -107,7 +109,7 @@ const Login = () => {
                   <TextField
                     name="email"
                     label="Email"
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e: { target: { value: SetStateAction<string>; }; }) => setEmail(e.target.value)}
                   />
                 </FormControl>
                 <FormControl>
@@ -133,7 +135,7 @@ const Login = () => {
                         </InputAdornment>
                       ),
                     }}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e: { target: { value: SetStateAction<string>; }; }) => setPassword(e.target.value)}
                   />
                 </FormControl>
               </Stack>
@@ -165,6 +167,7 @@ const Login = () => {
                 variant="contained"
                 color="primary"
                 disabled={!email || !password}
+                
               >
                 Se connecter
               </Button>
