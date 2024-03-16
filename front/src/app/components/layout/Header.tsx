@@ -11,6 +11,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Snackbar,
   Tooltip,
 } from "@mui/material";
 import Link from "next/link";
@@ -21,47 +22,47 @@ import DirectionsCarFilledOutlinedIcon from "@mui/icons-material/DirectionsCarFi
 import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
 import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import { useFindUserByIdLazyQuery } from "@/types/graphql";
-import { getCookie } from "cookies-next";
 import { AuthContext } from "@/context/authContext";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+
+
 
 const Header = () => {
   const router = useRouter();
-
+  const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
-
-  const [findUser, { data, error }] = useFindUserByIdLazyQuery();
-
-  const { user, updateUser, logout } = useContext(AuthContext);
-
-  useEffect(() => {
-    console.log(user);
-    const userIdCookie = getCookie("id");
-    console.log(userIdCookie);
-
-    if (!userIdCookie && !user) return;
-
-    if (!userIdCookie && user) {
-      console.log("no cookies");
-      logout();
+    const handleCloseSnackbar = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
       return;
     }
+    setOpen(false);
+  };
 
-    if (user?.id !== userIdCookie) {
-      findUser({
-        variables: { findUserById: userIdCookie as string },
-        onCompleted(data) {
-          console.log(data);
-          updateUser(data.findUserById);
-        },
-      });
+  const [loggedUser, setLoggedUser] = useState<String | undefined>(Cookies.get("id") ?? "");
+
+  const { user, updateUser } = useContext(AuthContext);
+  
+  useEffect(() => {
+    setLoggedUser(Cookies.get("id") ?? "");
+  }, [])
+  console.log('user', loggedUser)
+  
+  useEffect(() => {
+    const email = Cookies.get("email") ?? ""; // Possible d'utiliser dans le menu
+    const role = Cookies.get("role") ?? "USER"; // Possible d'utiliser pour un menu admin
+    const id = Cookies.get("id") ?? "";
+    console.log('cookies', email, role, id);
+    if(!user && id){
+      console.log('update user', id);
+      updateUser(id);
     }
-  }, [findUser, user, logout, updateUser]);
+    // state intermédiaire 
+    setLoggedUser(user);
+  }, [user, updateUser]);
 
   return (
     <header className="flex justify-between items-center py-6 px-6">
@@ -69,7 +70,7 @@ const Header = () => {
         <Image src={logo} alt="Ecovoit" height={45} />
       </Link>
       <nav className="flex gap-4 items-center">
-        {!user ? (
+        {!loggedUser ? (
           <>
             <Button onClick={() => router.push(routes.login.pathname)}>
               Connexion
@@ -118,7 +119,7 @@ const Header = () => {
               className="m-4"
             >
               <MenuItem onClick={() => router.push(routes.profile.pathname)}>
-                <div className="w-72 flex justify-between">
+                <div className="w-48 flex justify-between">
                   <PersonRoundedIcon /> <p>Mon profil</p>{" "}
                   <KeyboardArrowRightOutlinedIcon />
                 </div>
@@ -127,7 +128,7 @@ const Header = () => {
               <Divider />
 
               <MenuItem onClick={() => router.push(routes.journeys.pathname)}>
-                <div className="w-72 flex justify-between">
+                <div className="w-48 flex justify-between">
                   <DirectionsCarFilledOutlinedIcon /> <p>Mes trajets</p>
                   <KeyboardArrowRightOutlinedIcon />
                 </div>
@@ -136,17 +137,20 @@ const Header = () => {
               <Divider />
 
               <MenuItem onClick={() => router.push(routes.messaging.pathname)}>
-                <div className="w-72 flex justify-between">
+                <div className="w-48 flex justify-between">
                   <ModeCommentOutlinedIcon />
-                  <p>Ma messagerie</p>
+                  <p>Messagerie</p>
                   <KeyboardArrowRightOutlinedIcon />
                 </div>
               </MenuItem>
 
               <Divider />
 
-              <MenuItem onClick={() => router.push(routes.logout.pathname)}>
-                <div className="w-72 flex justify-between">
+              <MenuItem onClick={() => {
+                setOpen(true);
+                router.push(routes.logout.pathname)
+              } }>
+                <div className="w-48 flex justify-between">
                   <CloseOutlinedIcon />
                   <p>Déconnexion</p>
                   <KeyboardArrowRightOutlinedIcon />
@@ -156,6 +160,13 @@ const Header = () => {
           </>
         )}
       </nav>
+      <Snackbar
+      anchorOrigin={{vertical: "bottom", horizontal: 'right'} }
+        open={open}
+        onClose={handleCloseSnackbar}
+        autoHideDuration={3000}
+        message="Vous êtes déconnecté"
+        />
     </header>
   );
 };
