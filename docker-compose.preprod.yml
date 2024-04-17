@@ -4,6 +4,7 @@ services:
     # construit un image à partir du fichier /back
     image: ecovoitwild/back-ecovoit:latest
     # build: ./back
+
     # A gauche le port en local, à droite celui dans docker
     ports:
       - 4000:4000
