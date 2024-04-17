@@ -6,7 +6,7 @@ on:
       - "*"
   pull_request: # Lors d'une PR merge
     branches:
-      - "main"
+      - "PREPROD"
     types:
       - closed
 
@@ -102,11 +102,11 @@ jobs:
         with:
           push: true
           context: "{{defaultContext}}:back"
-          tags: "${{ secrets.DOCKERHUB_USERNAME }}/test-docker-ci:latest"
+          tags: "${{ secrets.DOCKERHUB_USERNAME }}/back-ecovoit:latest"
 
       - name: 🔨 Build and push front
         uses: docker/build-push-action@v4
         with:
           push: true
           context: "{{defaultContext}}:front"
-          tags: "${{ secrets.DOCKERHUB_USERNAME }}/test-docker-ci:latest"
+          tags: "${{ secrets.DOCKERHUB_USERNAME }}/front-ecovoit:latest"
