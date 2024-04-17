@@ -2,8 +2,8 @@ services:
   backend:
     platform: linux/amd64
     # construit un image à partir du fichier /back
-    # image: ecovoitwild/back-ecovoit:latest
-    build: ./back
+    image: ecovoitwild/back-ecovoit:latest
+    # build: ./back
     # A gauche le port en local, à droite celui dans docker
     ports:
       - 4000:4000
@@ -76,8 +76,8 @@ services:
 
   frontend:
     platform: linux/amd64
-    # image: ecovoitwild/front-ecovoit:latest
-    build: ./front
+    image: ecovoitwild/front-ecovoit:latest
+    # build: ./front
     command: sh -c "npm run build && npm run start" # ne start pas car il build seulement les fichiers sont static
     volumes:
       - web-frontend-build:/build
