@@ -1,9 +1,7 @@
 "use client";
 
-import useUserContext from "@/context/useUserContext";
 import { Button } from "@mui/material";
-import { getCookie, CookieValueTypes } from "cookies-next";
-import { useEffect, useMemo } from "react";
+import { CookieValueTypes } from "cookies-next";
 
 export type UserInfos = {
   email: CookieValueTypes;
