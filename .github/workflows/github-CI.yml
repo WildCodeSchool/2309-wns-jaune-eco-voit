@@ -80,12 +80,11 @@ jobs:
             cd ./front && npm i && npm run test-ci
           fi
 
-  # passe pas
   builds:
     needs: Test
     name: Build back & front
     runs-on: ubuntu-latest
-    # if: ${{ github.event_name == 'pull_request' && github.event.action == 'opened' }}
+    if: github.event_name == 'pull_request' && github.event.action == 'opened'
     steps:
       - name: Build back
         working-directory: back
