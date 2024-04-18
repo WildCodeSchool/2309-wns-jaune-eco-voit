@@ -8,11 +8,6 @@ services:
     # A gauche le port en local, à droite celui dans docker
     ports:
       - 4000:4000
-    # pour les utilisateurs de windows, sinon error
-    environment:
-      - WDS_SOCKET_HOST=127.0.0.1
-      - CHOKIDAR_USEPOLLING=true
-      - WATCHPACK_POLLING=true
     # 'depends-on' > dit qu'un service dépend d'un autre
     env_file:
       - back/.env
