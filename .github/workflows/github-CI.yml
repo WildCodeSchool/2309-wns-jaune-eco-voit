@@ -79,8 +79,21 @@ jobs:
             cd ./front && npm i && npm run test-ci
           fi
 
-  docker:
+  builds:
     needs: Test
+    name: Build back & front
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Build back
+        run: cd ./back && npm run build
+      - name: Buid front
+        run: cd ./front && npm run build
+
+  docker:
+    needs:
+      - Test
+      - builds
     name: 🐳 Push on Docker
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
