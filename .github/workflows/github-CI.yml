@@ -80,30 +80,11 @@ jobs:
             cd ./front && npm i && npm run test-ci
           fi
 
-  builds:
-    needs: Test
-    name: Build back & front
-    runs-on: ubuntu-latest
-    steps:
-      - name: 📌 Check out Git repository
-        uses: actions/checkout@v3
-      - name: Build back
-        working-directory: back
-        run: |
-          npm i 
-          npm run build
-      - name: Build front
-        working-directory: front
-        run: |
-          npm i
-          npm run build
-
   docker:
     needs:
       - Test
     name: 🐳 Push on Docker
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
     steps:
       - name: 🦅 Set up QEMU
         uses: docker/setup-qemu-action@v2
