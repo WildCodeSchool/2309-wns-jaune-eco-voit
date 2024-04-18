@@ -196,6 +196,3 @@ export class UpdateJourneyStatusInput {
     @Field()
     status: JourneyStatus
 }
-
-@InputType()
-export class FindJourneyWithFiltersInput {}

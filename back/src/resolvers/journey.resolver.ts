@@ -15,7 +15,7 @@ import BookingsService from '../services/bookings.service'
 @Resolver()
 export default class JourneyResolver {
     @Query(() => [JourneyEntity])
-    async listJourneys(@Arg('filters', { nullable: true }) filters: ) {
+    async listJourneys() {
         return await new JourneysService().listJourneys()
     }
 
