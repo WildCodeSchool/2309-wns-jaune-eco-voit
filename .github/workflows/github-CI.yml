@@ -80,6 +80,23 @@ jobs:
             cd ./front && npm i && npm run test-ci
           fi
 
+  # passe pas
+  builds:
+    needs: Test
+    name: Build back & front
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build back
+        working-directory: back
+        run: |
+          npm i 
+          npm run build
+      - name: Build front
+        working-directory: front
+        run: |
+          npm i
+          npm run build
+
   docker:
     needs:
       - Test
