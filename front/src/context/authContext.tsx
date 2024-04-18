@@ -1,38 +1,39 @@
-import { UserEntity } from "@/api-types/user";
 import { useCallback, useMemo, useState } from "react";
 import { createContext } from "react";
 
+
 export const AuthContext = createContext<{
-  user: UserEntity | undefined;
-  getUser: UserEntity | undefined;
-  updateUser: (user: UserEntity) => void;
-  logout: () => void;
+  user: String | undefined;
+  getUser: String | undefined;
+  updateUser: (user: String) => void;
+  contextLogout: () => void;
 }>({
   user: undefined,
   getUser: undefined,
   updateUser: () => {},
-  logout: () => {},
+  contextLogout: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<undefined | UserEntity>(undefined);
 
-  const updateUser = useCallback(
-    (user: UserEntity) => {
-      console.log("user in context", user);
+  const [user, setUser] = useState<undefined | String>(undefined);
+
+  const updateUser = (useCallback)(
+    (user: String) => {
+      console.log('update context user', user);
       setUser(user);
     },
     [setUser]
   );
 
-  const getUser = useMemo<UserEntity | undefined>(() => user, [user]);
+  const getUser = useMemo<String | undefined>(() => user, [user]);
 
-  const logout = () => {
+  const contextLogout = () => {
     setUser(undefined);
   };
 
   return (
-    <AuthContext.Provider value={{ user, getUser, updateUser, logout }}>
+    <AuthContext.Provider value={{ user, getUser, updateUser, contextLogout }}>
       {children}
     </AuthContext.Provider>
   );

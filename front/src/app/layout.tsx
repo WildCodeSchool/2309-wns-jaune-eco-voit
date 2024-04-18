@@ -10,7 +10,7 @@ import Footer from "./components/layout/Footer";
 import { createContext, useContext, useEffect, useState } from "react";
 import { getCookie } from "cookies-next";
 
-import { AuthContext, AuthProvider } from "@/context/authContext";
+import { AuthProvider } from "@/context/authContext";
 
 // export const metadata: Metadata = {
 //   title: "Create Next App",

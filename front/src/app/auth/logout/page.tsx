@@ -1,18 +1,25 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { useLogoutLazyQuery } from "@/types/graphql";
 
+import { AuthContext } from "@/context/authContext";
+
+
+
 function Logout() {
+  const { contextLogout } = useContext(AuthContext);
   const router = useRouter();
-  const [logout, { loading, data }] = useLogoutLazyQuery();
+  const [logout, { loading }] = useLogoutLazyQuery();
 
   useEffect(() => {
+    contextLogout();
     logout();
+    console.log('tik')
     setTimeout(() => {
-      router.push("/");
-    }, 2000);
-  }, [logout, router]);
+    router.push("/");
+    },1000)
+  }, [ logout, router, contextLogout]);
 
   return (
     <main
