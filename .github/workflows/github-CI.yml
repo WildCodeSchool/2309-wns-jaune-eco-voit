@@ -84,7 +84,6 @@ jobs:
     needs: Test
     name: Build back & front
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.action == 'opened'
     steps:
       - name: Build back
         working-directory: back
@@ -100,6 +99,10 @@ jobs:
   docker:
     needs:
       - Test
+<<<<<<< HEAD
+=======
+    #  - builds
+>>>>>>> 3ddd9b18 (build)
     name: 🐳 Push on Docker
     runs-on: ubuntu-latest
     steps:
