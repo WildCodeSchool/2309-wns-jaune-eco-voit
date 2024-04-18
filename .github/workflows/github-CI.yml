@@ -80,22 +80,26 @@ jobs:
           fi
 
   # passe pas
-  # builds:
-  #  needs: Test
-  #  name: Build back & front
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #    - name: Build back
-  #      run: cd ./back && npm run build
-  #      # working-directory: back
-  #    - name: Build front
-  #      run: cd ./front && npm run build
-  #      # working-directory: front
+  builds:
+    needs: Test
+    name: Build back & front
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build back
+        working-directory: back
+        run: |
+          npm i 
+          npm run build
+      - name: Build front
+        working-directory: front
+        run: |
+          npm i
+          npm run build
 
   docker:
     needs:
       - Test
-    #  - builds
+      - builds
     name: 🐳 Push on Docker
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
