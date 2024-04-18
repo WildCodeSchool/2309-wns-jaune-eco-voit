@@ -9,6 +9,7 @@ on:
       - "PREPROD"
     types:
       - closed
+      - opened
 
 jobs:
   run-linters:
@@ -84,6 +85,7 @@ jobs:
     needs: Test
     name: Build back & front
     runs-on: ubuntu-latest
+    if: github.event.pull_request.state == 'opened'
     steps:
       - name: 📌 Check out Git repository
         uses: actions/checkout@v3
