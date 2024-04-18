@@ -11,7 +11,9 @@
         "prettier:fix": "npm run prettier -- --write",
         "format": "npm run prettier:fix && npm run lint:fix",
         "test": "jest --watch",
-        "test-ci": "jest"
+        "test-ci": "jest",
+        "build": "tsc",
+        "startprod": "node .build/index.js"
     },
     "author": "Groupe 1",
     "license": "ISC",

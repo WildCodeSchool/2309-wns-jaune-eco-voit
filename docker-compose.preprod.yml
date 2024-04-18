@@ -17,6 +17,7 @@ services:
     env_file:
       - back/.env
       - ./secret.env
+    command: sh -c "npm run build && npm run startprod"
     depends_on:
       # Nom du service du quel backend dépend
       db:
@@ -79,9 +80,11 @@ services:
     platform: linux/amd64
     image: ecovoitwild/front-ecovoit:latest
     # build: ./front
-    command: sh -c "npm run build && npm run start" # ne start pas car il build seulement les fichiers sont static
-    volumes:
-      - web-frontend-build:/build
+    # Puisqu'avec next on est sur un server, on doit le start. On n'est pas sur un fichier static
+    command: sh -c "npm run build && npm run start"
+    # Pas de volume puisqu'on est sur un fichier static
+    # volumes:
+    #   - web-frontend-build:/build
     env_file:
       - ./secret.env
     ports:
@@ -93,7 +96,6 @@ services:
     # depends_on:
     #   backend:
     #     condition: service_healthy
-  
 
   nginx:
     image: nginx:1.21.3
@@ -104,12 +106,11 @@ services:
     ports:
       - 8000:80
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf   
-      - web-frontend-build:/web-frontend-build
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      # - web-frontend-build:/web-frontend-build
       - ./logs:/var/log/nginx
 
 volumes:
   ecovoit-data:
   ecovoit-data-test:
-  web-frontend-build:
-
+  # web-frontend-build:
