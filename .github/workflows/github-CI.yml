@@ -99,10 +99,6 @@ jobs:
   docker:
     needs:
       - Test
-<<<<<<< HEAD
-=======
-    #  - builds
->>>>>>> 3ddd9b18 (build)
     name: 🐳 Push on Docker
     runs-on: ubuntu-latest
     steps:
