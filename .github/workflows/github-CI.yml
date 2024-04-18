@@ -84,7 +84,6 @@ jobs:
     needs: Test
     name: Build back & front
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.action == 'opened'
     steps:
       - name: 📌 Check out Git repository
         uses: actions/checkout@v3
@@ -102,7 +101,7 @@ jobs:
   docker:
     needs:
       - Test
-      - builds
+    #  - builds
     name: 🐳 Push on Docker
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
