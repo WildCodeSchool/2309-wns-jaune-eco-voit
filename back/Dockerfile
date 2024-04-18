@@ -3,7 +3,7 @@
 #   Alpine linux est la plus distribution linux la plus légère. 
 FROM node:20-alpine
 
-# Working directory:
+# Working directory:alpine
 #   Definie '/app' comme le working directory dans le container Docker, et le créé s'il n'existe pas
 RUN mkdir /app
 WORKDIR /app
