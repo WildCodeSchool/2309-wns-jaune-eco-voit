@@ -139,4 +139,4 @@ jobs:
     if: github.event.pull_request.merged == true
     steps:
       - name: Webhook update-preprod
-        run: curl https://ops.0923-jaune-1.wns.wilders.dev/hooks/update-preprod
+        run: curl https://ops.0923-jaune-1.wns.wilders.dev/hooks/f2dfe092-7444-4b96-ac89-7204e628819b
