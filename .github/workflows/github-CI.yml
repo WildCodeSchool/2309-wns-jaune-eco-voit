@@ -101,6 +101,7 @@ jobs:
   docker:
     needs:
       - Test
+      - builds
     name: 🐳 Push on Docker
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
@@ -130,3 +131,13 @@ jobs:
           push: true
           context: "{{defaultContext}}:front"
           tags: "${{ secrets.DOCKERHUB_USERNAME }}/front-ecovoit:latest"
+
+  webhook:
+    needs:
+      - docker
+    name: 🐳 Trigger webhook
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Webhook update-preprod
+        run: curl https://ops.0923-jaune-1.wns.wilders.dev/hooks/update-preprod
