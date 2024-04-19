@@ -54,11 +54,11 @@ const Login = () => {
       login({
         variables: { data: { email: data.email, password: data.password } },
         onCompleted(data) {
-          console.log('loggin', data.login.id);
+          console.log("loggin", data.login.id);
           updateUser(data.login.id);
           setTimeout(() => {
-          router.push(routes.home.pathname);
-          },1000)
+            router.push(routes.home.pathname);
+          }, 1000);
         },
         onError(error) {
           console.log(error);
@@ -109,7 +109,9 @@ const Login = () => {
                   <TextField
                     name="email"
                     label="Email"
-                    onChange={(e: { target: { value: SetStateAction<string>; }; }) => setEmail(e.target.value)}
+                    onChange={(e: {
+                      target: { value: SetStateAction<string> };
+                    }) => setEmail(e.target.value)}
                   />
                 </FormControl>
                 <FormControl>
@@ -135,7 +137,9 @@ const Login = () => {
                         </InputAdornment>
                       ),
                     }}
-                    onChange={(e: { target: { value: SetStateAction<string>; }; }) => setPassword(e.target.value)}
+                    onChange={(e: {
+                      target: { value: SetStateAction<string> };
+                    }) => setPassword(e.target.value)}
                   />
                 </FormControl>
               </Stack>
@@ -167,7 +171,6 @@ const Login = () => {
                 variant="contained"
                 color="primary"
                 disabled={!email || !password}
-                
               >
                 Se connecter
               </Button>

@@ -50,8 +50,8 @@ async function main() {
             origin: [
                 'http://localhost:3002',
                 'https://studio.apollographql.com',
-                'https://preprod.0923-jaune-1.wns.wilders.dev/',
-                'https://0923-jaune-1.wns.wilders.dev/',
+                'https://preprod.0923-jaune-1.wns.wilders.dev',
+                'https://0923-jaune-1.wns.wilders.dev',
                 'http://localhost:8000',
             ],
             credentials: true,
