@@ -9,7 +9,6 @@ on:
       - "PREPROD"
     types:
       - closed
-      - opened
 
 jobs:
   run-linters:
