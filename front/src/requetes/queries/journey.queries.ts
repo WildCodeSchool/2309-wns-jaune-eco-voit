@@ -1,44 +1,39 @@
 import { gql } from "@apollo/client";
 
 export const LIST_JOURNEYS = gql`
-  query listJourneys {
-    listJourneys {
+  query ListJourneys($filters: ListJourneysWithFilters) {
+    listJourneys(filters: $filters) {
+      arrival_time
+      automaticAccept
+      availableSeats
+      bookings {
+        arrivalTime
+        createdAt
+        departureTime
+        id
+        status
+        totalPrice
+        updatedAt
+        user {
+          firstname
+          email
+          lastname
+          id
+        }
+      }
+      createdAt
+      departure_time
+      destination
       id
       origin
-      destination
-      totalPrice
-      departure_time
-      arrival_time
-      availableSeats
       status
-      automaticAccept
-      createdAt
+      totalPrice
       updatedAt
       user {
-        id
+        email
         firstname
         lastname
-        email
-        password
-        dateOfBirth
-        phoneNumber
-        profilPicture
-        role
-        grade
-        tripsAsPassenger
-        tripsAsDriver
-        status
-        createdAt
-        updatedAt
-      }
-      bookings {
         id
-        totalPrice
-        departureTime
-        arrivalTime
-        status
-        createdAt
-        updatedAt
       }
     }
   }

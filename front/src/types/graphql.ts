@@ -81,6 +81,13 @@ export type JourneyEntity = {
   user: UserEntity;
 };
 
+export type ListJourneysWithFilters = {
+  automaticAccept?: InputMaybe<Scalars['Boolean']['input']>;
+  departureTime?: InputMaybe<Scalars['DateTimeISO']['input']>;
+  destination?: InputMaybe<Scalars['String']['input']>;
+  origin?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type LoginInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -208,6 +215,11 @@ export type QueryListBookingsByJourneyArgs = {
 
 export type QueryListBookingsByUserArgs = {
   userId: Scalars['String']['input'];
+};
+
+
+export type QueryListJourneysArgs = {
+  filters?: InputMaybe<ListJourneysWithFilters>;
 };
 
 
@@ -374,10 +386,12 @@ export type FindBookingByIdQueryVariables = Exact<{
 
 export type FindBookingByIdQuery = { __typename?: 'Query', findBookingById: { __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilPicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } } };
 
-export type ListJourneysQueryVariables = Exact<{ [key: string]: never; }>;
+export type ListJourneysQueryVariables = Exact<{
+  filters?: InputMaybe<ListJourneysWithFilters>;
+}>;
 
 
-export type ListJourneysQuery = { __typename?: 'Query', listJourneys: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilPicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, bookings: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }> }> };
+export type ListJourneysQuery = { __typename?: 'Query', listJourneys: Array<{ __typename?: 'JourneyEntity', arrival_time: any, automaticAccept: boolean, availableSeats: number, createdAt: any, departure_time: any, destination: string, id: string, origin: string, status: string, totalPrice: number, updatedAt?: any | null, bookings: Array<{ __typename?: 'BookingEntity', arrivalTime: any, createdAt: any, departureTime: any, id: string, status: string, totalPrice: number, updatedAt?: any | null, user: { __typename?: 'UserEntity', firstname: string, email: any, lastname: string, id: string } }>, user: { __typename?: 'UserEntity', email: any, firstname: string, lastname: string, id: string } }> };
 
 export type ListJourneysByUserQueryVariables = Exact<{
   userId: Scalars['String']['input'];
@@ -1253,44 +1267,39 @@ export type FindBookingByIdLazyQueryHookResult = ReturnType<typeof useFindBookin
 export type FindBookingByIdSuspenseQueryHookResult = ReturnType<typeof useFindBookingByIdSuspenseQuery>;
 export type FindBookingByIdQueryResult = Apollo.QueryResult<FindBookingByIdQuery, FindBookingByIdQueryVariables>;
 export const ListJourneysDocument = gql`
-    query listJourneys {
-  listJourneys {
+    query ListJourneys($filters: ListJourneysWithFilters) {
+  listJourneys(filters: $filters) {
+    arrival_time
+    automaticAccept
+    availableSeats
+    bookings {
+      arrivalTime
+      createdAt
+      departureTime
+      id
+      status
+      totalPrice
+      updatedAt
+      user {
+        firstname
+        email
+        lastname
+        id
+      }
+    }
+    createdAt
+    departure_time
+    destination
     id
     origin
-    destination
-    totalPrice
-    departure_time
-    arrival_time
-    availableSeats
     status
-    automaticAccept
-    createdAt
+    totalPrice
     updatedAt
     user {
-      id
+      email
       firstname
       lastname
-      email
-      password
-      dateOfBirth
-      phoneNumber
-      profilPicture
-      role
-      grade
-      tripsAsPassenger
-      tripsAsDriver
-      status
-      createdAt
-      updatedAt
-    }
-    bookings {
       id
-      totalPrice
-      departureTime
-      arrivalTime
-      status
-      createdAt
-      updatedAt
     }
   }
 }
@@ -1308,6 +1317,7 @@ export const ListJourneysDocument = gql`
  * @example
  * const { data, loading, error } = useListJourneysQuery({
  *   variables: {
+ *      filters: // value for 'filters'
  *   },
  * });
  */
