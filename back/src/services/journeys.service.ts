@@ -1,10 +1,11 @@
-import { Repository } from 'typeorm'
+import { MoreThanOrEqual, Repository } from 'typeorm'
 
 import DataSource from '../db'
 import {
     JourneyEntity,
     CreateJourneyInput,
     UpdateJourneyInput,
+    ListJourneysWithFilters,
 } from '../entities/journey.entity'
 import { validateData, assertDataExists } from '../utils/errorHandlers'
 
@@ -25,14 +26,18 @@ export default class JourneysService {
         return journey as JourneyEntity
     }
 
-    async listJourneys() {
-        return await this.db.find({ relations: { user: true, bookings: true } })
-    }
-
-    async listJourneysFilter({ userId }: { userId?: string }) {
+    async listJourneys(
+        filters?: ListJourneysWithFilters & { userId?: string }
+    ) {
         return await this.db.find({
             where: {
-                user: { id: userId ?? undefined },
+                user: { id: filters?.userId },
+                origin: filters?.origin,
+                destination: filters?.destination,
+                departure_time: filters?.departureTime
+                    ? MoreThanOrEqual(filters.departureTime)
+                    : undefined,
+                automaticAccept: filters?.automaticAccept,
             },
             relations: { user: true, bookings: true },
         })

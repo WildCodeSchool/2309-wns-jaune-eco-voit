@@ -196,3 +196,18 @@ export class UpdateJourneyStatusInput {
     @Field()
     status: JourneyStatus
 }
+
+@InputType()
+export class ListJourneysWithFilters {
+    @Field({ nullable: true })
+    origin?: string
+
+    @Field({ nullable: true })
+    destination?: string
+
+    @Field({ nullable: true })
+    automaticAccept?: boolean
+
+    @Field({ nullable: true })
+    departureTime?: Date
+}

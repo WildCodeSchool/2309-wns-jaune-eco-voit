@@ -31,7 +31,7 @@ export default class BookingsService {
         return book as BookingEntity
     }
 
-    async listBookingsByJourneyId(id: string) {
+    async listBookingsByJourneyId(id: string): Promise<BookingEntity[]> {
         return await this.db.find({
             where: { journey: { id } },
             relations: { user: true, journey: true },
