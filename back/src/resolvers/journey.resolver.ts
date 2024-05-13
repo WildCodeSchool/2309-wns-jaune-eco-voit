@@ -6,6 +6,7 @@ import {
     CreateJourneyInput,
     UpdateJourneyInput,
     UpdateJourneyStatusInput,
+    ListJourneysWithFilters,
 } from '../entities/journey.entity'
 import UsersService from '../services/users.service'
 import { MyContext } from '..'
@@ -15,8 +16,10 @@ import BookingsService from '../services/bookings.service'
 @Resolver()
 export default class JourneyResolver {
     @Query(() => [JourneyEntity])
-    async listJourneys() {
-        return await new JourneysService().listJourneys()
+    async listJourneys(
+        @Arg('filters', { nullable: true }) filters?: ListJourneysWithFilters
+    ) {
+        return await new JourneysService().listJourneys(filters)
     }
 
     @Query(() => JourneyEntity)
@@ -37,9 +40,8 @@ export default class JourneyResolver {
         await new UsersService().findUserById(userId)
 
         userAuthorized([userId], user)
-        console.log('COUCOU')
 
-        return await new JourneysService().listJourneysFilter({
+        return await new JourneysService().listJourneys({
             userId,
         })
     }
