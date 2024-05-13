@@ -43,6 +43,15 @@ export default class JourneysService {
         })
     }
 
+    async listJourneysByUser({ userId }: { userId?: string }) {
+        return await this.db.find({
+            where: {
+                user: { id: userId },
+            },
+            relations: { user: true, bookings: true },
+        })
+    }
+
     async createJourney(data: CreateJourneyInput) {
         const newJourney: JourneyEntity = this.db.create(data)
 

@@ -41,7 +41,7 @@ export default class JourneyResolver {
 
         userAuthorized([userId], user)
 
-        return await new JourneysService().listJourneys({
+        return await new JourneysService().listJourneysByUser({
             userId,
         })
     }
