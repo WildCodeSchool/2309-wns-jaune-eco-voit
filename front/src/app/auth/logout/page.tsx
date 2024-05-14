@@ -5,8 +5,6 @@ import { useLogoutLazyQuery } from "@/types/graphql";
 
 import { AuthContext } from "@/context/authContext";
 
-
-
 function Logout() {
   const { contextLogout } = useContext(AuthContext);
   const router = useRouter();
@@ -16,9 +14,9 @@ function Logout() {
     contextLogout();
     logout();
     setTimeout(() => {
-    router.push("/");
-    },1000)
-  }, [ logout, router, contextLogout]);
+      router.push("/");
+    }, 1000);
+  }, [logout, router, contextLogout]);
 
   return (
     <main

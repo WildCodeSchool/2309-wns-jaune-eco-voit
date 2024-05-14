@@ -116,8 +116,6 @@ export default class BookingResolver {
         if (journey.availableSeats <= 0)
             throw new Error('No available seats for this journey')
 
-        console.log('ok2')
-
         await new JourneysService().updateJourney({
             id: journey.id,
             availableSeats: journey.availableSeats - 1,

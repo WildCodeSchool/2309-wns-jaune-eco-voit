@@ -26,47 +26,41 @@ import { AuthContext } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 
-
-
 const Header = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const [loggedUser, setLoggedUser] = useState<string | undefined>(undefined);
-  
+
   const { user, updateUser } = useContext(AuthContext);
 
-  
   useEffect(() => {
     setLoggedUser(Cookies.get("id") ?? "");
-  }, [user])
+  }, [user]);
 
-
-  
   useEffect(() => {
     const email = Cookies.get("email") ?? ""; // Possible d'utiliser dans le menu
     const role = Cookies.get("role") ?? "USER"; // Possible d'utiliser pour un menu admin
     const id = Cookies.get("id") ?? "";
-    if(!user && id){
+    if (!user && id) {
       updateUser(id);
     }
     setLoggedUser(user?.toString());
   }, [user, updateUser]);
 
-
-
-
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
-    const handleCloseSnackbar = (event: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
+  const handleCloseSnackbar = (
+    event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
       return;
     }
     setOpen(false);
   };
-
 
   return (
     <header className="flex justify-between items-center py-6 px-6">
@@ -150,10 +144,12 @@ const Header = () => {
 
               <Divider />
 
-              <MenuItem onClick={() => {
-                setOpen(true);
-                router.push(routes.logout.pathname)
-              } }>
+              <MenuItem
+                onClick={() => {
+                  setOpen(true);
+                  router.push(routes.logout.pathname);
+                }}
+              >
                 <div className="w-48 flex justify-between">
                   <CloseOutlinedIcon />
                   <p>Déconnexion</p>
@@ -165,12 +161,12 @@ const Header = () => {
         )}
       </nav>
       <Snackbar
-      anchorOrigin={{vertical: "bottom", horizontal: 'right'} }
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         open={open}
         onClose={handleCloseSnackbar}
         autoHideDuration={3000}
         message="Vous êtes déconnecté"
-        />
+      />
     </header>
   );
 };

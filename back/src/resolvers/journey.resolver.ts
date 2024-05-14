@@ -19,6 +19,8 @@ export default class JourneyResolver {
     async listJourneys(
         @Arg('filters', { nullable: true }) filters?: ListJourneysWithFilters
     ) {
+        console.log('coucou')
+        console.log('datas:', await new JourneysService().listJourneys(filters))
         return await new JourneysService().listJourneys(filters)
     }
 
