@@ -37,7 +37,6 @@ async function checkToken(token: string | undefined, request: NextRequest) {
       response = NextResponse.redirect(new URL("/auth/login", request.url));
     }
     //On delete les cookies existants
-    console.log('delete cookies')
     response.cookies.delete("email");
     response.cookies.delete("role");
     response.cookies.delete("id");
@@ -53,7 +52,6 @@ async function checkToken(token: string | undefined, request: NextRequest) {
         response = NextResponse.redirect(new URL("/error", request.url)); // Créer une page "Access denied"
       }
       //On ajoute des cookie avec les infos du user
-      console.log('set cookies')
       response.cookies.set("email", email);
       response.cookies.set("role", role);
       response.cookies.set("id", id);

@@ -61,7 +61,6 @@ function Register() {
   const [register, { error }] = useRegisterMutation({
     onCompleted(data) {
       router.push(routes.login.pathname);
-      console.log(data);
     },
     onError(error: any) {
       console.log(error);
@@ -79,7 +78,6 @@ function Register() {
     }
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData) as CreateUserInput;
-    console.log("data", data);
 
     if (
       data.email &&

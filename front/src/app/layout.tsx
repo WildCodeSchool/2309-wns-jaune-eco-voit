@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const client = new ApolloClient({
-    uri: "https://preprod.0923-jaune-1.wns.wilders.dev/graphql",
+    uri: `${process.env.NEXT_PUBLIC_APOLLO_CLIENT_URI}`,
     cache: new InMemoryCache(),
     credentials: "include",
   });

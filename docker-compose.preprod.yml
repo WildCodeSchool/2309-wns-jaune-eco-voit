@@ -27,7 +27,7 @@ services:
     # "healthcheck" exécute des tests et renvoie l'état de santé de la DB (boolean).
     healthcheck:
       # les commandes à executer pour run le health check.
-      test: ["CMD-SHELL", "pg_isready -d ecovoit -U ecovoit_user"]
+      test: [ "CMD-SHELL", "pg_isready -d ecovoit -U ecovoit_user" ]
       # le temps entre chaque execution du health check
       interval: 5s
       # Le temps max que doit prendre l'execution du health check
@@ -49,7 +49,7 @@ services:
     # "healthcheck" exécute des tests et renvoie l'état de santé de la DB (boolean).
     healthcheck:
       # les commandes à executer pour run le health check.
-      test: ["CMD-SHELL", "pg_isready -d ecovoit -U ecovoit_user"]
+      test: [ "CMD-SHELL", "pg_isready -d ecovoit -U ecovoit_user" ]
       # le temps entre chaque execution du health check
       interval: 5s
       # Le temps max que doit prendre l'execution du health check
@@ -85,7 +85,7 @@ services:
     ports:
       - 3002:3000
     environment:
-      - APOLLO_CLIENT_URI="https://preprod.0923-jaune-1.wns.wilders.dev/graphql"
+      - NEXT_PUBLIC_APOLLO_CLIENT_URI="https://preprod.0923-jaune-1.wns.wilders.dev/graphql"
     # depends_on:
     #   backend:
     #     condition: service_healthy
@@ -105,5 +105,4 @@ services:
 
 volumes:
   ecovoit-data:
-  ecovoit-data-test:
-  # web-frontend-build:
+  ecovoit-data-test: # web-frontend-build:

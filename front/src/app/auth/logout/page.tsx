@@ -15,7 +15,6 @@ function Logout() {
   useEffect(() => {
     contextLogout();
     logout();
-    console.log('tik')
     setTimeout(() => {
     router.push("/");
     },1000)

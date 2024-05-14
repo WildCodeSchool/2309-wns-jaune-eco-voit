@@ -20,7 +20,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const updateUser = (useCallback)(
     (user: String) => {
-      console.log('update context user', user);
       setUser(user);
     },
     [setUser]
