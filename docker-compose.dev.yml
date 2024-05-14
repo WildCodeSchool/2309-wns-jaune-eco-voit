@@ -33,7 +33,7 @@ services:
     # "healthcheck" exécute des tests et renvoie l'état de santé de la DB (boolean).
     healthcheck:
       # les commandes à executer pour run le health check.
-      test: ["CMD-SHELL", "pg_isready -d ecovoit -U ecovoit_user"]
+      test: [ "CMD-SHELL", "pg_isready -d ecovoit -U ecovoit_user" ]
       # le temps entre chaque execution du health check
       interval: 5s
       # Le temps max que doit prendre l'execution du health check
@@ -55,7 +55,7 @@ services:
     # "healthcheck" exécute des tests et renvoie l'état de santé de la DB (boolean).
     healthcheck:
       # les commandes à executer pour run le health check.
-      test: ["CMD-SHELL", "pg_isready -d ecovoit -U ecovoit_user"]
+      test: [ "CMD-SHELL", "pg_isready -d ecovoit -U ecovoit_user" ]
       # le temps entre chaque execution du health check
       interval: 5s
       # Le temps max que doit prendre l'execution du health check
@@ -89,8 +89,7 @@ services:
       - WDS_SOCKET_HOST=127.0.0.1
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
-      - APOLLO_CLIENT_URI=http://localhost:4000
-
+      - NEXT_PUBLIC_APOLLO_CLIENT_URI=http://localhost:4000
     # depends_on:
     #   backend:
     #     condition: service_healthy

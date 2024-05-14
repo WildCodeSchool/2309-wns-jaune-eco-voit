@@ -32,6 +32,31 @@ const Header = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const [loggedUser, setLoggedUser] = useState<string | undefined>(undefined);
+  
+  const { user, updateUser } = useContext(AuthContext);
+
+  
+  useEffect(() => {
+    setLoggedUser(Cookies.get("id") ?? "");
+  }, [user])
+
+
+  
+  useEffect(() => {
+    const email = Cookies.get("email") ?? ""; // Possible d'utiliser dans le menu
+    const role = Cookies.get("role") ?? "USER"; // Possible d'utiliser pour un menu admin
+    const id = Cookies.get("id") ?? "";
+    if(!user && id){
+      updateUser(id);
+    }
+    setLoggedUser(user?.toString());
+  }, [user, updateUser]);
+
+
+
+
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
@@ -42,27 +67,6 @@ const Header = () => {
     setOpen(false);
   };
 
-  const [loggedUser, setLoggedUser] = useState<String | undefined>(Cookies.get("id") ?? "");
-
-  const { user, updateUser } = useContext(AuthContext);
-  
-  useEffect(() => {
-    setLoggedUser(Cookies.get("id") ?? "");
-  }, [])
-  console.log('user', loggedUser)
-  
-  useEffect(() => {
-    const email = Cookies.get("email") ?? ""; // Possible d'utiliser dans le menu
-    const role = Cookies.get("role") ?? "USER"; // Possible d'utiliser pour un menu admin
-    const id = Cookies.get("id") ?? "";
-    console.log('cookies', email, role, id);
-    if(!user && id){
-      console.log('update user', id);
-      updateUser(id);
-    }
-    // state intermédiaire 
-    setLoggedUser(user);
-  }, [user, updateUser]);
 
   return (
     <header className="flex justify-between items-center py-6 px-6">

@@ -3,7 +3,7 @@
 - Copier le .env.example
 - cd back - npm i 
 - cd front - npm i 
-- docker compose up 
+- docker compose -f docker-compose.dev.yml up --build
 
 
 ## Règles
