@@ -27,7 +27,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { alpha, useTheme } from "@mui/material/styles";
 
 import { useRouter } from "next/navigation";
-import { LocalizationProvider } from "@mui/x-date-pickers";
+import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
 
 import { useEffect, useState } from "react";
 import { routes } from "@/app/lib/routes";
@@ -191,6 +191,14 @@ function Register() {
                   adapterLocale="fr"
                 >
                   <DatePicker name="dateOfBirth" label="Date de naissance" />
+                </LocalizationProvider>
+              </FormControl>
+              <FormControl>
+                <LocalizationProvider
+                  dateAdapter={AdapterDayjs}
+                  adapterLocale="fr"
+                >
+                  <DateCalendar  defaultValue={dayjs('2022-04-17')} />
                 </LocalizationProvider>
               </FormControl>
             </Stack>

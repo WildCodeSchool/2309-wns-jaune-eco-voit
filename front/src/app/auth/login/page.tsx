@@ -54,7 +54,6 @@ const Login = () => {
       login({
         variables: { data: { email: data.email, password: data.password } },
         onCompleted(data) {
-          console.log("loggin", data.login.id);
           updateUser(data.login.id);
           setTimeout(() => {
             router.push(routes.home.pathname);
