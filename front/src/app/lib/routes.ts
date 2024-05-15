@@ -52,8 +52,8 @@ export const routes: { [key: string]: Route } = {
     title: "Messagerie",
     protected: "PRIVATE",
   },
-  publier: {
-    pathname: "/publish",
+  publish: {
+    pathname: "/journey/publish",
     title: "Publier un trajet",
     protected: "PRIVATE",
   },
