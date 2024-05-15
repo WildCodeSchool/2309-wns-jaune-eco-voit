@@ -391,7 +391,7 @@ export type ListJourneysQueryVariables = Exact<{
 }>;
 
 
-export type ListJourneysQuery = { __typename?: 'Query', listJourneys: Array<{ __typename?: 'JourneyEntity', arrival_time: any, automaticAccept: boolean, availableSeats: number, createdAt: any, departure_time: any, destination: string, id: string, origin: string, status: string, totalPrice: number, updatedAt?: any | null, bookings: Array<{ __typename?: 'BookingEntity', arrivalTime: any, createdAt: any, departureTime: any, id: string, status: string, totalPrice: number, updatedAt?: any | null, user: { __typename?: 'UserEntity', firstname: string, email: any, lastname: string, id: string } }>, user: { __typename?: 'UserEntity', email: any, firstname: string, lastname: string, id: string } }> };
+export type ListJourneysQuery = { __typename?: 'Query', listJourneys: Array<{ __typename?: 'JourneyEntity', arrival_time: any, automaticAccept: boolean, availableSeats: number, createdAt: any, departure_time: any, destination: string, id: string, origin: string, status: string, totalPrice: number, updatedAt?: any | null, bookings: Array<{ __typename?: 'BookingEntity', arrivalTime: any, createdAt: any, departureTime: any, id: string, status: string, totalPrice: number, updatedAt?: any | null }>, user: { __typename?: 'UserEntity', email: any, firstname: string, lastname: string, id: string } }> };
 
 export type ListJourneysByUserQueryVariables = Exact<{
   userId: Scalars['String']['input'];
@@ -1280,12 +1280,6 @@ export const ListJourneysDocument = gql`
       status
       totalPrice
       updatedAt
-      user {
-        firstname
-        email
-        lastname
-        id
-      }
     }
     createdAt
     departure_time

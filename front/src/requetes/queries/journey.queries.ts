@@ -14,12 +14,6 @@ export const LIST_JOURNEYS = gql`
         status
         totalPrice
         updatedAt
-        user {
-          firstname
-          email
-          lastname
-          id
-        }
       }
       createdAt
       departure_time
@@ -34,6 +28,7 @@ export const LIST_JOURNEYS = gql`
         firstname
         lastname
         id
+        vehicule
       }
     }
   }

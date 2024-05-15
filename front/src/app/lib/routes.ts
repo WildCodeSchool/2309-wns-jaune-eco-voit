@@ -52,4 +52,9 @@ export const routes: { [key: string]: Route } = {
     title: "Publier un trajet",
     protected: "PRIVATE",
   },
+  searchJourneys: {
+    pathname: "/journeys/search",
+    title: "Trouver votre futur trajet",
+    protected: "PRIVATE",
+  },
 };
