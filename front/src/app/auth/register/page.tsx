@@ -13,23 +13,20 @@ import {
   InputAdornment,
   FormControl,
   Divider,
-  Avatar,
 } from "@mui/material";
 
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 import dayjs from "dayjs";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/fr";
 
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { alpha, useTheme } from "@mui/material/styles";
 
 import { useRouter } from "next/navigation";
-import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { routes } from "@/app/lib/routes";
 
 // utils pour la confirmation mdp / email
@@ -186,20 +183,7 @@ function Register() {
                 </FormControl>
               </Stack>
               <FormControl>
-                <LocalizationProvider
-                  dateAdapter={AdapterDayjs}
-                  adapterLocale="fr"
-                >
                   <DatePicker name="dateOfBirth" label="Date de naissance" />
-                </LocalizationProvider>
-              </FormControl>
-              <FormControl>
-                <LocalizationProvider
-                  dateAdapter={AdapterDayjs}
-                  adapterLocale="fr"
-                >
-                  <DateCalendar  defaultValue={dayjs('2022-04-17')} />
-                </LocalizationProvider>
               </FormControl>
             </Stack>
             <Button

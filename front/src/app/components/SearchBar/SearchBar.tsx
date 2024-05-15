@@ -14,7 +14,6 @@ const SearchBar = () => {
 
   const handleArrivalChange = (value: Object | null) => {
     setArrival(value);
-    console.log('arrival', value)
   };
 
   useEffect(() => {
@@ -28,8 +27,8 @@ const SearchBar = () => {
 
   const handleSearch = () => {
     if(departure && arrival){
-      console.log('searchQuery', searchQuery)
       setWarning("")
+      // Déclencher la recherche sur l'api avec searchQuery (objet contenant 2 objets, départure, arrival)
     }else{
       setWarning("Veuillez renseigner un point de départ et d'arrivée")
     }

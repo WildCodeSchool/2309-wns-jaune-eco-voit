@@ -67,7 +67,6 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({label, handleS
     value: string | null,
     reason: AutocompleteChangeReason
   ) => {
-    setSelectedOption(apiResponse.find((feature: any) => feature.label === value));
     handleSelectedAdress(apiResponse.find((feature: any) => feature.label === value));
   };
 
