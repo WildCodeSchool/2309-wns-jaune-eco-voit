@@ -19,13 +19,13 @@ import dayjs, { Dayjs } from "dayjs";
 function SearchJourneys() {
   const [listJourneys] = useListJourneysLazyQuery();
 
-  const [departureTime, setDepartureTime] = useState<Dayjs | null>(
-    dayjs(new Date())
-  );
+  // const [departureTime, setDepartureTime] = useState<Dayjs | null>(
+  //   dayjs(new Date())
+  // );
 
-  const handleChange = (newValue: Dayjs | null) => {
-    setDepartureTime(newValue);
-  };
+  // const handleChange = (newValue: Dayjs | null) => {
+  //   setDepartureTime(newValue);
+  // };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

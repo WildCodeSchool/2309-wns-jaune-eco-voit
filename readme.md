@@ -1,10 +1,11 @@
 # ECOVOIT
-# Installation 
-- Copier le .env.example
-- cd back - npm i 
-- cd front - npm i 
-- docker compose -f docker-compose.dev.yml up --build
 
+# Installation
+
+- Copier le .env.example
+- cd back - npm i
+- cd front - npm i
+- docker compose -f docker-compose.dev.yml up --build
 
 ## Règles
 
