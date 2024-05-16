@@ -29,7 +29,7 @@ import { AuthContext } from "@/context/authContext";
 const Login = () => {
   const theme = useTheme();
   const router = useRouter();
-  const [login, { data, error }] = useLoginLazyQuery();
+  const [login] = useLoginLazyQuery();
 
   const [loginError, setLoginError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState<Boolean>(false);
@@ -60,7 +60,7 @@ const Login = () => {
           }, 1000);
         },
         onError(error) {
-          console.log(error);
+          setLoginError(error.message);
         },
       });
     }
@@ -91,7 +91,7 @@ const Login = () => {
             <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
               Vous n&apos;avez pas de compte ?
               <Link
-                href="/auth/register"
+                href={routes.register.pathname}
                 variant="body2"
                 sx={{
                   color: alpha(theme.palette.primary.main, 0.8),

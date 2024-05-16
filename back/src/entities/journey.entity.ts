@@ -199,15 +199,18 @@ export class UpdateJourneyStatusInput {
 
 @InputType()
 export class ListJourneysWithFilters {
-    @Field({ nullable: true })
+    @Field()
     origin: string
 
-    @Field({ nullable: true })
+    @Field()
     destination: string
 
-    @Field({ nullable: true })
+    @Field()
     departureTime: Date
 
     @Field({ nullable: true })
     automaticAccept?: boolean
+
+    @Field()
+    availableSeats: number
 }
