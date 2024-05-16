@@ -1,7 +1,7 @@
 "use client";
 import { AuthContext } from "@/context/authContext";
 import { FIND_JOURNEY_BY_ID } from "@/requetes/queries/journey.queries";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { Button } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 

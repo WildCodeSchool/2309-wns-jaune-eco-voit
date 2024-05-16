@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import defaultTheme from "tailwindcss/defaultTheme";
 
 const config: Config = {
   content: [
@@ -30,6 +31,10 @@ const config: Config = {
       secondary80: "#FFD0B6",
       secondary40: "#FFE7D9",
       secondary20: "#FDF3ED",
+    },
+    screens: {
+      ...defaultTheme.screens,
+      xs: "460px",
     },
     extend: {},
   },

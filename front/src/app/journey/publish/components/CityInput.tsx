@@ -17,7 +17,11 @@ const CityInput = ({
     <>
       <AddressAutoComplete
         defaultValue={defaultValue}
-        handleSelectedAdress={(value) => {
+        label={fromTo === "origin" ? "Point de départ" : "Point d'arrivée"}
+        clearAddress={() =>
+          setJourneyData((prevState) => ({ ...prevState, [fromTo]: "" }))
+        }
+        handleSelectedAddress={(value) => {
           if (!value) {
             return;
           }

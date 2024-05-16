@@ -31,7 +31,14 @@ export type JourneyData = {
 const PublishJourney = () => {
   const { getUser: userId } = useContext(AuthContext);
   const router = useRouter();
-  const [createJourney] = useMutation(CREATE_JOURNEY);
+  const [
+    createJourney,
+    {
+      data: createJourneySuccess,
+      loading: createJourneyLoading,
+      error: createJourneyError,
+    },
+  ] = useMutation(CREATE_JOURNEY);
 
   const [journeyData, setJourneyData] = useState<JourneyData>({
     origin: "",
@@ -154,9 +161,9 @@ const PublishJourney = () => {
     createJourney({
       variables: { data: journey },
       onCompleted: (res) => {
-        console.log("Good job bro", res);
-        router.push(`${routes.journey.pathname}/${res?.createJourney.id}`);
-        //TODO redirect page récapitulatif du trajet (id renvoyé de la journey créée)
+        setTimeout(() => {
+          router.push(`${routes.journey.pathname}/${res?.createJourney.id}`);
+        }, 1500);
       },
       onError: (err) => console.error("error", err),
     });
@@ -164,7 +171,7 @@ const PublishJourney = () => {
 
   return (
     <div className="publish_page flex flex-col space-between gap-8 flex-1 h-full w-full py-8 px-4">
-      <div className="stepper_indicator">
+      <div className="stepper_indicator md:block hidden">
         <Stepper activeStep={activeStep}>
           {steps.map((step) => {
             const stepProps: { completed?: boolean } = {};
@@ -181,15 +188,26 @@ const PublishJourney = () => {
       </div>
 
       <div className="publish_content flex-1 h-full flex flex-col items-center">
-        {activeStep === steps.length ? (
-          <h3 className="text-3xl">
-            Félicitations, votre trajet est en ligne!
-          </h3>
+        {createJourneyError ? (
+          <div className="h-full flex-1 flex flex-col gap-3 items-center justify-center">
+            <h3 className="text-2xl text-center xs:text-3xl">
+              Impossible de créer le trajet!
+            </h3>
+            <p>{createJourneyError.message}</p>
+          </div>
+        ) : createJourneySuccess ? (
+          <div className="h-full flex-1 flex flex-col gap-3 items-center justify-center">
+            <h3 className="text-2xl text-center xs:text-3xl">
+              Félicitations, votre trajet est en ligne!
+            </h3>
+          </div>
         ) : (
           <>
             {/* Steps content */}
             <div className="h-full flex-1 flex flex-col gap-6 items-center justify-center">
-              <h3 className="text-3xl">{steps[activeStep].stepTitle}</h3>
+              <h3 className="text-2xl text-center xs:text-3xl">
+                {steps[activeStep].stepTitle}
+              </h3>
               {steps[activeStep].stepContent}
             </div>
             {/* Stepper Nav buttons */}
