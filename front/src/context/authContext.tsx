@@ -1,11 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
 import { createContext } from "react";
 
-
 export const AuthContext = createContext<{
-  user: String | undefined;
-  getUser: String | undefined;
-  updateUser: (user: String) => void;
+  user: string | undefined;
+  getUser: string | undefined;
+  updateUser: (user: string) => void;
   contextLogout: () => void;
 }>({
   user: undefined,
@@ -15,17 +14,16 @@ export const AuthContext = createContext<{
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [user, setUser] = useState<undefined | string>(undefined);
 
-  const [user, setUser] = useState<undefined | String>(undefined);
-
-  const updateUser = (useCallback)(
-    (user: String) => {
+  const updateUser = useCallback(
+    (user: string) => {
       setUser(user);
     },
     [setUser]
   );
 
-  const getUser = useMemo<String | undefined>(() => user, [user]);
+  const getUser = useMemo<string | undefined>(() => user, [user]);
 
   const contextLogout = () => {
     setUser(undefined);

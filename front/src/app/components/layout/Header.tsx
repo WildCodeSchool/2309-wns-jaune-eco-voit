@@ -63,7 +63,7 @@ const Header = () => {
   };
 
   return (
-    <header className="flex justify-between items-center py-6 px-6">
+    <header className="flex justify-between items-center py-6 px-6 bg-white">
       <Link href={`${routes["home"].pathname}`}>
         <Image src={logo} alt="Ecovoit" height={45} />
       </Link>
@@ -86,7 +86,7 @@ const Header = () => {
               href="#"
               variant="text"
               className="flex items-center gap-4"
-              onClick={() => router.push(routes.publish.pathname)}
+              onClick={() => router.push(routes["publish-journey"].pathname)}
             >
               <AddCircleOutlineOutlinedIcon />
               <p className="font-medium text-sm">Publier un trajet</p>

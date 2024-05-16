@@ -40,6 +40,7 @@ type AddressAutoCompleteProps = {
   label: string;
   handleSelectedAddress: (addressResponse: AddressResponse) => void;
   clearAddress: () => void;
+  defaultValue?: string;
   sx?: SxProps<Theme>; // Corrected type definition for sx prop
 };
 
@@ -47,6 +48,7 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
   label,
   handleSelectedAddress,
   clearAddress,
+  defaultValue,
   sx,
 }) => {
   const [options, setOptions] = useState<string[]>([]);
@@ -73,7 +75,6 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
     }, 300),
     []
   );
-
   useEffect(() => {
     if (inputValue.length > 3) {
       fetchSuggestions(inputValue);
@@ -100,10 +101,10 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
       })
     );
   };
-
   return (
     <Stack>
       <Autocomplete
+        value={defaultValue ?? ""}
         sx={{ width: 300 }}
         freeSolo
         options={options}
