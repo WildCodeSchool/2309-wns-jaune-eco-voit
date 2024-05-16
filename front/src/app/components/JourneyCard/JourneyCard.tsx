@@ -19,7 +19,6 @@ type JourneyCardProps = {
   availableSeats: number;
   user: User;
   id: string;
-  seatsRequired?: number;
 };
 
 const JourneyCard = ({
@@ -30,7 +29,6 @@ const JourneyCard = ({
   availableSeats,
   user,
   id,
-  seatsRequired,
 }: JourneyCardProps) => {
   return (
     <Grid item sm={10} md={5}>
@@ -50,7 +48,7 @@ const JourneyCard = ({
           profilePicture={user.profilePicture}
         />
         <JourneyCardFooter
-          totalPrice={totalPrice * seatsRequired}
+          totalPrice={totalPrice}
           availableSeats={availableSeats}
         />
       </Link>

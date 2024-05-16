@@ -67,7 +67,7 @@ export default function Home() {
           <h3>Aucun trajet trouvé</h3>
         ) : (
           <Grid container spacing={4} justifyContent="center">
-            {journeys.map(({ id, departure_time, ...rest }) => {
+            {journeys.map(({ id, departure_time, totalPrice, ...rest }) => {
               dayjs.locale("fr");
 
               return (
@@ -76,7 +76,11 @@ export default function Home() {
                   key={id}
                   {...rest}
                   id={id}
-                  seatsRequired={filters?.availableSeats}
+                  totalPrice={
+                    filters?.availableSeats
+                      ? totalPrice * filters?.availableSeats
+                      : totalPrice
+                  }
                 />
               );
             })}
