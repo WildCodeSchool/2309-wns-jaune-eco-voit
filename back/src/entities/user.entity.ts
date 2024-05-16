@@ -7,6 +7,7 @@ import {
 } from 'type-graphql'
 import {
     BeforeInsert,
+    BeforeUpdate,
     Column,
     CreateDateColumn,
     Entity,
@@ -34,10 +35,14 @@ export type Status = 'ARCHIVED' | 'ACTIVE'
 @ObjectType()
 @Entity()
 export class UserEntity {
+    @BeforeUpdate()
     @BeforeInsert()
-    protected async beforeInsert() {
+    protected async hashPassword() {
+        if (!this.password.startsWith("$argon2")){
         this.password = await argon2.hash(this.password)
+        }
     }
+
 
     @Field(() => ID)
     @PrimaryGeneratedColumn('uuid')
@@ -187,6 +192,9 @@ export class UserProfile {
 
     @Field({ nullable: true })
     dateOfBirth?: Date
+
+    @Field()
+    password: string
 }
 // -------------- INPUTS -------------- //
 

@@ -54,18 +54,26 @@ console.log("updateInfos", updateInfos)
   };
 
   const handleSave = () => {
-
-    console.log(updateInfos, 'updateInfos')
     updateUser({
         variables: {data: {...updateInfos, id:getUser}}, onCompleted(data, clientOptions) {
           setIsEditing(false); // une fois la mise à jour terminée, désactiver le mode édition
-          console.log("data : ", data)
         },
       })
     setIsEditing(false);
   };
 
-  const handlePasswordSave = () => {
+  const handlePasswordSave = (e: React.FormEvent<HTMLFormElement>) => {    
+    e.preventDefault();
+    if(newPassword === confirmNewPassword){
+      updateUser({
+        variables: {data: {...updateInfos, id: getUser, password: newPassword}}, 
+        onCompleted(data, clientOptions) {
+          console.log("Mot de passe mis à jour");
+          handleClose();
+        },
+      })
+    }else{
+      console.log("Les mots de passe ne sont pas identiques");}
     setOpen(false);
   };
 
@@ -88,7 +96,7 @@ console.log("updateInfos", updateInfos)
         <h3 className="font-medium uppercase tracking-widest">
           {data?.getProfile?.firstname}
         </h3>
-        <Tooltip title="ProfilePicture flex flex-col justify-r items-center py-10">
+        <Tooltip title="Profile_picture" className="flex flex-col justify-r items-center py-10" >
           <IconButton color="inherit">
             <Avatar
               alt="profile picture"
@@ -108,7 +116,7 @@ console.log("updateInfos", updateInfos)
             <h4>Date de naissance : {data?.getProfile?.dateOfBirth}</h4>
             <h4>Numéro de téléphone : {data?.getProfile?.phoneNumber}</h4>
             <h4>Role : {data?.getProfile?.role}</h4>
-            <div className="ModalPassword bg-primary10">
+            <div className="ModalPassword bg-primary10 flex flex-col justify-center items-center py-10">
               <Button onClick={handleEdit}>Editer</Button>
             </div>
           </div>
@@ -174,7 +182,7 @@ console.log("updateInfos", updateInfos)
         }}
       >
         <Box component="section" sx={{ p: 2, backgroundColor: "#fff" }}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <Typography id="modal-modal-title" variant="h5" component="h2">
             Changement de mot de passe
           </Typography>
           <form onSubmit={handlePasswordSave}>
@@ -202,11 +210,11 @@ console.log("updateInfos", updateInfos)
                 <Input
                   type="password"
                   value={confirmNewPassword}
-                  onChange={(e) => setConfirmNewPassword(e.target.value)}
+                  onChange={(e) => setConfirmNewPassword(e.target.value )}
                   required
                 />
               </FormControl>
-              <Button type="submit">Enregistrer</Button>
+              <Button type="submit" onClick={handleSave}>Enregistrer</Button>
               <Button onClick={handleClose}>Annuler</Button>
             </Stack>
           </form>
