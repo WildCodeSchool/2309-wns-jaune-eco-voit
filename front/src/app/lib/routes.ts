@@ -37,10 +37,15 @@ export const routes: { [key: string]: Route } = {
     title: "Votre compte",
     protected: "PRIVATE",
   },
-  journeys: {
+  journeysUser: {
     pathname: "/profile/my-journeys",
     title: "Vos trajets",
     protected: "PRIVATE",
+  },
+  journey: {
+    pathname: "/journey",
+    title: "Trajet",
+    protected: "PUBLIC",
   },
   messagerie: {
     pathname: "/profile/messaging",
@@ -50,11 +55,6 @@ export const routes: { [key: string]: Route } = {
   publier: {
     pathname: "/publish",
     title: "Publier un trajet",
-    protected: "PRIVATE",
-  },
-  searchJourneys: {
-    pathname: "/journeys/search",
-    title: "Trouver votre futur trajet",
     protected: "PRIVATE",
   },
 };

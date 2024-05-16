@@ -60,7 +60,6 @@ function Register() {
       router.push(routes.login.pathname);
     },
     onError(error: any) {
-      console.log(error);
       setLoginError(error.message);
     },
   });
@@ -183,7 +182,7 @@ function Register() {
                 </FormControl>
               </Stack>
               <FormControl>
-                  <DatePicker name="dateOfBirth" label="Date de naissance" />
+                <DatePicker name="dateOfBirth" label="Date de naissance" />
               </FormControl>
             </Stack>
             <Button

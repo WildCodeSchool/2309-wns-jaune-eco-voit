@@ -19,9 +19,7 @@ export default class JourneyResolver {
     async listJourneys(
         @Arg('filters', { nullable: true }) filters?: ListJourneysWithFilters
     ) {
-        const jorneys = await new JourneysService().listJourneys(filters)
-        console.log(jorneys)
-        return jorneys
+        return await new JourneysService().listJourneys(filters)
     }
 
     @Query(() => JourneyEntity)

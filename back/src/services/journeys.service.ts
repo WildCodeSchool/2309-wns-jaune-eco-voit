@@ -26,18 +26,18 @@ export default class JourneysService {
         return journey as JourneyEntity
     }
 
-    async listJourneys(
-        filters?: ListJourneysWithFilters & { userId?: string }
-    ) {
+    async listJourneys(filters?: ListJourneysWithFilters) {
         return await this.db.find({
             where: {
-                user: { id: filters?.userId },
                 origin: filters?.origin,
                 destination: filters?.destination,
                 departure_time: filters?.departureTime
                     ? MoreThanOrEqual(filters.departureTime)
                     : undefined,
                 automaticAccept: filters?.automaticAccept,
+                availableSeats: filters?.availableSeats
+                    ? MoreThanOrEqual(filters.availableSeats)
+                    : undefined,
             },
             relations: { user: true, bookings: true },
         })

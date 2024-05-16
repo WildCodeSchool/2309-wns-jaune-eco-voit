@@ -28,7 +28,6 @@ export const LIST_JOURNEYS = gql`
         firstname
         lastname
         id
-        vehicule
       }
     }
   }

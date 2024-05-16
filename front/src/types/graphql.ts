@@ -83,9 +83,10 @@ export type JourneyEntity = {
 
 export type ListJourneysWithFilters = {
   automaticAccept?: InputMaybe<Scalars['Boolean']['input']>;
-  departureTime?: InputMaybe<Scalars['DateTimeISO']['input']>;
-  destination?: InputMaybe<Scalars['String']['input']>;
-  origin?: InputMaybe<Scalars['String']['input']>;
+  availableSeats: Scalars['Float']['input'];
+  departureTime: Scalars['DateTimeISO']['input'];
+  destination: Scalars['String']['input'];
+  origin: Scalars['String']['input'];
 };
 
 export type LoginInput = {
