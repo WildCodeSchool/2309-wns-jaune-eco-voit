@@ -7,15 +7,11 @@ import { gatwick, stolzl } from "./theme/ThemeOption";
 import ThemeRegistery from "./theme/ThemeRegistery";
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
-
 import { LocalizationProvider } from "@mui/x-date-pickers";
-
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/fr";
 
 import { AuthProvider } from "@/context/authContext";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 export default function RootLayout({
   children,

@@ -1,19 +1,39 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import { FormControlLabel, InputAdornment, TextField } from "@mui/material";
-import { TimePicker } from "@mui/x-date-pickers";
+import React, { useContext, useState } from "react";
+import { Button, Step, StepLabel, Stepper } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 import utc from "dayjs/plugin/utc";
 import fr from "dayjs/locale/fr";
-import Checkbox from "@mui/material/Checkbox";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import CityInput from "./components/CityInput";
+import DateAndTimePicker from "./components/DateAndTimePicker";
+import CountInput from "./components/CountInput";
+import Options from "./components/Options";
+import { AuthContext } from "@/context/authContext";
+import { useMutation } from "@apollo/client";
+import { CREATE_JOURNEY } from "@/requetes/mutations/journey.mutations";
+import { CreateJourneyInput } from "@/types/graphql";
+import { useRouter } from "next/navigation";
+import { routes } from "@/app/lib/routes";
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 dayjs.locale(fr);
 
+export type JourneyData = {
+  origin: string; //TODO mettre plus que la ville (coord)
+  destination: string; //TODO mettre plus que la ville (coord)
+  departure_date: Dayjs;
+  totalPrice: number;
+  automaticAccept: boolean;
+  availableSeats: number;
+};
+
 const PublishJourney = () => {
-  const [journeyData, setJourneyData] = useState({
+  const { getUser: userId } = useContext(AuthContext);
+  const router = useRouter();
+  const [createJourney] = useMutation(CREATE_JOURNEY);
+
+  const [journeyData, setJourneyData] = useState<JourneyData>({
     origin: "",
     destination: "",
     departure_date: dayjs(),
@@ -22,194 +42,184 @@ const PublishJourney = () => {
     availableSeats: 1,
   });
 
-  console.log("journeyData", journeyData);
+  const [activeStep, setActiveStep] = useState<number>(0);
+
+  const steps = [
+    {
+      stepName: "Départ",
+      stepContent: (
+        <CityInput
+          fromTo={"origin"}
+          defaultValue={journeyData.origin}
+          setJourneyData={setJourneyData}
+        />
+      ),
+      stepTitle: "D'où partez-vous?",
+    },
+    {
+      stepName: "Arrivée",
+      stepContent: (
+        <CityInput
+          fromTo={"destination"}
+          defaultValue={journeyData.destination}
+          setJourneyData={setJourneyData}
+        />
+      ),
+      stepTitle: "Où allez-vous?",
+    },
+    {
+      stepName: "Date",
+      stepContent: (
+        <DateAndTimePicker
+          dateTime={"date"}
+          journeyData={journeyData}
+          setJourneyData={setJourneyData}
+        />
+      ),
+      stepTitle: "Choisissez la date de votre départ",
+    },
+    {
+      stepName: "Horaire",
+      stepContent: (
+        <DateAndTimePicker
+          dateTime={"time"}
+          journeyData={journeyData}
+          setJourneyData={setJourneyData}
+        />
+      ),
+      stepTitle: "Choisissez l'heure de votre départ",
+    },
+    {
+      stepName: "Passagers",
+      stepContent: (
+        <CountInput
+          availableSeatsOrTotalPrice={"availableSeats"}
+          setJourneyData={setJourneyData}
+          journeyData={journeyData}
+          minValue={1}
+        />
+      ),
+      stepTitle: "Combien de passagers acceptez-vous?",
+    },
+    {
+      stepName: "Prix",
+      stepContent: (
+        <CountInput
+          availableSeatsOrTotalPrice={"totalPrice"}
+          setJourneyData={setJourneyData}
+          journeyData={journeyData}
+        />
+      ),
+      stepTitle: "Fixez le prix par passager",
+    },
+    {
+      stepName: "Options",
+      stepContent: (
+        <Options setJourneyData={setJourneyData} journeyData={journeyData} />
+      ),
+      stepTitle: "Activer la réservation automatique?",
+    },
+  ];
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleValidateForm = () => {
+    if (
+      !journeyData.origin ||
+      !journeyData.destination ||
+      journeyData.departure_date < dayjs() ||
+      journeyData.totalPrice === 0 ||
+      journeyData.availableSeats === 0 ||
+      !userId
+    )
+      return;
+
+    const journey: CreateJourneyInput = {
+      departure_time: journeyData.departure_date.toISOString(),
+      arrival_time: journeyData.departure_date.add(2, "hour").toISOString(),
+      origin: journeyData.origin,
+      destination: journeyData.destination,
+      totalPrice: journeyData.totalPrice,
+      availableSeats: journeyData.availableSeats,
+      automaticAccept: journeyData.automaticAccept,
+      user: { id: userId },
+    };
+
+    createJourney({
+      variables: { data: journey },
+      onCompleted: (res) => {
+        console.log("Good job bro", res);
+        router.push(`${routes.journey.pathname}/${res?.createJourney.id}`);
+        //TODO redirect page récapitulatif du trajet (id renvoyé de la journey créée)
+      },
+      onError: (err) => console.error("error", err),
+    });
+  };
 
   return (
-    <div className="publish_page flex-1">
-      <div className="origin">
-        <h3>D'où partez-vous</h3>
-        <TextField
-          value={journeyData.origin}
-          onChange={(value) =>
-            setJourneyData((prevState) => ({
-              ...prevState,
-              origin: value.target.value,
-            }))
-          }
-          label="origin"
-          className="origin_input"
-          type="text"
-          name="origin"
-          placeholder="Entrez le nom de la ville de départ"
-        />
-      </div>
-      <div className="destination">
-        <h3>Où allez-vous?</h3>
-        <TextField
-          value={journeyData.destination}
-          onChange={(value) =>
-            setJourneyData((prevState) => ({
-              ...prevState,
-              destination: value.target.value,
-            }))
-          }
-          label="destination"
-          className="destination_input"
-          type="text"
-          name="destination"
-          placeholder="Entrez le nom de la ville d'arrivée"
-        />
-      </div>
-      <div className="date w-fit">
-        <h3>Choisissez la date de votre départ</h3>
-
-        <DateCalendar
-          className="date_input"
-          value={journeyData.departure_date}
-          onChange={(newValue) =>
-            setJourneyData((prevState) => ({
-              ...prevState,
-              departure_date: newValue,
-            }))
-          }
-          minDate={dayjs()}
-          timezone="UTC"
-        />
+    <div className="publish_page flex flex-col space-between gap-8 flex-1 h-full w-full py-8 px-4">
+      <div className="stepper_indicator">
+        <Stepper activeStep={activeStep}>
+          {steps.map((step) => {
+            const stepProps: { completed?: boolean } = {};
+            const labelProps: {
+              optional?: React.ReactNode;
+            } = {};
+            return (
+              <Step key={step.stepName} {...stepProps}>
+                <StepLabel {...labelProps}>{step.stepName}</StepLabel>
+              </Step>
+            );
+          })}
+        </Stepper>
       </div>
 
-      <div className="departure_time">
-        <h3>À quelle heure souhaitez-vous partir?</h3>
-        <TimePicker
-          timezone="system"
-          value={journeyData.departure_date}
-          onChange={(newValue) =>
-            setJourneyData((prevState) => ({
-              ...prevState,
-              departure_date: newValue || dayjs(),
-            }))
-          }
-          label="departure_time"
-          ampm={false}
-        />
-      </div>
-
-      <div className="passengers">
-        <h3>Combien de passagers acceptez-vous?</h3>
-        <div className="flex gap-5 items-center">
-          <button
-            className="rounded-full hover:bg-primary20 cursor-pointer border-2 text-primary100 border-primary100 h-10 w-10 flex justify-center items-center aspect-square"
-            onClick={() =>
-              setJourneyData((prevState) => ({
-                ...prevState,
-                availableSeats:
-                  prevState.availableSeats > 1
-                    ? prevState.availableSeats - 1
-                    : prevState.availableSeats,
-              }))
-            }
-          >
-            -
-          </button>
-          <TextField
-            value={journeyData.availableSeats}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              setJourneyData((prevState) => ({
-                ...prevState,
-                availableSeats: parseInt(event.target.value),
-              }));
-            }}
-            variant="filled"
-            type="number"
-            sx={{ fontSize: "5rem" }}
-            InputProps={{
-              onWheel: (event) => {
-                if (event.target instanceof HTMLInputElement)
-                  event.target.blur();
-              },
-              inputProps: { min: 1 },
-            }}
-          />
-          <button
-            className="rounded-full hover:bg-primary20 cursor-pointer border-2 text-primary100 border-primary100 h-10 w-10 flex justify-center items-center aspect-square"
-            onClick={() =>
-              setJourneyData((prevState) => ({
-                ...prevState,
-                availableSeats: prevState.availableSeats + 1,
-              }))
-            }
-          >
-            +
-          </button>
-        </div>
-      </div>
-      <div>
-        <h3>Fixez votre prix par place</h3>
-        <div className="flex gap-5 items-center">
-          <button
-            className="rounded-full hover:bg-primary20 cursor-pointer border-2 text-primary100 border-primary100 h-10 w-10 flex justify-center items-center aspect-square"
-            onClick={() =>
-              setJourneyData((prevState) => ({
-                ...prevState,
-                totalPrice:
-                  prevState.totalPrice > 0
-                    ? prevState.totalPrice - 1
-                    : prevState.totalPrice,
-              }))
-            }
-          >
-            -
-          </button>
-          <TextField
-            value={journeyData.totalPrice}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              setJourneyData((prevState) => ({
-                ...prevState,
-                totalPrice: parseInt(event.target.value),
-              }));
-            }}
-            variant="filled"
-            type="number"
-            InputProps={{
-              inputProps: { min: 0 },
-              onWheel: (event) => {
-                if (event.target instanceof HTMLInputElement)
-                  event.target.blur();
-              },
-              startAdornment: (
-                <InputAdornment position="start">€</InputAdornment>
-              ),
-            }}
-          />
-          <button
-            className="rounded-full hover:bg-primary20 cursor-pointer border-2 text-primary100 border-primary100 h-10 w-10 flex justify-center items-center aspect-square"
-            onClick={() =>
-              setJourneyData((prevState) => ({
-                ...prevState,
-                totalPrice: prevState.totalPrice + 1,
-              }))
-            }
-          >
-            +
-          </button>
-        </div>
-      </div>
-      <div>
-        <h3>Activer la réservation automatique</h3>
-        <FormControlLabel
-          control={
-            <Checkbox
-              defaultChecked
-              value={journeyData.automaticAccept}
-              onChange={(e) =>
-                setJourneyData((prevState) => ({
-                  ...prevState,
-                  automaticAccept: e.target.checked,
-                }))
-              }
-            />
-          }
-          label="Réservation automatique"
-        />
+      <div className="publish_content flex-1 h-full flex flex-col items-center">
+        {activeStep === steps.length ? (
+          <h3 className="text-3xl">
+            Félicitations, votre trajet est en ligne!
+          </h3>
+        ) : (
+          <>
+            {/* Steps content */}
+            <div className="h-full flex-1 flex flex-col gap-6 items-center justify-center">
+              <h3 className="text-3xl">{steps[activeStep].stepTitle}</h3>
+              {steps[activeStep].stepContent}
+            </div>
+            {/* Stepper Nav buttons */}
+            <div className="stepper_nav flex gap-4">
+              <Button
+                variant={"contained"}
+                disabled={activeStep === 0}
+                onClick={handleBack}
+              >
+                Retour
+              </Button>
+              {activeStep === steps.length - 1 ? (
+                <Button onClick={handleValidateForm} variant={"contained"}>
+                  Terminer
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleNext}
+                  variant={"contained"}
+                  disabled={
+                    (activeStep === 0 && !journeyData.origin) ||
+                    (activeStep === 1 && !journeyData.destination)
+                  }
+                >
+                  Suivant
+                </Button>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
