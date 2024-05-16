@@ -104,6 +104,7 @@ const PublishJourney = () => {
           setJourneyData={setJourneyData}
           journeyData={journeyData}
           minValue={1}
+          maxValue={8}
         />
       ),
       stepTitle: "Combien de passagers acceptez-vous?",
@@ -229,7 +230,8 @@ const PublishJourney = () => {
                   variant={"contained"}
                   disabled={
                     (activeStep === 0 && !journeyData.origin) ||
-                    (activeStep === 1 && !journeyData.destination)
+                    (activeStep === 1 && !journeyData.destination) ||
+                    (activeStep === 5 && journeyData.totalPrice === 0)
                   }
                 >
                   Suivant
