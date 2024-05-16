@@ -31,11 +31,6 @@ export interface Payload {
 const app = express()
 const httpServer = http.createServer(app) // on créer un server HTTP à partir de la bibliothéque d'express, pour avoir Req et Res (pour les middlwares)
 
-// const corsOptions = {
-//     origin: 'http://localhost:3000',
-//     credentials: true,
-// }
-
 async function main() {
     const schema = await buildSchema({
         resolvers: [BookingResolver, UserResolver, JourneyResolver],

@@ -23,8 +23,6 @@ export type UserInfos = {
 };
 
 export default function Home() {
-  const router = useRouter();
-
   const [journeys, setJourneys] = useState<
     ListJourneysQuery["listJourneys"] | null
   >(null);
@@ -36,11 +34,19 @@ export default function Home() {
     },
   });
 
+  const [filters, setFilters] = useState<ListJourneysWithFilters | undefined>(
+    undefined
+  );
+
   const handleOnSearchJourneys = (filters?: ListJourneysWithFilters) => {
     if (!filters) {
       setJourneys(null);
+      setFilters(filters);
       return;
     }
+    setFilters(filters);
+    localStorage.setItem("lastSearch", JSON.stringify(filters));
+
     getJourneys({
       variables: {
         filters,
@@ -70,6 +76,7 @@ export default function Home() {
                   key={id}
                   {...rest}
                   id={id}
+                  seatsRequired={filters?.availableSeats}
                 />
               );
             })}
