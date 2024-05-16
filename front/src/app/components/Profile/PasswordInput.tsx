@@ -4,7 +4,7 @@ import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined
 import { ChangeEvent, useState } from "react";
 
 type PasswordInputProps = {
-  onChange?: (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
+  onChangeFn?: (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
   value?: string;
   error?: string;
   name: string;
@@ -12,7 +12,7 @@ type PasswordInputProps = {
 };
 
 const PasswordInput = ({
-  onChange,
+  onChangeFn,
   value,
   name,
   label,
@@ -26,7 +26,7 @@ const PasswordInput = ({
       label={label}
       type={showPassword ? "text" : "password"}
       value={value}
-      onChange={(e) => onChange?.(e)}
+      onChange={(e) => onChangeFn?.(e)}
       error={!!error}
       helperText={error}
       InputProps={{

@@ -116,7 +116,7 @@ function Register() {
               name="password"
               label="Mot de passe"
               value={newPassword}
-              onChange={(e) => {
+              onChangeFn={(e) => {
                 setPasswordsMatch(true);
                 setNewPassword(e.target.value);
               }}
@@ -127,7 +127,7 @@ function Register() {
               name="confirmPassword"
               label="Confirmez le mot de passe"
               value={confirmNewPassword}
-              onChange={(e) => {
+              onChangeFn={(e) => {
                 setPasswordsMatch(true);
                 setConfirmNewPassword(e.target.value);
               }}
