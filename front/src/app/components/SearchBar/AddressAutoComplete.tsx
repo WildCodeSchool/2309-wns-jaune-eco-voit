@@ -24,12 +24,17 @@ export type AddressResponse = {
   city: string;
   postCode: string;
   context: string;
-  geometry: string[];
+  geometry?: Geometry["coordonates"];
   label: string;
+};
+
+type Geometry = {
+  coordonates: string[];
 };
 
 type Feature = {
   properties: AddressResponse;
+  geometry: Geometry;
 };
 
 type ApiResponse = {
@@ -54,7 +59,8 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
   const [options, setOptions] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [apiResponse, setApiResponse] = useState<any>(null);
+  const [apiResponse, setApiResponse] = useState<Feature[]>([]);
+  const [geometry, setGeometry] = useState<string[]>([]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const fetchSuggestions = useCallback(
@@ -68,6 +74,7 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
       fetch(`/api/autocomplete?address=${encoded}`)
         .then((res) => res.json())
         .then((data: ApiResponse) => {
+          console.log(data);
           setOptions(data.features.map((feature) => feature.properties.label));
           setApiResponse(data.features);
           setLoading(false);
@@ -93,13 +100,16 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
     const data = apiResponse.find(
       (feature: any) => feature.properties.label === value
     );
-    const formatedAddress = data.properties;
+    const formattedAddress = data?.properties;
 
-    handleSelectedAddress(
-      Object.assign(formatedAddress, {
-        geometry: data.geometry.coordinates,
-      })
-    );
+    if (formattedAddress) {
+      const updatedAddress = {
+        ...formattedAddress,
+        geometry: data?.geometry.coordonates,
+      };
+
+      handleSelectedAddress(updatedAddress);
+    }
   };
   return (
     <Stack>

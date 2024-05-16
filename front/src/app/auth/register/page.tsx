@@ -3,20 +3,12 @@
 import { CreateUserInput, useRegisterMutation } from "@/types/graphql";
 
 import {
-  Container,
   TextField,
-  Card,
   Stack,
-  Button,
   Typography,
-  IconButton,
-  InputAdornment,
   FormControl,
   Divider,
 } from "@mui/material";
-
-import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
-import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
@@ -28,181 +20,145 @@ import { useRouter } from "next/navigation";
 
 import { useState } from "react";
 import { routes } from "@/app/lib/routes";
+import PasswordInput from "@/app/components/Profile/PasswordInput";
+import CardButton from "@/app/components/Buttons/CardButton";
+import ConnexionCard from "@/app/components/Profile/ConnexionCard";
 
-// utils pour la confirmation mdp / email
 const EMAIL_REGEX =
-  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+  /  ^[a-zA-Z0-9.!#$%&’*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 function Register() {
   const router = useRouter();
   const theme = useTheme();
 
-  const [showPassword, setShowPassword] = useState<Boolean>(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
-  };
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordsMatch, setPasswordsMatch] = useState(true);
-  const [validPassword, setValidPassword] = useState(true);
+  const [emailValid, setEmailValid] = useState(true);
 
   const [loginError, setLoginError] = useState<string | null>(null);
 
-  const [validEmail, setValidEmail] = useState(false);
-
-  const [register, { error }] = useRegisterMutation({
-    onCompleted(data) {
+  const [register] = useRegisterMutation({
+    onCompleted() {
       router.push(routes.login.pathname);
+      resetValues();
     },
     onError(error: any) {
       setLoginError(error.message);
     },
   });
 
+  const resetValues = () => {
+    setNewPassword("");
+    setConfirmNewPassword("");
+    setLoginError("");
+  };
+
+  const checkIfPasswordMatch = (): boolean => {
+    const match = newPassword === confirmNewPassword;
+    if (!match) {
+      resetValues();
+      setPasswordsMatch(false);
+    }
+    return match;
+  };
+
+  const checkEmailValidity = (email: string): boolean => {
+    setEmailValid(EMAIL_REGEX.test(email));
+
+    return !EMAIL_REGEX.test(email);
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
-      setPasswordsMatch(false);
-      setLoginError("Les mots de passe ne correspondent pas");
-      return;
-    }
+    if (!checkIfPasswordMatch()) return;
+
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData) as CreateUserInput;
+    const { email, password, firstname, lastname, dateOfBirth } =
+      Object.fromEntries(formData) as CreateUserInput;
 
-    if (
-      data.email &&
-      data.password &&
-      data.firstname &&
-      data.lastname &&
-      data.dateOfBirth
-    ) {
-      const birthdate = dayjs(data.dateOfBirth, "DD/MM/YYYY").toISOString();
+    if (!checkEmailValidity(email)) return;
 
+    if (email && password && firstname && lastname && dateOfBirth) {
       register({
         variables: {
           data: {
-            email: data.email,
-            password: data.password,
-            firstname: data.firstname,
-            lastname: data.lastname,
-            dateOfBirth: birthdate,
+            email,
+            password,
+            firstname,
+            lastname,
+            dateOfBirth: dayjs(dateOfBirth, "DD/MM/YYYY").toISOString(),
           },
         },
       });
-      setPassword("");
-      setConfirmPassword("");
-      setLoginError("");
     } else {
       setLoginError("Veuillez remplir tous les champs");
     }
   };
 
   return (
-    <Container>
-      <Stack
-        my={4}
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
-        spacing={4}
-        p={2}
-      >
-        <Card
-          sx={{
-            p: 5,
-            width: 1,
-            maxWidth: 420,
-          }}
-        >
-          <Typography variant="h4" align="center">
-            Inscription
-          </Typography>
-          <form onSubmit={handleSubmit}>
-            <Stack spacing={3} sx={{ my: 2 }}>
-              <FormControl>
-                <TextField name="email" label="Email" />
-              </FormControl>
-              <FormControl>
-                <TextField
-                  name="password"
-                  label="Mot de passe"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showPassword ? (
-                            <VisibilityOutlinedIcon color="primary" />
-                          ) : (
-                            <VisibilityOffOutlinedIcon color="primary" />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </FormControl>
-              <FormControl>
-                <TextField
-                  name="confirmPassword"
-                  label="Confirmer le mot de passe"
-                  type={showPassword ? "text" : "password"}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  error={!passwordsMatch}
-                  helperText={
-                    !passwordsMatch
-                      ? "Les mots de passe ne correspondent pas"
-                      : null
-                  }
-                />
-              </FormControl>
-              <Divider
-                sx={{ borderColor: alpha(theme.palette.divider, 0.4) }}
-              />
-              <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
-                <FormControl>
-                  <TextField name="firstname" label="Prénom" />
-                </FormControl>
-                <FormControl>
-                  <TextField name="lastname" label="Nom" />
-                </FormControl>
-              </Stack>
-              <FormControl>
-                <DatePicker name="dateOfBirth" label="Date de naissance" />
-              </FormControl>
-            </Stack>
-            <Button
-              fullWidth
-              size="large"
-              type="submit"
-              variant="contained"
-              color="primary"
-            >
-              S&apos;inscrire
-            </Button>
-          </form>
-          {loginError && (
-            <Typography variant="body2" color="error" sx={{ mt: 2 }}>
-              {loginError}
-            </Typography>
-          )}
-        </Card>
-      </Stack>
-    </Container>
+    <ConnexionCard title="Inscription">
+      <form onSubmit={handleSubmit}>
+        <Stack spacing={3} sx={{ my: 2 }}>
+          <FormControl>
+            <TextField
+              name="email"
+              label="Email"
+              error={!emailValid}
+              helperText={!emailValid && "Email invalide"}
+              onChange={() => setEmailValid(true)}
+            />
+          </FormControl>
+          <FormControl>
+            <PasswordInput
+              name="password"
+              label="Mot de passe"
+              value={newPassword}
+              onChangeFn={(e) => {
+                setPasswordsMatch(true);
+                setNewPassword(e.target.value);
+              }}
+            />
+          </FormControl>
+          <FormControl>
+            <PasswordInput
+              name="confirmPassword"
+              label="Confirmez le mot de passe"
+              value={confirmNewPassword}
+              onChangeFn={(e) => {
+                setPasswordsMatch(true);
+                setConfirmNewPassword(e.target.value);
+              }}
+              error={
+                !passwordsMatch
+                  ? "Les mots de passe ne correspondent pas"
+                  : undefined
+              }
+            />
+          </FormControl>
+          <Divider sx={{ borderColor: alpha(theme.palette.divider, 0.4) }} />
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
+            <FormControl>
+              <TextField name="firstname" label="Prénom" />
+            </FormControl>
+            <FormControl>
+              <TextField name="lastname" label="Nom" />
+            </FormControl>
+          </Stack>
+          <FormControl>
+            <DatePicker name="dateOfBirth" label="Date de naissance" />
+          </FormControl>
+        </Stack>
+        <CardButton>S&apos;inscrire</CardButton>
+      </form>
+      {loginError && (
+        <Typography variant="body2" color="error" sx={{ mt: 2 }}>
+          {loginError}
+        </Typography>
+      )}
+    </ConnexionCard>
   );
 }
 
