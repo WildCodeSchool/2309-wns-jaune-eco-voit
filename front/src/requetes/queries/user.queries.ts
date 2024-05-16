@@ -98,6 +98,7 @@ query GetProfile {
     email
     role
     dateOfBirth
+    password
   }
 }
 `;

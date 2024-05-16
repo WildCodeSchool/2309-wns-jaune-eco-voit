@@ -299,6 +299,7 @@ export type UserProfile = {
   email: Scalars['String']['output'];
   firstname: Scalars['String']['output'];
   lastname: Scalars['String']['output'];
+  password: Scalars['String']['output'];
   phoneNumber?: Maybe<Scalars['String']['output']>;
   profilePicture?: Maybe<Scalars['String']['output']>;
   role: Scalars['String']['output'];
@@ -432,7 +433,7 @@ export type FindUserByIdQuery = { __typename?: 'Query', findUserById: { __typena
 export type GetProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetProfileQuery = { __typename?: 'Query', getProfile: { __typename?: 'UserProfile', lastname: string, firstname: string, phoneNumber?: string | null, profilePicture?: string | null, email: string, role: string, dateOfBirth?: any | null } };
+export type GetProfileQuery = { __typename?: 'Query', getProfile: { __typename?: 'UserProfile', lastname: string, firstname: string, phoneNumber?: string | null, profilePicture?: string | null, email: string, role: string, dateOfBirth?: any | null, password: string } };
 
 
 export const RegisterDocument = gql`
@@ -1669,6 +1670,7 @@ export const GetProfileDocument = gql`
     email
     role
     dateOfBirth
+    password
   }
 }
     `;
