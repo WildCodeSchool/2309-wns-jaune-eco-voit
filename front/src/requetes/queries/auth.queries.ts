@@ -10,7 +10,7 @@ export const LOGIN = gql`
       password
       dateOfBirth
       phoneNumber
-      profilPicture
+      profilePicture
       role
       grade
       tripsAsPassenger

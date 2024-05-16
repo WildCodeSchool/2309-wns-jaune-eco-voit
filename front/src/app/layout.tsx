@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   const client = new ApolloClient({
     uri: `${process.env.NEXT_PUBLIC_APOLLO_CLIENT_URI}`,
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({addTypename: false}),
     credentials: "include",
   });
 

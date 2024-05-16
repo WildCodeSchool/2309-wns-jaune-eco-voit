@@ -22,7 +22,7 @@ export const LIST_JOURNEYS = gql`
         password
         dateOfBirth
         phoneNumber
-        profilPicture
+        profilePicture
         role
         grade
         tripsAsPassenger
@@ -66,7 +66,7 @@ export const LIST_JOURNEYS_BY_USER = gql`
         password
         dateOfBirth
         phoneNumber
-        profilPicture
+        profilePicture
         role
         grade
         tripsAsPassenger
@@ -119,7 +119,7 @@ export const FIND_JOURNEY_BY_ID = gql`
         password
         dateOfBirth
         phoneNumber
-        profilPicture
+        profilePicture
         role
         grade
         tripsAsPassenger

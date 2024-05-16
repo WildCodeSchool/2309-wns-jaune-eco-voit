@@ -18,7 +18,7 @@ export const CREATE_BOOKING = gql`
         password
         dateOfBirth
         phoneNumber
-        profilPicture
+        profilePicture        
         role
         grade
         tripsAsPassenger
@@ -62,7 +62,7 @@ export const ACCEPT_BOOKING = gql`
         password
         dateOfBirth
         phoneNumber
-        profilPicture
+        profilePicture
         role
         grade
         tripsAsPassenger
@@ -106,7 +106,7 @@ export const REJECT_BOOKING = gql`
         password
         dateOfBirth
         phoneNumber
-        profilPicture
+        profilePicture
         role
         grade
         tripsAsPassenger
@@ -150,7 +150,7 @@ export const CANCEL_BOOKING = gql`
         password
         dateOfBirth
         phoneNumber
-        profilPicture
+        profilePicture
         role
         grade
         tripsAsPassenger
