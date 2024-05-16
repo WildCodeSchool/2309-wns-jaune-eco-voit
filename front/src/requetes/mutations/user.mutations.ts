@@ -10,7 +10,7 @@ export const UPDATE_USER = gql`
       password
       dateOfBirth
       phoneNumber
-      profilPicture
+      profilePicture
       role
       grade
       tripsAsPassenger
@@ -54,7 +54,7 @@ export const ARCHIVE_USER = gql`
       password
       dateOfBirth
       phoneNumber
-      profilPicture
+      profilePicture
       role
       grade
       tripsAsPassenger

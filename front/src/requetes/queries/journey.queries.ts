@@ -5,30 +5,33 @@ export const LIST_JOURNEYS = gql`
     listJourneys(filters: $filters) {
       arrival_time
       automaticAccept
-      availableSeats
-      bookings {
-        arrivalTime
+      createdAt
+      updatedAt
+      user {
+        id
+        firstname
+        lastname
+        email
+        password
+        dateOfBirth
+        phoneNumber
+        profilePicture
+        role
+        grade
+        tripsAsPassenger
+        tripsAsDriver
+        status
         createdAt
         departureTime
-        id
-        status
         totalPrice
         updatedAt
       }
-      createdAt
       departure_time
       destination
       id
       origin
       status
       totalPrice
-      updatedAt
-      user {
-        email
-        firstname
-        lastname
-        id
-      }
     }
   }
 `;
@@ -55,7 +58,7 @@ export const LIST_JOURNEYS_BY_USER = gql`
         password
         dateOfBirth
         phoneNumber
-        profilPicture
+        profilePicture
         role
         grade
         tripsAsPassenger
@@ -108,7 +111,7 @@ export const FIND_JOURNEY_BY_ID = gql`
         password
         dateOfBirth
         phoneNumber
-        profilPicture
+        profilePicture
         role
         grade
         tripsAsPassenger

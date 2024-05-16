@@ -32,7 +32,7 @@ export const routes: { [key: string]: Route } = {
     title: "Admin",
     protected: "ADMIN",
   },
-  profil: {
+  profile: {
     pathname: "/profile/my-profile",
     title: "Votre compte",
     protected: "PRIVATE",
