@@ -86,7 +86,7 @@ const Header = () => {
               href="#"
               variant="text"
               className="flex items-center gap-4"
-              onClick={() => router.push(routes.publish.pathname)}
+              onClick={() => router.push(routes["publish-journey"].pathname)}
             >
               <AddCircleOutlineOutlinedIcon />
               <p className="font-medium text-sm">Publier un trajet</p>
