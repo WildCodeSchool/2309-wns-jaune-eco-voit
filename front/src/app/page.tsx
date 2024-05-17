@@ -44,6 +44,7 @@ export default function Home() {
       setFilters(filters);
       return;
     }
+
     setFilters(filters);
     localStorage.setItem("lastSearch", JSON.stringify(filters));
 
