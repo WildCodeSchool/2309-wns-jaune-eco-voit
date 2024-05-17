@@ -13,8 +13,7 @@ import PersonIcon from "@mui/icons-material/Person";
 
 import AddressAutoComplete, { AddressResponse } from "./AddressAutoComplete";
 import { useState } from "react";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { ListJourneysWithFilters } from "@/types/graphql";
 
@@ -92,6 +91,7 @@ const SearchBar = ({ onSearchJourneys }: SearchJourneysProps) => {
           sx={{
             borderRadius: "32px 0 0 32px",
           }}
+          gotAdornment
         />
         <Divider flexItem orientation="vertical" />
         <AddressAutoComplete
@@ -105,27 +105,26 @@ const SearchBar = ({ onSearchJourneys }: SearchJourneysProps) => {
             border: "0!important",
             borderWidth: "0",
           }}
+          gotAdornment
         />
         <Divider flexItem orientation="vertical" />
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            value={departureTime}
-            onChange={(date) => setDepartureTime(date)}
-            name="departureTime"
-            minDate={dayjs()}
-            slotProps={{
-              inputAdornment: {
-                position: "start",
-              },
-            }}
-            sx={{
-              width: "200px",
-              border: "0",
-              height: "auto",
-            }}
-            slots={{ textField: StyledTextField }}
-          />
-        </LocalizationProvider>
+        <DatePicker
+          value={departureTime}
+          onChange={(date) => setDepartureTime(date)}
+          name="departureTime"
+          minDate={dayjs()}
+          slotProps={{
+            inputAdornment: {
+              position: "start",
+            },
+          }}
+          sx={{
+            width: "200px",
+            border: "0",
+            height: "auto",
+          }}
+          slots={{ textField: StyledTextField }}
+        />
         <Divider flexItem orientation="vertical" />
         <FormControl sx={{ width: "100px", border: 0, margin: "0 2em" }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>

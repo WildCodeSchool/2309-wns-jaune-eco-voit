@@ -58,7 +58,8 @@ type AddressAutoCompleteProps = {
   label: string;
   handleSelectedAddress: (addressResponse: AddressResponse) => void;
   clearAddress: () => void;
-  sx?: SxProps<Theme>; // Corrected type definition for sx prop
+  sx?: SxProps<Theme>;
+  gotAdornment?: boolean; // Corrected type definition for sx prop
 };
 
 const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
@@ -66,6 +67,7 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
   handleSelectedAddress,
   clearAddress,
   sx,
+  gotAdornment,
 }) => {
   const [options, setOptions] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
@@ -129,10 +131,12 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
         onChange={handleOptionChange}
         renderInput={(params) => (
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <CircleOutlinedIcon
-              color="primary"
-              className="ml-4 color-primary"
-            />
+            {gotAdornment && (
+              <CircleOutlinedIcon
+                color="primary"
+                className="ml-4 color-primary"
+              />
+            )}
             <StyledTextField
               {...params}
               label={label}
