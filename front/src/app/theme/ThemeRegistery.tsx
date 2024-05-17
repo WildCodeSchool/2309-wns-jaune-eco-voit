@@ -3,6 +3,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { NextAppDirEmotionCacheProvider } from "./EmotionCache";
 import CssBaseline from "@mui/material/CssBaseline";
 import { themeOptions } from "./ThemeOption";
+import type {} from "@mui/lab/themeAugmentation";
 
 const theme = createTheme(themeOptions);
 

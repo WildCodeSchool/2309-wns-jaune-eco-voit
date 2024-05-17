@@ -30,6 +30,15 @@ export const stolzl = localFont({
 
 // MUI theme
 export const themeOptions: ThemeOptions = {
+   breakpoints: {
+    values: {
+      xs: 0,
+      sm: 640,
+      md: 768,
+      lg: 1024,
+      xl: 1536,
+    },
+  },
   palette: {
     common: {
       black: "#201F28",

@@ -34,7 +34,7 @@ const JourneyCard = ({
     <Grid item sm={10} md={5}>
       <Link
         href={`${routes.journey.pathname}/${id}`}
-        className="flex flex-col rounded-2xl bg-white p-6 gap-6"
+        className="flex flex-col rounded-2xl bg-white p-6 gap-6 hover:shadow-xl transition duration-300 ease-in-out"
       >
         <JourneyCardHeader
           departureTime={departureTime}

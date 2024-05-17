@@ -1,11 +1,16 @@
 import {
   Button,
   FormControl,
-  InputLabel,
   MenuItem,
   Select,
   Stack,
+  TextField,
+  Divider,
+  Box,
 } from "@mui/material";
+
+import PersonIcon from "@mui/icons-material/Person";
+
 import AddressAutoComplete, { AddressResponse } from "./AddressAutoComplete";
 import { useState } from "react";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -13,6 +18,35 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import { ListJourneysWithFilters } from "@/types/graphql";
 
+import { styled } from "@mui/material/styles";
+
+const StyledTextField = styled(TextField)({
+  "& .MuiOutlinedInput-root": {
+    borderRadius: 0,
+    border: "none",
+  },
+  "& .MuiOutlinedInput-notchedOutline": {
+    border: "none",
+  },
+  "& .MuiInputBase-input": {
+    borderRadius: 0,
+    border: "0",
+  },
+});
+
+const StyledSelect = styled(Select)({
+  "& .MuiOutlinedInput-root": {
+    borderRadius: 0,
+    border: "none",
+  },
+  "& .MuiOutlinedInput-notchedOutline": {
+    border: "none",
+  },
+  "& .MuiInputBase-input": {
+    borderRadius: 0,
+    border: "0",
+  },
+});
 type SearchJourneysProps = {
   onSearchJourneys: (filters?: ListJourneysWithFilters) => void;
 };
@@ -44,8 +78,11 @@ const SearchBar = ({ onSearchJourneys }: SearchJourneysProps) => {
   };
 
   return (
-    <Stack gap={2} margin={2}>
-      <Stack direction={{ sm: "column", md: "row" }}>
+    <Stack gap={2} margin={2} className="h-14">
+      <Stack
+        direction={{ sm: "column", md: "row" }}
+        className="rounded-full  h-14 bg-white"
+      >
         <AddressAutoComplete
           label={"Départ"}
           handleSelectedAddress={(value: AddressResponse | null) =>
@@ -56,6 +93,7 @@ const SearchBar = ({ onSearchJourneys }: SearchJourneysProps) => {
             borderRadius: "32px 0 0 32px",
           }}
         />
+        <Divider flexItem orientation="vertical" />
         <AddressAutoComplete
           label={"Arrivée"}
           handleSelectedAddress={(value: AddressResponse | null) =>
@@ -64,38 +102,56 @@ const SearchBar = ({ onSearchJourneys }: SearchJourneysProps) => {
           clearAddress={() => setDestination(null)}
           sx={{
             borderRadius: "0",
+            border: "0!important",
+            borderWidth: "0",
           }}
         />
+        <Divider flexItem orientation="vertical" />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             value={departureTime}
             onChange={(date) => setDepartureTime(date)}
-            label="Date de départ"
             name="departureTime"
             minDate={dayjs()}
-            sx={{ width: "200px" }}
+            slotProps={{
+              inputAdornment: {
+                position: "start",
+              },
+            }}
+            sx={{
+              width: "200px",
+              border: "0",
+              height: "auto",
+            }}
+            slots={{ textField: StyledTextField }}
           />
         </LocalizationProvider>
-        <FormControl sx={{ width: "200px", border: 0 }}>
-          <InputLabel id="select-available-seats">Places</InputLabel>
-          <Select
-            value={availableSeats}
-            labelId="select-available-seats"
-            onChange={(e) => setAvailableSeats(Number(e.target.value))}
-            sx={{ borderRadius: 0 }}
-          >
-            {availableSeatsArray.map((seat) => (
-              <MenuItem value={seat} key={seat}>
-                {seat}
-              </MenuItem>
-            ))}
-          </Select>
+        <Divider flexItem orientation="vertical" />
+        <FormControl sx={{ width: "100px", border: 0, margin: "0 2em" }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <PersonIcon color="primary" />
+            <StyledSelect
+              value={availableSeats}
+              label="Places"
+              onChange={(e: any) => setAvailableSeats(Number(e.target.value))}
+              sx={{ borderRadius: 0, width: "100px" }}
+            >
+              {availableSeatsArray.map((seat) => (
+                <MenuItem value={seat} key={seat}>
+                  {seat}
+                </MenuItem>
+              ))}
+            </StyledSelect>
+          </Box>
         </FormControl>
 
         <Button
           className="h-14 self-baseline md:self-end"
           onClick={handleSearch}
           variant={"contained"}
+          sx={{
+            borderRadius: "0 32px 32px 0",
+          }}
         >
           Rechercher
         </Button>
