@@ -20,10 +20,7 @@ export const LIST_JOURNEYS = gql`
         grade
         tripsAsPassenger
         tripsAsDriver
-        status
         createdAt
-        departureTime
-        totalPrice
         updatedAt
       }
       departure_time
