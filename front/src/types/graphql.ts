@@ -440,7 +440,7 @@ export type ListJourneysQueryVariables = Exact<{
 }>;
 
 
-export type ListJourneysQuery = { __typename?: 'Query', listJourneys: Array<{ __typename?: 'JourneyEntity', arrival_time: any, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, departure_time: any, destination: string, id: string, origin: string, status: string, totalPrice: number, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, createdAt: any, updatedAt?: any | null } }> };
+export type ListJourneysQuery = { __typename?: 'Query', listJourneys: Array<{ __typename?: 'JourneyEntity', arrival_time: any, automaticAccept: boolean, availableSeats: number, createdAt: any, departure_time: any, destination: string, id: string, origin: string, status: string, totalPrice: number, updatedAt?: any | null, bookings: Array<{ __typename?: 'BookingEntity', arrivalTime: any, createdAt: any, departureTime: any, id: string, status: string, totalPrice: number, updatedAt?: any | null }>, user: { __typename?: 'UserEntity', email: any, firstname: string, lastname: string, id: string } }> };
 
 export type ListJourneysByUserQueryVariables = Exact<{
   userId: Scalars['String']['input'];
@@ -1670,30 +1670,30 @@ export const ListJourneysDocument = gql`
   listJourneys(filters: $filters) {
     arrival_time
     automaticAccept
-    createdAt
-    updatedAt
-    user {
-      id
-      firstname
-      lastname
-      email
-      password
-      dateOfBirth
-      phoneNumber
-      profilePicture
-      role
-      grade
-      tripsAsPassenger
-      tripsAsDriver
+    availableSeats
+    bookings {
+      arrivalTime
       createdAt
+      departureTime
+      id
+      status
+      totalPrice
       updatedAt
     }
+    createdAt
     departure_time
     destination
     id
     origin
     status
     totalPrice
+    updatedAt
+    user {
+      email
+      firstname
+      lastname
+      id
+    }
   }
 }
     `;

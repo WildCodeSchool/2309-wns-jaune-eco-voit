@@ -5,30 +5,30 @@ export const LIST_JOURNEYS = gql`
     listJourneys(filters: $filters) {
       arrival_time
       automaticAccept
-      createdAt
-      updatedAt
-      user {
-        id
-        firstname
-        lastname
-        email
-        password
-        dateOfBirth
-        phoneNumber
-        profilePicture
-        role
-        grade
-        tripsAsPassenger
-        tripsAsDriver
+      availableSeats
+      bookings {
+        arrivalTime
         createdAt
+        departureTime
+        id
+        status
+        totalPrice
         updatedAt
       }
+      createdAt
       departure_time
       destination
       id
       origin
       status
       totalPrice
+      updatedAt
+      user {
+        email
+        firstname
+        lastname
+        id
+      }
     }
   }
 `;
