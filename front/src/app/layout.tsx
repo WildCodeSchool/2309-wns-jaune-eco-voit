@@ -35,8 +35,8 @@ export default function RootLayout({
               lang="en"
               className={`${stolzl.variable} ${gatwick.variable}`}
             >
-              <body className="font-stolzl">
-                <main className="min-h-screen flex flex-col justify-between bg-primary10">
+              <body className="font-stolzl bg-primary10">
+                <main className="min-h-screen flex flex-col justify-between">
                   <Header />
                   {children}
                   <Footer />
