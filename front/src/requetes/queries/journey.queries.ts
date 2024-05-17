@@ -23,7 +23,7 @@ export const LIST_JOURNEYS = gql`
       status
       totalPrice
       updatedAt
-      user {
+      user { 
         email
         firstname
         lastname
