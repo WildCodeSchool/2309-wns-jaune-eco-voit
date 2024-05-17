@@ -14,7 +14,7 @@ jobs:
   run-linters:
     name: 🧼 Run linters
     runs-on: ubuntu-latest
-
+    if: github.event_name == 'push'
     steps:
       - name: 📌 Check out Git repository
         uses: actions/checkout@v3
@@ -54,6 +54,7 @@ jobs:
     needs: run-linters
     name: 👤 Test
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     services:
       postgres:
         image: postgres
@@ -83,6 +84,7 @@ jobs:
     needs: Test
     name: Build back & front
     runs-on: ubuntu-latest
+    if: github.event_name == 'push'
     steps:
       - name: 📌 Check out Git repository
         uses: actions/checkout@v3
