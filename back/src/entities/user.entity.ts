@@ -307,6 +307,9 @@ export class UserMessage {
 export class UserWithoutPassord
     implements Pick<UserEntity, 'email' | 'firstname' | 'lastname'>
 {
+    @Field(() => ID)
+    id: string
+
     @Field()
     firstname: string
 

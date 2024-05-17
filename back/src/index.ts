@@ -56,7 +56,7 @@ async function main() {
 
     const server = new ApolloServer<MyContext>({
         schema,
-        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })], // Informe Apollo Server, qu'il utilisera le server Http créer plus haut
+        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })], // Informe Apollo Server, qu'il utilisera le server Http créé plus haut
     })
     // lancement du server
     await server.start()
