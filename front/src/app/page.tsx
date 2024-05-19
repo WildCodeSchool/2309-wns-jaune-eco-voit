@@ -3,7 +3,7 @@
 import SearchBar from "./components/SearchBar/SearchBar";
 import { CircularProgress, Grid, Link } from "@mui/material";
 import { CookieValueTypes } from "cookies-next";
-import { useRouter } from "next/navigation";
+
 import {
   ListJourneysQuery,
   ListJourneysWithFilters,

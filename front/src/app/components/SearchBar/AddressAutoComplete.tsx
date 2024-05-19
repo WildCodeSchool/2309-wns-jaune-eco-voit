@@ -7,8 +7,26 @@ import {
   Stack,
   SxProps,
   Theme,
+  Box,
 } from "@mui/material";
 
+import { styled } from "@mui/material/styles";
+
+import CircleOutlinedIcon from "@mui/icons-material/CircleOutlined";
+
+const StyledTextField = styled(TextField)({
+  "& .MuiOutlinedInput-root": {
+    borderRadius: 0,
+    border: "none",
+  },
+  "& .MuiOutlinedInput-notchedOutline": {
+    border: "none",
+  },
+  "& .MuiInputBase-input": {
+    borderRadius: 0,
+    border: "0",
+  },
+});
 function debounce<Func extends (...args: any[]) => void>(
   func: Func,
   wait: number
@@ -46,7 +64,8 @@ type AddressAutoCompleteProps = {
   handleSelectedAddress: (addressResponse: AddressResponse) => void;
   clearAddress: () => void;
   defaultValue?: string;
-  sx?: SxProps<Theme>; // Corrected type definition for sx prop
+  sx?: SxProps<Theme>;
+  gotAdornment?: boolean; // Corrected type definition for sx prop
 };
 
 const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
@@ -55,6 +74,7 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
   clearAddress,
   defaultValue,
   sx,
+  gotAdornment,
 }) => {
   const [options, setOptions] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
@@ -121,25 +141,32 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
         onInputChange={(event, newInputValue) => setInputValue(newInputValue)}
         onChange={handleOptionChange}
         renderInput={(params) => (
-          <TextField
-            {...params}
-            label={label}
-            variant="outlined"
-            InputProps={{
-              ...params.InputProps,
-              sx: {
-                ...sx,
-              },
-              endAdornment: (
-                <>
-                  {loading ? (
-                    <CircularProgress color="inherit" size={20} />
-                  ) : null}
-                  {params.InputProps.endAdornment}
-                </>
-              ),
-            }}
-          />
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            {gotAdornment && (
+              <CircleOutlinedIcon
+                color="primary"
+                className="ml-4 color-primary"
+              />
+            )}
+            <StyledTextField
+              {...params}
+              label={label}
+              InputProps={{
+                ...params.InputProps,
+                sx: {
+                  ...sx,
+                },
+                endAdornment: (
+                  <>
+                    {loading ? (
+                      <CircularProgress color="inherit" size={20} />
+                    ) : null}
+                    {params.InputProps.endAdornment}
+                  </>
+                ),
+              }}
+            />
+          </Box>
         )}
       />
     </Stack>
