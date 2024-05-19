@@ -1,0 +1,33 @@
+{
+  "createJourney": {
+    "id": "4325cd6a-62c8-451a-9158-cea9dd32c7e7",
+    "origin": "Paris",
+    "destination": "Grenoble",
+    "totalPrice": 35,
+    "departure_time": "2011-10-05T14:48:00.000Z",
+    "arrival_time": "2011-10-05T16:48:00.000Z",
+    "availableSeats": 8,
+    "status": "[\"PLANNED\"]",
+    "automaticAccept": false,
+    "createdAt": "2024-05-17T08:57:08.466Z",
+    "updatedAt": "2024-05-17T08:57:08.466Z",
+    "user": {
+      "id": "8c8911b3-1a8b-4197-acac-86100b973b80",
+      "firstname": "olive",
+      "lastname": "gomez",
+      "email": "olive@gmail.com",
+      "password": "$argon2id$v=19$m=65536,t=3,p=4$TSThDnyEvdVmshDXvghITg$DDzMETdtytL3ox3nFW9PHAZ+u5f5s/YmK4YSTW7qL78",
+      "dateOfBirth": "2024-03-12T22:41:36.000Z",
+      "phoneNumber": "0658553641",
+      "profilPicture": null,
+      "role": "USER",
+      "grade": "BEGINNER",
+      "tripsAsPassenger": 0,
+      "tripsAsDriver": 0,
+      "status": "ACTIVE",
+      "createdAt": "2024-03-13T08:44:17.295Z",
+      "updatedAt": "2024-03-13T08:44:17.295Z"
+    },
+    "bookings": []
+  }
+}

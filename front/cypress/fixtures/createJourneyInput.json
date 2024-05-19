@@ -1,0 +1,14 @@
+{
+  "data": {
+    "departure_time": "2011-10-05T14:48:00.000Z",
+    "arrival_time": "2011-10-05T16:48:00.000Z",
+    "origin": "Lyon",
+    "destination": "Marseille",
+    "totalPrice": 20,
+    "automaticAccept": true,
+    "user": {
+      "id": "8c8911b3-1a8b-4197-acac-86100b973b80"
+    },
+    "availableSeats": 3
+  }
+}

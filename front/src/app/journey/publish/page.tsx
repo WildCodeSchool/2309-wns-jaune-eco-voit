@@ -5,23 +5,20 @@ import dayjs, { Dayjs } from "dayjs";
 import utc from "dayjs/plugin/utc";
 import fr from "dayjs/locale/fr";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import CityInput from "./components/CityInput";
-import DateAndTimePicker from "./components/DateAndTimePicker";
-import CountInput from "./components/CountInput";
-import Options from "./components/Options";
 import { AuthContext } from "@/context/authContext";
 import { useMutation } from "@apollo/client";
 import { CREATE_JOURNEY } from "@/requetes/mutations/journey.mutations";
 import { CreateJourneyInput } from "@/types/graphql";
 import { useRouter } from "next/navigation";
 import { routes } from "@/app/lib/routes";
+import { stepsData as steps } from "./stepsData";
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 dayjs.locale(fr);
 
 export type JourneyData = {
-  origin: string; //TODO mettre plus que la ville (coord)
-  destination: string; //TODO mettre plus que la ville (coord)
+  origin: string;
+  destination: string;
   departure_date: Dayjs;
   totalPrice: number;
   automaticAccept: boolean;
@@ -33,11 +30,7 @@ const PublishJourney = () => {
   const router = useRouter();
   const [
     createJourney,
-    {
-      data: createJourneySuccess,
-      loading: createJourneyLoading,
-      error: createJourneyError,
-    },
+    { data: createJourneySuccess, error: createJourneyError },
   ] = useMutation(CREATE_JOURNEY);
 
   const [journeyData, setJourneyData] = useState<JourneyData>({
@@ -50,84 +43,6 @@ const PublishJourney = () => {
   });
 
   const [activeStep, setActiveStep] = useState<number>(0);
-
-  const steps = [
-    {
-      stepName: "Départ",
-      stepContent: (
-        <CityInput
-          fromTo={"origin"}
-          defaultValue={journeyData.origin}
-          setJourneyData={setJourneyData}
-        />
-      ),
-      stepTitle: "D'où partez-vous?",
-    },
-    {
-      stepName: "Arrivée",
-      stepContent: (
-        <CityInput
-          fromTo={"destination"}
-          defaultValue={journeyData.destination}
-          setJourneyData={setJourneyData}
-        />
-      ),
-      stepTitle: "Où allez-vous?",
-    },
-    {
-      stepName: "Date",
-      stepContent: (
-        <DateAndTimePicker
-          dateTime={"date"}
-          journeyData={journeyData}
-          setJourneyData={setJourneyData}
-        />
-      ),
-      stepTitle: "Choisissez la date de votre départ",
-    },
-    {
-      stepName: "Horaire",
-      stepContent: (
-        <DateAndTimePicker
-          dateTime={"time"}
-          journeyData={journeyData}
-          setJourneyData={setJourneyData}
-        />
-      ),
-      stepTitle: "Choisissez l'heure de votre départ",
-    },
-    {
-      stepName: "Passagers",
-      stepContent: (
-        <CountInput
-          availableSeatsOrTotalPrice={"availableSeats"}
-          setJourneyData={setJourneyData}
-          journeyData={journeyData}
-          minValue={1}
-          maxValue={8}
-        />
-      ),
-      stepTitle: "Combien de passagers acceptez-vous?",
-    },
-    {
-      stepName: "Prix",
-      stepContent: (
-        <CountInput
-          availableSeatsOrTotalPrice={"totalPrice"}
-          setJourneyData={setJourneyData}
-          journeyData={journeyData}
-        />
-      ),
-      stepTitle: "Fixez le prix par passager",
-    },
-    {
-      stepName: "Options",
-      stepContent: (
-        <Options setJourneyData={setJourneyData} journeyData={journeyData} />
-      ),
-      stepTitle: "Activer la réservation automatique?",
-    },
-  ];
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -174,7 +89,7 @@ const PublishJourney = () => {
     <div className="publish_page flex flex-col space-between gap-8 flex-1 h-full w-full py-8 px-4">
       <div className="stepper_indicator md:block hidden">
         <Stepper activeStep={activeStep}>
-          {steps.map((step) => {
+          {steps(setJourneyData, journeyData).map((step) => {
             const stepProps: { completed?: boolean } = {};
             const labelProps: {
               optional?: React.ReactNode;
@@ -207,9 +122,9 @@ const PublishJourney = () => {
             {/* Steps content */}
             <div className="h-full flex-1 flex flex-col gap-6 items-center justify-center">
               <h3 className="text-2xl text-center xs:text-3xl">
-                {steps[activeStep].stepTitle}
+                {steps(setJourneyData, journeyData)[activeStep].stepTitle}
               </h3>
-              {steps[activeStep].stepContent}
+              {steps(setJourneyData, journeyData)[activeStep].stepContent}
             </div>
             {/* Stepper Nav buttons */}
             <div className="stepper_nav flex gap-4">
@@ -220,7 +135,7 @@ const PublishJourney = () => {
               >
                 Retour
               </Button>
-              {activeStep === steps.length - 1 ? (
+              {activeStep === steps(setJourneyData, journeyData).length - 1 ? (
                 <Button onClick={handleValidateForm} variant={"contained"}>
                   Terminer
                 </Button>

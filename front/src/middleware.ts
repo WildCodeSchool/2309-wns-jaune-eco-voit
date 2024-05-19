@@ -30,6 +30,7 @@ export async function verify(token: string): Promise<Payload> {
 
 async function checkToken(token: string | undefined, request: NextRequest) {
   const currentRoute = findRouteByPathname(request.nextUrl.pathname);
+  console.log("currentRoute", currentRoute);
   let response = NextResponse.next();
   if (!token) {
     //On redirige si la route est protégée

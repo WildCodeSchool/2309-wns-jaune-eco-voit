@@ -1,0 +1,110 @@
+describe("Journey publish page", () => {
+  it("Publish journey", () => {
+    /*------ Login ------*/
+    cy.visit("/auth/login");
+    cy.url().should("eq", "http://localhost:3002/auth/login");
+
+    cy.get("input[name='email']").type("olive@gmail.com");
+    cy.get("input[name='password']").type("olive");
+    cy.get("button").contains("Se connecter").click();
+
+    cy.url().should("eq", "http://localhost:3002/");
+
+    /*------ Journey publish page ------*/
+
+    cy.get("p").contains("Publier un trajet").parent().click();
+    // cy.visit("/journey/publish");
+    cy.url().should("eq", "http://localhost:3002/journey/publish");
+
+    /*------ Step1 ------*/
+    cy.get("h3").contains("D'où partez-vous?");
+    cy.get("label").contains("Point de départ");
+
+    cy.get("label")
+      .contains("Point de départ")
+      .next("div")
+      .find("input")
+      .then(($input) => {
+        cy.wrap($input).type("Paris");
+      });
+
+    // button "Suivant" must be disabled if we don't have value in input
+    cy.get("button").contains("Suivant").should("be.disabled");
+    cy.get('.MuiAutocomplete-popper li[data-option-index="0"]').click();
+
+    cy.get("button").contains("Suivant").click();
+
+    /*------ Step2 ------*/
+    cy.get("h3").contains("Où allez-vous?");
+    cy.get("label").contains("Point d'arrivée");
+
+    cy.get("label")
+      .contains("Point d'arrivée")
+      .next("div")
+      .find("input")
+      .then(($input) => {
+        cy.wrap($input).type("Grenoble");
+      });
+
+    // button "Suivant" must be disabled if we don't have value in input
+    cy.get("button").contains("Suivant").should("be.disabled");
+    cy.get('.MuiAutocomplete-popper li[data-option-index="0"]').click();
+
+    cy.get("button").contains("Suivant").click();
+
+    /*------ Step3 ------*/
+    cy.get("h3").contains("Choisissez la date de votre départ");
+    cy.get("button[aria-selected='true']").next("button").click();
+    cy.get("button").contains("Suivant").click();
+
+    //Step4
+    cy.get("h3").contains("Choisissez l'heure de votre départ");
+    cy.get("button").contains("Suivant").click();
+
+    /*------ Step4 ------*/
+    cy.get("h3").contains("Combien de passagers acceptez-vous?");
+
+    //Initial value = 1
+    cy.get("input").should("have.value", "1");
+
+    cy.get("input").click().type("{selectall}7");
+    cy.get("button").contains("+").click().click();
+    //Max value must not exceed 8
+    cy.get("input").should("have.value", "8");
+
+    cy.get("button").contains("Suivant").click();
+
+    /*------ Step5 ------*/
+    cy.get("h3").contains("Fixez le prix par passager");
+
+    //initial value = 0
+    cy.get("input").should("have.value", "0");
+    // button "Suivant" must be disabled if input value is 0
+    cy.get("button").contains("Suivant").should("be.disabled");
+
+    cy.get("input").type("{selectall}35").should("have.value", "35");
+
+    cy.get("button").contains("Suivant").click();
+
+    /*------ Step6 ------*/
+    cy.get("h3").contains("Activer la réservation automatique?");
+    cy.get("input.PrivateSwitchBase-input").click().should("not.be.checked");
+
+    // Intercepter l'appel API et répondre avec les fixtures
+    // cy.fixture("createJourneyInput.json").then((Input) => {
+    //   cy.fixture("createJourneyOutput.json").then((output) => {
+    //     cy.intercept("POST", "http://localhost:4000", (req) => {
+    //       req.reply(output);
+    //     }).as("testCreateJourney");
+    //   });
+    // });
+
+    // cy.wait("@testCreateJourney");
+    cy.get("button").contains("Terminer").click();
+
+    /*------ Validation step ------*/
+    cy.contains("Félicitations, votre trajet est en ligne!").should(
+      "be.visible"
+    );
+  });
+});
