@@ -54,7 +54,9 @@ describe("Journey publish page", () => {
 
     /*------ Step3 ------*/
     cy.get("h3").contains("Choisissez la date de votre départ");
-    cy.get("button[aria-selected='true']").next("button").click();
+    cy.get("button[title='Next month']").click();
+    cy.get("div[role='row']").find("button").eq(0).click();
+    // cy.get("button[aria-selected='true']").next("button").click();
     cy.get("button").contains("Suivant").click();
 
     //Step4
@@ -90,21 +92,33 @@ describe("Journey publish page", () => {
     cy.get("h3").contains("Activer la réservation automatique?");
     cy.get("input.PrivateSwitchBase-input").click().should("not.be.checked");
 
-    // Intercepter l'appel API et répondre avec les fixtures
-    // cy.fixture("createJourneyInput.json").then((Input) => {
-    //   cy.fixture("createJourneyOutput.json").then((output) => {
-    //     cy.intercept("POST", "http://localhost:4000", (req) => {
-    //       req.reply(output);
-    //     }).as("testCreateJourney");
-    //   });
-    // });
+    // // Intercept the API call and respond with the fixtures
+    cy.fixture("createJourneyInput.json").then((input) => {
+      cy.fixture("createJourneyOutput.json").then((output) => {
+        cy.intercept("POST", "http://localhost:4000", (req) => {
+          req.body = input;
 
-    // cy.wait("@testCreateJourney");
+          req.reply({
+            statusCode: 200,
+            body: output,
+          });
+        }).as("CreateJourneyResponse");
+      });
+    });
+
     cy.get("button").contains("Terminer").click();
+
+    // Wait for the intercepted call to complete
+    cy.wait("@CreateJourneyResponse");
 
     /*------ Validation step ------*/
     cy.contains("Félicitations, votre trajet est en ligne!").should(
       "be.visible"
+    );
+    cy.wait(1500);
+    cy.url().should(
+      "eq",
+      "http://localhost:3002/journey/96efab94-d728-4940-8ab0-2bb3de8a2dc6"
     );
   });
 });

@@ -1,14 +1,18 @@
 {
-  "data": {
-    "departure_time": "2011-10-05T14:48:00.000Z",
-    "arrival_time": "2011-10-05T16:48:00.000Z",
-    "origin": "Lyon",
-    "destination": "Marseille",
-    "totalPrice": 20,
-    "automaticAccept": true,
-    "user": {
-      "id": "8c8911b3-1a8b-4197-acac-86100b973b80"
-    },
-    "availableSeats": 3
-  }
+  "operationName": "createJourney",
+  "variables": {
+    "data": {
+      "departure_time": "2024-05-20T17:31:04.000Z",
+      "arrival_time": "2024-05-20T19:31:04.000Z",
+      "origin": "Saint-Caprais-de-Bordeaux",
+      "destination": "Anglet",
+      "totalPrice": 22,
+      "availableSeats": 1,
+      "automaticAccept": true,
+      "user": {
+        "id": "8c8911b3-1a8b-4197-acac-86100b973b80"
+      }
+    }
+  },
+  "query": "mutation createJourney($data: CreateJourneyInput!) {\n  createJourney(data: $data) {\n    id\n    origin\n    destination\n    totalPrice\n    departure_time\n    arrival_time\n    availableSeats\n    status\n    automaticAccept\n    createdAt\n    updatedAt\n    user {\n      id\n      firstname\n      lastname\n      email\n      password\n      dateOfBirth\n      phoneNumber\n      profilPicture\n      role\n      grade\n      tripsAsPassenger\n      tripsAsDriver\n      status\n      createdAt\n      updatedAt\n    }\n    bookings {\n      id\n      totalPrice\n      departureTime\n      arrivalTime\n      status\n      createdAt\n      updatedAt\n    }\n  }\n}"
 }
