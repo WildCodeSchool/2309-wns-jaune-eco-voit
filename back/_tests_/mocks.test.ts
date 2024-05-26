@@ -1,5 +1,5 @@
 import { ApolloServer } from '@apollo/server'
-import { Query, buildSchemaSync } from 'type-graphql'
+import { buildSchemaSync } from 'type-graphql'
 import UserResolver from '../src/resolvers/user.resolver'
 import { UserEntity } from '../src/entities/user.entity'
 import { addMocksToSchema } from '@graphql-tools/mock'
@@ -18,6 +18,8 @@ import {
 } from './utils/requetes/queries/user.queries'
 import { ResponseListJourneys } from './utils/types/journeys.type'
 import { LIST_JOURNEYS } from './utils/requetes/queries/journeys.queries'
+import JourneyResolver from '../src/resolvers/journey.resolver'
+import { arrayContains } from 'class-validator'
 
 let server: ApolloServer
 
@@ -39,7 +41,7 @@ const mapJourneyData = (dataArray: Omit<JourneyEntity, 'user'>[]) => {
 }
 
 const baseSchema = buildSchemaSync({
-    resolvers: [UserResolver],
+    resolvers: [UserResolver, JourneyResolver],
     authChecker: () => true,
 })
 
@@ -50,8 +52,6 @@ beforeAll(async () => {
             listUsers() {
                 return usersData
             },
-        },
-        Query: {
             listJourneys() {
                 return journeysData
             },
@@ -77,15 +77,15 @@ beforeAll(async () => {
 })
 
 describe('Test sur les Users', () => {
-    // it('should return users list', async () => {
-    //     const response = await server.executeOperation<ResponseListUsers>({
-    //         query: LIST_USERS,
-    //     })
-    //     assert(response.body.kind === 'single')
-    //     expect(response.body.singleResult.data).toEqual({
-    //         listUsers: mapUserData(usersData),
-    //     })
-    // })
+    it('should return users list', async () => {
+        const response = await server.executeOperation<ResponseListUsers>({
+            query: LIST_USERS,
+        })
+        assert(response.body.kind === 'single')
+        expect(response.body.singleResult.data).toEqual({
+            listUsers: mapUserData(usersData),
+        })
+    })
 
     it('should find a user by its id', async () => {
         const response = await server.executeOperation<ResponseFindUserById>({
@@ -107,9 +107,19 @@ describe('Test sur les Users', () => {
             query: LIST_JOURNEYS,
         })
         assert(response.body.kind === 'single')
-        console.log(JSON.stringify(response.body.singleResult))
-        expect(response.body.singleResult.data).toEqual({
-            listJourneys: mapJourneyData(journeysData),
-        })
+        const responseData = response.body.singleResult.data?.listJourneys
+
+        const reduces = responseData?.reduce<
+            Omit<
+                JourneyEntity,
+                'departure_time' | 'arrival_time' | 'createdAt'
+            >[]
+        >((acc, curr) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { arrival_time, createdAt, departure_time, ...rest } = curr
+            return [rest, ...acc]
+        }, [])
+
+        expect(arrayContains(reduces, mapJourneyData(journeysData)))
     })
 })

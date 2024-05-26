@@ -67,6 +67,11 @@ export default function Home() {
       <h3 className="font-medium uppercase tracking-widest">Ecovoit</h3>
 
       <SearchBar onSearchJourneys={handleOnSearchJourneys} />
+<<<<<<< HEAD
+=======
+
+      {loading && <CircularProgress />}
+>>>>>>> 75068acc (tests)
 
       {journeys &&
         (journeys.length === 0 ? (

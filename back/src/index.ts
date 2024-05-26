@@ -33,7 +33,8 @@ export interface Payload {
 }
 
 const app = express()
-const httpServer = http.createServer(app) // on créer un server HTTP à partir de la bibliothéque d'express, pour avoir Req et Res (pour les middlwares)
+// Création d'un serveur HTTP à partir de la bibliothéque d'express
+const httpServer = http.createServer(app)
 
 async function main() {
     const schema = await buildSchema({
@@ -48,21 +49,25 @@ async function main() {
         authChecker: customAuthChecker,
     })
 
+<<<<<<< HEAD
     // la variable job est necessaire pour créé le cron mais n'est jamais appelée a proprement parlé dans le code
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const job = schedule.scheduleJob('*/30 * * * *', async function () {
         await changeJourneysStatus()
     })
 
+=======
+    // Création du serveur Apollo
+>>>>>>> 75068acc (tests)
     const server = new ApolloServer<MyContext>({
         schema,
-        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })], // Informe Apollo Server, qu'il utilisera le server Http créé plus haut
+        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
     })
-    // lancement du server
+    // Lancement du server
     await server.start()
+
     app.use(
         '/',
-        // autorise toutes les origines à accéder à l'API. En spécifiant { origin: "*" }, cela permet à n'importe quel domaine d'accéder à l'API
         cors<cors.CorsRequest>({
             origin: [
                 'http://localhost:3002',
@@ -75,10 +80,11 @@ async function main() {
             credentials: true,
         }),
         express.json(),
+
         // intégre Apollo Server à Express
         expressMiddleware(server, {
             // On passe dans ce callback à chaque requette
-            // On retourne un objet un objet contenant res et req à tous les resolvers
+            // On retourne un objet contenant res et req à tous les resolvers
             context: async ({ req, res }) => {
                 let user: UserEntity | null = null
 
