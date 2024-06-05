@@ -25,6 +25,14 @@ services:
         # La db doit avoir été démarrer et etre considérée comme healthy (voir health check dans db service)
         condition: service_healthy
 
+  images:
+    build: ./images
+    ports:
+      - 8000:8000
+    volumes:
+      - ./images/src:/app/src
+      - ./images/uploads:/app/uploads
+
   db:
     # on utilise l'image officiel de postgres
     image: postgres:15
@@ -90,6 +98,7 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
       - NEXT_PUBLIC_APOLLO_CLIENT_URI=http://localhost:4000
+      - NEXT_PUBLIC_IMAGES_URI=http://localhost:8000
     # depends_on:
     #   backend:
     #     condition: service_healthy

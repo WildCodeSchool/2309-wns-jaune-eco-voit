@@ -13,12 +13,15 @@ const storage = multer.diskStorage({
     cb(null, path.join(__dirname, "../uploads"));
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
+    cb(null, Date.now() + "-" + encodeURI(file.originalname.replace(" ", "_")));
   },
 });
 
 const upload = multer({ storage: storage });
 // on instancie multer en lui passant le middleware de stockage
+app.get("/", (req: any, res: Response) => {
+  res.send("Hello World!");
+});
 
 app.post("/profile", upload.single("avatar"), (req: any, res: Response) => {
   fs.readFile(req.file.path, (err, content) => {
