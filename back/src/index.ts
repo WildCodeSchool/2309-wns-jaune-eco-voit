@@ -58,6 +58,7 @@ async function main() {
                 'https://studio.apollographql.com',
                 'https://preprod.0923-jaune-1.wns.wilders.dev',
                 'https://0923-jaune-1.wns.wilders.dev',
+                'http://localhost:8000/profile',
                 'http://localhost:8000',
             ],
             credentials: true,

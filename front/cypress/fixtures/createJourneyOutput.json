@@ -20,7 +20,7 @@
         "password": "$argon2id$v=19$m=65536,t=3,p=4$TSThDnyEvdVmshDXvghITg$DDzMETdtytL3ox3nFW9PHAZ+u5f5s/YmK4YSTW7qL78",
         "dateOfBirth": "2024-03-12T22:41:36.000Z",
         "phoneNumber": "0658553641",
-        "profilPicture": null,
+        "profilePicture": null,
         "role": "USER",
         "grade": "BEGINNER",
         "tripsAsPassenger": 0,

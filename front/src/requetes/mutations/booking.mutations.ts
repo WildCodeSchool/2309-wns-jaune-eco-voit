@@ -18,7 +18,7 @@ export const CREATE_BOOKING = gql`
         password
         dateOfBirth
         phoneNumber
-        profilePicture        
+        profilePicture
         role
         grade
         tripsAsPassenger

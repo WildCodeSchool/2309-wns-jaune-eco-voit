@@ -76,6 +76,35 @@ export default class UserResolver {
     //     return await new UsersService().findUserById(email)
     // }
 
+    @Authorized()
+    @Query(() => UserProfile)
+    async getProfile(
+        @Ctx()
+        {
+            user: {
+                firstname,
+                lastname,
+                phoneNumber,
+                profilePicture,
+                email,
+                role,
+                dateOfBirth,
+                password,
+            },
+        }: MyContext & { user: UserEntity } //l'union de type permet d'indiquer que user ne sera jamais nul ici, grâce au @Authorized
+    ): Promise<UserProfile> {
+        return {
+            firstname,
+            lastname,
+            phoneNumber,
+            profilePicture,
+            email,
+            role,
+            dateOfBirth,
+            password,
+        }
+    }
+
     @Query(() => UserEntity)
     async login(
         @Arg('data') { email, password }: LoginInput,

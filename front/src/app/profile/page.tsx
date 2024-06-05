@@ -2,18 +2,21 @@
 import React, { useContext, useState } from "react";
 import Image from "next/image";
 import { AuthContext } from "@/context/authContext";
-import { useUpdateUserMutation } from "@/types/graphql";
+import { GetProfileDocument, useUpdateUserMutation } from "@/types/graphql";
 import { Button } from "@mui/material";
 
 const UploadPicture = () => {
   const [preview, setPreview] = useState<string>("");
 
   const { getUser: userId } = useContext(AuthContext);
-  const [updateProfilePicture, { data }] = useUpdateUserMutation({
+
+  const [updateProfilePicture] = useUpdateUserMutation({
     onCompleted: () => {
-      console.log("data", data);
+      setPreview("");
     },
+    refetchQueries: [{ query: GetProfileDocument }],
   });
+
   const handlePreviewAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -22,9 +25,10 @@ const UploadPicture = () => {
 
   const handleFileUpload = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // if (!preview) return;
+
     const formData = new FormData(e.currentTarget);
     const avatar = formData.get("avatar") as File;
+
     if (!avatar.name || !userId) return;
 
     fetch(`${process.env.NEXT_PUBLIC_IMAGES_URI}/profile`, {
@@ -34,13 +38,10 @@ const UploadPicture = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
-          const fileUrl = `${process.env.NEXT_PUBLIC_IMAGES_URI}${data.filename}`;
-          console.log("fileUrl", fileUrl);
-          console.log("data", data);
-          console.log("userId", userId);
+          const fileUrl = `${process.env.NEXT_PUBLIC_IMAGES_URI}/avatar/${data.filename}`;
+          // Update user profile with new picture
           updateProfilePicture({
             variables: { data: { id: userId, profilePicture: fileUrl } },
-            // TODO vérifier : peut être que c'est profilPicture sans le "e"
           });
         }
       })
@@ -50,7 +51,7 @@ const UploadPicture = () => {
   return (
     <div className="flex flex-col align-center justify-center gap-4 w-full">
       {
-        //To show the preview
+        //To preview the file thumbnail
         preview && <Image src={preview} alt="avatar" height={200} width={200} />
       }
       <form

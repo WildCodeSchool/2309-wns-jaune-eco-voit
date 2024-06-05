@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
     cb(null, path.join(__dirname, "../uploads"));
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + encodeURI(file.originalname.replace(" ", "_")));
+    cb(null, Date.now() + "-" + file.originalname);
   },
 });
 
@@ -28,9 +28,7 @@ app.post("/profile", upload.single("avatar"), (req: any, res: Response) => {
     if (err) {
       res.status(500).send({ error: err });
     }
-    res
-      .status(201)
-      .send({ status: "success", filename: "/avatar/" + req.file.filename });
+    res.status(201).send({ status: "success", filename: req.file.filename });
   });
 });
 

@@ -25,15 +25,24 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { AuthContext } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { useGetProfileQuery } from "@/types/graphql";
 
 const Header = () => {
   const router = useRouter();
+
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
   const [loggedUser, setLoggedUser] = useState<string | undefined>(undefined);
 
   const { user, updateUser } = useContext(AuthContext);
+
+  const {
+    data: userDatas,
+    loading,
+    error,
+  } = useGetProfileQuery({
+    fetchPolicy: "network-only",
+  });
 
   useEffect(() => {
     setLoggedUser(Cookies.get("id") ?? "");
@@ -101,7 +110,12 @@ const Header = () => {
               >
                 <Avatar
                   alt="profile picture"
-                  src="https://www.santelog.com/sites/santelog.com/www.santelog.com/files/styles/large/public/images/accroche/adobestock_276208008_lama.jpeg?itok=d2steNiv"
+                  src={
+                    userDatas?.getProfile?.profilePicture === null ||
+                    userDatas?.getProfile?.profilePicture === ""
+                      ? "https://www.santelog.com/sites/santelog.com/www.santelog.com/files/styles/large/public/images/accroche/adobestock_276208008_lama.jpeg?itok=d2steNiv"
+                      : userDatas?.getProfile?.profilePicture
+                  }
                 />
               </IconButton>
             </Tooltip>
