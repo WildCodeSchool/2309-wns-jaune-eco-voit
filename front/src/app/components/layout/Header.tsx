@@ -32,7 +32,7 @@ const Header = () => {
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const [loggedUser, setLoggedUser] = useState<string | undefined>(undefined);
+  const [loggedUser, setLoggedUser] = useState<string>();
 
   const { getUserId, updateUser } = useContext(AuthContext);
 

@@ -55,7 +55,11 @@ export default function JourneyMessages({
   };
 
   if (messagesLoading) {
-    return <CircularProgress />;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <CircularProgress />
+      </div>
+    );
   }
 
   if (!messagesData) {
@@ -84,14 +88,14 @@ export default function JourneyMessages({
             <div className="text-center text-gray-500">Pas de messages</div>
           )}
         </div>
+        <JourneyMessagePost
+          onChangeMessageValue={setNewMessage}
+          isPostMessageLoading={postMessageLoading}
+          isPostNewMessageError={!!postMessageError}
+          messageValue={newMessage}
+          onPostNewMessage={handlePostMessage}
+        />
       </Stack>
-      <JourneyMessagePost
-        onChangeMessageValue={setNewMessage}
-        isPostMessageLoading={postMessageLoading}
-        isPostNewMessageError={!!postMessageError}
-        messageValue={newMessage}
-        onPostNewMessage={handlePostMessage}
-      />
     </>
   );
 }
