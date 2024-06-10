@@ -33,10 +33,30 @@ export default class UserResolver {
     async getProfile(
         @Ctx()
         {
-            user: { firstname, lastname, phoneNumber, profilePicture, email, role, dateOfBirth, password },
+            user: {
+                firstname,
+                lastname,
+                phoneNumber,
+                profilePicture,
+                email,
+                role,
+                dateOfBirth,
+                password,
+                id,
+            },
         }: MyContext & { user: UserEntity } //l'union de type permet d'indiquer que user ne sera jamais nul ici, grâce au @Authorized
     ): Promise<UserProfile> {
-        return { firstname, lastname, phoneNumber, profilePicture, email, role, dateOfBirth, password }
+        return {
+            firstname,
+            lastname,
+            phoneNumber,
+            profilePicture,
+            email,
+            role,
+            dateOfBirth,
+            password,
+            id,
+        }
     }
 
     // @Authorized()

@@ -27,6 +27,7 @@ import {
     IsString,
     Length,
 } from 'class-validator'
+import { JourneyMessageEntity } from './journeyMessage.entity'
 
 export type Role = 'USER' | 'ADMIN'
 export type Grade = 'BEGINNER' | 'CONFIRMED' | 'AMBASSADOR'
@@ -38,11 +39,10 @@ export class UserEntity {
     @BeforeUpdate()
     @BeforeInsert()
     protected async hashPassword() {
-        if (!this.password.startsWith("$argon2")){
-        this.password = await argon2.hash(this.password)
+        if (!this.password.startsWith('$argon2')) {
+            this.password = await argon2.hash(this.password)
         }
     }
-
 
     @Field(() => ID)
     @PrimaryGeneratedColumn('uuid')
@@ -161,6 +161,13 @@ export class UserEntity {
     @OneToMany(() => BookingEntity, (b) => b.user)
     bookings?: BookingEntity[]
 
+    @Field(() => [JourneyMessageEntity])
+    @OneToMany(
+        () => JourneyMessageEntity,
+        (journeyMessage) => journeyMessage.user
+    )
+    journeyMessages?: JourneyMessageEntity[]
+
     // @Field(() => [VehiculeEntity])
     // @OneToMany(() => VehiculeEntity, (v) => v.user)
     // vehicules: VehiculeEntity[];
@@ -172,6 +179,9 @@ export class UserEntity {
 
 @ObjectType()
 export class UserProfile {
+    @Field(() => ID)
+    id: string
+
     @Field()
     firstname: string
 

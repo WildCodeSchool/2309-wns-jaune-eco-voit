@@ -2,76 +2,135 @@
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 dayjs.locale("fr");
-import { useFindJourneyByIdQuery } from "@/types/graphql";
+import { useFindJourneyByIdQuery, useFindUserByIdQuery } from "@/types/graphql";
 
-import { Stack, Typography, Grid, Divider, Button } from "@mui/material";
+import {
+  Stack,
+  Typography,
+  Grid,
+  Divider,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 
 import AvatarJourney from "@/app/components/Avatar/AvatarJouney";
 import JourneyTimeline from "@/app/components/JourneyCard/JourneyTimeline";
 import VerifiedUserOutlinedIcon from "@mui/icons-material/VerifiedUser";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
+import { useContext } from "react";
+import { AuthContext } from "@/context/authContext";
+import JourneyMessages from "@/app/components/JourneyMessages/JourneyMessages";
 
 export default function Page({ params }: { params: { id: string } }) {
-  const { data, loading, error } = useFindJourneyByIdQuery({
+  const { id: journeyId } = params;
+
+  const { getUser: userId } = useContext(AuthContext);
+
+  const {
+    data: journeyData,
+    loading: journeyLoading,
+    error: journeyError,
+  } = useFindJourneyByIdQuery({
     variables: {
-      findJourneyById: params.id,
+      findJourneyById: journeyId,
     },
   });
 
-  return (
-    <Stack className="h-full w-10/12" alignSelf={"center"}>
-      {loading && <div>Loading...</div>}
-      {error && <div>Error: {error.message}</div>}
-      {data && (
-        <Stack direction={"column"} justifyContent={"start"} height={"100vh"}>
-          <Stack height={"25vh"} justifyContent={"center"}>
-            <Typography
-              variant="h4"
-              component="h1"
-              align="center"
-              height={"10vh"}
-            >
-              {dayjs(data?.findJourneyById.departure_time).format(
-                "dddd D MMMM YYYY"
-              )}
-            </Typography>
-          </Stack>
+  const { data: userData } = useFindUserByIdQuery({
+    variables: {
+      findUserById: userId || "",
+    },
+  });
 
-          <Grid container>
-            <Grid item direction={"column"} xs={12} md={6} spacing={20}>
+  const isUserAllowedToAccessMessage = () => {
+    const journey = journeyData?.findJourneyById;
+    const userConnected = userData?.findUserById;
+
+    const isDriver = journey?.user.id === userId;
+
+    const journeyBookingIds = new Set(
+      journey?.bookings?.map((booking) => booking.id)
+    );
+    const isPassenger = userConnected?.bookings?.some((booking) =>
+      journeyBookingIds.has(booking.id)
+    );
+
+    return isDriver || isPassenger;
+  };
+
+  if (journeyLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <CircularProgress />
+      </div>
+    );
+  }
+
+  return (
+    <Stack className="h-full w-10/12 mx-auto">
+      {journeyError && <div>Error: {journeyError.message}</div>}
+      {journeyData && (
+        <Stack direction="column" alignItems="center" spacing={4}>
+          <Typography
+            variant="h4"
+            component="h1"
+            align="center"
+            sx={{ height: "10vh", my: 4 }}
+          >
+            {dayjs(journeyData?.findJourneyById.departure_time).format(
+              "dddd D MMMM YYYY"
+            )}
+          </Typography>
+
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={5}>
               <Divider />
               <Stack
-                direction={"row"}
-                justifyContent={"space-between"}
+                direction="row"
+                justifyContent="space-between"
                 sx={{ my: 4 }}
               >
                 <Typography variant="h6" component="p">
                   Prix total pour 1 passager
                 </Typography>
                 <Typography variant="h6" component="p">
-                  {data?.findJourneyById.totalPrice} €
+                  {journeyData?.findJourneyById.totalPrice} €
                 </Typography>
               </Stack>
-              <Divider sx={{ marginBottom: 4 }} />
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                sx={{ my: 4 }}
+              >
+                <Typography variant="h6" component="p">
+                  Nombre de places disponibles
+                </Typography>
+                <Typography variant="h6" component="p">
+                  {journeyData?.findJourneyById.availableSeats}
+                </Typography>
+              </Stack>
+              <Divider />
               <AvatarJourney
-                firstname={data.findJourneyById.user.firstname}
+                firstname={journeyData.findJourneyById.user.firstname}
                 rating={2}
-                profilePicture={data.findJourneyById.user.profilPicture!}
+                profilePicture={
+                  journeyData.findJourneyById.user.profilePicture!
+                }
               />
-              <Stack direction={"row"} spacing={3} marginY={8}>
+              {/* <Stack direction="row" spacing={3} marginY={8}>
                 <VerifiedUserOutlinedIcon />
-                <p className="text-xl text-dark60">Profil Vérifié</p>
+                <Typography variant="body1" className="text-dark60">
+                  Profil Vérifié
+                </Typography>
               </Stack>
-              <Stack direction={"row"} spacing={3} marginY={4}>
+              <Stack direction="row" spacing={3} marginY={4}>
                 <CalendarMonthOutlinedIcon color="primary" />
-                <p className="text-xl text-dark60">
+                <Typography variant="body1" className="text-dark60">
                   Annule rarement ses trajets
-                </p>
-              </Stack>
-
-              <Divider sx={{ marginY: 8 }} />
-
+                </Typography>
+              </Stack> */}
+              <Divider />
               <Button
                 variant="contained"
                 fullWidth
@@ -79,13 +138,13 @@ export default function Page({ params }: { params: { id: string } }) {
                 sx={{ borderRadius: "20px" }}
                 size="large"
               >
-                Contacter {data.findJourneyById.user.firstname}
+                Contacter {journeyData.findJourneyById.user.firstname}
               </Button>
             </Grid>
             <Grid
               item
               xs={12}
-              md={6}
+              md={7}
               sx={{
                 marginY: {
                   xs: 8,
@@ -94,21 +153,34 @@ export default function Page({ params }: { params: { id: string } }) {
                 minHeight: "400px",
               }}
             >
-              <h6
-                className={
-                  "text-center text-3xl mb-10 font-bold text-primary-500"
-                }
+              <Typography
+                variant="h6"
+                align="center"
+                sx={{
+                  mb: 4,
+                  fontSize: "2rem",
+                  fontWeight: "bold",
+                  color: "primary.main",
+                }}
               >
                 Détail du trajet
-              </h6>
+              </Typography>
               <JourneyTimeline
-                departureTime={data.findJourneyById.departure_time}
-                arrivalTime={data.findJourneyById.arrival_time}
-                origin={data.findJourneyById.origin}
-                destination={data.findJourneyById.destination}
+                departureTime={journeyData.findJourneyById.departure_time}
+                arrivalTime={journeyData.findJourneyById.arrival_time}
+                origin={journeyData.findJourneyById.origin}
+                destination={journeyData.findJourneyById.destination}
               />
             </Grid>
           </Grid>
+
+          {userId && isUserAllowedToAccessMessage() && (
+            <Grid container spacing={2} alignItems="center" sx={{ mt: 4 }}>
+              <Grid item xs={12}>
+                <JourneyMessages userId={userId} journeyId={journeyId} />
+              </Grid>
+            </Grid>
+          )}
         </Stack>
       )}
     </Stack>

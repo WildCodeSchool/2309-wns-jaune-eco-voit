@@ -21,6 +21,7 @@ import { UserEntity } from './user.entity'
 import { BookingEntity } from './booking.entity'
 import { IsBoolean, IsDate, IsInt, Length, Max, Min } from 'class-validator'
 import { Float } from 'type-graphql'
+import { JourneyMessageEntity } from './journeyMessage.entity'
 
 export type JourneyStatus = 'PLANNED' | 'CANCELLED' | 'DONE'
 
@@ -87,6 +88,13 @@ export class JourneyEntity {
     @Field(() => [BookingEntity])
     @OneToMany(() => BookingEntity, (b) => b.journey)
     bookings?: BookingEntity[]
+
+    @Field(() => [JourneyMessageEntity], { nullable: true })
+    @OneToMany(
+        () => JourneyMessageEntity,
+        (journeyMessage) => journeyMessage.journey
+    )
+    journeyMessages?: JourneyMessageEntity[]
 
     @Field()
     @Column({

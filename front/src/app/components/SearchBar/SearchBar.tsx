@@ -122,8 +122,18 @@ const SearchBar = ({ onSearchJourneys }: SearchJourneysProps) => {
             width: "200px",
             border: "0",
             height: "auto",
+            "& .MuiOutlinedInput-root": {
+              borderRadius: 0,
+              border: "none",
+            },
+            "& .MuiOutlinedInput-notchedOutline": {
+              border: "none",
+            },
+            "& .MuiInputBase-input": {
+              borderRadius: 0,
+              border: "0",
+            },
           }}
-          slots={{ textField: StyledTextField }}
         />
         <Divider flexItem orientation="vertical" />
         <FormControl sx={{ width: "100px", border: 0, margin: "0 2em" }}>

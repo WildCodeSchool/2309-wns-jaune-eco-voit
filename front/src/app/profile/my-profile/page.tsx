@@ -15,13 +15,21 @@ import {
 } from "@mui/material";
 import React, { useContext, useEffect } from "react";
 import { useState } from "react";
-import { GetProfileDocument, useGetProfileQuery, useUpdateUserMutation } from "@/types/graphql";
+import {
+  GetProfileDocument,
+  useGetProfileQuery,
+  useUpdateUserMutation,
+} from "@/types/graphql";
 import { AuthContext } from "@/context/authContext";
 
 function MyProfile() {
-  const { data, loading, error } = useGetProfileQuery({fetchPolicy: "network-only"}); // fetchPolicy: "network-only" : permet d'afficher les nouvelles informations enregistrer sans rafraichir la page
-  const [updateUser] = useUpdateUserMutation({refetchQueries: [{query: GetProfileDocument}]});
-  const {getUser} = useContext(AuthContext);
+  const { data, loading, error } = useGetProfileQuery({
+    fetchPolicy: "network-only",
+  }); // fetchPolicy: "network-only" : permet d'afficher les nouvelles informations enregistrer sans rafraichir la page
+  const [updateUser] = useUpdateUserMutation({
+    refetchQueries: [{ query: GetProfileDocument }],
+  });
+  const { getUser: userId } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
   const [open, setOpen] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
@@ -30,13 +38,13 @@ function MyProfile() {
   const [updateInfos, setUpdateInfos] = useState<any>({});
 
   useEffect(() => {
-    if(data){
-      setUpdateInfos(data?.getProfile)
+    if (data) {
+      setUpdateInfos(data?.getProfile);
     }
-}, [data]);
+  }, [data]);
 
-console.log("updateInfos", updateInfos)
-  
+  console.log("updateInfos", updateInfos);
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -55,37 +63,39 @@ console.log("updateInfos", updateInfos)
 
   const handleSave = () => {
     updateUser({
-        variables: {data: {...updateInfos, id:getUser}}, onCompleted(data, clientOptions) {
-          setIsEditing(false); // une fois la mise à jour terminée, désactiver le mode édition
-        },
-      })
+      variables: { data: { ...updateInfos, id: userId } },
+      onCompleted(data, clientOptions) {
+        setIsEditing(false); // une fois la mise à jour terminée, désactiver le mode édition
+      },
+    });
     setIsEditing(false);
   };
 
-  const handlePasswordSave = (e: React.FormEvent<HTMLFormElement>) => {    
+  const handlePasswordSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if(newPassword === confirmNewPassword){
+    if (newPassword === confirmNewPassword) {
       updateUser({
-        variables: {data: {...updateInfos, id: getUser, password: newPassword}}, 
+        variables: {
+          data: { ...updateInfos, id: userId, password: newPassword },
+        },
         onCompleted(data, clientOptions) {
           console.log("Mot de passe mis à jour");
           handleClose();
         },
-      })
-    }else{
-      console.log("Les mots de passe ne sont pas identiques");}
+      });
+    } else {
+      console.log("Les mots de passe ne sont pas identiques");
+    }
     setOpen(false);
   };
 
-  if(loading){
-    return <div>Loading ...</div>
+  if (loading) {
+    return <div>Loading ...</div>;
   }
 
-  if(error){
-    return <div>Error</div>
+  if (error) {
+    return <div>Error</div>;
   }
-  
-
 
   return (
     <div className="home_page flex flex-col gap-6  bg-primary10 py-10">
@@ -96,7 +106,10 @@ console.log("updateInfos", updateInfos)
         <h3 className="font-medium uppercase tracking-widest">
           {data?.getProfile?.firstname}
         </h3>
-        <Tooltip title="Profile_picture" className="flex flex-col justify-r items-center py-10" >
+        <Tooltip
+          title="Profile_picture"
+          className="flex flex-col justify-r items-center py-10"
+        >
           <IconButton color="inherit">
             <Avatar
               alt="profile picture"
@@ -127,39 +140,72 @@ console.log("updateInfos", updateInfos)
             <FormControl className="FormControl">
               <FormLabel>Prenom :</FormLabel>
               <Input
-              sx={{marginTop:"0.5em!important"}}
+                sx={{ marginTop: "0.5em!important" }}
                 autoFocus
                 value={updateInfos.firstname}
-                onChange={(e) => setUpdateInfos((prevState: any) => ({...prevState, firstname: e.target.value}))}
+                onChange={(e) =>
+                  setUpdateInfos((prevState: any) => ({
+                    ...prevState,
+                    firstname: e.target.value,
+                  }))
+                }
               />
             </FormControl>
 
-            <FormControl className="FormControl" >
+            <FormControl className="FormControl">
               <FormLabel>Nom :</FormLabel>
-              <Input 
-              value={updateInfos.lastname} sx={{marginTop:"0.5em!important"}}
-              onChange={(e) => setUpdateInfos((prevState: any) => ({...prevState, lastname: e.target.value}))} />
+              <Input
+                value={updateInfos.lastname}
+                sx={{ marginTop: "0.5em!important" }}
+                onChange={(e) =>
+                  setUpdateInfos((prevState: any) => ({
+                    ...prevState,
+                    lastname: e.target.value,
+                  }))
+                }
+              />
             </FormControl>
 
             <FormControl className="FormControl">
               <FormLabel>E-mail :</FormLabel>
-              <Input 
-              onChange={(e) => setUpdateInfos((prevState: any) => ({...prevState, email: e.target.value}))} 
-              value={updateInfos.email} sx={{marginTop:"0.5em!important"}}/>
+              <Input
+                onChange={(e) =>
+                  setUpdateInfos((prevState: any) => ({
+                    ...prevState,
+                    email: e.target.value,
+                  }))
+                }
+                value={updateInfos.email}
+                sx={{ marginTop: "0.5em!important" }}
+              />
             </FormControl>
 
             <FormControl className="FormControl">
               <FormLabel>Date de naissance :</FormLabel>
-              <Input 
-              value={updateInfos.dateOfBirth} sx={{marapinTop:"0.5em!important"}}
-              onChange={(e) => setUpdateInfos((prevState: any) => ({...prevState, dateOfBirth: e.target.value}))} />
+              <Input
+                value={updateInfos.dateOfBirth}
+                sx={{ marapinTop: "0.5em!important" }}
+                onChange={(e) =>
+                  setUpdateInfos((prevState: any) => ({
+                    ...prevState,
+                    dateOfBirth: e.target.value,
+                  }))
+                }
+              />
             </FormControl>
 
             <FormControl className="">
               <FormLabel>Numéro de téléphone :</FormLabel>
-              <Input 
-              onChange={(e) => setUpdateInfos((prevState: any) => ({...prevState, phoneNumber: e.target.value}))}
-              value={updateInfos.phoneNumber} sx={{marginTop:"0.5em!important"}} />
+              <Input
+                onChange={(e) =>
+                  setUpdateInfos((prevState: any) => ({
+                    ...prevState,
+                    phoneNumber: e.target.value,
+                  }))
+                }
+                value={updateInfos.phoneNumber}
+                sx={{ marginTop: "0.5em!important" }}
+              />
             </FormControl>
 
             <div className="flex gap-4 mt-8 ModalPassword">
@@ -211,11 +257,13 @@ console.log("updateInfos", updateInfos)
                 <Input
                   type="password"
                   value={confirmNewPassword}
-                  onChange={(e) => setConfirmNewPassword(e.target.value )}
+                  onChange={(e) => setConfirmNewPassword(e.target.value)}
                   required
                 />
               </FormControl>
-              <Button type="submit" onClick={handleSave}>Enregistrer</Button>
+              <Button type="submit" onClick={handleSave}>
+                Enregistrer
+              </Button>
               <Button onClick={handleClose}>Annuler</Button>
             </Stack>
           </form>
