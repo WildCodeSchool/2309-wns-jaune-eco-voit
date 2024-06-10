@@ -1,0 +1,35 @@
+{
+  "data": {
+    "createJourney": {
+      "id": "96efab94-d728-4940-8ab0-2bb3de8a2dc6",
+      "origin": "Saint-Caprais-de-Bordeaux",
+      "destination": "Anglet",
+      "totalPrice": 22,
+      "departure_time": "2024-05-20T17:31:04.000Z",
+      "arrival_time": "2024-05-20T19:31:04.000Z",
+      "availableSeats": 1,
+      "status": "[\"PLANNED\"]",
+      "automaticAccept": true,
+      "createdAt": "2024-05-19T17:31:39.409394",
+      "updatedAt": "2024-05-19T17:31:39.409394",
+      "user": {
+        "id": "8c8911b3-1a8b-4197-acac-86100b973b80",
+        "firstname": "olive",
+        "lastname": "gomez",
+        "email": "olive@gmail.com",
+        "password": "$argon2id$v=19$m=65536,t=3,p=4$TSThDnyEvdVmshDXvghITg$DDzMETdtytL3ox3nFW9PHAZ+u5f5s/YmK4YSTW7qL78",
+        "dateOfBirth": "2024-03-12T22:41:36.000Z",
+        "phoneNumber": "0658553641",
+        "profilePicture": null,
+        "role": "USER",
+        "grade": "BEGINNER",
+        "tripsAsPassenger": 0,
+        "tripsAsDriver": 0,
+        "status": "ACTIVE",
+        "createdAt": "2024-03-13T08:44:17.295Z",
+        "updatedAt": "2024-03-13T08:44:17.295Z"
+      },
+      "bookings": []
+    }
+  }
+}

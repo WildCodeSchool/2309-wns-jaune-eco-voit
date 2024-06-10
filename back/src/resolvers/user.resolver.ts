@@ -59,23 +59,6 @@ export default class UserResolver {
         }
     }
 
-    // @Authorized()
-    // @Query(() => UpdateUserPasswordInput)
-    // async updatePassword(
-    //     @Ctx()
-    //     {
-    //         user: { password , email },
-    //     }: MyContext & { user: UserEntity }
-    // ): Promise<UpdateUserPasswordInput> {
-    //     return { password, email }
-    // }
-
-    // @Authorized()
-    // @Query(() => UserEntity)
-    // async findUserByEmail(@Arg('email') email: string) {
-    //     return await new UsersService().findUserById(email)
-    // }
-
     @Query(() => UserEntity)
     async login(
         @Arg('data') { email, password }: LoginInput,

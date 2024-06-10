@@ -94,7 +94,6 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
       fetch(`/api/autocomplete?address=${encoded}`)
         .then((res) => res.json())
         .then((data: ApiResponse) => {
-          console.log(data);
           setOptions(data.features.map((feature) => feature.properties.label));
           setApiResponse(data.features);
           setLoading(false);

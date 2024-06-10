@@ -25,29 +25,42 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { AuthContext } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import { useGetProfileLazyQuery, useGetProfileQuery } from "@/types/graphql";
 
 const Header = () => {
   const router = useRouter();
+
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
   const [loggedUser, setLoggedUser] = useState<string | undefined>(undefined);
+  const [userUserPicture, setUserUserPicture] = useState<string | undefined>(
+    undefined
+  );
+  const { getUser, updateUser } = useContext(AuthContext);
 
-  const { user, updateUser } = useContext(AuthContext);
+  const [getUserDatas, { data, loading, error }] = useGetProfileLazyQuery({
+    fetchPolicy: "network-only", // Used for first execution
+    nextFetchPolicy: "cache-first", // Used for subsequent executions
+  });
+
+  useEffect(() => {
+    if (!loading && !error && data) {
+      setUserUserPicture(data?.getProfile?.profilePicture ?? undefined);
+    }
+  }, [data, loading, error]);
 
   useEffect(() => {
     setLoggedUser(Cookies.get("id") ?? "");
-  }, [user]);
+  }, [getUser]);
 
   useEffect(() => {
-    const email = Cookies.get("email") ?? ""; // Possible d'utiliser dans le menu
-    const role = Cookies.get("role") ?? "USER"; // Possible d'utiliser pour un menu admin
     const id = Cookies.get("id") ?? "";
-    if (!user && id) {
+    if (!getUser && id) {
       updateUser(id);
     }
-    setLoggedUser(user?.toString());
-  }, [user, updateUser]);
+    getUserDatas();
+    setLoggedUser(getUser?.toString());
+  }, [getUser, updateUser]);
 
   const handleCloseMenu = () => {
     setAnchorEl(null);
@@ -91,7 +104,6 @@ const Header = () => {
               <AddCircleOutlineOutlinedIcon />
               <p className="font-medium text-sm">Publier un trajet</p>
             </Button>
-
             <Tooltip title="Profile">
               <IconButton
                 onClick={(e) => {
@@ -101,7 +113,11 @@ const Header = () => {
               >
                 <Avatar
                   alt="profile picture"
-                  src="https://www.santelog.com/sites/santelog.com/www.santelog.com/files/styles/large/public/images/accroche/adobestock_276208008_lama.jpeg?itok=d2steNiv"
+                  src={
+                    !userUserPicture
+                      ? "https://www.santelog.com/sites/santelog.com/www.santelog.com/files/styles/large/public/images/accroche/adobestock_276208008_lama.jpeg?itok=d2steNiv"
+                      : userUserPicture
+                  }
                 />
               </IconButton>
             </Tooltip>

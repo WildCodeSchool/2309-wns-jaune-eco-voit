@@ -42,7 +42,6 @@ const DateAndTimePicker = ({
           timezone="system"
           value={journeyData.departure_date}
           onChange={(newValue) => {
-            console.log("newValue", newValue);
             if (newValue) {
               setJourneyData((prevState) => ({
                 ...prevState,

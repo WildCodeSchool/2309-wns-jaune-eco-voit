@@ -21,17 +21,20 @@ import {
   useUpdateUserMutation,
 } from "@/types/graphql";
 import { AuthContext } from "@/context/authContext";
+import UploadPofilePicture from "../components/UploadPofilePicture";
 
 function MyProfile() {
   const { data, loading, error } = useGetProfileQuery({
-    fetchPolicy: "network-only",
-  }); // fetchPolicy: "network-only" : permet d'afficher les nouvelles informations enregistrer sans rafraichir la page
+    fetchPolicy: "network-only", // Used for first execution:  : permet d'afficher les nouvelles informations enregistrer sans rafraichir la page
+    nextFetchPolicy: "cache-first", // Used for subsequent executions
+  });
   const [updateUser] = useUpdateUserMutation({
     refetchQueries: [{ query: GetProfileDocument }],
   });
   const { getUser: userId } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
   const [open, setOpen] = useState(false);
+  const [isEditPictureModalOpen, setIsEditPictureModalOpen] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -42,8 +45,6 @@ function MyProfile() {
       setUpdateInfos(data?.getProfile);
     }
   }, [data]);
-
-  console.log("updateInfos", updateInfos);
 
   const handleOpen = () => {
     setOpen(true);
@@ -115,7 +116,11 @@ function MyProfile() {
               alt="profile picture"
               sx={{ width: 110, height: 110 }}
               // src={updateInfos.picture}
-              src="https://www.santelog.com/sites/santelog.com/www.santelog.com/files/styles/large/public/images/accroche/adobestock_276208008_lama.jpeg?itok=d2steNiv"
+              src={
+                updateInfos.profilePicture ??
+                "https://www.santelog.com/sites/santelog.com/www.santelog.com/files/styles/large/public/images/accroche/adobestock_276208008_lama.jpeg?itok=d2steNiv"
+              }
+              onClick={() => setIsEditPictureModalOpen(true)}
             />
           </IconButton>
         </Tooltip>
@@ -218,6 +223,28 @@ function MyProfile() {
       </div>
 
       <Modal
+        open={isEditPictureModalOpen}
+        onClose={() => setIsEditPictureModalOpen(false)}
+        aria-labelledby="modal-profile-picture"
+        aria-describedby="Modale d'édition de la photo de profil"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div className="flex flex-col justify-center items-center bg-white p-6 rounded-md">
+          <UploadPofilePicture
+            setIsEditPictureModalOpen={setIsEditPictureModalOpen}
+            profilePictureUrl={
+              updateInfos.profilePicture ??
+              "https://www.santelog.com/sites/santelog.com/www.santelog.com/files/styles/large/public/images/accroche/adobestock_276208008_lama.jpeg?itok=d2steNiv"
+            }
+          />
+        </div>
+      </Modal>
+
+      <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
@@ -228,7 +255,7 @@ function MyProfile() {
           justifyContent: "center",
         }}
       >
-        <Box component="section" sx={{ p: 2, backgroundColor: "#fff" }}>
+        <section className="p-6 rounded-md bg-white">
           <Typography id="modal-modal-title" variant="h5" component="h2">
             Changement de mot de passe
           </Typography>
@@ -267,7 +294,7 @@ function MyProfile() {
               <Button onClick={handleClose}>Annuler</Button>
             </Stack>
           </form>
-        </Box>
+        </section>
       </Modal>
     </div>
   );

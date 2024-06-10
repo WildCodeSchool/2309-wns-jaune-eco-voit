@@ -89,16 +89,16 @@ export const FIND_USER_BY_ID = gql`
 `;
 
 export const GET_PROFILE = gql`
-query GetProfile {
-  getProfile {
-    lastname
-    firstname
-    phoneNumber
-    profilePicture
-    email
-    role
-    dateOfBirth
-    password
+  query GetProfile {
+    getProfile {
+      lastname
+      firstname
+      phoneNumber
+      profilePicture
+      email
+      role
+      dateOfBirth
+      password
+    }
   }
-}
 `;
