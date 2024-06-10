@@ -53,6 +53,12 @@ export type CreateJourneyInput = {
   user: PartialUserInput;
 };
 
+export type CreateJourneyMessageInput = {
+  journey: PartialJourneyInput;
+  message: Scalars['String']['input'];
+  user: PartialUserInput;
+};
+
 export type CreateUserInput = {
   dateOfBirth: Scalars['DateTimeISO']['input'];
   email: Scalars['String']['input'];
@@ -74,9 +80,20 @@ export type JourneyEntity = {
   departure_time: Scalars['DateTimeISO']['output'];
   destination: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  journeyMessages: Array<JourneyMessageEntity>;
   origin: Scalars['String']['output'];
   status: Scalars['String']['output'];
   totalPrice: Scalars['Float']['output'];
+  updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
+  user: UserEntity;
+};
+
+export type JourneyMessageEntity = {
+  __typename?: 'JourneyMessageEntity';
+  createdAt: Scalars['DateTimeISO']['output'];
+  id: Scalars['ID']['output'];
+  journey: JourneyEntity;
+  message: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
   user: UserEntity;
 };
@@ -101,6 +118,7 @@ export type Mutation = {
   cancelBooking: BookingEntity;
   createBooking: BookingEntity;
   createJourney: JourneyEntity;
+  createJourneyMessage: JourneyMessageEntity;
   decreaseAvailableSeats: JourneyEntity;
   increaseAvailableSeats: JourneyEntity;
   register: UserWithoutPassord;
@@ -133,6 +151,11 @@ export type MutationCreateBookingArgs = {
 
 export type MutationCreateJourneyArgs = {
   data: CreateJourneyInput;
+};
+
+
+export type MutationCreateJourneyMessageArgs = {
+  data: CreateJourneyMessageInput;
 };
 
 
@@ -174,6 +197,10 @@ export type PartialBookingInput = {
   id: Scalars['ID']['input'];
 };
 
+export type PartialJourneyInput = {
+  id: Scalars['ID']['input'];
+};
+
 export type PartialUserInput = {
   id: Scalars['ID']['input'];
 };
@@ -187,6 +214,7 @@ export type Query = {
   listBookings: Array<BookingEntity>;
   listBookingsByJourney: Array<BookingEntity>;
   listBookingsByUser: Array<BookingEntity>;
+  listJourneyMessagesByJourney: Array<JourneyMessageEntity>;
   listJourneys: Array<JourneyEntity>;
   listJourneysByUser: Array<JourneyEntity>;
   listUsers: Array<UserEntity>;
@@ -217,6 +245,11 @@ export type QueryListBookingsByJourneyArgs = {
 
 export type QueryListBookingsByUserArgs = {
   userId: Scalars['String']['input'];
+};
+
+
+export type QueryListJourneyMessagesByJourneyArgs = {
+  journeyId: Scalars['String']['input'];
 };
 
 
@@ -276,6 +309,7 @@ export type UserEntity = {
   firstname: Scalars['String']['output'];
   grade?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
+  journeyMessages: Array<JourneyMessageEntity>;
   journeys?: Maybe<Array<JourneyEntity>>;
   lastname: Scalars['String']['output'];
   password: Scalars['String']['output'];
@@ -299,6 +333,7 @@ export type UserProfile = {
   dateOfBirth?: Maybe<Scalars['DateTimeISO']['output']>;
   email: Scalars['String']['output'];
   firstname: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
   lastname: Scalars['String']['output'];
   password: Scalars['String']['output'];
   phoneNumber?: Maybe<Scalars['String']['output']>;
@@ -383,6 +418,13 @@ export type DecreaseAvailableSeatsMutationVariables = Exact<{
 
 export type DecreaseAvailableSeatsMutation = { __typename?: 'Mutation', decreaseAvailableSeats: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, bookings: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }> } };
 
+export type PostJourneyMessageMutationVariables = Exact<{
+  data: CreateJourneyMessageInput;
+}>;
+
+
+export type PostJourneyMessageMutation = { __typename?: 'Mutation', createJourneyMessage: { __typename?: 'JourneyMessageEntity', id: string, createdAt: any, message: string, journey: { __typename?: 'JourneyEntity', journeyMessages: Array<{ __typename?: 'JourneyMessageEntity', id: string }> }, user: { __typename?: 'UserEntity', id: string } } };
+
 export type UpdateUserMutationVariables = Exact<{
   data: UpdateUserInput;
 }>;
@@ -455,6 +497,13 @@ export type FindJourneyByIdQueryVariables = Exact<{
 
 
 export type FindJourneyByIdQuery = { __typename?: 'Query', findJourneyById: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, bookings: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }>, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null } } };
+
+export type ListJourneyMessagesByJourneyQueryVariables = Exact<{
+  journeyId: Scalars['String']['input'];
+}>;
+
+
+export type ListJourneyMessagesByJourneyQuery = { __typename?: 'Query', listJourneyMessagesByJourney: Array<{ __typename?: 'JourneyMessageEntity', createdAt: any, id: string, message: string, journey: { __typename?: 'JourneyEntity', id: string }, user: { __typename?: 'UserEntity', id: string, firstname: string, profilePicture?: string | null } }> };
 
 export type ListUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1130,6 +1179,49 @@ export function useDecreaseAvailableSeatsMutation(baseOptions?: Apollo.MutationH
 export type DecreaseAvailableSeatsMutationHookResult = ReturnType<typeof useDecreaseAvailableSeatsMutation>;
 export type DecreaseAvailableSeatsMutationResult = Apollo.MutationResult<DecreaseAvailableSeatsMutation>;
 export type DecreaseAvailableSeatsMutationOptions = Apollo.BaseMutationOptions<DecreaseAvailableSeatsMutation, DecreaseAvailableSeatsMutationVariables>;
+export const PostJourneyMessageDocument = gql`
+    mutation postJourneyMessage($data: CreateJourneyMessageInput!) {
+  createJourneyMessage(data: $data) {
+    id
+    createdAt
+    journey {
+      journeyMessages {
+        id
+      }
+    }
+    message
+    user {
+      id
+    }
+  }
+}
+    `;
+export type PostJourneyMessageMutationFn = Apollo.MutationFunction<PostJourneyMessageMutation, PostJourneyMessageMutationVariables>;
+
+/**
+ * __usePostJourneyMessageMutation__
+ *
+ * To run a mutation, you first call `usePostJourneyMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePostJourneyMessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [postJourneyMessageMutation, { data, loading, error }] = usePostJourneyMessageMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function usePostJourneyMessageMutation(baseOptions?: Apollo.MutationHookOptions<PostJourneyMessageMutation, PostJourneyMessageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PostJourneyMessageMutation, PostJourneyMessageMutationVariables>(PostJourneyMessageDocument, options);
+      }
+export type PostJourneyMessageMutationHookResult = ReturnType<typeof usePostJourneyMessageMutation>;
+export type PostJourneyMessageMutationResult = Apollo.MutationResult<PostJourneyMessageMutation>;
+export type PostJourneyMessageMutationOptions = Apollo.BaseMutationOptions<PostJourneyMessageMutation, PostJourneyMessageMutationVariables>;
 export const UpdateUserDocument = gql`
     mutation updateUser($data: UpdateUserInput!) {
   updateUser(data: $data) {
@@ -1882,6 +1974,56 @@ export type FindJourneyByIdQueryHookResult = ReturnType<typeof useFindJourneyByI
 export type FindJourneyByIdLazyQueryHookResult = ReturnType<typeof useFindJourneyByIdLazyQuery>;
 export type FindJourneyByIdSuspenseQueryHookResult = ReturnType<typeof useFindJourneyByIdSuspenseQuery>;
 export type FindJourneyByIdQueryResult = Apollo.QueryResult<FindJourneyByIdQuery, FindJourneyByIdQueryVariables>;
+export const ListJourneyMessagesByJourneyDocument = gql`
+    query listJourneyMessagesByJourney($journeyId: String!) {
+  listJourneyMessagesByJourney(journeyId: $journeyId) {
+    createdAt
+    id
+    journey {
+      id
+    }
+    message
+    user {
+      id
+      firstname
+      profilePicture
+    }
+  }
+}
+    `;
+
+/**
+ * __useListJourneyMessagesByJourneyQuery__
+ *
+ * To run a query within a React component, call `useListJourneyMessagesByJourneyQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListJourneyMessagesByJourneyQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListJourneyMessagesByJourneyQuery({
+ *   variables: {
+ *      journeyId: // value for 'journeyId'
+ *   },
+ * });
+ */
+export function useListJourneyMessagesByJourneyQuery(baseOptions: Apollo.QueryHookOptions<ListJourneyMessagesByJourneyQuery, ListJourneyMessagesByJourneyQueryVariables> & ({ variables: ListJourneyMessagesByJourneyQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListJourneyMessagesByJourneyQuery, ListJourneyMessagesByJourneyQueryVariables>(ListJourneyMessagesByJourneyDocument, options);
+      }
+export function useListJourneyMessagesByJourneyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListJourneyMessagesByJourneyQuery, ListJourneyMessagesByJourneyQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListJourneyMessagesByJourneyQuery, ListJourneyMessagesByJourneyQueryVariables>(ListJourneyMessagesByJourneyDocument, options);
+        }
+export function useListJourneyMessagesByJourneySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<ListJourneyMessagesByJourneyQuery, ListJourneyMessagesByJourneyQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ListJourneyMessagesByJourneyQuery, ListJourneyMessagesByJourneyQueryVariables>(ListJourneyMessagesByJourneyDocument, options);
+        }
+export type ListJourneyMessagesByJourneyQueryHookResult = ReturnType<typeof useListJourneyMessagesByJourneyQuery>;
+export type ListJourneyMessagesByJourneyLazyQueryHookResult = ReturnType<typeof useListJourneyMessagesByJourneyLazyQuery>;
+export type ListJourneyMessagesByJourneySuspenseQueryHookResult = ReturnType<typeof useListJourneyMessagesByJourneySuspenseQuery>;
+export type ListJourneyMessagesByJourneyQueryResult = Apollo.QueryResult<ListJourneyMessagesByJourneyQuery, ListJourneyMessagesByJourneyQueryVariables>;
 export const ListUsersDocument = gql`
     query listUsers {
   listUsers {

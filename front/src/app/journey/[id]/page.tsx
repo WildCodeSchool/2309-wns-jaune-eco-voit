@@ -2,28 +2,71 @@
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 dayjs.locale("fr");
-import { useFindJourneyByIdQuery } from "@/types/graphql";
+import { useFindJourneyByIdQuery, useFindUserByIdQuery } from "@/types/graphql";
 
-import { Stack, Typography, Grid, Divider, Button } from "@mui/material";
+import {
+  Stack,
+  Typography,
+  Grid,
+  Divider,
+  Button,
+  CircularProgress,
+} from "@mui/material";
 
 import AvatarJourney from "@/app/components/Avatar/AvatarJouney";
 import JourneyTimeline from "@/app/components/JourneyCard/JourneyTimeline";
 import VerifiedUserOutlinedIcon from "@mui/icons-material/VerifiedUser";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
+import { useContext, useState } from "react";
+import { AuthContext } from "@/context/authContext";
+import JourneyMessages from "@/app/components/JourneyMessages/JourneyMessages";
 
 export default function Page({ params }: { params: { id: string } }) {
-  const { data, loading, error } = useFindJourneyByIdQuery({
+  const { id: journeyId } = params;
+
+  const { getUserId: userId } = useContext(AuthContext);
+
+  const {
+    data: journeyData,
+    loading: journeyLoading,
+    error: journeyError,
+  } = useFindJourneyByIdQuery({
     variables: {
-      findJourneyById: params.id,
+      findJourneyById: journeyId,
     },
   });
 
+  const { data: userData } = useFindUserByIdQuery({
+    variables: {
+      findUserById: userId || "",
+    },
+  });
+
+  const isUserAllowedToAccessMessage = () => {
+    const journey = journeyData?.findJourneyById;
+    const userConnected = userData?.findUserById;
+
+    const isDriver = journey?.user.id === userId;
+
+    const journeyBookingIds = new Set(
+      journey?.bookings?.map((booking) => booking.id)
+    );
+    const isPassenger = userConnected?.bookings?.some((booking) =>
+      journeyBookingIds.has(booking.id)
+    );
+
+    return isDriver || isPassenger;
+  };
+
+  if (journeyLoading) {
+    return <CircularProgress />;
+  }
+
   return (
     <Stack className="h-full w-10/12" alignSelf={"center"}>
-      {loading && <div>Loading...</div>}
-      {error && <div>Error: {error.message}</div>}
-      {data && (
+      {journeyError && <div>Error: {journeyError.message}</div>}
+      {journeyData && (
         <Stack direction={"column"} justifyContent={"start"} height={"100vh"}>
           <Stack height={"25vh"} justifyContent={"center"}>
             <Typography
@@ -32,7 +75,7 @@ export default function Page({ params }: { params: { id: string } }) {
               align="center"
               height={"10vh"}
             >
-              {dayjs(data?.findJourneyById.departure_time).format(
+              {dayjs(journeyData?.findJourneyById.departure_time).format(
                 "dddd D MMMM YYYY"
               )}
             </Typography>
@@ -50,14 +93,16 @@ export default function Page({ params }: { params: { id: string } }) {
                   Prix total pour 1 passager
                 </Typography>
                 <Typography variant="h6" component="p">
-                  {data?.findJourneyById.totalPrice} €
+                  {journeyData?.findJourneyById.totalPrice} €
                 </Typography>
               </Stack>
               <Divider sx={{ marginBottom: 4 }} />
               <AvatarJourney
-                firstname={data.findJourneyById.user.firstname}
+                firstname={journeyData.findJourneyById.user.firstname}
                 rating={2}
-                profilePicture={data.findJourneyById.user.profilPicture!}
+                profilePicture={
+                  journeyData.findJourneyById.user.profilePicture!
+                }
               />
               <Stack direction={"row"} spacing={3} marginY={8}>
                 <VerifiedUserOutlinedIcon />
@@ -79,7 +124,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 sx={{ borderRadius: "20px" }}
                 size="large"
               >
-                Contacter {data.findJourneyById.user.firstname}
+                Contacter {journeyData.findJourneyById.user.firstname}
               </Button>
             </Grid>
             <Grid
@@ -102,13 +147,17 @@ export default function Page({ params }: { params: { id: string } }) {
                 Détail du trajet
               </h6>
               <JourneyTimeline
-                departureTime={data.findJourneyById.departure_time}
-                arrivalTime={data.findJourneyById.arrival_time}
-                origin={data.findJourneyById.origin}
-                destination={data.findJourneyById.destination}
+                departureTime={journeyData.findJourneyById.departure_time}
+                arrivalTime={journeyData.findJourneyById.arrival_time}
+                origin={journeyData.findJourneyById.origin}
+                destination={journeyData.findJourneyById.destination}
               />
             </Grid>
           </Grid>
+
+          {userId && isUserAllowedToAccessMessage() && (
+            <JourneyMessages userId={userId} journeyId={journeyId} />
+          )}
         </Stack>
       )}
     </Stack>

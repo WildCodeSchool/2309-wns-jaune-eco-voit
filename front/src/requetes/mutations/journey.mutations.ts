@@ -219,3 +219,21 @@ export const DECREASE_AVAILABLE_SEATS = gql`
     }
   }
 `;
+
+export const POST_JOURNEY_MESSAGE = gql`
+  mutation postJourneyMessage($data: CreateJourneyMessageInput!) {
+    createJourneyMessage(data: $data) {
+      id
+      createdAt
+      journey {
+        journeyMessages {
+          id
+        }
+      }
+      message
+      user {
+        id
+      }
+    }
+  }
+`;

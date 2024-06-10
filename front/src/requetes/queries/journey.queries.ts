@@ -23,7 +23,7 @@ export const LIST_JOURNEYS = gql`
       status
       totalPrice
       updatedAt
-      user { 
+      user {
         email
         firstname
         lastname
@@ -116,6 +116,24 @@ export const FIND_JOURNEY_BY_ID = gql`
         status
         createdAt
         updatedAt
+      }
+    }
+  }
+`;
+
+export const LIST_JOURNEY_MESSAGES_BY_JOURNEY = gql`
+  query listJourneyMessagesByJourney($journeyId: String!) {
+    listJourneyMessagesByJourney(journeyId: $journeyId) {
+      createdAt
+      id
+      journey {
+        id
+      }
+      message
+      user {
+        id
+        firstname
+        profilePicture
       }
     }
   }

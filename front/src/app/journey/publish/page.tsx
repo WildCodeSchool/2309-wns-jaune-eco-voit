@@ -29,7 +29,7 @@ export type JourneyData = {
 };
 
 const PublishJourney = () => {
-  const { getUser: userId } = useContext(AuthContext);
+  const { getUserId: userId } = useContext(AuthContext);
   const router = useRouter();
   const [
     createJourney,

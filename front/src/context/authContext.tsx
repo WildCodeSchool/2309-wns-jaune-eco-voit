@@ -2,35 +2,39 @@ import { useCallback, useMemo, useState } from "react";
 import { createContext } from "react";
 
 export const AuthContext = createContext<{
-  user: string | undefined;
-  getUser: string | undefined;
+  getUserId: string | undefined;
   updateUser: (user: string) => void;
   contextLogout: () => void;
 }>({
-  user: undefined,
-  getUser: undefined,
+  getUserId: undefined,
   updateUser: () => {},
   contextLogout: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<undefined | string>(undefined);
+  const [userId, setUserId] = useState<undefined | string>(undefined);
 
   const updateUser = useCallback(
-    (user: string) => {
-      setUser(user);
+    (userId: string) => {
+      setUserId(userId);
     },
-    [setUser]
+    [setUserId]
   );
 
-  const getUser = useMemo<string | undefined>(() => user, [user]);
+  const getUserId = useMemo<string | undefined>(() => userId, [userId]);
 
   const contextLogout = () => {
-    setUser(undefined);
+    setUserId(undefined);
   };
 
   return (
-    <AuthContext.Provider value={{ user, getUser, updateUser, contextLogout }}>
+    <AuthContext.Provider
+      value={{
+        getUserId,
+        updateUser,
+        contextLogout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
