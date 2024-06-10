@@ -22,7 +22,7 @@ export const CREATE_JOURNEY = gql`
         password
         dateOfBirth
         phoneNumber
-        profilPicture
+        profilePicture
         role
         grade
         tripsAsPassenger
@@ -75,7 +75,7 @@ export const UPDATE_JOURNEY = gql`
         password
         dateOfBirth
         phoneNumber
-        profilPicture
+        profilePicture
         role
         grade
         tripsAsPassenger
@@ -110,7 +110,7 @@ export const UPDATE_JOURNEY_STATUS = gql`
         password
         dateOfBirth
         phoneNumber
-        profilPicture
+        profilePicture
         role
         grade
         tripsAsPassenger
@@ -154,7 +154,7 @@ export const INCREASE_AVAILABLE_SEATS = gql`
         password
         dateOfBirth
         phoneNumber
-        profilPicture
+        profilePicture
         role
         grade
         tripsAsPassenger
@@ -198,7 +198,7 @@ export const DECREASE_AVAILABLE_SEATS = gql`
         password
         dateOfBirth
         phoneNumber
-        profilPicture
+        profilePicture
         role
         grade
         tripsAsPassenger

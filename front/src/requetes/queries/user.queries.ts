@@ -10,7 +10,7 @@ export const LIST_USERS = gql`
       password
       dateOfBirth
       phoneNumber
-      profilPicture
+      profilePicture
       role
       grade
       tripsAsPassenger
@@ -54,7 +54,7 @@ export const FIND_USER_BY_ID = gql`
       password
       dateOfBirth
       phoneNumber
-      profilPicture
+      profilePicture
       role
       tripsAsPassenger
       grade
@@ -86,4 +86,19 @@ export const FIND_USER_BY_ID = gql`
       }
     }
   }
+`;
+
+export const GET_PROFILE = gql`
+query GetProfile {
+  getProfile {
+    lastname
+    firstname
+    phoneNumber
+    profilePicture
+    email
+    role
+    dateOfBirth
+    password
+  }
+}
 `;

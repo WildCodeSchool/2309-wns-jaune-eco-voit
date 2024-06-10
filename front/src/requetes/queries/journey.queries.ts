@@ -23,7 +23,7 @@ export const LIST_JOURNEYS = gql`
       status
       totalPrice
       updatedAt
-      user {
+      user { 
         email
         firstname
         lastname
@@ -55,7 +55,7 @@ export const LIST_JOURNEYS_BY_USER = gql`
         password
         dateOfBirth
         phoneNumber
-        profilPicture
+        profilePicture
         role
         grade
         tripsAsPassenger
@@ -108,7 +108,7 @@ export const FIND_JOURNEY_BY_ID = gql`
         password
         dateOfBirth
         phoneNumber
-        profilPicture
+        profilePicture
         role
         grade
         tripsAsPassenger
