@@ -10,6 +10,12 @@ const nextConfig = {
         port: "8000",
         pathname: "/avatar/*",
       },
+      {
+        protocol: "https",
+        hostname: "www.santelog.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
   distDir: "build",
