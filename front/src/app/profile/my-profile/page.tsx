@@ -42,8 +42,11 @@ function MyProfile() {
       setUpdateInfos(data?.getProfile);
     }
   }, [data]);
+<<<<<<< HEAD
 
   console.log("updateInfos", updateInfos);
+=======
+>>>>>>> d09fb195 (resolving conflicts and CI fix)
 
   const handleOpen = () => {
     setOpen(true);
