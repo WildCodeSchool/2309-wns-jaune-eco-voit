@@ -25,8 +25,9 @@ import UploadPofilePicture from "../components/UploadPofilePicture";
 
 function MyProfile() {
   const { data, loading, error } = useGetProfileQuery({
-    fetchPolicy: "network-only",
-  }); // fetchPolicy: "network-only" : permet d'afficher les nouvelles informations enregistrer sans rafraichir la page
+    fetchPolicy: "network-only", // Used for first execution:  : permet d'afficher les nouvelles informations enregistrer sans rafraichir la page
+    nextFetchPolicy: "cache-first", // Used for subsequent executions
+  });
   const [updateUser] = useUpdateUserMutation({
     refetchQueries: [{ query: GetProfileDocument }],
   });

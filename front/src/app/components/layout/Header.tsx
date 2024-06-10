@@ -36,11 +36,11 @@ const Header = () => {
   const [userUserPicture, setUserUserPicture] = useState<string | undefined>(
     undefined
   );
-  const [email, setEmail] = useState<string>();
   const { getUser, updateUser } = useContext(AuthContext);
 
   const [getUserDatas, { data, loading, error }] = useGetProfileLazyQuery({
-    fetchPolicy: "network-only",
+    fetchPolicy: "network-only", // Used for first execution
+    nextFetchPolicy: "cache-first", // Used for subsequent executions
   });
 
   useEffect(() => {
@@ -104,7 +104,6 @@ const Header = () => {
               <AddCircleOutlineOutlinedIcon />
               <p className="font-medium text-sm">Publier un trajet</p>
             </Button>
-            <p>Bonjour {email && email}</p>
             <Tooltip title="Profile">
               <IconButton
                 onClick={(e) => {
