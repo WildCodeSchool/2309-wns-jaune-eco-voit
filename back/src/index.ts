@@ -84,6 +84,7 @@ async function main() {
                             await new UsersService().findUserByEmailWitoutAsserting(
                                 verify.payload.email
                             )
+                        console.log(user)
                     } catch (err) {
                         console.log(err)
                     }
