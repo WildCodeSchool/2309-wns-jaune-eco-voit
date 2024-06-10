@@ -4,10 +4,13 @@ on:
   push: # Lors du push sur toutes les branches
     branches:
       - "*"
-  pull_request: # Lors d'une PR merge
+  pull_request: # Lors de la création ou la mise à jour d'une PR
     branches:
-      - "PREPROD"
+      - "*"
     types:
+      - opened
+      - synchronize
+      - reopened
       - closed
 
 jobs:
@@ -121,14 +124,14 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          context: "{{defaultContext}}:back"
+          context: ./back
           tags: "${{ secrets.DOCKERHUB_USERNAME }}/back-ecovoit:latest"
 
       - name: 🔨 Build and push front
         uses: docker/build-push-action@v4
         with:
           push: true
-          context: "{{defaultContext}}:front"
+          context: ./front
           tags: "${{ secrets.DOCKERHUB_USERNAME }}/front-ecovoit:latest"
 
   webhook:

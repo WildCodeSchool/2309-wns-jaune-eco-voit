@@ -15,6 +15,7 @@ import { jwtVerify } from 'jose'
 import { UserEntity } from './entities/user.entity'
 import UsersService from './services/users.service'
 import { customAuthChecker } from './lib/authChecker'
+import JourneyMessageResolver from './resolvers/journeyMessage.resolver'
 
 export interface MyContext {
     req: express.Request
@@ -33,7 +34,12 @@ const httpServer = http.createServer(app) // on créer un server HTTP à partir 
 
 async function main() {
     const schema = await buildSchema({
-        resolvers: [BookingResolver, UserResolver, JourneyResolver],
+        resolvers: [
+            BookingResolver,
+            UserResolver,
+            JourneyResolver,
+            JourneyMessageResolver,
+        ],
         validate: true,
         authChecker: customAuthChecker,
     })

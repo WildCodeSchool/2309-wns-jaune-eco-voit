@@ -25,30 +25,29 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { AuthContext } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { getuid } from "process";
 
 const Header = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const [loggedUser, setLoggedUser] = useState<string>();
+  const [loggedUser, setLoggedUser] = useState<string | undefined>(undefined);
 
-  const { getUserId, updateUser } = useContext(AuthContext);
+  const { user, updateUser } = useContext(AuthContext);
 
   useEffect(() => {
     setLoggedUser(Cookies.get("id") ?? "");
-  }, [getuid]);
+  }, [user]);
 
   useEffect(() => {
     const email = Cookies.get("email") ?? ""; // Possible d'utiliser dans le menu
     const role = Cookies.get("role") ?? "USER"; // Possible d'utiliser pour un menu admin
     const id = Cookies.get("id") ?? "";
-    if (!getUserId && id) {
+    if (!user && id) {
       updateUser(id);
     }
-    setLoggedUser(getUserId?.toString());
-  }, [getUserId, updateUser]);
+    setLoggedUser(user?.toString());
+  }, [user, updateUser]);
 
   const handleCloseMenu = () => {
     setAnchorEl(null);
