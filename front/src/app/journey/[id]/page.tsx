@@ -25,7 +25,7 @@ import JourneyMessages from "@/app/components/JourneyMessages/JourneyMessages";
 export default function Page({ params }: { params: { id: string } }) {
   const { id: journeyId } = params;
 
-  const { getUserId: userId } = useContext(AuthContext);
+  const { getUser: userId } = useContext(AuthContext);
 
   const {
     data: journeyData,
