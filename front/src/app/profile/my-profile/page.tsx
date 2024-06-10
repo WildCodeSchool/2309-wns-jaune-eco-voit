@@ -31,11 +31,7 @@ function MyProfile() {
   const [updateUser] = useUpdateUserMutation({
     refetchQueries: [{ query: GetProfileDocument }],
   });
-<<<<<<< HEAD
   const { getUser: userId } = useContext(AuthContext);
-=======
-  const { getUser } = useContext(AuthContext);
->>>>>>> 00c22849 (back and front upload profile picture)
   const [isEditing, setIsEditing] = useState(false);
   const [open, setOpen] = useState(false);
   const [isEditPictureModalOpen, setIsEditPictureModalOpen] = useState(false);
@@ -49,11 +45,6 @@ function MyProfile() {
       setUpdateInfos(data?.getProfile);
     }
   }, [data]);
-<<<<<<< HEAD
-
-  console.log("updateInfos", updateInfos);
-=======
->>>>>>> 00c22849 (back and front upload profile picture)
 
   const handleOpen = () => {
     setOpen(true);
@@ -73,11 +64,7 @@ function MyProfile() {
 
   const handleSave = () => {
     updateUser({
-<<<<<<< HEAD
       variables: { data: { ...updateInfos, id: userId } },
-=======
-      variables: { data: { ...updateInfos, id: getUser } },
->>>>>>> 00c22849 (back and front upload profile picture)
       onCompleted(data, clientOptions) {
         setIsEditing(false); // une fois la mise à jour terminée, désactiver le mode édition
       },
@@ -90,11 +77,7 @@ function MyProfile() {
     if (newPassword === confirmNewPassword) {
       updateUser({
         variables: {
-<<<<<<< HEAD
           data: { ...updateInfos, id: userId, password: newPassword },
-=======
-          data: { ...updateInfos, id: getUser, password: newPassword },
->>>>>>> 00c22849 (back and front upload profile picture)
         },
         onCompleted(data, clientOptions) {
           console.log("Mot de passe mis à jour");
