@@ -88,7 +88,7 @@ console.log("updateInfos", updateInfos)
 
 
   return (
-    <div className="home_page flex flex-col gap-6 h-full  bg-primary10 py-10">
+    <div className="home_page flex flex-col gap-6  bg-primary10 py-10">
       <h1 className="Title  flex flex-col justify-center items-center py-10">
         Mon profil
       </h1>
@@ -100,14 +100,15 @@ console.log("updateInfos", updateInfos)
           <IconButton color="inherit">
             <Avatar
               alt="profile picture"
-              sx={{ width: 126, height: 126 }}
-              src={updateInfos.picture}
+              sx={{ width: 110, height: 110 }}
+              // src={updateInfos.picture}
+              src="https://www.santelog.com/sites/santelog.com/www.santelog.com/files/styles/large/public/images/accroche/adobestock_276208008_lama.jpeg?itok=d2steNiv"
             />
           </IconButton>
         </Tooltip>
       </div>
 
-      <div className="body-profile flex flex-col justify-center items-center py-10 ">
+      <div className="body-profile flex flex-col justify-center items-center py-10  ">
         {!isEditing && (
           <div className="flex flex-col gap-8 w-3/4">
             <h4>Prenom : {data?.getProfile?.firstname}</h4>
@@ -150,7 +151,7 @@ console.log("updateInfos", updateInfos)
             <FormControl className="FormControl">
               <FormLabel>Date de naissance :</FormLabel>
               <Input 
-              value={updateInfos.dateOfBirth} sx={{marginTop:"0.5em!important"}}
+              value={updateInfos.dateOfBirth} sx={{marapinTop:"0.5em!important"}}
               onChange={(e) => setUpdateInfos((prevState: any) => ({...prevState, dateOfBirth: e.target.value}))} />
             </FormControl>
 
