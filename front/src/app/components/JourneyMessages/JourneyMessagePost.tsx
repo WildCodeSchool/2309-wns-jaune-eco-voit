@@ -48,7 +48,7 @@ export default function JourneyMessagePost({
       </Button>
       {isPostNewMessageError && (
         <Typography variant="body2" color="error">
-          Quelque chose s'est mal passé
+          Quelque chose s&aposest mal passé
         </Typography>
       )}
     </Stack>
