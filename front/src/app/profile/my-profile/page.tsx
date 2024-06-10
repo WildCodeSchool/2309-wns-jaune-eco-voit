@@ -29,7 +29,7 @@ function MyProfile() {
   const [updateUser] = useUpdateUserMutation({
     refetchQueries: [{ query: GetProfileDocument }],
   });
-  const { getUserId } = useContext(AuthContext);
+  const { getUser: userId } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
   const [open, setOpen] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
@@ -63,7 +63,7 @@ function MyProfile() {
 
   const handleSave = () => {
     updateUser({
-      variables: { data: { ...updateInfos, id: getUserId } },
+      variables: { data: { ...updateInfos, id: userId } },
       onCompleted(data, clientOptions) {
         setIsEditing(false); // une fois la mise à jour terminée, désactiver le mode édition
       },
@@ -76,7 +76,7 @@ function MyProfile() {
     if (newPassword === confirmNewPassword) {
       updateUser({
         variables: {
-          data: { ...updateInfos, id: getUserId, password: newPassword },
+          data: { ...updateInfos, id: userId, password: newPassword },
         },
         onCompleted(data, clientOptions) {
           console.log("Mot de passe mis à jour");
