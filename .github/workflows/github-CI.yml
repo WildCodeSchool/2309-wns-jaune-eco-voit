@@ -14,42 +14,42 @@ on:
       - closed
 
 jobs:
-  # run-linters:
-  #   name: 🧼 Run linters
-  #   runs-on: ubuntu-latest
+  run-linters:
+    name: 🧼 Run linters
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: 📌 Check out Git repository
-  #       uses: actions/checkout@v3
+    steps:
+      - name: 📌 Check out Git repository
+        uses: actions/checkout@v3
 
-  #     - name: 🛠️ Set up Node.js
-  #       uses: actions/setup-node@v1
-  #       with:
-  #         node-version: 18
+      - name: 🛠️ Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18
 
-  #     - name: 🎯 Install Node.js dependencies
-  #       run: |
-  #         cd back
-  #         npm i
-  #         npm run lint
-  #         cd ../front
-  #         npm i
-  #         npm run lint
+      - name: 🎯 Install Node.js dependencies
+        run: |
+          cd back
+          npm i
+          npm run lint
+          cd ../front
+          npm i
+          npm run lint
 
-  #     - name: 🏃🏽 Run linters back
-  #       uses: wearerequired/lint-action@v2
-  #       with:
-  #         eslint_dir: ./back
-  #         eslint: true
+      - name: 🏃🏽 Run linters back
+        uses: wearerequired/lint-action@v2
+        with:
+          eslint_dir: ./back
+          eslint: true
 
-  #     - name: 🏃🏽 Run linters front
-  #       uses: wearerequired/lint-action@v2
-  #       with:
-  #         eslint_dir: ./front
-  #         eslint: true
+      - name: 🏃🏽 Run linters front
+        uses: wearerequired/lint-action@v2
+        with:
+          eslint_dir: ../front
+          eslint: true
 
-  #     - name: 🤗 Hello CI
-  #       run: echo "This job's status is ${{ job.status }}."
+      - name: 🤗 Hello CI
+        run: echo "This job's status is ${{ job.status }}."
 
   Test:
     # needs: run-linters
