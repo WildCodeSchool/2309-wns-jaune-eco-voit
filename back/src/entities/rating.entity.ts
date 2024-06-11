@@ -1,4 +1,4 @@
-/*import {
+import {
     Field,
     GraphQLISODateTime,
     ID,
@@ -9,11 +9,15 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinColumn,
     ManyToOne,
+    OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm'
-import { BookingEntity } from '../src/entities/booking.entity'
+import { BookingEntity, PartialBookingInput } from './booking.entity'
+import { UserEntity } from './user.entity'
+import { PartialUserInput } from './journey.entity'
 
 export type Rate = '1' | '2' | '3' | '4' | '5'
 export type Status = 'ACTIVE' | 'ARCHIVED'
@@ -25,14 +29,6 @@ export class RatingEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string
 
-    @Field(() => GraphQLISODateTime)
-    @CreateDateColumn()
-    createdAt: Date
-
-    @Field(() => GraphQLISODateTime)
-    @UpdateDateColumn()
-    updatedAt: Date
-
     @Field()
     @Column({
         type: 'text',
@@ -40,23 +36,23 @@ export class RatingEntity {
     })
     rate: Rate
 
-    @Field()
-    @Column('uuid')
-    userRated: string
-
-    @Field()
-    @Column('uuid')
-    userRater: string
+    @Field(() => UserEntity)
+    @ManyToOne(() => UserEntity, (u) => u.ratings)
+    // @Column('uuid')
+    userRated: UserEntity
 
     @Field(() => BookingEntity)
-    @ManyToOne(() => BookingEntity, (b) => b.ratings)
+    @OneToOne(() => BookingEntity)
+    @JoinColumn()
     booking: BookingEntity
-}
 
-@InputType()
-export class PartialBookingInput {
-    @Field(() => ID)
-    id: string
+    @Field(() => GraphQLISODateTime)
+    @CreateDateColumn()
+    createdAt: Date
+
+    @Field(() => GraphQLISODateTime)
+    @UpdateDateColumn()
+    updatedAt: Date
 }
 
 @InputType()
@@ -64,12 +60,9 @@ export class CreateRatingInput {
     @Field()
     rate: Rate
 
-    @Field()
-    userRaterId: PartialBookingInput
+    @Field(() => PartialUserInput)
+    userRated: PartialUserInput
 
-    @Field()
-    userRatedId: PartialBookingInput
-
-    @Field()
-    bookingId: PartialBookingInput
-}*/
+    @Field(() => PartialBookingInput)
+    booking: PartialBookingInput
+}

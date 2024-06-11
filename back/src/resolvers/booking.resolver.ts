@@ -18,7 +18,10 @@ export default class BookingResolver {
     @Query(() => BookingEntity)
     async findBookingById(@Arg('id') id: string, @Ctx() { user }: MyContext) {
         const booking = await new BookingService().findBookingById(id)
-        userAuthorized([booking.user.id, booking.journey.user.id], user)
+        const journey = await new JourneysService().findJourneyById(
+            booking.journey.id
+        )
+        userAuthorized([booking.user.id, journey.user.id], user)
         return booking
     }
 

@@ -15,6 +15,7 @@ services:
       - WDS_SOCKET_HOST=127.0.0.1
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
+      - CLIENT_URL=http://localhost:3002
     # 'depends-on' > dit qu'un service dépend d'un autre
     env_file:
       - back/.env

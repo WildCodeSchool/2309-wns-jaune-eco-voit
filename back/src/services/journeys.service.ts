@@ -1,4 +1,4 @@
-import { MoreThanOrEqual, Repository } from 'typeorm'
+import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm'
 
 import DataSource from '../db'
 import {
@@ -8,6 +8,7 @@ import {
     ListJourneysWithFilters,
 } from '../entities/journey.entity'
 import { validateData, assertDataExists } from '../utils/errorHandlers'
+import dayjs from 'dayjs'
 
 export default class JourneysService {
     db: Repository<JourneyEntity>
@@ -38,6 +39,18 @@ export default class JourneysService {
                 availableSeats: filters?.availableSeats
                     ? MoreThanOrEqual(filters.availableSeats)
                     : undefined,
+            },
+            relations: { user: true, bookings: true },
+        })
+    }
+
+    async listJourneysForScheduler() {
+        return await this.db.find({
+            where: {
+                departure_time: LessThanOrEqual(
+                    dayjs().subtract(1, 'day').toDate()
+                ),
+                status: 'PLANNED',
             },
             relations: { user: true, bookings: true },
         })

@@ -80,11 +80,11 @@ function MyProfile() {
           data: { ...updateInfos, id: userId, password: newPassword },
         },
         onCompleted(data, clientOptions) {
-          console.log("Mot de passe mis à jour");
           handleClose();
         },
       });
     } else {
+      //TODO Gere l'UI de l'erreur
       console.log("Les mots de passe ne sont pas identiques");
     }
     setOpen(false);

@@ -43,6 +43,7 @@ export default class UserResolver {
                 dateOfBirth,
                 password,
                 id,
+                averageRate,
             },
         }: MyContext & { user: UserEntity } //l'union de type permet d'indiquer que user ne sera jamais nul ici, grâce au @Authorized
     ): Promise<UserProfile> {
@@ -56,6 +57,7 @@ export default class UserResolver {
             dateOfBirth,
             password,
             id,
+            averageRate,
         }
     }
 

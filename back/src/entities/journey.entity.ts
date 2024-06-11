@@ -100,7 +100,7 @@ export class JourneyEntity {
     @Column({
         type: 'text',
         enum: ['PLANNED', 'CANCELLED', 'DONE'],
-        default: ['PLANNED'],
+        default: 'PLANNED',
     })
     status: JourneyStatus
 
