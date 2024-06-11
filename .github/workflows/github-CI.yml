@@ -27,15 +27,14 @@ jobs:
         with:
           node-version: 18
 
-      - name: 🎯 Install Node.js dependencies for back
+      - name: 🎯 Install Node.js dependencies
         run: |
           cd back
-          npm ci
-
-      - name: 🎯 Install Node.js dependencies for front
-        run: |
-          cd front
-          npm ci
+          npm i
+          npm run lint
+          cd ../front
+          npm i
+          npm run lint
 
       - name: 🏃🏽 Run linters back
         uses: wearerequired/lint-action@v2
@@ -47,7 +46,7 @@ jobs:
       - name: 🏃🏽 Run linters front
         uses: wearerequired/lint-action@v2
         with:
-          eslint_dir: ./front
+          eslint_dir: ../front
           eslint: true
         if: startsWith(github.ref, 'refs/heads/front')
 
