@@ -52,7 +52,7 @@ jobs:
         run: echo "This job's status is ${{ job.status }}."
 
   Test:
-    # needs: run-linters
+    needs: run-linters
     name: 👤 Test
     runs-on: ubuntu-latest
     services:
