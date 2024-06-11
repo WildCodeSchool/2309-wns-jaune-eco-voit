@@ -39,7 +39,7 @@ jobs:
       - name: 🏃🏽 Run linters front
         uses: wearerequired/lint-action@v2
         with:
-          eslint_dir: ../front
+          eslint_dir: ./front
           eslint: true
         # if: startsWith(github.ref, 'refs/heads/front')
 
