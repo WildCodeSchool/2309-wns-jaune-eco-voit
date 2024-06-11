@@ -27,26 +27,29 @@ jobs:
         with:
           node-version: 18
 
-      - name: 🎯 Install Node.js dependencies
+      - name: 🎯 Install Node.js dependencies for back
         run: |
           cd back
-          npm i
-          npm run lint
-          cd ../front
-          npm i
-          npm run lint
+          npm ci
+
+      - name: 🎯 Install Node.js dependencies for front
+        run: |
+          cd front
+          npm ci
 
       - name: 🏃🏽 Run linters back
         uses: wearerequired/lint-action@v2
         with:
           eslint_dir: ./back
           eslint: true
+        if: startsWith(github.ref, 'refs/heads/back')
 
       - name: 🏃🏽 Run linters front
         uses: wearerequired/lint-action@v2
         with:
-          eslint_dir: ../front
+          eslint_dir: ./front
           eslint: true
+        if: startsWith(github.ref, 'refs/heads/front')
 
       - name: 🤗 Hello CI
         run: echo "This job's status is ${{ job.status }}."
