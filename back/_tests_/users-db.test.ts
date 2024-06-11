@@ -96,9 +96,7 @@ describe('Test sur les users avec la base de données', () => {
             },
         })
 
-        // console.log(JSON.stringify(response.body))
         assert(response.body.kind === 'single')
-        // console.log(response.body)
         expect(response.body.singleResult.data).toEqual({
             register: { email: 'olivier@yopmail.fr' },
         })

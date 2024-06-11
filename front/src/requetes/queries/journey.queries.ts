@@ -7,12 +7,9 @@ export const LIST_JOURNEYS = gql`
       automaticAccept
       availableSeats
       bookings {
-        arrivalTime
         createdAt
-        departureTime
         id
         status
-        totalPrice
         updatedAt
       }
       createdAt
@@ -66,9 +63,6 @@ export const LIST_JOURNEYS_BY_USER = gql`
       }
       bookings {
         id
-        totalPrice
-        departureTime
-        arrivalTime
         status
         createdAt
         updatedAt
@@ -93,9 +87,6 @@ export const FIND_JOURNEY_BY_ID = gql`
       updatedAt
       bookings {
         id
-        totalPrice
-        departureTime
-        arrivalTime
         status
         createdAt
         updatedAt

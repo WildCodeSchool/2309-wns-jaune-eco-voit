@@ -28,6 +28,7 @@ import {
     Length,
 } from 'class-validator'
 import { JourneyMessageEntity } from './journeyMessage.entity'
+import { RatingEntity } from './rating.entity'
 
 export type Role = 'USER' | 'ADMIN'
 export type Grade = 'BEGINNER' | 'CONFIRMED' | 'AMBASSADOR'
@@ -153,9 +154,14 @@ export class UserEntity {
     @OneToMany(() => JourneyEntity, (j) => j.user)
     journeys?: JourneyEntity[]
 
-    // @Field(() => [RatingEntity])
-    // @OneToMany(() => RatingEntity, (r) => r.booking)
-    // ratings: RatingEntity[];
+    @Field(() => [RatingEntity])
+    @OneToMany(() => RatingEntity, (r) => r.userRated)
+    ratings: RatingEntity[]
+
+    @Field({ nullable: true })
+    @Column('float', { nullable: true })
+    // @Max(5)
+    averageRate: number
 
     @Field(() => [BookingEntity], { nullable: true })
     @OneToMany(() => BookingEntity, (b) => b.user)
@@ -205,6 +211,9 @@ export class UserProfile {
 
     @Field()
     password: string
+
+    @Field({ nullable: true })
+    averageRate?: number
 }
 // -------------- INPUTS -------------- //
 

@@ -16,6 +16,9 @@ import { UserEntity } from './entities/user.entity'
 import UsersService from './services/users.service'
 import { customAuthChecker } from './lib/authChecker'
 import JourneyMessageResolver from './resolvers/journeyMessage.resolver'
+import schedule from 'node-schedule'
+import { changeJourneysStatus } from './utils/scheduler'
+import RatingResolver from './resolvers/rating.resolver'
 
 export interface MyContext {
     req: express.Request
@@ -39,10 +42,18 @@ async function main() {
             UserResolver,
             JourneyResolver,
             JourneyMessageResolver,
+            RatingResolver,
         ],
         validate: true,
         authChecker: customAuthChecker,
     })
+
+    // la variable job est necessaire pour créé le cron mais n'est jamais appelée a proprement parlé dans le code
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const job = schedule.scheduleJob('*/1 * * * *', async function () {
+        await changeJourneysStatus()
+    })
+
     const server = new ApolloServer<MyContext>({
         schema,
         plugins: [ApolloServerPluginDrainHttpServer({ httpServer })], // Informe Apollo Server, qu'il utilisera le server Http créer plus haut
@@ -84,7 +95,6 @@ async function main() {
                             await new UsersService().findUserByEmailWitoutAsserting(
                                 verify.payload.email
                             )
-                        console.log(user)
                     } catch (err) {
                         console.log(err)
                     }

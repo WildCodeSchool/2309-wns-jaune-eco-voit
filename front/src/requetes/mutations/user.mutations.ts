@@ -33,9 +33,6 @@ export const UPDATE_USER = gql`
       }
       bookings {
         id
-        totalPrice
-        departureTime
-        arrivalTime
         status
         createdAt
         updatedAt
@@ -77,9 +74,6 @@ export const ARCHIVE_USER = gql`
       }
       bookings {
         id
-        totalPrice
-        departureTime
-        arrivalTime
         status
         createdAt
         updatedAt

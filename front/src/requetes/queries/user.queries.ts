@@ -33,9 +33,6 @@ export const LIST_USERS = gql`
       }
       bookings {
         id
-        totalPrice
-        departureTime
-        arrivalTime
         status
         createdAt
         updatedAt
@@ -77,9 +74,6 @@ export const FIND_USER_BY_ID = gql`
       }
       bookings {
         id
-        totalPrice
-        departureTime
-        arrivalTime
         status
         createdAt
         updatedAt

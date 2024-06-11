@@ -33,9 +33,6 @@ export const CREATE_JOURNEY = gql`
       }
       bookings {
         id
-        totalPrice
-        departureTime
-        arrivalTime
         status
         createdAt
         updatedAt
@@ -60,9 +57,6 @@ export const UPDATE_JOURNEY = gql`
       updatedAt
       bookings {
         id
-        totalPrice
-        departureTime
-        arrivalTime
         status
         createdAt
         updatedAt
@@ -121,9 +115,6 @@ export const UPDATE_JOURNEY_STATUS = gql`
       }
       bookings {
         id
-        totalPrice
-        departureTime
-        arrivalTime
         status
         createdAt
         updatedAt
@@ -165,9 +156,6 @@ export const INCREASE_AVAILABLE_SEATS = gql`
       }
       bookings {
         id
-        totalPrice
-        departureTime
-        arrivalTime
         status
         createdAt
         updatedAt
@@ -209,9 +197,6 @@ export const DECREASE_AVAILABLE_SEATS = gql`
       }
       bookings {
         id
-        totalPrice
-        departureTime
-        arrivalTime
         status
         createdAt
         updatedAt

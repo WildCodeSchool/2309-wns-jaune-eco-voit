@@ -16,14 +16,14 @@ export default class UsersService {
 
     async listUser() {
         return await this.db.find({
-            relations: { journeys: true, bookings: true },
+            relations: { journeys: true, bookings: true, ratings: true },
         })
     }
 
     async findUserById(id: string) {
         const user = await this.db.findOne({
             where: { id },
-            relations: { journeys: true, bookings: true },
+            relations: { journeys: true, bookings: true, ratings: true },
         })
 
         assertDataExists(user)
@@ -34,7 +34,7 @@ export default class UsersService {
     async findUserByEmail(email: string) {
         const user = await this.db.findOne({
             where: { email },
-            relations: { journeys: true, bookings: true },
+            relations: { journeys: true, bookings: true, ratings: true },
         })
         assertDataExists(user)
 
@@ -68,6 +68,24 @@ export default class UsersService {
         const userToUpdate = await this.findUserById(id)
 
         const userUpdated = this.db.merge(userToUpdate, body)
+
+        await validateData(userUpdated)
+
+        return this.db.save(userUpdated)
+    }
+
+    async updateAverageRate({
+        userId,
+        newAverageRate,
+    }: {
+        userId: string
+        newAverageRate: number
+    }) {
+        const userToUpdate = await this.findUserById(userId)
+
+        const userUpdated = this.db.merge(userToUpdate, {
+            averageRate: newAverageRate,
+        })
 
         await validateData(userUpdated)
 

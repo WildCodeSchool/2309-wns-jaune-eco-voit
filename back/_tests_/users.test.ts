@@ -18,9 +18,8 @@ let server: ApolloServer
 // to delete all Dates from the object (Jest doesn't accept to compare Dates)
 const mapData = (dataArray: Omit<UserEntity, 'hashPassword'>[]) => {
     return dataArray.map((el) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { dateOfBirth, createdAt, ...rest } = el
-        // log to avoid non used error
-        console.log(dateOfBirth, createdAt)
         return rest
     })
 }

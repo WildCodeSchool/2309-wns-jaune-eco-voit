@@ -22,23 +22,17 @@ export type Scalars = {
 
 export type BookingEntity = {
   __typename?: 'BookingEntity';
-  arrivalTime: Scalars['DateTimeISO']['output'];
   createdAt: Scalars['DateTimeISO']['output'];
-  departureTime: Scalars['DateTimeISO']['output'];
   id: Scalars['ID']['output'];
   journey: JourneyEntity;
   status: Scalars['String']['output'];
-  totalPrice: Scalars['Float']['output'];
   updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
   user: UserEntity;
 };
 
 export type CreateBookingInput = {
-  arrivalTime: Scalars['DateTimeISO']['input'];
-  departureTime: Scalars['DateTimeISO']['input'];
   journey: PartialBookingInput;
   status?: InputMaybe<Scalars['String']['input']>;
-  totalPrice: Scalars['Float']['input'];
   user: PartialBookingInput;
 };
 
@@ -57,6 +51,12 @@ export type CreateJourneyMessageInput = {
   journey: PartialJourneyInput;
   message: Scalars['String']['input'];
   user: PartialUserInput;
+};
+
+export type CreateRatingInput = {
+  booking: PartialBookingInput;
+  rate: Scalars['String']['input'];
+  userRated: PartialUserInput;
 };
 
 export type CreateUserInput = {
@@ -80,7 +80,7 @@ export type JourneyEntity = {
   departure_time: Scalars['DateTimeISO']['output'];
   destination: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  journeyMessages: Array<JourneyMessageEntity>;
+  journeyMessages?: Maybe<Array<JourneyMessageEntity>>;
   origin: Scalars['String']['output'];
   status: Scalars['String']['output'];
   totalPrice: Scalars['Float']['output'];
@@ -119,6 +119,7 @@ export type Mutation = {
   createBooking: BookingEntity;
   createJourney: JourneyEntity;
   createJourneyMessage: JourneyMessageEntity;
+  createRating: RatingEntity;
   decreaseAvailableSeats: JourneyEntity;
   increaseAvailableSeats: JourneyEntity;
   register: UserWithoutPassord;
@@ -156,6 +157,11 @@ export type MutationCreateJourneyArgs = {
 
 export type MutationCreateJourneyMessageArgs = {
   data: CreateJourneyMessageInput;
+};
+
+
+export type MutationCreateRatingArgs = {
+  data: CreateRatingInput;
 };
 
 
@@ -217,6 +223,7 @@ export type Query = {
   listJourneyMessagesByJourney: Array<JourneyMessageEntity>;
   listJourneys: Array<JourneyEntity>;
   listJourneysByUser: Array<JourneyEntity>;
+  listRatingsByUser: Array<RatingEntity>;
   listUsers: Array<UserEntity>;
   login: UserEntity;
   logout: UserMessage;
@@ -263,8 +270,23 @@ export type QueryListJourneysByUserArgs = {
 };
 
 
+export type QueryListRatingsByUserArgs = {
+  userRatedId: Scalars['String']['input'];
+};
+
+
 export type QueryLoginArgs = {
   data: LoginInput;
+};
+
+export type RatingEntity = {
+  __typename?: 'RatingEntity';
+  booking: BookingEntity;
+  createdAt: Scalars['DateTimeISO']['output'];
+  id: Scalars['ID']['output'];
+  rate: Scalars['String']['output'];
+  updatedAt: Scalars['DateTimeISO']['output'];
+  userRated: UserEntity;
 };
 
 export type UpdateJourneyInput = {
@@ -302,6 +324,7 @@ export type UpdateUserInput = {
 
 export type UserEntity = {
   __typename?: 'UserEntity';
+  averageRate?: Maybe<Scalars['Float']['output']>;
   bookings?: Maybe<Array<BookingEntity>>;
   createdAt: Scalars['DateTimeISO']['output'];
   dateOfBirth: Scalars['DateTimeISO']['output'];
@@ -315,6 +338,7 @@ export type UserEntity = {
   password: Scalars['String']['output'];
   phoneNumber?: Maybe<Scalars['String']['output']>;
   profilePicture?: Maybe<Scalars['String']['output']>;
+  ratings: Array<RatingEntity>;
   role: Scalars['String']['output'];
   status?: Maybe<Scalars['String']['output']>;
   tripsAsDriver: Scalars['Float']['output'];
@@ -330,6 +354,7 @@ export type UserMessage = {
 
 export type UserProfile = {
   __typename?: 'UserProfile';
+  averageRate?: Maybe<Scalars['Float']['output']>;
   dateOfBirth?: Maybe<Scalars['DateTimeISO']['output']>;
   email: Scalars['String']['output'];
   firstname: Scalars['String']['output'];
@@ -360,84 +385,84 @@ export type CreateBookingMutationVariables = Exact<{
 }>;
 
 
-export type CreateBookingMutation = { __typename?: 'Mutation', createBooking: { __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } } };
+export type CreateBookingMutation = { __typename?: 'Mutation', createBooking: { __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } } };
 
 export type AcceptBookingMutationVariables = Exact<{
   acceptBookingId: Scalars['String']['input'];
 }>;
 
 
-export type AcceptBookingMutation = { __typename?: 'Mutation', acceptBooking: { __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } } };
+export type AcceptBookingMutation = { __typename?: 'Mutation', acceptBooking: { __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } } };
 
 export type RejectBookingMutationVariables = Exact<{
   rejectBookingId: Scalars['String']['input'];
 }>;
 
 
-export type RejectBookingMutation = { __typename?: 'Mutation', rejectBooking: { __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } } };
+export type RejectBookingMutation = { __typename?: 'Mutation', rejectBooking: { __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } } };
 
 export type CancelBookingMutationVariables = Exact<{
   cancelBookingId: Scalars['String']['input'];
 }>;
 
 
-export type CancelBookingMutation = { __typename?: 'Mutation', cancelBooking: { __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } } };
+export type CancelBookingMutation = { __typename?: 'Mutation', cancelBooking: { __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } } };
 
 export type CreateJourneyMutationVariables = Exact<{
   data: CreateJourneyInput;
 }>;
 
 
-export type CreateJourneyMutation = { __typename?: 'Mutation', createJourney: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, bookings: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }> } };
+export type CreateJourneyMutation = { __typename?: 'Mutation', createJourney: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, bookings: Array<{ __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null }> } };
 
 export type UpdateJourneyMutationVariables = Exact<{
   data: UpdateJourneyInput;
 }>;
 
 
-export type UpdateJourneyMutation = { __typename?: 'Mutation', updateJourney: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, bookings: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }>, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null } } };
+export type UpdateJourneyMutation = { __typename?: 'Mutation', updateJourney: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, bookings: Array<{ __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null }>, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null } } };
 
 export type UpdateJourneyStatusMutationVariables = Exact<{
   data: UpdateJourneyStatusInput;
 }>;
 
 
-export type UpdateJourneyStatusMutation = { __typename?: 'Mutation', updateJourneyStatus: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, bookings: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }> } };
+export type UpdateJourneyStatusMutation = { __typename?: 'Mutation', updateJourneyStatus: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, bookings: Array<{ __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null }> } };
 
 export type IncreaseAvailableSeatsMutationVariables = Exact<{
   increaseAvailableSeatsId: Scalars['String']['input'];
 }>;
 
 
-export type IncreaseAvailableSeatsMutation = { __typename?: 'Mutation', increaseAvailableSeats: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, bookings: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }> } };
+export type IncreaseAvailableSeatsMutation = { __typename?: 'Mutation', increaseAvailableSeats: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, bookings: Array<{ __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null }> } };
 
 export type DecreaseAvailableSeatsMutationVariables = Exact<{
   decreaseAvailableSeatsId: Scalars['String']['input'];
 }>;
 
 
-export type DecreaseAvailableSeatsMutation = { __typename?: 'Mutation', decreaseAvailableSeats: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, bookings: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }> } };
+export type DecreaseAvailableSeatsMutation = { __typename?: 'Mutation', decreaseAvailableSeats: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, bookings: Array<{ __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null }> } };
 
 export type PostJourneyMessageMutationVariables = Exact<{
   data: CreateJourneyMessageInput;
 }>;
 
 
-export type PostJourneyMessageMutation = { __typename?: 'Mutation', createJourneyMessage: { __typename?: 'JourneyMessageEntity', id: string, createdAt: any, message: string, journey: { __typename?: 'JourneyEntity', journeyMessages: Array<{ __typename?: 'JourneyMessageEntity', id: string }> }, user: { __typename?: 'UserEntity', id: string } } };
+export type PostJourneyMessageMutation = { __typename?: 'Mutation', createJourneyMessage: { __typename?: 'JourneyMessageEntity', id: string, createdAt: any, message: string, journey: { __typename?: 'JourneyEntity', journeyMessages?: Array<{ __typename?: 'JourneyMessageEntity', id: string }> | null }, user: { __typename?: 'UserEntity', id: string } } };
 
 export type UpdateUserMutationVariables = Exact<{
   data: UpdateUserInput;
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null, journeys?: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null }> | null, bookings?: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }> | null } };
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null, journeys?: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null }> | null, bookings?: Array<{ __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null }> | null } };
 
 export type ArchiveUserMutationVariables = Exact<{
   archiveUserId: Scalars['String']['input'];
 }>;
 
 
-export type ArchiveUserMutation = { __typename?: 'Mutation', archiveUser: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null, journeys?: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null }> | null, bookings?: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }> | null } };
+export type ArchiveUserMutation = { __typename?: 'Mutation', archiveUser: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null, journeys?: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null }> | null, bookings?: Array<{ __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null }> | null } };
 
 export type LoginQueryVariables = Exact<{
   data: LoginInput;
@@ -454,49 +479,49 @@ export type LogoutQuery = { __typename?: 'Query', logout: { __typename?: 'UserMe
 export type ListBookingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ListBookingsQuery = { __typename?: 'Query', listBookings: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } }> };
+export type ListBookingsQuery = { __typename?: 'Query', listBookings: Array<{ __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } }> };
 
 export type ListBookingsByUserQueryVariables = Exact<{
   userId: Scalars['String']['input'];
 }>;
 
 
-export type ListBookingsByUserQuery = { __typename?: 'Query', listBookingsByUser: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } }> };
+export type ListBookingsByUserQuery = { __typename?: 'Query', listBookingsByUser: Array<{ __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } }> };
 
 export type ListBookingsByJourneyQueryVariables = Exact<{
   journeyId: Scalars['String']['input'];
 }>;
 
 
-export type ListBookingsByJourneyQuery = { __typename?: 'Query', listBookingsByJourney: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } }> };
+export type ListBookingsByJourneyQuery = { __typename?: 'Query', listBookingsByJourney: Array<{ __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } }> };
 
 export type FindBookingByIdQueryVariables = Exact<{
   findBookingById: Scalars['String']['input'];
 }>;
 
 
-export type FindBookingByIdQuery = { __typename?: 'Query', findBookingById: { __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } } };
+export type FindBookingByIdQuery = { __typename?: 'Query', findBookingById: { __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, journey: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null } } };
 
 export type ListJourneysQueryVariables = Exact<{
   filters?: InputMaybe<ListJourneysWithFilters>;
 }>;
 
 
-export type ListJourneysQuery = { __typename?: 'Query', listJourneys: Array<{ __typename?: 'JourneyEntity', arrival_time: any, automaticAccept: boolean, availableSeats: number, createdAt: any, departure_time: any, destination: string, id: string, origin: string, status: string, totalPrice: number, updatedAt?: any | null, bookings: Array<{ __typename?: 'BookingEntity', arrivalTime: any, createdAt: any, departureTime: any, id: string, status: string, totalPrice: number, updatedAt?: any | null }>, user: { __typename?: 'UserEntity', email: any, firstname: string, lastname: string, id: string } }> };
+export type ListJourneysQuery = { __typename?: 'Query', listJourneys: Array<{ __typename?: 'JourneyEntity', arrival_time: any, automaticAccept: boolean, availableSeats: number, createdAt: any, departure_time: any, destination: string, id: string, origin: string, status: string, totalPrice: number, updatedAt?: any | null, bookings: Array<{ __typename?: 'BookingEntity', createdAt: any, id: string, status: string, updatedAt?: any | null }>, user: { __typename?: 'UserEntity', email: any, firstname: string, lastname: string, id: string } }> };
 
 export type ListJourneysByUserQueryVariables = Exact<{
   userId: Scalars['String']['input'];
 }>;
 
 
-export type ListJourneysByUserQuery = { __typename?: 'Query', listJourneysByUser: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, bookings: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }> }> };
+export type ListJourneysByUserQuery = { __typename?: 'Query', listJourneysByUser: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null }, bookings: Array<{ __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null }> }> };
 
 export type FindJourneyByIdQueryVariables = Exact<{
   findJourneyById: Scalars['String']['input'];
 }>;
 
 
-export type FindJourneyByIdQuery = { __typename?: 'Query', findJourneyById: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, bookings: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }>, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null } } };
+export type FindJourneyByIdQuery = { __typename?: 'Query', findJourneyById: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, bookings: Array<{ __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null }>, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null } } };
 
 export type ListJourneyMessagesByJourneyQueryVariables = Exact<{
   journeyId: Scalars['String']['input'];
@@ -508,14 +533,14 @@ export type ListJourneyMessagesByJourneyQuery = { __typename?: 'Query', listJour
 export type ListUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ListUsersQuery = { __typename?: 'Query', listUsers: Array<{ __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null, journeys?: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null }> | null, bookings?: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }> | null }> };
+export type ListUsersQuery = { __typename?: 'Query', listUsers: Array<{ __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null, journeys?: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null }> | null, bookings?: Array<{ __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null }> | null }> };
 
 export type FindUserByIdQueryVariables = Exact<{
   findUserById: Scalars['String']['input'];
 }>;
 
 
-export type FindUserByIdQuery = { __typename?: 'Query', findUserById: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, tripsAsPassenger: number, grade?: string | null, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null, journeys?: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null }> | null, bookings?: Array<{ __typename?: 'BookingEntity', id: string, totalPrice: number, departureTime: any, arrivalTime: any, status: string, createdAt: any, updatedAt?: any | null }> | null } };
+export type FindUserByIdQuery = { __typename?: 'Query', findUserById: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, tripsAsPassenger: number, grade?: string | null, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null, journeys?: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null }> | null, bookings?: Array<{ __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null }> | null } };
 
 export type GetProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -562,9 +587,6 @@ export const CreateBookingDocument = gql`
     mutation createBooking($data: CreateBookingInput!) {
   createBooking(data: $data) {
     id
-    totalPrice
-    departureTime
-    arrivalTime
     status
     createdAt
     updatedAt
@@ -631,9 +653,6 @@ export const AcceptBookingDocument = gql`
     mutation acceptBooking($acceptBookingId: String!) {
   acceptBooking(id: $acceptBookingId) {
     id
-    totalPrice
-    departureTime
-    arrivalTime
     status
     createdAt
     updatedAt
@@ -700,9 +719,6 @@ export const RejectBookingDocument = gql`
     mutation rejectBooking($rejectBookingId: String!) {
   rejectBooking(id: $rejectBookingId) {
     id
-    totalPrice
-    departureTime
-    arrivalTime
     status
     createdAt
     updatedAt
@@ -769,9 +785,6 @@ export const CancelBookingDocument = gql`
     mutation cancelBooking($cancelBookingId: String!) {
   cancelBooking(id: $cancelBookingId) {
     id
-    totalPrice
-    departureTime
-    arrivalTime
     status
     createdAt
     updatedAt
@@ -867,9 +880,6 @@ export const CreateJourneyDocument = gql`
     }
     bookings {
       id
-      totalPrice
-      departureTime
-      arrivalTime
       status
       createdAt
       updatedAt
@@ -919,9 +929,6 @@ export const UpdateJourneyDocument = gql`
     updatedAt
     bookings {
       id
-      totalPrice
-      departureTime
-      arrivalTime
       status
       createdAt
       updatedAt
@@ -1005,9 +1012,6 @@ export const UpdateJourneyStatusDocument = gql`
     }
     bookings {
       id
-      totalPrice
-      departureTime
-      arrivalTime
       status
       createdAt
       updatedAt
@@ -1074,9 +1078,6 @@ export const IncreaseAvailableSeatsDocument = gql`
     }
     bookings {
       id
-      totalPrice
-      departureTime
-      arrivalTime
       status
       createdAt
       updatedAt
@@ -1143,9 +1144,6 @@ export const DecreaseAvailableSeatsDocument = gql`
     }
     bookings {
       id
-      totalPrice
-      departureTime
-      arrivalTime
       status
       createdAt
       updatedAt
@@ -1255,9 +1253,6 @@ export const UpdateUserDocument = gql`
     }
     bookings {
       id
-      totalPrice
-      departureTime
-      arrivalTime
       status
       createdAt
       updatedAt
@@ -1324,9 +1319,6 @@ export const ArchiveUserDocument = gql`
     }
     bookings {
       id
-      totalPrice
-      departureTime
-      arrivalTime
       status
       createdAt
       updatedAt
@@ -1458,9 +1450,6 @@ export const ListBookingsDocument = gql`
     query ListBookings {
   listBookings {
     id
-    totalPrice
-    departureTime
-    arrivalTime
     status
     createdAt
     updatedAt
@@ -1533,9 +1522,6 @@ export const ListBookingsByUserDocument = gql`
     query ListBookingsByUser($userId: String!) {
   listBookingsByUser(userId: $userId) {
     id
-    totalPrice
-    departureTime
-    arrivalTime
     status
     createdAt
     updatedAt
@@ -1609,9 +1595,6 @@ export const ListBookingsByJourneyDocument = gql`
     query listBookingsByJourney($journeyId: String!) {
   listBookingsByJourney(journeyId: $journeyId) {
     id
-    totalPrice
-    departureTime
-    arrivalTime
     status
     createdAt
     updatedAt
@@ -1685,9 +1668,6 @@ export const FindBookingByIdDocument = gql`
     query FindBookingById($findBookingById: String!) {
   findBookingById(id: $findBookingById) {
     id
-    totalPrice
-    departureTime
-    arrivalTime
     status
     createdAt
     updatedAt
@@ -1764,12 +1744,9 @@ export const ListJourneysDocument = gql`
     automaticAccept
     availableSeats
     bookings {
-      arrivalTime
       createdAt
-      departureTime
       id
       status
-      totalPrice
       updatedAt
     }
     createdAt
@@ -1855,9 +1832,6 @@ export const ListJourneysByUserDocument = gql`
     }
     bookings {
       id
-      totalPrice
-      departureTime
-      arrivalTime
       status
       createdAt
       updatedAt
@@ -1914,9 +1888,6 @@ export const FindJourneyByIdDocument = gql`
     updatedAt
     bookings {
       id
-      totalPrice
-      departureTime
-      arrivalTime
       status
       createdAt
       updatedAt
@@ -2057,9 +2028,6 @@ export const ListUsersDocument = gql`
     }
     bookings {
       id
-      totalPrice
-      departureTime
-      arrivalTime
       status
       createdAt
       updatedAt
@@ -2132,9 +2100,6 @@ export const FindUserByIdDocument = gql`
     }
     bookings {
       id
-      totalPrice
-      departureTime
-      arrivalTime
       status
       createdAt
       updatedAt

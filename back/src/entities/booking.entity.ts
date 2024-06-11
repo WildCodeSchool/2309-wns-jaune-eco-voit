@@ -8,17 +8,15 @@ import {
 } from 'typeorm' // Pour définir les entités TypeORM
 import {
     Field,
-    Float,
     GraphQLISODateTime,
     ID,
     InputType,
     ObjectType,
 } from 'type-graphql' // Pour définir les Types GraphQL
-import { Min, IsDate } from 'class-validator' // to add validators
 import { UserEntity } from './user.entity'
 import { JourneyEntity } from './journey.entity'
 
-export type Status = 'PENDING' | 'REJECTED' | 'CANCELLED' | 'ACCEPTED'
+export type Status = 'PENDING' | 'REJECTED' | 'CANCELLED' | 'ACCEPTED' | 'DONE'
 
 @ObjectType()
 @Entity()
@@ -27,33 +25,13 @@ export class BookingEntity {
     @PrimaryGeneratedColumn('uuid') // pour TypeORM
     id: string
 
-    @Field(() => Float)
-    @Column({ type: 'float' })
-    @Min(0.1, { message: 'Price must be greater than 0' })
-    totalPrice: number
-
-    @Field()
-    @Column({ type: 'timestamptz' }) // Recommended for Date  typeORM
-    @IsDate({ message: 'Departure time must be a valide date' })
-    departureTime: Date
-
-    @Field()
-    @Column({ type: 'timestamptz' }) // Recommended for Date  typeORM
-    @IsDate({ message: 'Arrival time must be a valide date' })
-    arrivalTime: Date
-
     @Field()
     @Column({
         type: 'text',
-        enum: ['PENDING', 'REJECTED', 'ACCEPTED', 'CANCELLED'],
-        default: ['PENDING'],
+        enum: ['PENDING', 'REJECTED', 'ACCEPTED', 'CANCELLED', 'DONE'],
+        default: 'PENDING',
     })
     status: Status // Type créé pour le Statut
-
-    // @Field(() => [StepEntity])
-    // @JoinTable()
-    // @ManyToMany(() => StepEntity, (s) => s.bookings)
-    // steps: StepEntity[];
 
     @Field(() => UserEntity)
     @ManyToOne(() => UserEntity, (u) => u.bookings)
@@ -62,10 +40,6 @@ export class BookingEntity {
     @Field(() => JourneyEntity)
     @ManyToOne(() => JourneyEntity, (j) => j.bookings)
     journey: JourneyEntity
-
-    // @Field(() => [RatingEntity])
-    // @OneToMany(() => RatingEntity, (rating) => rating.booking)
-    // ratings: RatingEntity[];
 
     @Field(() => GraphQLISODateTime)
     @CreateDateColumn()
@@ -86,15 +60,6 @@ export class PartialBookingInput {
 
 @InputType()
 export class CreateBookingInput {
-    @Field(() => Float)
-    totalPrice: number
-
-    @Field()
-    departureTime: Date
-
-    @Field()
-    arrivalTime: Date
-
     @Field(() => PartialBookingInput)
     user: PartialBookingInput
 
