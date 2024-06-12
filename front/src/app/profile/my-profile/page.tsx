@@ -97,6 +97,7 @@ function MyProfile() {
   if (error) {
     return <div>Error</div>;
   }
+  console.log(data);
 
   return (
     <div className="home_page flex flex-col gap-6  bg-primary10 py-10">

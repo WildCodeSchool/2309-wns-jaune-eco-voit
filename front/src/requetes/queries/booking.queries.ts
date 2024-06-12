@@ -20,6 +20,7 @@ export const LIST_BOOKINGS = gql`
         grade
         tripsAsPassenger
         tripsAsDriver
+        averageRate
         status
         createdAt
         updatedAt
@@ -61,6 +62,7 @@ export const LIST_BOOKINGS_BY_USER = gql`
         grade
         tripsAsPassenger
         tripsAsDriver
+        averageRate
         status
         createdAt
         updatedAt
@@ -97,6 +99,7 @@ export const LIST_BOOKINGS_BY_JOURNEY = gql`
         password
         dateOfBirth
         phoneNumber
+        averageRate
         profilePicture
         role
         grade
@@ -142,6 +145,7 @@ export const FIND_BOOKING_BY_ID = gql`
         role
         grade
         tripsAsPassenger
+        averageRate
         tripsAsDriver
         status
         createdAt

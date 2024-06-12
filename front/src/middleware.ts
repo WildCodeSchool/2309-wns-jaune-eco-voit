@@ -29,12 +29,18 @@ export async function verify(token: string): Promise<Payload> {
 }
 
 async function checkToken(token: string | undefined, request: NextRequest) {
-  const currentRoute = findRouteByPathname(request.nextUrl.pathname);
+  const prevLocation = request.nextUrl.pathname;
+  const currentRoute = findRouteByPathname(prevLocation);
   let response = NextResponse.next();
   if (!token) {
     //On redirige si la route est protégée
     if (currentRoute && currentRoute.protected !== "PUBLIC") {
-      response = NextResponse.redirect(new URL("/auth/login", request.url));
+      response = NextResponse.redirect(
+        new URL(
+          `/auth/login?requestedURL=${request.nextUrl.pathname}`,
+          request.url
+        )
+      );
     }
     //On delete les cookies existants
     response.cookies.delete("email");
@@ -59,11 +65,21 @@ async function checkToken(token: string | undefined, request: NextRequest) {
       return response;
     }
 
-    return NextResponse.redirect(new URL("/auth/login", request.url));
+    return NextResponse.redirect(
+      new URL(
+        `/auth/login?requestedURL=${request.nextUrl.pathname}`,
+        request.url
+      )
+    );
   } catch (err) {
     console.error("Verification echouée", err);
 
-    response = NextResponse.redirect(new URL("/auth/login", request.url));
+    response = NextResponse.redirect(
+      new URL(
+        `/auth/login?requestedURL=${request.nextUrl.pathname}`,
+        request.url
+      )
+    );
     //On delete les cookies existants
     response.cookies.delete("token");
     response.cookies.delete("email");

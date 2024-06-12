@@ -113,7 +113,7 @@ export default function Page({ params }: { params: { id: string } }) {
               <Divider />
               <AvatarJourney
                 firstname={journeyData.findJourneyById.user.firstname}
-                rating={2}
+                rating={journeyData.findJourneyById.user.averageRate}
                 profilePicture={
                   journeyData.findJourneyById.user.profilePicture!
                 }

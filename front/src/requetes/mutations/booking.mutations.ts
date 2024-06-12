@@ -12,6 +12,7 @@ export const CREATE_BOOKING = gql`
         firstname
         lastname
         email
+        averageRate
         password
         dateOfBirth
         phoneNumber
@@ -54,6 +55,7 @@ export const ACCEPT_BOOKING = gql`
         lastname
         email
         password
+        averageRate
         dateOfBirth
         phoneNumber
         profilePicture
@@ -97,6 +99,7 @@ export const REJECT_BOOKING = gql`
         password
         dateOfBirth
         phoneNumber
+        averageRate
         profilePicture
         role
         grade
@@ -139,6 +142,7 @@ export const CANCEL_BOOKING = gql`
         dateOfBirth
         phoneNumber
         profilePicture
+        averageRate
         role
         grade
         tripsAsPassenger

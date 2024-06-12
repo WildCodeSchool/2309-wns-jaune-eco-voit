@@ -60,7 +60,7 @@ const Header = () => {
     }
     getUserDatas();
     setLoggedUser(getUser?.toString());
-  }, [getUser, updateUser]);
+  }, [getUser, updateUser, getUserDatas]);
 
   const handleCloseMenu = () => {
     setAnchorEl(null);

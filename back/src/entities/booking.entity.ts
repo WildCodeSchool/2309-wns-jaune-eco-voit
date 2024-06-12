@@ -16,7 +16,13 @@ import {
 import { UserEntity } from './user.entity'
 import { JourneyEntity } from './journey.entity'
 
-export type Status = 'PENDING' | 'REJECTED' | 'CANCELLED' | 'ACCEPTED' | 'DONE'
+export type Status =
+    | 'PENDING'
+    | 'REJECTED'
+    | 'CANCELLED'
+    | 'ACCEPTED'
+    | 'DONE'
+    | 'RATED'
 
 @ObjectType()
 @Entity()
@@ -28,11 +34,10 @@ export class BookingEntity {
     @Field()
     @Column({
         type: 'text',
-        enum: ['PENDING', 'REJECTED', 'ACCEPTED', 'CANCELLED', 'DONE'],
+        enum: ['PENDING', 'REJECTED', 'ACCEPTED', 'CANCELLED', 'DONE', 'RATED'],
         default: 'PENDING',
     })
     status: Status // Type créé pour le Statut
-
     @Field(() => UserEntity)
     @ManyToOne(() => UserEntity, (u) => u.bookings)
     user: UserEntity
