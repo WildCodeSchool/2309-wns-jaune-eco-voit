@@ -22,6 +22,7 @@ import {
 } from "@/types/graphql";
 import { AuthContext } from "@/context/authContext";
 import UploadPofilePicture from "../components/UploadPofilePicture";
+import dayjs from "dayjs";
 
 function MyProfile() {
   const { data, loading, error } = useGetProfileQuery({
@@ -89,6 +90,7 @@ function MyProfile() {
     }
     setOpen(false);
   };
+  const formatDate = dayjs(updateInfos?.dateOfBirth).format("DD/MM/YYYY");
 
   if (loading) {
     return <div>Loading ...</div>;
@@ -132,7 +134,7 @@ function MyProfile() {
             <h4>Prenom : {data?.getProfile?.firstname}</h4>
             <h4>Nom : {data?.getProfile?.lastname}</h4>
             <h4>E-mail : {data?.getProfile?.email}</h4>
-            <h4>Date de naissance : {data?.getProfile?.dateOfBirth}</h4>
+            <h4>Date de naissance : {formatDate}</h4>
             <h4>Numéro de téléphone : {data?.getProfile?.phoneNumber}</h4>
             <h4>Role : {data?.getProfile?.role}</h4>
             <div className="ModalPassword bg-primary10 flex flex-col justify-center items-center py-10">
@@ -188,7 +190,7 @@ function MyProfile() {
             <FormControl className="FormControl">
               <FormLabel>Date de naissance :</FormLabel>
               <Input
-                value={updateInfos.dateOfBirth}
+                value={formatDate}
                 sx={{ marapinTop: "0.5em!important" }}
                 onChange={(e) =>
                   setUpdateInfos((prevState: any) => ({
