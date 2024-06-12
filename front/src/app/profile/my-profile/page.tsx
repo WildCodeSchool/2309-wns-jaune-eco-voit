@@ -7,21 +7,20 @@ import {
   FormLabel,
   IconButton,
   Input,
-  Modal,
-  Stack,
   Tooltip,
-  Typography,
 } from "@mui/material";
 import React, { useContext, useEffect } from "react";
 import { useState } from "react";
 import {
   GetProfileDocument,
+  UserProfile,
   useGetProfileQuery,
   useUpdateUserMutation,
 } from "@/types/graphql";
 import { AuthContext } from "@/context/authContext";
-import UploadPofilePicture from "../components/UploadPofilePicture";
 import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
+import UploadProfilePictureModal from "../../components/UploadProfilePicture/UploadProfilePictureModal";
+import ChangePasswordModal from "@/app/components/ChangePassword/ChangePasswordModal";
 
 function MyProfile() {
   const { data, loading, error } = useGetProfileQuery({
@@ -33,74 +32,82 @@ function MyProfile() {
   });
   const { getUser: userId } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] =
+    useState(false);
   const [isEditPictureModalOpen, setIsEditPictureModalOpen] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  const [updateInfos, setUpdateInfos] = useState<any>({});
+  const [updateInfos, setUpdateInfos] =
+    useState<Omit<UserProfile, "id" | "averageRate">>();
 
   useEffect(() => {
     if (data) {
-      setUpdateInfos(data?.getProfile);
+      const { averageRate, ...rest } = data.getProfile;
+      setUpdateInfos(rest);
     }
   }, [data]);
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
-
-  const handleCancel = () => {
-    setIsEditing(false);
-  };
-
   const handleSave = () => {
-    updateUser({
-      variables: { data: { ...updateInfos, id: userId } },
-      onCompleted(data, clientOptions) {
-        setIsEditing(false); // une fois la mise à jour terminée, désactiver le mode édition
-      },
-    });
-    setIsEditing(false);
+    console.log(updateInfos);
+    if (userId) {
+      updateUser({
+        variables: { data: { ...updateInfos, id: userId } },
+
+        onCompleted() {
+          setIsEditing(false); // une fois la mise à jour terminée, désactiver le mode édition
+        },
+      });
+    }
+  };
+
+  const resetPasswordInputs = () => {
+    setOldPassword("");
+    setNewPassword("");
+    setConfirmNewPassword("");
+  };
+
+  const handleOnCloseChangePasswordModal = () => {
+    setIsChangePasswordModalOpen(false);
+    resetPasswordInputs();
   };
 
   const handlePasswordSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (newPassword === confirmNewPassword) {
+    if (newPassword === confirmNewPassword && userId) {
       updateUser({
         variables: {
           data: { ...updateInfos, id: userId, password: newPassword },
         },
-        onCompleted(data, clientOptions) {
-          handleClose();
+        onCompleted() {
+          setIsEditing(false); // une fois la mise à jour terminée, désactiver le mode édition
+          handleOnCloseChangePasswordModal();
         },
       });
     } else {
       //TODO Gere l'UI de l'erreur
       console.log("Les mots de passe ne sont pas identiques");
     }
-    setOpen(false);
   };
 
   if (loading) {
     return <CircularLoading />;
   }
 
-  if (error || !data) {
+  //TODO Gérer l'erreur
+  if (error || !data || !updateInfos) {
     return <div>Error</div>;
   }
 
   const {
-    getProfile: { firstname, lastname, email, dateOfBirth, phoneNumber, role },
-  } = data;
+    firstname,
+    lastname,
+    email,
+    dateOfBirth,
+    phoneNumber,
+    role,
+    profilePicture,
+  } = updateInfos;
 
   return (
     <div className="home_page flex flex-col gap-6  bg-primary10 py-10">
@@ -117,8 +124,7 @@ function MyProfile() {
             <Avatar
               alt="profile picture"
               sx={{ width: 110, height: 110 }}
-              // src={updateInfos.picture}
-              src={updateInfos.profilePicture}
+              src={profilePicture ?? undefined}
               onClick={() => setIsEditPictureModalOpen(true)}
             />
           </IconButton>
@@ -135,7 +141,7 @@ function MyProfile() {
             <h4>Numéro de téléphone : {phoneNumber}</h4>
             <h4>Role : {role}</h4>
             <div className="ModalPassword bg-primary10 flex flex-col justify-center items-center py-10">
-              <Button onClick={handleEdit}>Editer</Button>
+              <Button onClick={() => setIsEditing(true)}>Editer</Button>
             </div>
           </div>
         )}
@@ -146,7 +152,7 @@ function MyProfile() {
               <Input
                 sx={{ marginTop: "0.5em!important" }}
                 autoFocus
-                value={updateInfos.firstname}
+                value={firstname}
                 onChange={(e) =>
                   setUpdateInfos((prevState: any) => ({
                     ...prevState,
@@ -159,7 +165,7 @@ function MyProfile() {
             <FormControl className="FormControl">
               <FormLabel>Nom :</FormLabel>
               <Input
-                value={updateInfos.lastname}
+                value={lastname}
                 sx={{ marginTop: "0.5em!important" }}
                 onChange={(e) =>
                   setUpdateInfos((prevState: any) => ({
@@ -179,7 +185,7 @@ function MyProfile() {
                     email: e.target.value,
                   }))
                 }
-                value={updateInfos.email}
+                value={email}
                 sx={{ marginTop: "0.5em!important" }}
               />
             </FormControl>
@@ -187,7 +193,7 @@ function MyProfile() {
             <FormControl className="FormControl">
               <FormLabel>Date de naissance :</FormLabel>
               <Input
-                value={updateInfos.dateOfBirth}
+                value={dateOfBirth}
                 sx={{ marapinTop: "0.5em!important" }}
                 onChange={(e) =>
                   setUpdateInfos((prevState: any) => ({
@@ -207,91 +213,41 @@ function MyProfile() {
                     phoneNumber: e.target.value,
                   }))
                 }
-                value={updateInfos.phoneNumber}
+                value={phoneNumber}
                 sx={{ marginTop: "0.5em!important" }}
               />
             </FormControl>
 
             <div className="flex gap-4 mt-8 ModalPassword">
-              <Button onClick={handleOpen}>Modifier votre mot de passe</Button>
+              <Button onClick={() => setIsChangePasswordModalOpen(true)}>
+                Modifier votre mot de passe
+              </Button>
               <Button onClick={handleSave}>Enregistrer</Button>
-              <Button onClick={handleCancel}>Annuler</Button>
+              <Button onClick={() => setIsEditing(false)}>Annuler</Button>
             </div>
           </div>
         )}
       </div>
 
-      <Modal
-        open={isEditPictureModalOpen}
-        onClose={() => setIsEditPictureModalOpen(false)}
-        aria-labelledby="modal-profile-picture"
-        aria-describedby="Modale d'édition de la photo de profil"
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div className="flex flex-col justify-center items-center bg-white p-6 rounded-md">
-          <UploadPofilePicture
-            setIsEditPictureModalOpen={setIsEditPictureModalOpen}
-            profilePictureUrl={updateInfos.profilePicture}
-          />
-        </div>
-      </Modal>
+      {isEditPictureModalOpen && (
+        <UploadProfilePictureModal
+          onCloseEditPictureModal={() => setIsEditPictureModalOpen(false)}
+          profilePicture={profilePicture}
+        />
+      )}
 
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <section className="p-6 rounded-md bg-white">
-          <Typography id="modal-modal-title" variant="h5" component="h2">
-            Changement de mot de passe
-          </Typography>
-          <form onSubmit={handlePasswordSave}>
-            <Stack spacing={2}>
-              <FormControl>
-                <FormLabel>Ancien mot de passe :</FormLabel>
-                <Input
-                  type="password"
-                  value={oldPassword}
-                  onChange={(e) => setOldPassword(e.target.value)}
-                  required
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel>Nouveau mot de passe :</FormLabel>
-                <Input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  required
-                />
-              </FormControl>
-              <FormControl>
-                <FormLabel>Confirmer le nouveau mot de passe :</FormLabel>
-                <Input
-                  type="password"
-                  value={confirmNewPassword}
-                  onChange={(e) => setConfirmNewPassword(e.target.value)}
-                  required
-                />
-              </FormControl>
-              <Button type="submit" onClick={handleSave}>
-                Enregistrer
-              </Button>
-              <Button onClick={handleClose}>Annuler</Button>
-            </Stack>
-          </form>
-        </section>
-      </Modal>
+      {isChangePasswordModalOpen && (
+        <ChangePasswordModal
+          onCloseModal={handleOnCloseChangePasswordModal}
+          onChangeOldPassword={(value) => setOldPassword(value)}
+          onChangeConfirmNewPassword={(value) => setConfirmNewPassword(value)}
+          onChangeNewPassword={(value) => setNewPassword(value)}
+          onSavePassword={(e) => handlePasswordSave(e)}
+          oldPassword={oldPassword}
+          newPassword={newPassword}
+          confirmNewPassword={confirmNewPassword}
+        />
+      )}
     </div>
   );
 }

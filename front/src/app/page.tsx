@@ -53,7 +53,7 @@ export default function Home() {
     return <CircularLoading />;
   }
 
-  if (error || !journeys) {
+  if (error) {
     //TODO Gerer erreur
     return <div>Erreur</div>;
   }
@@ -65,42 +65,43 @@ export default function Home() {
 
       <SearchBar onSearchJourneys={handleOnSearchJourneys} />
 
-      {journeys.length === 0 ? (
-        <h3>Aucun trajet trouvé</h3>
-      ) : (
-        <Grid container spacing={4} justifyContent="center">
-          {journeys.map(
-            ({
-              id,
-              departure_time,
-              totalPrice,
-              user,
-              origin,
-              destination,
-              availableSeats,
-            }) => {
-              dayjs.locale("fr");
+      {journeys &&
+        (journeys.length === 0 ? (
+          <h3>Aucun trajet trouvé</h3>
+        ) : (
+          <Grid container spacing={4} justifyContent="center">
+            {journeys.map(
+              ({
+                id,
+                departure_time,
+                totalPrice,
+                user,
+                origin,
+                destination,
+                availableSeats,
+              }) => {
+                dayjs.locale("fr");
 
-              return (
-                <JourneyCard
-                  departureTime={departure_time}
-                  key={id}
-                  id={id}
-                  totalPrice={
-                    filters?.availableSeats
-                      ? totalPrice * filters?.availableSeats
-                      : totalPrice
-                  }
-                  user={user}
-                  origin={origin}
-                  destination={destination}
-                  availableSeats={availableSeats}
-                />
-              );
-            }
-          )}
-        </Grid>
-      )}
+                return (
+                  <JourneyCard
+                    departureTime={departure_time}
+                    key={id}
+                    id={id}
+                    totalPrice={
+                      filters?.availableSeats
+                        ? totalPrice * filters?.availableSeats
+                        : totalPrice
+                    }
+                    user={user}
+                    origin={origin}
+                    destination={destination}
+                    availableSeats={availableSeats}
+                  />
+                );
+              }
+            )}
+          </Grid>
+        ))}
     </div>
   );
 }
