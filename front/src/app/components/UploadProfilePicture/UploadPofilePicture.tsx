@@ -1,23 +1,23 @@
 "use client";
+import { Avatar, Button } from "@mui/material";
 import React, { SetStateAction, useContext, useState } from "react";
-import Image from "next/image";
+
 import { AuthContext } from "@/context/authContext";
 import { GetProfileDocument, useUpdateUserMutation } from "@/types/graphql";
-import { Button } from "@mui/material";
 
 const UploadPofilePicture = ({
-  setIsEditPictureModalOpen,
+  onCloseEditPictureModal,
   profilePictureUrl,
 }: {
-  profilePictureUrl: string;
-  setIsEditPictureModalOpen: React.Dispatch<SetStateAction<boolean>>;
+  profilePictureUrl?: string | null;
+  onCloseEditPictureModal: () => void;
 }) => {
   const { getUser: userId } = useContext(AuthContext);
 
   const [updateProfilePicture] = useUpdateUserMutation({
     onCompleted: () => {
       setPreview("");
-      setIsEditPictureModalOpen(false);
+      onCloseEditPictureModal();
     },
     refetchQueries: [{ query: GetProfileDocument }],
   });
@@ -59,14 +59,10 @@ const UploadPofilePicture = ({
   return (
     <div className="flex flex-col items-center gap-4 w-full">
       {
-        //To preview the file thumbnail
-        <Image
-          src={preview ? preview : profilePictureUrl}
-          alt="avatar"
-          height={200}
-          width={200}
-          className="rounded-full object-cover h-36 w-36"
-          unoptimized // pour éviter que Next ne renomme l'URL avec des caractère spéciaux
+        <Avatar
+          alt="profile picture"
+          src={profilePictureUrl ?? undefined}
+          sx={{ width: 150, height: 150 }}
         />
       }
       <form

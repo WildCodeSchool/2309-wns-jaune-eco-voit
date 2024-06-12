@@ -9,9 +9,7 @@ import {
   Theme,
   Box,
 } from "@mui/material";
-
 import { styled } from "@mui/material/styles";
-
 import CircleOutlinedIcon from "@mui/icons-material/CircleOutlined";
 
 const StyledTextField = styled(TextField)({
@@ -27,6 +25,7 @@ const StyledTextField = styled(TextField)({
     border: "0",
   },
 });
+
 function debounce<Func extends (...args: any[]) => void>(
   func: Func,
   wait: number
@@ -77,8 +76,8 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
   gotAdornment,
 }) => {
   const [options, setOptions] = useState<string[]>([]);
-  const [inputValue, setInputValue] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState("");
+  const [loading, setLoading] = useState(false);
   const [apiResponse, setApiResponse] = useState<Feature[]>([]);
   const [geometry, setGeometry] = useState<string[]>([]);
 

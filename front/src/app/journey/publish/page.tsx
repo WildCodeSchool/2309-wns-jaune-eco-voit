@@ -52,25 +52,34 @@ const PublishJourney = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  const {
+    origin,
+    departure_date,
+    destination,
+    availableSeats,
+    totalPrice,
+    automaticAccept,
+  } = journeyData;
+
   const handleValidateForm = () => {
     if (
-      !journeyData.origin ||
-      !journeyData.destination ||
-      journeyData.departure_date < dayjs() ||
-      journeyData.totalPrice === 0 ||
-      journeyData.availableSeats === 0 ||
+      !origin ||
+      !destination ||
+      departure_date < dayjs() ||
+      totalPrice === 0 ||
+      availableSeats === 0 ||
       !userId
     )
       return;
 
     const journey: CreateJourneyInput = {
-      departure_time: journeyData.departure_date.toISOString(),
-      arrival_time: journeyData.departure_date.add(2, "hour").toISOString(),
-      origin: journeyData.origin,
-      destination: journeyData.destination,
-      totalPrice: journeyData.totalPrice,
-      availableSeats: journeyData.availableSeats,
-      automaticAccept: journeyData.automaticAccept,
+      departure_time: departure_date.toISOString(),
+      arrival_time: departure_date.add(2, "hour").toISOString(),
+      origin,
+      destination,
+      totalPrice,
+      availableSeats,
+      automaticAccept,
       user: { id: userId },
     };
 
@@ -144,9 +153,9 @@ const PublishJourney = () => {
                   onClick={handleNext}
                   variant={"contained"}
                   disabled={
-                    (activeStep === 0 && !journeyData.origin) ||
-                    (activeStep === 1 && !journeyData.destination) ||
-                    (activeStep === 5 && journeyData.totalPrice === 0)
+                    (activeStep === 0 && !origin) ||
+                    (activeStep === 1 && !destination) ||
+                    (activeStep === 5 && totalPrice === 0)
                   }
                 >
                   Suivant

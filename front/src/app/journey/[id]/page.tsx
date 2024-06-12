@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 import "dayjs/locale/fr";
 dayjs.locale("fr");
 import { useFindJourneyByIdQuery, useFindUserByIdQuery } from "@/types/graphql";
-
 import {
   Stack,
   Typography,
@@ -12,11 +11,8 @@ import {
   Button,
   CircularProgress,
 } from "@mui/material";
-
 import AvatarJourney from "@/app/components/Avatar/AvatarJouney";
 import JourneyTimeline from "@/app/components/JourneyCard/JourneyTimeline";
-import VerifiedUserOutlinedIcon from "@mui/icons-material/VerifiedUser";
-import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import { useContext } from "react";
 import { AuthContext } from "@/context/authContext";
@@ -25,7 +21,7 @@ import JourneyMessages from "@/app/components/JourneyMessages/JourneyMessages";
 export default function Page({ params }: { params: { id: string } }) {
   const { id: journeyId } = params;
 
-  const { getUser: userId } = useContext(AuthContext);
+  const { getUser: userContextId } = useContext(AuthContext);
 
   const {
     data: journeyData,
@@ -39,21 +35,35 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const { data: userData } = useFindUserByIdQuery({
     variables: {
-      findUserById: userId || "",
+      findUserById: userContextId || "",
     },
   });
 
+  if (!journeyData || journeyError) {
+    //TODO renvoyer vers la page d'erreur
+    return <div>Quelque chose s&apos;est mal passé</div>;
+  }
+
+  const {
+    findJourneyById: {
+      user: driver,
+      bookings,
+      departure_time,
+      arrival_time,
+      origin,
+      destination,
+      availableSeats,
+      totalPrice,
+    },
+  } = journeyData;
+
   const isUserAllowedToAccessMessage = () => {
-    const journey = journeyData?.findJourneyById;
-    const userConnected = userData?.findUserById;
+    const isDriver = driver.id === userContextId;
 
-    const isDriver = journey?.user.id === userId;
+    const journeyBookingIds = bookings.map(({ id }) => id);
 
-    const journeyBookingIds = new Set(
-      journey?.bookings?.map((booking) => booking.id)
-    );
-    const isPassenger = userConnected?.bookings?.some((booking) =>
-      journeyBookingIds.has(booking.id)
+    const isPassenger = userData?.findUserById.bookings?.some(({ id }) =>
+      journeyBookingIds.some((journeyBookingId) => journeyBookingId === id)
     );
 
     return isDriver || isPassenger;
@@ -69,68 +79,51 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <Stack className="h-full w-10/12 mx-auto">
-      {journeyError && <div>Error: {journeyError.message}</div>}
-      {journeyData && (
-        <Stack direction="column" alignItems="center" spacing={4}>
-          <Typography
-            variant="h4"
-            component="h1"
-            align="center"
-            sx={{ height: "10vh", my: 4 }}
-          >
-            {dayjs(journeyData?.findJourneyById.departure_time).format(
-              "dddd D MMMM YYYY"
-            )}
-          </Typography>
+      <Stack direction="column" alignItems="center" spacing={4}>
+        <Typography
+          variant="h4"
+          component="h1"
+          align="center"
+          sx={{ height: "10vh", my: 4 }}
+        >
+          {dayjs(departure_time).format("dddd D MMMM YYYY")}
+        </Typography>
 
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={5}>
-              <Divider />
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                sx={{ my: 4 }}
-              >
-                <Typography variant="h6" component="p">
-                  Prix total pour 1 passager
-                </Typography>
-                <Typography variant="h6" component="p">
-                  {journeyData?.findJourneyById.totalPrice} €
-                </Typography>
-              </Stack>
-              <Stack
-                direction="row"
-                justifyContent="space-between"
-                sx={{ my: 4 }}
-              >
-                <Typography variant="h6" component="p">
-                  Nombre de places disponibles
-                </Typography>
-                <Typography variant="h6" component="p">
-                  {journeyData?.findJourneyById.availableSeats}
-                </Typography>
-              </Stack>
-              <Divider />
-              <AvatarJourney
-                firstname={journeyData.findJourneyById.user.firstname}
-                rating={journeyData.findJourneyById.user.averageRate}
-                profilePicture={
-                  journeyData.findJourneyById.user.profilePicture!
-                }
-              />
-              {/* <Stack direction="row" spacing={3} marginY={8}>
-                <VerifiedUserOutlinedIcon />
-                <Typography variant="body1" className="text-dark60">
-                  Profil Vérifié
-                </Typography>
-              </Stack>
-              <Stack direction="row" spacing={3} marginY={4}>
-                <CalendarMonthOutlinedIcon color="primary" />
-                <Typography variant="body1" className="text-dark60">
-                  Annule rarement ses trajets
-                </Typography>
-              </Stack> */}
-              <Divider />
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={5}>
+            <Divider />
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              sx={{ my: 4 }}
+            >
+              <Typography variant="h6" component="p">
+                Prix total pour 1 passager
+              </Typography>
+              <Typography variant="h6" component="p">
+                {totalPrice} €
+              </Typography>
+            </Stack>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              sx={{ my: 4 }}
+            >
+              <Typography variant="h6" component="p">
+                Nombre de places disponibles
+              </Typography>
+              <Typography variant="h6" component="p">
+                {availableSeats}
+              </Typography>
+            </Stack>
+            <Divider />
+            <AvatarJourney
+              firstname={driver.firstname}
+              rating={driver.averageRate}
+              profilePicture={driver.profilePicture!}
+            />
+            <Divider />
+            {driver.id !== userContextId && (
               <Button
                 variant="contained"
                 fullWidth
@@ -138,50 +131,50 @@ export default function Page({ params }: { params: { id: string } }) {
                 sx={{ borderRadius: "20px" }}
                 size="large"
               >
-                Contacter {journeyData.findJourneyById.user.firstname}
+                Contacter {driver.firstname}
               </Button>
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              md={7}
+            )}
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            md={7}
+            sx={{
+              marginY: {
+                xs: 8,
+                md: 0,
+              },
+              minHeight: "400px",
+            }}
+          >
+            <Typography
+              variant="h6"
+              align="center"
               sx={{
-                marginY: {
-                  xs: 8,
-                  md: 0,
-                },
-                minHeight: "400px",
+                mb: 4,
+                fontSize: "1.8rem",
+                color: "black",
               }}
             >
-              <Typography
-                variant="h6"
-                align="center"
-                sx={{
-                  mb: 4,
-                  fontSize: "1.8rem",
-                  color: "black",
-                }}
-              >
-                Détail du trajet
-              </Typography>
-              <JourneyTimeline
-                departureTime={journeyData.findJourneyById.departure_time}
-                arrivalTime={journeyData.findJourneyById.arrival_time}
-                origin={journeyData.findJourneyById.origin}
-                destination={journeyData.findJourneyById.destination}
-              />
+              Détail du trajet
+            </Typography>
+            <JourneyTimeline
+              departureTime={departure_time}
+              arrivalTime={arrival_time}
+              origin={origin}
+              destination={destination}
+            />
+          </Grid>
+        </Grid>
+
+        {userContextId && isUserAllowedToAccessMessage() && (
+          <Grid container spacing={2} alignItems="center" sx={{ mt: 4 }}>
+            <Grid item xs={12}>
+              <JourneyMessages userId={userContextId} journeyId={journeyId} />
             </Grid>
           </Grid>
-
-          {userId && isUserAllowedToAccessMessage() && (
-            <Grid container spacing={2} alignItems="center" sx={{ mt: 4 }}>
-              <Grid item xs={12}>
-                <JourneyMessages userId={userId} journeyId={journeyId} />
-              </Grid>
-            </Grid>
-          )}
-        </Stack>
-      )}
+        )}
+      </Stack>
     </Stack>
   );
 }

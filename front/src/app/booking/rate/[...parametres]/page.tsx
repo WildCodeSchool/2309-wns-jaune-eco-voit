@@ -6,11 +6,12 @@ import {
   useFindUserByIdQuery,
 } from "@/types/graphql";
 import { AuthContext } from "@/context/authContext";
-import { Avatar, Button, CircularProgress, Rating } from "@mui/material";
+import { Button, CircularProgress, Rating } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { routes } from "@/app/lib/routes";
 import JourneyCardHeader from "@/app/components/JourneyCard/JourneyCardHeader";
 import AvatarJourney from "@/app/components/Avatar/AvatarJouney";
+import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
 
 const RatingPage = ({
   params: {
@@ -34,11 +35,7 @@ const RatingPage = ({
 
   const [
     rateBooking,
-    {
-      data: rateBookingData,
-      error: rateBookingError,
-      loading: rateBookingLoading,
-    },
+    { error: rateBookingError, loading: rateBookingLoading },
   ] = useCreateRateMutation({
     onCompleted: () => {
       router.push(routes["home"].pathname);
@@ -61,20 +58,24 @@ const RatingPage = ({
   const { getUser: userId } = useContext(AuthContext);
 
   if (bookingLoading || userLoading || rateBookingLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <CircularProgress />
-      </div>
-    );
+    return <CircularLoading />;
   }
 
-  if (!bookingDatas || !userDatas) {
+  if (
+    !bookingDatas ||
+    !userDatas ||
+    rateBookingError ||
+    userError ||
+    bookingError
+  ) {
     return <div>Désolé, quelque chose s&apos;est mal passé</div>;
   }
 
   const {
     findBookingById: {
       journey: { departure_time, origin, destination },
+      user: { id: passengerId },
+      status: bookingStatus,
     },
   } = bookingDatas;
 
@@ -82,7 +83,7 @@ const RatingPage = ({
     findUserById: { firstname, profilePicture },
   } = userDatas;
 
-  if (bookingDatas?.findBookingById.user.id !== userId) {
+  if (passengerId !== userId) {
     return (
       <div className="flex items-center justify-center">
         You are not allowed to rate this booking
@@ -90,7 +91,7 @@ const RatingPage = ({
     );
   }
 
-  if (bookingDatas?.findBookingById.status !== "DONE") {
+  if (bookingStatus !== "DONE") {
     return (
       <div className="flex items-center justify-center">
         Ce trajet ne peut pas etre noté
@@ -98,8 +99,6 @@ const RatingPage = ({
     );
   }
 
-  console.log("bookingDatas", bookingDatas);
-  console.log("userDatas", userDatas);
   return (
     <div className="flex flex-col gap-8 items-center justify-center">
       <h2>Détails du trajet</h2>
@@ -120,8 +119,8 @@ const RatingPage = ({
         <h3>Évaluez le conducteur</h3>
         <Rating
           value={+bookingRate}
-          onChange={(e, newValue) =>
-            setBookingRate(newValue?.toString() ?? "1")
+          onChange={(_, newValue) =>
+            newValue && setBookingRate(newValue?.toString())
           }
           defaultValue={0}
           precision={1}
