@@ -9,7 +9,7 @@ type AvatarJourneyProps = {
 const AvatarJourney = ({
   firstname,
   rating,
-  profilePicture = "https://www.santelog.com/sites/santelog.com/www.santelog.com/files/styles/large/public/images/accroche/adobestock_276208008_lama.jpeg?itok=d2steNiv",
+  profilePicture,
 }: AvatarJourneyProps) => {
   return (
     <div className="py-4 gap-4">

@@ -4,11 +4,10 @@ import AvatarJourney from "../Avatar/AvatarJouney";
 import JourneyCardFooter from "./JourneyCardFooter";
 import { routes } from "@/app/lib/routes";
 import Link from "next/link";
-import { JourneyEntity, UserEntity } from "@/types/graphql";
 
 type User = {
   averageRate?: number | null;
-  profilePicture?: string;
+  profilePicture?: string | null;
   firstname: string;
 };
 
@@ -31,7 +30,6 @@ const JourneyCard = ({
   user,
   id,
 }: JourneyCardProps) => {
-  console.log("average", user.averageRate);
   return (
     <Grid item sm={10} md={5}>
       <Link
@@ -43,14 +41,10 @@ const JourneyCard = ({
           origin={origin}
           destination={destination}
         />
-
         <AvatarJourney
           firstname={user.firstname}
           rating={user.averageRate ? user.averageRate : undefined}
-          profilePicture={
-            user.profilePicture ??
-            "https://www.santelog.com/sites/santelog.com/www.santelog.com/files/styles/large/public/images/accroche/adobestock_276208008_lama.jpeg?itok=d2steNiv"
-          }
+          profilePicture={user.profilePicture ?? ""}
         />
         <JourneyCardFooter
           totalPrice={totalPrice}

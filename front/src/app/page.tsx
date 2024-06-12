@@ -13,7 +13,6 @@ import { useState } from "react";
 
 import dayjs from "dayjs";
 import JourneyCard from "./components/JourneyCard/JourneyCard";
-import { routes } from "./lib/routes";
 
 export type UserInfos = {
   email: CookieValueTypes;
@@ -53,6 +52,8 @@ export default function Home() {
       },
     });
   };
+
+  console.log("JOURNEY", journeys);
 
   return (
     <div className="home_page flex-1 flex flex-col gap-6 h-full items-center justify-center py-10">

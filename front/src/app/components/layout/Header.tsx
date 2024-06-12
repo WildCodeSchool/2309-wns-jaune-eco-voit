@@ -25,7 +25,7 @@ import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { AuthContext } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { useGetProfileLazyQuery, useGetProfileQuery } from "@/types/graphql";
+import { useGetProfileLazyQuery } from "@/types/graphql";
 
 const Header = () => {
   const router = useRouter();
@@ -36,7 +36,7 @@ const Header = () => {
   const [userUserPicture, setUserUserPicture] = useState<string | undefined>(
     undefined
   );
-  const { getUser, updateUser } = useContext(AuthContext);
+  const { getUser, user, updateUser } = useContext(AuthContext);
 
   const [getUserDatas, { data, loading, error }] = useGetProfileLazyQuery({
     fetchPolicy: "network-only", // Used for first execution
@@ -57,10 +57,13 @@ const Header = () => {
     const id = Cookies.get("id") ?? "";
     if (!getUser && id) {
       updateUser(id);
+      //s'il y a un id dans le cookie
+      //mais que le contexte ne continent pas d'utilisateur
+      //alors on l'update
     }
     getUserDatas();
     setLoggedUser(getUser?.toString());
-  }, [getUser, updateUser, getUserDatas]);
+  }, [getUser, user, updateUser, getUserDatas]);
 
   const handleCloseMenu = () => {
     setAnchorEl(null);
@@ -111,14 +114,7 @@ const Header = () => {
                 }}
                 color="inherit"
               >
-                <Avatar
-                  alt="profile picture"
-                  src={
-                    !userUserPicture
-                      ? "https://www.santelog.com/sites/santelog.com/www.santelog.com/files/styles/large/public/images/accroche/adobestock_276208008_lama.jpeg?itok=d2steNiv"
-                      : userUserPicture
-                  }
-                />
+                <Avatar alt="profile picture" src={userUserPicture} />
               </IconButton>
             </Tooltip>
 

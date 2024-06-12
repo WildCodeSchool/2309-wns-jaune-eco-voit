@@ -99,7 +99,11 @@ export class UserEntity {
     phoneNumber?: string
 
     @Field({ nullable: true })
-    @Column({ nullable: true })
+    @Column({
+        nullable: true,
+        default:
+            'https://www.santelog.com/sites/santelog.com/www.santelog.com/files/styles/large/public/images/accroche/adobestock_276208008_lama.jpeg?itok=d2steNiv',
+    })
     profilePicture?: string
 
     @Field()
