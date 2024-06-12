@@ -1,7 +1,7 @@
 "use client";
 //cores
 import { useState, useContext, SetStateAction } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 //graphQL
 import { LoginInput, useLoginLazyQuery } from "@/types/graphql";
 //
@@ -15,13 +15,16 @@ import CardButton from "@/app/components/Buttons/CardButton";
 import ConnexionCard from "@/app/components/Profile/ConnexionCard";
 
 const Login = () => {
+  const searchParams = useSearchParams();
+  const requestedURL = searchParams.get("requestedURL");
+
   const theme = useTheme();
   const router = useRouter();
   const [login] = useLoginLazyQuery({
     onCompleted(data) {
       updateUser(data.login.id);
       setTimeout(() => {
-        router.push(routes.home.pathname);
+        router.push(requestedURL ?? routes.home.pathname);
       }, 1000);
     },
     onError(error) {

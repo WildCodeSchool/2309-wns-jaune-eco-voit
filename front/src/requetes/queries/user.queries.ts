@@ -13,6 +13,7 @@ export const LIST_USERS = gql`
       profilePicture
       role
       grade
+      averageRate
       tripsAsPassenger
       tripsAsDriver
       status
@@ -52,6 +53,7 @@ export const FIND_USER_BY_ID = gql`
       dateOfBirth
       phoneNumber
       profilePicture
+      averageRate
       role
       tripsAsPassenger
       grade
@@ -88,6 +90,7 @@ export const GET_PROFILE = gql`
       lastname
       firstname
       phoneNumber
+      averageRate
       profilePicture
       email
       role

@@ -15,6 +15,7 @@ export const LOGIN = gql`
       grade
       tripsAsPassenger
       status
+      averageRate
       tripsAsDriver
       createdAt
       updatedAt

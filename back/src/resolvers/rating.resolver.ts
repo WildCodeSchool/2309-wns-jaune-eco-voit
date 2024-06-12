@@ -20,9 +20,11 @@ export default class RatingResolver {
         @Ctx() { user: userCtx }: MyContext
     ) {
         const ratingService = new RatingsService()
+        const bookingService = new BookingsService()
 
-        const { user: rater, status } =
-            await new BookingsService().findBookingById(booking.id)
+        const { user: rater, status } = await bookingService.findBookingById(
+            booking.id
+        )
 
         const isBookingRated = await ratingService.findRatingByBooking(
             booking.id
@@ -52,6 +54,8 @@ export default class RatingResolver {
                 userRatings.length
             ).toFixed(2)
         )
+
+        await bookingService.updateBooking(booking.id, { status: 'RATED' })
 
         await new UsersService().updateAverageRate({
             userId: userRated.id,
