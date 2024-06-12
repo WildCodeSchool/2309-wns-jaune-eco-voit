@@ -1,8 +1,10 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   useCreateRateMutation,
+  useFindBookingByIdLazyQuery,
   useFindBookingByIdQuery,
+  useFindUserByIdLazyQuery,
   useFindUserByIdQuery,
 } from "@/types/graphql";
 import { AuthContext } from "@/context/authContext";
@@ -21,17 +23,24 @@ const RatingPage = ({
   params: { parametres: Array<string> };
 }) => {
   const router = useRouter();
+
   const [bookingRate, setBookingRate] = useState<string>("5");
-  const {
-    data: bookingDatas,
-    error: bookingError,
-    loading: bookingLoading,
-  } = useFindBookingByIdQuery({ variables: { findBookingById: bookingId } });
-  const {
-    data: userDatas,
-    error: userError,
-    loading: userLoading,
-  } = useFindUserByIdQuery({ variables: { findUserById: driverId } });
+
+  useEffect(() => {
+    if (bookingId && driverId) {
+      findBookingById({ variables: { findBookingById: bookingId } });
+      findUserById({ variables: { findUserById: driverId } });
+    }
+  }, [bookingId, driverId]);
+
+  const [
+    findBookingById,
+    { data: bookingDatas, error: bookingError, loading: bookingLoading },
+  ] = useFindBookingByIdLazyQuery();
+  const [
+    findUserById,
+    { data: userDatas, error: userError, loading: userLoading },
+  ] = useFindUserByIdLazyQuery();
 
   const [
     rateBooking,

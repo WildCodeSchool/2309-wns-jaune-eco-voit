@@ -66,7 +66,9 @@ const CountInput = ({
             setJourneyData((prevState) => ({
               ...prevState,
               [availableSeatsOrTotalPrice]:
-                prevState[availableSeatsOrTotalPrice] < 8
+                (availableSeatsOrTotalPrice === "availableSeats" &&
+                  prevState[availableSeatsOrTotalPrice] < 8) ||
+                availableSeatsOrTotalPrice === "totalPrice"
                   ? prevState[availableSeatsOrTotalPrice] + 1
                   : prevState[availableSeatsOrTotalPrice],
             }))

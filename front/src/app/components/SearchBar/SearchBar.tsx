@@ -4,7 +4,6 @@ import {
   MenuItem,
   Select,
   Stack,
-  TextField,
   Divider,
   Box,
 } from "@mui/material";
@@ -15,7 +14,6 @@ import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { ListJourneysWithFilters } from "@/types/graphql";
 import { styled } from "@mui/material/styles";
-import { SignalCellularNullSharp } from "@mui/icons-material";
 
 const StyledSelect = styled(Select)({
   "& .MuiOutlinedInput-root": {
@@ -37,9 +35,7 @@ type SearchJourneysProps = {
 const SearchBar = ({ onSearchJourneys }: SearchJourneysProps) => {
   const [destination, setDestination] = useState<AddressResponse>();
   const [origin, setOrigin] = useState<AddressResponse>();
-  const [departureTime, setDepartureTime] = useState<Dayjs | null>(
-    SignalCellularNullSharp
-  );
+  const [departureTime, setDepartureTime] = useState<Dayjs | null>(null);
   const [availableSeats, setAvailableSeats] = useState<number>(1);
 
   const [warning, setWarning] = useState<string>("");
@@ -100,6 +96,9 @@ const SearchBar = ({ onSearchJourneys }: SearchJourneysProps) => {
           slotProps={{
             inputAdornment: {
               position: "start",
+            },
+            field: {
+              readOnly: true,
             },
           }}
           sx={{
