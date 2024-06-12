@@ -1,9 +1,10 @@
 "use client";
-import React, { SetStateAction, useContext, useState } from "react";
+import { Button } from "@mui/material";
 import Image from "next/image";
+import React, { SetStateAction, useContext, useState } from "react";
+
 import { AuthContext } from "@/context/authContext";
 import { GetProfileDocument, useUpdateUserMutation } from "@/types/graphql";
-import { Button } from "@mui/material";
 
 const UploadPofilePicture = ({
   setIsEditPictureModalOpen,

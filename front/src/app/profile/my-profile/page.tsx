@@ -2,7 +2,6 @@
 
 import {
   Avatar,
-  Box,
   Button,
   FormControl,
   FormLabel,
@@ -22,6 +21,7 @@ import {
 } from "@/types/graphql";
 import { AuthContext } from "@/context/authContext";
 import UploadPofilePicture from "../components/UploadPofilePicture";
+import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
 
 function MyProfile() {
   const { data, loading, error } = useGetProfileQuery({
@@ -91,13 +91,16 @@ function MyProfile() {
   };
 
   if (loading) {
-    return <div>Loading ...</div>;
+    return <CircularLoading />;
   }
 
-  if (error) {
+  if (error || !data) {
     return <div>Error</div>;
   }
-  console.log(data);
+
+  const {
+    getProfile: { firstname, lastname, email, dateOfBirth, phoneNumber, role },
+  } = data;
 
   return (
     <div className="home_page flex flex-col gap-6  bg-primary10 py-10">
@@ -105,9 +108,7 @@ function MyProfile() {
         Mon profil
       </h1>
       <div className="header-Profil flex flex-col justify-center items-center py-10">
-        <h3 className="font-medium uppercase tracking-widest">
-          {data?.getProfile?.firstname}
-        </h3>
+        <h3 className="font-medium uppercase tracking-widest">{firstname}</h3>
         <Tooltip
           title="Profile_picture"
           className="flex flex-col justify-r items-center py-10"
@@ -127,12 +128,12 @@ function MyProfile() {
       <div className="body-profile flex flex-col justify-center items-center py-10  ">
         {!isEditing && (
           <div className="flex flex-col gap-8 w-3/4">
-            <h4>Prenom : {data?.getProfile?.firstname}</h4>
-            <h4>Nom : {data?.getProfile?.lastname}</h4>
-            <h4>E-mail : {data?.getProfile?.email}</h4>
-            <h4>Date de naissance : {data?.getProfile?.dateOfBirth}</h4>
-            <h4>Numéro de téléphone : {data?.getProfile?.phoneNumber}</h4>
-            <h4>Role : {data?.getProfile?.role}</h4>
+            <h4>Prenom : {firstname}</h4>
+            <h4>Nom : {lastname}</h4>
+            <h4>E-mail : {email}</h4>
+            <h4>Date de naissance : {dateOfBirth}</h4>
+            <h4>Numéro de téléphone : {phoneNumber}</h4>
+            <h4>Role : {role}</h4>
             <div className="ModalPassword bg-primary10 flex flex-col justify-center items-center py-10">
               <Button onClick={handleEdit}>Editer</Button>
             </div>

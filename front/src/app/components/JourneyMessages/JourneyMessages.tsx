@@ -6,6 +6,7 @@ import { CircularProgress, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import JourneyMessageCard from "./JourneyMessageCard";
 import JourneyMessagePost from "./JourneyMessagePost";
+import CircularLoading from "../CircularLoading/CircularLoading";
 
 type JourneyMessagesProps = {
   userId: string;
@@ -21,7 +22,6 @@ export default function JourneyMessages({
   const {
     data: messagesData,
     loading: messagesLoading,
-    error: messagesError,
     refetch: refetchMessages,
   } = useListJourneyMessagesByJourneyQuery({
     variables: {
@@ -31,11 +31,7 @@ export default function JourneyMessages({
 
   const [
     postMessage,
-    {
-      data: postMessageData,
-      loading: postMessageLoading,
-      error: postMessageError,
-    },
+    { loading: postMessageLoading, error: postMessageError },
   ] = usePostJourneyMessageMutation();
 
   const handlePostMessage = () => {
@@ -55,11 +51,7 @@ export default function JourneyMessages({
   };
 
   if (messagesLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <CircularProgress />
-      </div>
-    );
+    return <CircularLoading />;
   }
 
   if (!messagesData) {

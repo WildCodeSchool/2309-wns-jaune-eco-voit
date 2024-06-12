@@ -8,30 +8,14 @@ import {
   Divider,
   Box,
 } from "@mui/material";
-
 import PersonIcon from "@mui/icons-material/Person";
-
 import AddressAutoComplete, { AddressResponse } from "./AddressAutoComplete";
 import { useState } from "react";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { ListJourneysWithFilters } from "@/types/graphql";
-
 import { styled } from "@mui/material/styles";
-
-const StyledTextField = styled(TextField)({
-  "& .MuiOutlinedInput-root": {
-    borderRadius: 0,
-    border: "none",
-  },
-  "& .MuiOutlinedInput-notchedOutline": {
-    border: "none",
-  },
-  "& .MuiInputBase-input": {
-    borderRadius: 0,
-    border: "0",
-  },
-});
+import { SignalCellularNullSharp } from "@mui/icons-material";
 
 const StyledSelect = styled(Select)({
   "& .MuiOutlinedInput-root": {
@@ -51,9 +35,11 @@ type SearchJourneysProps = {
 };
 
 const SearchBar = ({ onSearchJourneys }: SearchJourneysProps) => {
-  const [destination, setDestination] = useState<AddressResponse | null>(null);
-  const [origin, setOrigin] = useState<AddressResponse | null>(null);
-  const [departureTime, setDepartureTime] = useState<Dayjs | null>(null);
+  const [destination, setDestination] = useState<AddressResponse>();
+  const [origin, setOrigin] = useState<AddressResponse>();
+  const [departureTime, setDepartureTime] = useState<Dayjs | null>(
+    SignalCellularNullSharp
+  );
   const [availableSeats, setAvailableSeats] = useState<number>(1);
 
   const [warning, setWarning] = useState<string>("");
@@ -84,10 +70,8 @@ const SearchBar = ({ onSearchJourneys }: SearchJourneysProps) => {
       >
         <AddressAutoComplete
           label={"Départ"}
-          handleSelectedAddress={(value: AddressResponse | null) =>
-            setOrigin(value)
-          }
-          clearAddress={() => setOrigin(null)}
+          handleSelectedAddress={(value: AddressResponse) => setOrigin(value)}
+          clearAddress={() => setOrigin(undefined)}
           sx={{
             borderRadius: "32px 0 0 32px",
           }}
@@ -96,10 +80,10 @@ const SearchBar = ({ onSearchJourneys }: SearchJourneysProps) => {
         <Divider flexItem orientation="vertical" />
         <AddressAutoComplete
           label={"Arrivée"}
-          handleSelectedAddress={(value: AddressResponse | null) =>
+          handleSelectedAddress={(value: AddressResponse) =>
             setDestination(value)
           }
-          clearAddress={() => setDestination(null)}
+          clearAddress={() => setDestination(undefined)}
           sx={{
             borderRadius: "0",
             border: "0!important",

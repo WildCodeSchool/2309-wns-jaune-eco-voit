@@ -1,6 +1,6 @@
 "use client";
 //cores
-import { useState, useContext, SetStateAction } from "react";
+import { useState, useContext } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 //graphQL
 import { LoginInput, useLoginLazyQuery } from "@/types/graphql";
