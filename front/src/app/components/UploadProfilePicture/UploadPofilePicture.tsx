@@ -61,7 +61,7 @@ const UploadPofilePicture = ({
       {
         <Avatar
           alt="profile picture"
-          src={profilePictureUrl ?? undefined}
+          src={preview ? preview : profilePictureUrl ? profilePictureUrl : ""}
           sx={{ width: 150, height: 150 }}
         />
       }
