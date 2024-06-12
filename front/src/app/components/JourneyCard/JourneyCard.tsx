@@ -6,9 +6,9 @@ import { routes } from "@/app/lib/routes";
 import Link from "next/link";
 
 type User = {
+  averageRate?: number | null;
+  profilePicture?: string | null;
   firstname: string;
-  rating?: number;
-  profilePicture?: string;
 };
 
 type JourneyCardProps = {
@@ -41,11 +41,10 @@ const JourneyCard = ({
           origin={origin}
           destination={destination}
         />
-
         <AvatarJourney
           firstname={user.firstname}
-          rating={user.rating}
-          profilePicture={user.profilePicture}
+          rating={user.averageRate ? user.averageRate : undefined}
+          profilePicture={user.profilePicture ?? ""}
         />
         <JourneyCardFooter
           totalPrice={totalPrice}

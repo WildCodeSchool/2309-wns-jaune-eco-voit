@@ -25,6 +25,8 @@ export const LIST_JOURNEYS = gql`
         firstname
         lastname
         id
+        averageRate
+        profilePicture
       }
     }
   }
@@ -60,6 +62,7 @@ export const LIST_JOURNEYS_BY_USER = gql`
         status
         createdAt
         updatedAt
+        averageRate
       }
       bookings {
         id
@@ -106,6 +109,7 @@ export const FIND_JOURNEY_BY_ID = gql`
         tripsAsDriver
         status
         createdAt
+        averageRate
         updatedAt
       }
     }

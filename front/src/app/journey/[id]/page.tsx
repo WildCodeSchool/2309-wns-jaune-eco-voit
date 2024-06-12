@@ -113,7 +113,7 @@ export default function Page({ params }: { params: { id: string } }) {
               <Divider />
               <AvatarJourney
                 firstname={journeyData.findJourneyById.user.firstname}
-                rating={2}
+                rating={journeyData.findJourneyById.user.averageRate}
                 profilePicture={
                   journeyData.findJourneyById.user.profilePicture!
                 }
@@ -158,9 +158,8 @@ export default function Page({ params }: { params: { id: string } }) {
                 align="center"
                 sx={{
                   mb: 4,
-                  fontSize: "2rem",
-                  fontWeight: "bold",
-                  color: "primary.main",
+                  fontSize: "1.8rem",
+                  color: "black",
                 }}
               >
                 Détail du trajet

@@ -13,6 +13,7 @@ export const UPDATE_USER = gql`
       profilePicture
       role
       grade
+      averageRate
       tripsAsPassenger
       tripsAsDriver
       status
@@ -56,6 +57,7 @@ export const ARCHIVE_USER = gql`
       grade
       tripsAsPassenger
       tripsAsDriver
+      averageRate
       status
       createdAt
       updatedAt

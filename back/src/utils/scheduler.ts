@@ -53,19 +53,19 @@ const updateJourney = async (journey: JourneyEntity) => {
 
     if (bookingsId && bookingsId.length > 0) {
         bookingsId.forEach(async (id) => {
-            updateBooking(id)
+            updateBooking(id, journey.user.id)
         })
     }
 }
 
-const updateBooking = async (id: string) => {
+const updateBooking = async (id: string, userRatedId: string) => {
     const {
         user: { email: userEmail },
     } = await bookingService.findBookingById(id)
     // TODO COMPLETER LE LIEN
     sendEmail({
         userEmail,
-        ratingLink: `${process.env.CLIENT_URL}/booking/rate/${id}`,
+        ratingLink: `${process.env.CLIENT_URL}/booking/rate/${id}/${userRatedId}`,
     })
     await bookingService.updateBooking(id, { status: 'DONE' })
 }

@@ -13,7 +13,6 @@ import { useState } from "react";
 
 import dayjs from "dayjs";
 import JourneyCard from "./components/JourneyCard/JourneyCard";
-import { routes } from "./lib/routes";
 
 export type UserInfos = {
   email: CookieValueTypes;
@@ -54,6 +53,8 @@ export default function Home() {
     });
   };
 
+  console.log("JOURNEY", journeys);
+
   return (
     <div className="home_page flex-1 flex flex-col gap-6 h-full items-center justify-center py-10">
       <h1>Il faut rouler cool Raoul !</h1>
@@ -67,23 +68,36 @@ export default function Home() {
           <h3>Aucun trajet trouvé</h3>
         ) : (
           <Grid container spacing={4} justifyContent="center">
-            {journeys.map(({ id, departure_time, totalPrice, ...rest }) => {
-              dayjs.locale("fr");
+            {journeys.map(
+              ({
+                id,
+                departure_time,
+                totalPrice,
+                user,
+                origin,
+                destination,
+                availableSeats,
+              }) => {
+                dayjs.locale("fr");
 
-              return (
-                <JourneyCard
-                  departureTime={departure_time}
-                  key={id}
-                  {...rest}
-                  id={id}
-                  totalPrice={
-                    filters?.availableSeats
-                      ? totalPrice * filters?.availableSeats
-                      : totalPrice
-                  }
-                />
-              );
-            })}
+                return (
+                  <JourneyCard
+                    departureTime={departure_time}
+                    key={id}
+                    id={id}
+                    totalPrice={
+                      filters?.availableSeats
+                        ? totalPrice * filters?.availableSeats
+                        : totalPrice
+                    }
+                    user={user}
+                    origin={origin}
+                    destination={destination}
+                    availableSeats={availableSeats}
+                  />
+                );
+              }
+            )}
           </Grid>
         ))}
     </div>

@@ -76,14 +76,22 @@ export default function JourneyMessages({
         </Typography>
         <div className="container mx-auto p-4">
           {messages && messages.length > 0 ? (
-            messages.map(({ id, user: { firstname }, createdAt, message }) => (
-              <JourneyMessageCard
-                firstname={firstname}
-                createdAt={createdAt}
-                content={message}
-                key={id}
-              />
-            ))
+            messages.map(
+              ({
+                id,
+                user: { firstname, profilePicture },
+                createdAt,
+                message,
+              }) => (
+                <JourneyMessageCard
+                  firstname={firstname}
+                  createdAt={createdAt}
+                  content={message}
+                  profilePicture={profilePicture ?? ""}
+                  key={id}
+                />
+              )
+            )
           ) : (
             <div className="text-center text-gray-500">Pas de messages</div>
           )}
