@@ -69,7 +69,7 @@ const RatingPage = ({
   }
 
   if (!bookingDatas || !userDatas) {
-    return <div>Désolée, quelque chose s'est mal passé</div>;
+    return <div>Désolé, quelque chose s&apos;est mal passé</div>;
   }
 
   const {
