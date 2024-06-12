@@ -42,6 +42,14 @@ export const UPDATE_USER = gql`
   }
 `;
 
+export const UPDATE_USER_PASSWORD = gql`
+  mutation updateUserPassword($data: UpdateUserPasswordInput!) {
+    updateUserPassword(data: $data) {
+      id
+    }
+  }
+`;
+
 export const ARCHIVE_USER = gql`
   mutation archiveUser($archiveUserId: String!) {
     archiveUser(id: $archiveUserId) {

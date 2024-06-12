@@ -3,6 +3,7 @@ import {
     CreateUserInput,
     LoginInput,
     UpdateUserInput,
+    UpdateUserPasswordInput,
     UserEntity,
     UserMessage,
     UserProfile,
@@ -129,6 +130,29 @@ export default class UserResolver {
         userAuthorized([data.id], user)
 
         return await new UsersService().updateUser(data)
+    }
+
+    @Authorized()
+    @Mutation(() => UserEntity)
+    async updateUserPassword(
+        @Arg('data') data: UpdateUserPasswordInput,
+        @Ctx() { user }: MyContext
+    ) {
+        const { id, oldPassword } = data
+
+        userAuthorized([id], user)
+
+        if (!user) {
+            throw new Error('Non autorisé')
+        }
+
+        const isPasswordValid = await argon2.verify(user.password, oldPassword)
+
+        if (!isPasswordValid) {
+            throw new Error('Old password unvalid')
+        }
+
+        return await new UsersService().updateUserPassword(data)
     }
 
     @Authorized()

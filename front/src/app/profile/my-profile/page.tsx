@@ -16,6 +16,7 @@ import {
   UserProfile,
   useGetProfileQuery,
   useUpdateUserMutation,
+  useUpdateUserPasswordMutation,
 } from "@/types/graphql";
 import { AuthContext } from "@/context/authContext";
 import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
@@ -27,9 +28,7 @@ function MyProfile() {
     fetchPolicy: "network-only", // Used for first execution:  : permet d'afficher les nouvelles informations enregistrer sans rafraichir la page
     nextFetchPolicy: "cache-first", // Used for subsequent executions
   });
-  const [updateUser] = useUpdateUserMutation({
-    refetchQueries: [{ query: GetProfileDocument }],
-  });
+
   const { getUser: userId } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] =
@@ -38,6 +37,7 @@ function MyProfile() {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [isChangePasswordError, setIsChangePasswordError] = useState(false);
   const [updateInfos, setUpdateInfos] =
     useState<Omit<UserProfile, "id" | "averageRate">>();
 
@@ -48,17 +48,26 @@ function MyProfile() {
     }
   }, [data]);
 
-  const handleSave = () => {
-    console.log(updateInfos);
-    if (userId) {
-      updateUser({
-        variables: { data: { ...updateInfos, id: userId } },
+  const [updateUser] = useUpdateUserMutation({
+    refetchQueries: [{ query: GetProfileDocument }],
+  });
 
-        onCompleted() {
-          setIsEditing(false); // une fois la mise à jour terminée, désactiver le mode édition
-        },
-      });
-    }
+  const [updateUserPassword, { error: updatePasswordError }] =
+    useUpdateUserPasswordMutation();
+
+  if (!userId) {
+    // TODO Gerer erreur
+    return <div>Erreur</div>;
+  }
+
+  const handleSave = () => {
+    updateUser({
+      variables: { data: { ...updateInfos, id: userId } },
+
+      onCompleted() {
+        setIsEditing(false); // une fois la mise à jour terminée, désactiver le mode édition
+      },
+    });
   };
 
   const resetPasswordInputs = () => {
@@ -70,24 +79,27 @@ function MyProfile() {
   const handleOnCloseChangePasswordModal = () => {
     setIsChangePasswordModalOpen(false);
     resetPasswordInputs();
+    setIsChangePasswordError(false);
   };
 
   const handlePasswordSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (newPassword === confirmNewPassword && userId) {
-      updateUser({
-        variables: {
-          data: { ...updateInfos, id: userId, password: newPassword },
-        },
-        onCompleted() {
-          setIsEditing(false); // une fois la mise à jour terminée, désactiver le mode édition
-          handleOnCloseChangePasswordModal();
-        },
-      });
-    } else {
-      //TODO Gere l'UI de l'erreur
-      console.log("Les mots de passe ne sont pas identiques");
+    if (newPassword !== confirmNewPassword) {
+      setIsChangePasswordError(true);
+      return;
     }
+    updateUserPassword({
+      variables: {
+        data: { id: userId, newPassword, oldPassword },
+      },
+      onError() {
+        setIsChangePasswordError(true);
+      },
+      onCompleted() {
+        setIsEditing(false);
+        handleOnCloseChangePasswordModal();
+      },
+    });
   };
 
   if (loading) {
@@ -239,13 +251,23 @@ function MyProfile() {
       {isChangePasswordModalOpen && (
         <ChangePasswordModal
           onCloseModal={handleOnCloseChangePasswordModal}
-          onChangeOldPassword={(value) => setOldPassword(value)}
-          onChangeConfirmNewPassword={(value) => setConfirmNewPassword(value)}
-          onChangeNewPassword={(value) => setNewPassword(value)}
+          onChangeOldPassword={(value) => {
+            setIsChangePasswordError(false);
+            setOldPassword(value);
+          }}
+          onChangeConfirmNewPassword={(value) => {
+            setIsChangePasswordError(false);
+            setConfirmNewPassword(value);
+          }}
+          onChangeNewPassword={(value) => {
+            setIsChangePasswordError(false);
+            setNewPassword(value);
+          }}
           onSavePassword={(e) => handlePasswordSave(e)}
           oldPassword={oldPassword}
           newPassword={newPassword}
           confirmNewPassword={confirmNewPassword}
+          isError={isChangePasswordError}
         />
       )}
     </div>

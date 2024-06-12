@@ -18,6 +18,7 @@ type ChangePasswordModalProps = {
   onChangeNewPassword: (value: string) => void;
   onChangeConfirmNewPassword: (value: string) => void;
   onSavePassword: (e: FormEvent<HTMLFormElement>) => void;
+  isError: boolean;
 };
 
 const ChangePasswordModal = ({
@@ -29,6 +30,7 @@ const ChangePasswordModal = ({
   onChangeOldPassword,
   onChangeNewPassword,
   onChangeConfirmNewPassword,
+  isError,
 }: ChangePasswordModalProps) => {
   return (
     <Modal
@@ -77,6 +79,11 @@ const ChangePasswordModal = ({
             <Button type="submit">Enregistrer</Button>
             <Button onClick={onCloseModal}>Annuler</Button>
           </Stack>
+          {isError && (
+            <Typography variant="body2" color="error">
+              Les données ne correspondent pas
+            </Typography>
+          )}
         </form>
       </section>
     </Modal>
