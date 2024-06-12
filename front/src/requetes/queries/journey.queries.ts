@@ -26,6 +26,7 @@ export const LIST_JOURNEYS = gql`
         lastname
         id
         averageRate
+        profilePicture
       }
     }
   }

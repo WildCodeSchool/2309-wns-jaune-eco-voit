@@ -4,21 +4,18 @@ type JourneyMessageCardProps = {
   firstname: string;
   createdAt: Date;
   content: string;
+  profilePicture?: string;
 };
 
 export default function JourneyMessageCard({
   firstname,
   createdAt,
   content,
+  profilePicture,
 }: JourneyMessageCardProps) {
   return (
     <Card className="flex items-start mb-4 p-4 shadow-sm">
-      <Avatar
-        className="mr-4"
-        src={
-          "https://www.santelog.com/sites/santelog.com/www.santelog.com/files/styles/large/public/images/accroche/adobestock_276208008_lama.jpeg?itok=d2steNiv"
-        }
-      >
+      <Avatar className="mr-4" src={profilePicture}>
         {firstname}
       </Avatar>
       <CardContent className="flex-grow">

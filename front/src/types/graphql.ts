@@ -514,7 +514,7 @@ export type ListJourneysQueryVariables = Exact<{
 }>;
 
 
-export type ListJourneysQuery = { __typename?: 'Query', listJourneys: Array<{ __typename?: 'JourneyEntity', arrival_time: any, automaticAccept: boolean, availableSeats: number, createdAt: any, departure_time: any, destination: string, id: string, origin: string, status: string, totalPrice: number, updatedAt?: any | null, bookings: Array<{ __typename?: 'BookingEntity', createdAt: any, id: string, status: string, updatedAt?: any | null }>, user: { __typename?: 'UserEntity', email: any, firstname: string, lastname: string, id: string, averageRate?: number | null } }> };
+export type ListJourneysQuery = { __typename?: 'Query', listJourneys: Array<{ __typename?: 'JourneyEntity', arrival_time: any, automaticAccept: boolean, availableSeats: number, createdAt: any, departure_time: any, destination: string, id: string, origin: string, status: string, totalPrice: number, updatedAt?: any | null, bookings: Array<{ __typename?: 'BookingEntity', createdAt: any, id: string, status: string, updatedAt?: any | null }>, user: { __typename?: 'UserEntity', email: any, firstname: string, lastname: string, id: string, averageRate?: number | null, profilePicture?: string | null } }> };
 
 export type ListJourneysByUserQueryVariables = Exact<{
   userId: Scalars['String']['input'];
@@ -1828,6 +1828,7 @@ export const ListJourneysDocument = gql`
       lastname
       id
       averageRate
+      profilePicture
     }
   }
 }

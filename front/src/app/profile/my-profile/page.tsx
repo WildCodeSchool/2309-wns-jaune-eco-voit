@@ -117,10 +117,7 @@ function MyProfile() {
               alt="profile picture"
               sx={{ width: 110, height: 110 }}
               // src={updateInfos.picture}
-              src={
-                updateInfos.profilePicture ??
-                "https://www.santelog.com/sites/santelog.com/www.santelog.com/files/styles/large/public/images/accroche/adobestock_276208008_lama.jpeg?itok=d2steNiv"
-              }
+              src={updateInfos.profilePicture}
               onClick={() => setIsEditPictureModalOpen(true)}
             />
           </IconButton>
@@ -237,10 +234,7 @@ function MyProfile() {
         <div className="flex flex-col justify-center items-center bg-white p-6 rounded-md">
           <UploadPofilePicture
             setIsEditPictureModalOpen={setIsEditPictureModalOpen}
-            profilePictureUrl={
-              updateInfos.profilePicture ??
-              "https://www.santelog.com/sites/santelog.com/www.santelog.com/files/styles/large/public/images/accroche/adobestock_276208008_lama.jpeg?itok=d2steNiv"
-            }
+            profilePictureUrl={updateInfos.profilePicture}
           />
         </div>
       </Modal>

@@ -158,9 +158,8 @@ export default function Page({ params }: { params: { id: string } }) {
                 align="center"
                 sx={{
                   mb: 4,
-                  fontSize: "2rem",
-                  fontWeight: "bold",
-                  color: "primary.main",
+                  fontSize: "1.8rem",
+                  color: "black",
                 }}
               >
                 Détail du trajet
