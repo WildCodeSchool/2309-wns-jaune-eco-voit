@@ -3,12 +3,10 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   useCreateRateMutation,
   useFindBookingByIdLazyQuery,
-  useFindBookingByIdQuery,
   useFindUserByIdLazyQuery,
-  useFindUserByIdQuery,
 } from "@/types/graphql";
 import { AuthContext } from "@/context/authContext";
-import { Button, CircularProgress, Rating } from "@mui/material";
+import { Button, Rating } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { routes } from "@/app/lib/routes";
 import JourneyCardHeader from "@/app/components/JourneyCard/JourneyCardHeader";
@@ -24,23 +22,24 @@ const RatingPage = ({
 }) => {
   const router = useRouter();
 
-  const [bookingRate, setBookingRate] = useState<string>("5");
+  const [bookingRate, setBookingRate] = useState("5");
+
+  const [
+    findBookingById,
+    { data: bookingDatas, error: bookingError, loading: bookingLoading },
+  ] = useFindBookingByIdLazyQuery();
+
+  const [
+    findUserById,
+    { data: userDatas, error: userError, loading: userLoading },
+  ] = useFindUserByIdLazyQuery();
 
   useEffect(() => {
     if (bookingId && driverId) {
       findBookingById({ variables: { findBookingById: bookingId } });
       findUserById({ variables: { findUserById: driverId } });
     }
-  }, [bookingId, driverId]);
-
-  const [
-    findBookingById,
-    { data: bookingDatas, error: bookingError, loading: bookingLoading },
-  ] = useFindBookingByIdLazyQuery();
-  const [
-    findUserById,
-    { data: userDatas, error: userError, loading: userLoading },
-  ] = useFindUserByIdLazyQuery();
+  }, [bookingId, driverId, findBookingById, findUserById]);
 
   const [
     rateBooking,
@@ -66,18 +65,17 @@ const RatingPage = ({
 
   const { getUser: userId } = useContext(AuthContext);
 
-  if (bookingLoading || userLoading || rateBookingLoading) {
-    return <CircularLoading />;
+  useEffect(() => {
+    (rateBookingError || userError || bookingError) &&
+      router.push(`${routes["error"].pathname}`);
+  }, [rateBookingError, userError, bookingError, router]);
+
+  if (!bookingDatas || !userDatas) {
+    return null;
   }
 
-  if (
-    !bookingDatas ||
-    !userDatas ||
-    rateBookingError ||
-    userError ||
-    bookingError
-  ) {
-    return <div>Désolé, quelque chose s&apos;est mal passé</div>;
+  if (bookingLoading || userLoading || rateBookingLoading) {
+    return <CircularLoading />;
   }
 
   const {
@@ -95,7 +93,7 @@ const RatingPage = ({
   if (passengerId !== userId) {
     return (
       <div className="flex items-center justify-center">
-        You are not allowed to rate this booking
+        Vous n&apos;êtes pas autorisé à noter ce booking
       </div>
     );
   }

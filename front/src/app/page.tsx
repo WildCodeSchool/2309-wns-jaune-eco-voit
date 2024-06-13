@@ -1,7 +1,7 @@
 "use client";
 
 import SearchBar from "./components/SearchBar/SearchBar";
-import { CircularProgress, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import { CookieValueTypes } from "cookies-next";
 
 import {
@@ -9,11 +9,13 @@ import {
   ListJourneysWithFilters,
   useListJourneysLazyQuery,
 } from "@/types/graphql";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import dayjs from "dayjs";
 import JourneyCard from "./components/JourneyCard/JourneyCard";
 import CircularLoading from "./components/CircularLoading/CircularLoading";
+import { useRouter } from "next/navigation";
+import { routes } from "./lib/routes";
 
 export type UserInfos = {
   email: CookieValueTypes;
@@ -24,13 +26,15 @@ export type UserInfos = {
 
 export default function Home() {
   const [journeys, setJourneys] = useState<ListJourneysQuery["listJourneys"]>();
+  const router = useRouter();
 
-  const [getJourneys, { loading, error }] = useListJourneysLazyQuery({
-    fetchPolicy: "no-cache",
-    onCompleted(data) {
-      setJourneys(data.listJourneys);
-    },
-  });
+  const [getJourneys, { loading: getJourneyLoading, error: getJourneyError }] =
+    useListJourneysLazyQuery({
+      fetchPolicy: "no-cache",
+      onCompleted(data) {
+        setJourneys(data.listJourneys);
+      },
+    });
 
   const [filters, setFilters] = useState<ListJourneysWithFilters>();
 
@@ -49,13 +53,12 @@ export default function Home() {
     });
   };
 
-  if (loading) {
-    return <CircularLoading />;
-  }
+  useEffect(() => {
+    getJourneyError && router.push(`${routes["error"].pathname}`);
+  }, [getJourneyError, router]);
 
-  if (error) {
-    //TODO Gerer erreur
-    return <div>Erreur</div>;
+  if (getJourneyLoading) {
+    return <CircularLoading />;
   }
 
   return (
