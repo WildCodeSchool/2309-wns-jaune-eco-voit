@@ -72,13 +72,16 @@ jobs:
     steps:
       - name: 🗂️ Check out code
         uses: actions/checkout@v2
-      - name: 🧐 Go to tests and run test
+      - name: 🧐 Go to tests and run test back
         run: |
-          if [[ "startsWith(github.ref, 'refs/heads/back')" ]]; then
-            cd ./back && npm i && npm run test-ci
-          elif [[ "startsWith(github.ref, 'refs/heads/front')" ]]; then
-            cd ./front && npm i && npm run test-ci
-          fi
+          cd ./back 
+          npm i
+          npm run test-ci
+      - name: 🧐 Go to tests and run test front
+        run: |
+          cd ./front 
+          npm i
+          npm run test-ci
 
   builds:
     needs: Test
