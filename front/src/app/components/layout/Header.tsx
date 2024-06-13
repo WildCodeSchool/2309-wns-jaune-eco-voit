@@ -135,7 +135,7 @@ const Header = () => {
 
               <Divider />
 
-              <MenuItem onClick={() => router.push(routes.journeys.pathname)}>
+              <MenuItem onClick={() => router.push(routes.journeysUser.pathname)}>
                 <div className="w-48 flex justify-between">
                   <DirectionsCarFilledOutlinedIcon /> <p>Mes trajets</p>
                   <KeyboardArrowRightOutlinedIcon />

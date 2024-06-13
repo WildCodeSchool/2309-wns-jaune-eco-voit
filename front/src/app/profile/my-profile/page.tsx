@@ -19,6 +19,7 @@ import {
   useUpdateUserPasswordMutation,
 } from "@/types/graphql";
 import { AuthContext } from "@/context/authContext";
+import dayjs from "dayjs";
 import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
 import UploadProfilePictureModal from "../../components/UploadProfilePicture/UploadProfilePictureModal";
 import ChangePasswordModal from "@/app/components/ChangePassword/ChangePasswordModal";
@@ -149,9 +150,13 @@ function MyProfile() {
             <h4>Prenom : {firstname}</h4>
             <h4>Nom : {lastname}</h4>
             <h4>E-mail : {email}</h4>
-            <h4>Date de naissance : {dateOfBirth}</h4>
+            <h4>
+              Date de naissance :{" "}
+              {dayjs(updateInfos?.dateOfBirth).format("DD/MM/YYYY")}
+            </h4>
             <h4>Numéro de téléphone : {phoneNumber}</h4>
             <h4>Role : {role}</h4>
+
             <div className="ModalPassword bg-primary10 flex flex-col justify-center items-center py-10">
               <Button onClick={() => setIsEditing(true)}>Editer</Button>
             </div>
@@ -205,7 +210,7 @@ function MyProfile() {
             <FormControl className="FormControl">
               <FormLabel>Date de naissance :</FormLabel>
               <Input
-                value={dateOfBirth}
+                value={dayjs(updateInfos?.dateOfBirth).format("DD/MM/YYYY")}
                 sx={{ marapinTop: "0.5em!important" }}
                 onChange={(e) =>
                   setUpdateInfos((prevState: any) => ({

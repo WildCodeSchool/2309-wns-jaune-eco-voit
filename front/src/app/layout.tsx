@@ -33,7 +33,7 @@ export default function RootLayout({
               <body className="font-stolzl bg-primary10">
                 <main className="min-h-screen flex flex-col justify-between">
                   <Header />
-                  {children}
+                  <div className="flex-1">{children}</div>
                   <Footer />
                 </main>
               </body>
