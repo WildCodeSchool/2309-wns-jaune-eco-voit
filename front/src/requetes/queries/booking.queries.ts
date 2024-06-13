@@ -37,6 +37,12 @@ export const LIST_BOOKINGS = gql`
         automaticAccept
         createdAt
         updatedAt
+        user {
+          id
+          firstname
+          lastname
+          profilePicture
+        }
       }
     }
   }
@@ -79,6 +85,12 @@ export const LIST_BOOKINGS_BY_USER = gql`
         automaticAccept
         createdAt
         updatedAt
+        user {
+          email
+          lastname
+          firstname
+          profilePicture
+        }
       }
     }
   }
@@ -121,6 +133,12 @@ export const LIST_BOOKINGS_BY_JOURNEY = gql`
         automaticAccept
         createdAt
         updatedAt
+        user {
+          id
+          firstname
+          lastname
+          profilePicture
+        }
       }
     }
   }
@@ -163,6 +181,12 @@ export const FIND_BOOKING_BY_ID = gql`
         automaticAccept
         createdAt
         updatedAt
+        user {
+          id
+          firstname
+          lastname
+          profilePicture
+        }
       }
     }
   }

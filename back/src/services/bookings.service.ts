@@ -16,14 +16,14 @@ export default class BookingsService {
 
     async listBookings() {
         return await this.db.find({
-            relations: { user: true, journey: true },
+            relations: ['user', 'journey', 'journey.user'],
         })
     }
 
     async findBookingById(id: string) {
         const book = await this.db.findOne({
             where: { id },
-            relations: { user: true, journey: true },
+            relations: ['user', 'journey', 'journey.user'],
         })
 
         assertDataExists(book)
@@ -34,7 +34,7 @@ export default class BookingsService {
     async listBookingsByJourneyId(id: string): Promise<BookingEntity[]> {
         return await this.db.find({
             where: { journey: { id } },
-            relations: { user: true, journey: true },
+            relations: ['user', 'journey', 'journey.user'],
         })
     }
 
@@ -50,7 +50,7 @@ export default class BookingsService {
                 user: { id: userId ?? undefined },
                 journey: { id: journeyId ?? undefined },
             },
-            relations: { user: true, journey: true },
+            relations: ['user', 'journey', 'journey.user'],
         })
     }
 

@@ -1,47 +1,41 @@
 "use client";
 import React, { useContext, useEffect } from "react";
 import { useState } from "react";
-import { useGetProfileQuery, useListJourneysByUserQuery, GetProfileDocument, useUpdateUserMutation, useListBookingsByJourneyQuery } from "@/types/graphql";
+import { useGetProfileQuery, GetProfileDocument, useUpdateUserMutation, useListBookingsByUserLazyQuery, useListJourneysByUserLazyQuery, useListBookingsByUserQuery } from "@/types/graphql";
 import { AuthContext } from "@/context/authContext";
-import { Avatar, Box, Card, CardContent, Stack, Tab, Typography } from "@mui/material";
+import { Avatar, Box, Button, Card, CardContent, Tab, Typography } from "@mui/material";
 import TabContext from '@mui/lab/TabContext';
 import { TabList, TabPanel } from "@mui/lab";
 import dayjs from "dayjs";
 
 
 export default function MyJourneys() {
-  const { data, loading, error } = useGetProfileQuery({ fetchPolicy: "network-only" });
-  const [updateUser] = useUpdateUserMutation({ refetchQueries: [{ query: GetProfileDocument }] });
   const { getUser: userId } = useContext(AuthContext);
-  const [updateInfos, setUpdateInfos] = useState<any>({});
+  const user = useListBookingsByUserQuery({variables:{userId: userId!}})
+
   const [value, setValue] = useState('1');
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
+  const [getUserBookings, {data:bookingData,loading:bookingLoading,error:bookingError}]= useListBookingsByUserLazyQuery() // Lazy Query permet de créer une fonction quz l'on appelle quand on le veux 
+  const [getUserJourneys, {data:journeyData,loading:journeyLoading,error:journeyError}]= useListJourneysByUserLazyQuery()
+  
+  useEffect(() =>{
+    if(userId){
+      getUserBookings({variables:{userId: userId}})
+      getUserJourneys({variables:{userId: userId}})
+      }
+      },[getUserBookings, getUserJourneys, userId])
+      
 
-  const [userUserPicture, setUserUserPicture] = useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    if (data) {
-      setUpdateInfos(data?.getProfile);
-    }
-  }, [data]);
+      const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+        setValue(newValue);
+        };
 
 
-  const { data: journeyData, loading: journeyLoading, error: journeyError } = useListJourneysByUserQuery({
-    variables: { userId: userId || "" },
-  });
-
-  const { data : bookingData, loading: bookingLoading, error: bookingError } = useListBookingsByJourneyQuery({
-    variables: { journeyId: journeyData?.listJourneysByUser[0]?.id || "" },
-    
-  })
-
-  if (loading || journeyLoading) {
+  if (!userId || bookingLoading || journeyLoading) {
     return <div>Loading ...</div>;
   }
+  
 
-  if (error || journeyError) {
+  if (bookingError || journeyError) {
     return <div>Error</div>;
   }
 
@@ -50,7 +44,7 @@ export default function MyJourneys() {
   const formattedDate = dayjs(journeyData?.listJourneysByUser[0]?.departure_time).locale("fr").format("dddd D MMMM");
 
   return (
-    <Stack >
+    <div>
       <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <TabList onChange={handleChange} aria-label="lab API tabs example">
@@ -64,11 +58,7 @@ export default function MyJourneys() {
 
                 <Avatar
                   alt="profile picture"
-                  src={
-                    !userUserPicture
-                      ? "https://www.santelog.com/sites/santelog.com/www.santelog.com/files/styles/large/public/images/accroche/adobestock_276208008_lama.jpeg?itok=d2steNiv"
-                      : userUserPicture
-                  }
+                  src={journey?.user?.profilePicture ?? ""}
                 />
 
               <CardContent className="flex-grow "  >
@@ -79,11 +69,16 @@ export default function MyJourneys() {
                   <Typography variant="body2" color="textSecondary" className="text-sm">
                     {formattedDate} <br />Départ : {formattedTime}
                   </Typography>
+                  <div className="flex flex-col items-center justify-evenly gap-2  m-2">
+                     <Button className=" " onClick={() => {console.log("edit")}}>Modifier</Button>  { /* TODO faire la fonction de modification des journeys */}
+                    <Button className="" onClick={() => {console.log("cancel")}}>Annuler</Button> { /* TODO faire la fonction de suppression des journeyx */}
+                  </div>
+                   
                 </div>
                 <Typography variant="body1" className="mt-2 text-gray-700 whitespace-pre-wrap">
                   De {journey.origin} à {journey.destination}
                 </Typography>
-                <Typography variant="body1" className="mt-2 text-gray-700 whitespace-pre-wrap"> 
+                <Typography variant="body1"  className="mt-2 text-gray-700 whitespace-pre-wrap"> 
                 Siége dispobible : {journey.availableSeats}
                 </Typography>
                 <Typography>
@@ -94,22 +89,17 @@ export default function MyJourneys() {
           ))}
         </TabPanel>
         <TabPanel value="2">
-          {bookingData?.listBookingsByJourney.map((booking, index) => (
-            <Card key={index} className="flex items-center mb-4 p-4 m-auto  w-1/2">
-
+          {bookingData?.listBookingsByUser.map((booking, index) => (
+            <Card key={index} className="flex items-center mb-4 p-4 m-auto  w-1/2 ">
                 <Avatar
                   alt="profile picture"
-                  src={
-                    !userUserPicture
-                      ? "https://www.santelog.com/sites/santelog.com/www.santelog.com/files/styles/large/public/images/accroche/adobestock_276208008_lama.jpeg?itok=d2steNiv"
-                      : userUserPicture
-                  }
+                  src={booking?.journey?.user?.profilePicture ?? ""}
                 />
 
               <CardContent className="flex-grow "  >
                 <div className="flex items-center justify-between">
                   <Typography variant="h6" component="h6" className="font-semibold">
-                    {booking.user.firstname}
+                    {booking?.journey?.user?.firstname}
                   </Typography>
                   <Typography variant="body2" color="textSecondary" className="text-sm">
                     {formattedDate} <br />Départ : {formattedTime}
@@ -117,6 +107,9 @@ export default function MyJourneys() {
                 </div>
                 <Typography variant="body1" className="mt-2 text-gray-700 whitespace-pre-wrap">
                   De {booking.journey.origin} à {booking.journey.destination}
+                  <div className="flex flex-col items-center justify-evenly gap-2  m-2">
+                    <Button className="" onClick={() => {console.log("cancel")}}>Annuler</Button> { /* TODO faire la fonction de suppression des journeyx */}
+                  </div>
                 </Typography>
                 <Typography variant="body1" className="mt-2 text-gray-700 whitespace-pre-wrap"> 
                 Siége disponible : {booking.journey.availableSeats}
@@ -129,6 +122,6 @@ export default function MyJourneys() {
             ))}
         </TabPanel>
       </TabContext>
-    </Stack>
+    </div>
   );
 }

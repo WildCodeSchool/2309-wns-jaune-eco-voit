@@ -33,7 +33,7 @@ export class JourneyEntity {
     id: string
 
     @Field(() => UserEntity)
-    @ManyToOne(() => UserEntity, (user) => user.journeys)
+@ManyToOne(() => UserEntity, (user) => user.journeys /*, {eager: true} */) // eager : permet de faire les relations directement (à mettre d'un côté seulement)
     user: UserEntity
 
     // @Field(() => VehiculeEntity)
