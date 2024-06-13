@@ -2,6 +2,8 @@
 #   specifie l'image de base de docker utilisée
 #   Alpine linux est la plus distribution linux la plus légère. 
 FROM node:20-alpine
+RUN apk --update --no-cache add curl
+
 
 # Working directory:
 #   Definie '/app' comme le working directory dans le container Docker, et le créé s'il n'existe pas
