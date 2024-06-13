@@ -24,7 +24,9 @@ import { arrayContains } from 'class-validator'
 let server: ApolloServer
 
 // to delete all Dates from the object (Jest doesn't accept to compare Dates)
-const mapUserData = (dataArray: Omit<UserEntity, 'hashPassword'>[]) => {
+const mapUserData = (
+    dataArray: Omit<UserEntity, 'hashPassword' | 'ratings' | 'averageRate'>[]
+) => {
     return dataArray.map((el) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { dateOfBirth, createdAt, ...rest } = el

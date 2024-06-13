@@ -4,11 +4,7 @@ on:
   push: # Lors du push sur toutes les branches
     branches:
       - "*"
-<<<<<<< HEAD
   pull_request: # Lors de la création ou la mise à jour d'une PR
-=======
-  pull_request: # Lors d'une PR merge
->>>>>>> 75068acc (tests)
     branches:
       - "*"
     types:

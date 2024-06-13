@@ -1,6 +1,9 @@
 import { UserEntity } from '../../../src/entities/user.entity'
 
-export const usersData: Omit<UserEntity, 'hashPassword'>[] = [
+export const usersData: Omit<
+    UserEntity,
+    'hashPassword' | 'ratings' | 'averageRate'
+>[] = [
     {
         id: 'abcd',
         email: 'user1@yopmail.fr',
