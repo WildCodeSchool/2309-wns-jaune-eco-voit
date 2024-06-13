@@ -1,7 +1,7 @@
 import { JourneyEntity } from '../entities/journey.entity'
 import BookingsService from '../services/bookings.service'
 import JourneysService from '../services/journeys.service'
-import nodemailer from 'nodemailer'
+import { transporter } from './emailTransporter'
 
 const journeyService = new JourneysService()
 const bookingService = new BookingsService()
@@ -13,14 +13,6 @@ const sendEmail = ({
     userEmail: string
     ratingLink: string
 }) => {
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.GMAIL_ADDRESS,
-            pass: process.env.GMAIL_PASS,
-        },
-    })
-
     const mailOptions = {
         from: 'La super team Ecovoit',
         to: userEmail,
