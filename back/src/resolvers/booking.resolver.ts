@@ -5,6 +5,7 @@ import { MyContext } from '..'
 import UsersService from '../services/users.service'
 import JourneysService from '../services/journeys.service'
 import { userAuthorized } from '../utils/userAuthorized'
+import { transporter } from '../utils/emailTransporter'
 
 @Resolver(() => BookingEntity)
 export default class BookingResolver {
@@ -84,16 +85,37 @@ export default class BookingResolver {
         userAuthorized([data.user.id], user)
 
         const journeyService = new JourneysService()
-        const { availableSeats, automaticAccept } =
-            await journeyService.findJourneyById(data.journey.id)
+        const {
+            availableSeats,
+            automaticAccept,
+            user: { email: driverEmail, id: driverId },
+        } = await journeyService.findJourneyById(data.journey.id)
 
         if (availableSeats <= 0)
             throw new Error('No available seats for this journey')
 
-        const newBooking = new BookingService().createBooking({
+        const newBooking = await new BookingService().createBooking({
             ...data,
             status: automaticAccept ? 'ACCEPTED' : 'PENDING',
         })
+
+        if (!automaticAccept) {
+            const acceptLink = `${process.env.CLIENT_URL}/booking/accept/${newBooking.id}/${driverId}`
+
+            const mailOptions = {
+                from: 'La super team Ecovoit',
+                to: driverEmail,
+                subject: 'Nouvelle demande de réservation',
+                text: `Un passager souhaite réserver votre trajet ! Voici le lien pour l'accepter: ${acceptLink}`,
+            }
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.log(error)
+                }
+                console.log('Message sent: %s', info.messageId)
+            })
+        }
 
         automaticAccept &&
             (await journeyService.updateJourney({
