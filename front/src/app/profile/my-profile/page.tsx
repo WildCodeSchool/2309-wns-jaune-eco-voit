@@ -102,7 +102,6 @@ function MyProfile() {
       },
     });
   };
-  const formatDate = dayjs(updateInfos?.dateOfBirth).format("DD/MM/YYYY");
 
   if (loading) {
     return <CircularLoading />;
@@ -148,13 +147,15 @@ function MyProfile() {
       <div className="body-profile flex flex-col justify-center items-center py-10  ">
         {!isEditing && (
           <div className="flex flex-col gap-8 w-3/4">
-
-            <h4>Prenom : {data?.getProfile?.firstname}</h4>
-            <h4>Nom : {data?.getProfile?.lastname}</h4>
-            <h4>E-mail : {data?.getProfile?.email}</h4>
-            <h4>Date de naissance : {formatDate}</h4>
-            <h4>Numéro de téléphone : {data?.getProfile?.phoneNumber}</h4>
-            <h4>Role : {data?.getProfile?.role}</h4>
+            <h4>Prenom : {firstname}</h4>
+            <h4>Nom : {lastname}</h4>
+            <h4>E-mail : {email}</h4>
+            <h4>
+              Date de naissance :{" "}
+              {dayjs(updateInfos?.dateOfBirth).format("DD/MM/YYYY")}
+            </h4>
+            <h4>Numéro de téléphone : {phoneNumber}</h4>
+            <h4>Role : {role}</h4>
 
             <div className="ModalPassword bg-primary10 flex flex-col justify-center items-center py-10">
               <Button onClick={() => setIsEditing(true)}>Editer</Button>
@@ -209,7 +210,7 @@ function MyProfile() {
             <FormControl className="FormControl">
               <FormLabel>Date de naissance :</FormLabel>
               <Input
-                value={formatDate}
+                value={dayjs(updateInfos?.dateOfBirth).format("DD/MM/YYYY")}
                 sx={{ marapinTop: "0.5em!important" }}
                 onChange={(e) =>
                   setUpdateInfos((prevState: any) => ({
