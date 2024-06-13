@@ -18,7 +18,7 @@ const PasswordInput = ({
   label,
   error,
 }: PasswordInputProps) => {
-  const [showPassword, setShowPassword] = useState<Boolean>(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <TextField

@@ -273,10 +273,12 @@ export class UpdateUserInput {
 
 @InputType()
 export class UpdateUserPasswordInput {
+    @Field(() => ID)
+    id: string
     @Field()
-    email: string
+    oldPassword: string
     @Field()
-    password: string
+    newPassword: string
 }
 
 @InputType()

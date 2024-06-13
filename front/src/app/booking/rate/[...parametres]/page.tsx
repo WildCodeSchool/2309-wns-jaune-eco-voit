@@ -1,16 +1,17 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   useCreateRateMutation,
-  useFindBookingByIdQuery,
-  useFindUserByIdQuery,
+  useFindBookingByIdLazyQuery,
+  useFindUserByIdLazyQuery,
 } from "@/types/graphql";
 import { AuthContext } from "@/context/authContext";
-import { Avatar, Button, CircularProgress, Rating } from "@mui/material";
+import { Button, Rating } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { routes } from "@/app/lib/routes";
 import JourneyCardHeader from "@/app/components/JourneyCard/JourneyCardHeader";
 import AvatarJourney from "@/app/components/Avatar/AvatarJouney";
+import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
 
 const RatingPage = ({
   params: {
@@ -20,25 +21,29 @@ const RatingPage = ({
   params: { parametres: Array<string> };
 }) => {
   const router = useRouter();
-  const [bookingRate, setBookingRate] = useState<string>("5");
-  const {
-    data: bookingDatas,
-    error: bookingError,
-    loading: bookingLoading,
-  } = useFindBookingByIdQuery({ variables: { findBookingById: bookingId } });
-  const {
-    data: userDatas,
-    error: userError,
-    loading: userLoading,
-  } = useFindUserByIdQuery({ variables: { findUserById: driverId } });
+
+  const [bookingRate, setBookingRate] = useState("5");
+
+  const [
+    findBookingById,
+    { data: bookingDatas, error: bookingError, loading: bookingLoading },
+  ] = useFindBookingByIdLazyQuery();
+
+  const [
+    findUserById,
+    { data: userDatas, error: userError, loading: userLoading },
+  ] = useFindUserByIdLazyQuery();
+
+  useEffect(() => {
+    if (bookingId && driverId) {
+      findBookingById({ variables: { findBookingById: bookingId } });
+      findUserById({ variables: { findUserById: driverId } });
+    }
+  }, [bookingId, driverId, findBookingById, findUserById]);
 
   const [
     rateBooking,
-    {
-      data: rateBookingData,
-      error: rateBookingError,
-      loading: rateBookingLoading,
-    },
+    { error: rateBookingError, loading: rateBookingLoading },
   ] = useCreateRateMutation({
     onCompleted: () => {
       router.push(routes["home"].pathname);
@@ -60,21 +65,24 @@ const RatingPage = ({
 
   const { getUser: userId } = useContext(AuthContext);
 
-  if (bookingLoading || userLoading || rateBookingLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <CircularProgress />
-      </div>
-    );
-  }
+  useEffect(() => {
+    (rateBookingError || userError || bookingError) &&
+      router.push(`${routes["error"].pathname}`);
+  }, [rateBookingError, userError, bookingError, router]);
 
   if (!bookingDatas || !userDatas) {
-    return <div>Désolé, quelque chose s&apos;est mal passé</div>;
+    return null;
+  }
+
+  if (bookingLoading || userLoading || rateBookingLoading) {
+    return <CircularLoading />;
   }
 
   const {
     findBookingById: {
       journey: { departure_time, origin, destination },
+      user: { id: passengerId },
+      status: bookingStatus,
     },
   } = bookingDatas;
 
@@ -82,15 +90,15 @@ const RatingPage = ({
     findUserById: { firstname, profilePicture },
   } = userDatas;
 
-  if (bookingDatas?.findBookingById.user.id !== userId) {
+  if (passengerId !== userId) {
     return (
       <div className="flex items-center justify-center">
-        You are not allowed to rate this booking
+        Vous n&apos;êtes pas autorisé à noter ce booking
       </div>
     );
   }
 
-  if (bookingDatas?.findBookingById.status !== "DONE") {
+  if (bookingStatus !== "DONE") {
     return (
       <div className="flex items-center justify-center">
         Ce trajet ne peut pas etre noté
@@ -98,8 +106,6 @@ const RatingPage = ({
     );
   }
 
-  console.log("bookingDatas", bookingDatas);
-  console.log("userDatas", userDatas);
   return (
     <div className="flex flex-col gap-8 items-center justify-center">
       <h2>Détails du trajet</h2>
@@ -120,8 +126,8 @@ const RatingPage = ({
         <h3>Évaluez le conducteur</h3>
         <Rating
           value={+bookingRate}
-          onChange={(e, newValue) =>
-            setBookingRate(newValue?.toString() ?? "1")
+          onChange={(_, newValue) =>
+            newValue && setBookingRate(newValue?.toString())
           }
           defaultValue={0}
           precision={1}

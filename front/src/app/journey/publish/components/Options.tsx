@@ -7,13 +7,16 @@ type OptionsProps = {
   setJourneyData: React.Dispatch<React.SetStateAction<JourneyData>>;
 };
 
-const Options = ({ journeyData, setJourneyData }: OptionsProps) => {
+const Options = ({
+  journeyData: { automaticAccept },
+  setJourneyData,
+}: OptionsProps) => {
   return (
     <>
       <FormControlLabel
         control={
           <Checkbox
-            checked={journeyData.automaticAccept}
+            checked={automaticAccept}
             onChange={(e) =>
               setJourneyData((prevState) => ({
                 ...prevState,

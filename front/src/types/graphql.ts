@@ -127,6 +127,7 @@ export type Mutation = {
   updateJourney: JourneyEntity;
   updateJourneyStatus: JourneyEntity;
   updateUser: UserEntity;
+  updateUserPassword: UserEntity;
 };
 
 
@@ -197,6 +198,11 @@ export type MutationUpdateJourneyStatusArgs = {
 
 export type MutationUpdateUserArgs = {
   data: UpdateUserInput;
+};
+
+
+export type MutationUpdateUserPasswordArgs = {
+  data: UpdateUserPasswordInput;
 };
 
 export type PartialBookingInput = {
@@ -320,6 +326,12 @@ export type UpdateUserInput = {
   status?: InputMaybe<Scalars['String']['input']>;
   tripsAsDriver?: InputMaybe<Scalars['Float']['input']>;
   tripsAsPassenger?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type UpdateUserPasswordInput = {
+  id: Scalars['ID']['input'];
+  newPassword: Scalars['String']['input'];
+  oldPassword: Scalars['String']['input'];
 };
 
 export type UserEntity = {
@@ -463,6 +475,13 @@ export type UpdateUserMutationVariables = Exact<{
 
 
 export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, phoneNumber?: string | null, profilePicture?: string | null, role: string, grade?: string | null, averageRate?: number | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null, journeys?: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, totalPrice: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null }> | null, bookings?: Array<{ __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null }> | null } };
+
+export type UpdateUserPasswordMutationVariables = Exact<{
+  data: UpdateUserPasswordInput;
+}>;
+
+
+export type UpdateUserPasswordMutation = { __typename?: 'Mutation', updateUserPassword: { __typename?: 'UserEntity', id: string } };
 
 export type ArchiveUserMutationVariables = Exact<{
   archiveUserId: Scalars['String']['input'];
@@ -1345,6 +1364,39 @@ export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
 export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
 export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const UpdateUserPasswordDocument = gql`
+    mutation updateUserPassword($data: UpdateUserPasswordInput!) {
+  updateUserPassword(data: $data) {
+    id
+  }
+}
+    `;
+export type UpdateUserPasswordMutationFn = Apollo.MutationFunction<UpdateUserPasswordMutation, UpdateUserPasswordMutationVariables>;
+
+/**
+ * __useUpdateUserPasswordMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserPasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserPasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserPasswordMutation, { data, loading, error }] = useUpdateUserPasswordMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateUserPasswordMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserPasswordMutation, UpdateUserPasswordMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserPasswordMutation, UpdateUserPasswordMutationVariables>(UpdateUserPasswordDocument, options);
+      }
+export type UpdateUserPasswordMutationHookResult = ReturnType<typeof useUpdateUserPasswordMutation>;
+export type UpdateUserPasswordMutationResult = Apollo.MutationResult<UpdateUserPasswordMutation>;
+export type UpdateUserPasswordMutationOptions = Apollo.BaseMutationOptions<UpdateUserPasswordMutation, UpdateUserPasswordMutationVariables>;
 export const ArchiveUserDocument = gql`
     mutation archiveUser($archiveUserId: String!) {
   archiveUser(id: $archiveUserId) {

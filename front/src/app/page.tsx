@@ -1,7 +1,7 @@
 "use client";
 
 import SearchBar from "./components/SearchBar/SearchBar";
-import { CircularProgress, Grid, Link } from "@mui/material";
+import { Grid } from "@mui/material";
 import { CookieValueTypes } from "cookies-next";
 
 import {
@@ -9,10 +9,13 @@ import {
   ListJourneysWithFilters,
   useListJourneysLazyQuery,
 } from "@/types/graphql";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import dayjs from "dayjs";
 import JourneyCard from "./components/JourneyCard/JourneyCard";
+import CircularLoading from "./components/CircularLoading/CircularLoading";
+import { useRouter } from "next/navigation";
+import { routes } from "./lib/routes";
 
 export type UserInfos = {
   email: CookieValueTypes;
@@ -22,25 +25,22 @@ export type UserInfos = {
 };
 
 export default function Home() {
-  const [journeys, setJourneys] = useState<
-    ListJourneysQuery["listJourneys"] | null
-  >(null);
+  const [journeys, setJourneys] = useState<ListJourneysQuery["listJourneys"]>();
+  const router = useRouter();
 
-  const [getJourneys, { loading }] = useListJourneysLazyQuery({
-    fetchPolicy: "no-cache",
-    onCompleted(data) {
-      setJourneys(data.listJourneys);
-    },
-  });
+  const [getJourneys, { loading: getJourneyLoading, error: getJourneyError }] =
+    useListJourneysLazyQuery({
+      fetchPolicy: "no-cache",
+      onCompleted(data) {
+        setJourneys(data.listJourneys);
+      },
+    });
 
-  const [filters, setFilters] = useState<ListJourneysWithFilters | undefined>(
-    undefined
-  );
+  const [filters, setFilters] = useState<ListJourneysWithFilters>();
 
   const handleOnSearchJourneys = (filters?: ListJourneysWithFilters) => {
     if (!filters) {
-      setJourneys(null);
-      setFilters(filters);
+      setJourneys(undefined);
       return;
     }
     setFilters(filters);
@@ -53,7 +53,13 @@ export default function Home() {
     });
   };
 
-  console.log("JOURNEY", journeys);
+  useEffect(() => {
+    getJourneyError && router.push(`${routes["error"].pathname}`);
+  }, [getJourneyError, router]);
+
+  if (getJourneyLoading) {
+    return <CircularLoading />;
+  }
 
   return (
     <div className="home_page flex-1 flex flex-col gap-6 h-full items-center justify-center py-10">
@@ -61,7 +67,6 @@ export default function Home() {
       <h3 className="font-medium uppercase tracking-widest">Ecovoit</h3>
 
       <SearchBar onSearchJourneys={handleOnSearchJourneys} />
-      {loading && <CircularProgress />}
 
       {journeys &&
         (journeys.length === 0 ? (

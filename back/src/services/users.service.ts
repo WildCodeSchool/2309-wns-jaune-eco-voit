@@ -3,6 +3,7 @@ import datasource from '../db'
 import {
     CreateUserInput,
     UpdateUserInput,
+    UpdateUserPasswordInput,
     UserEntity,
 } from '../entities/user.entity'
 import { assertDataExists, validateData } from '../utils/errorHandlers'
@@ -68,6 +69,18 @@ export default class UsersService {
         const userToUpdate = await this.findUserById(id)
 
         const userUpdated = this.db.merge(userToUpdate, body)
+
+        await validateData(userUpdated)
+
+        return this.db.save(userUpdated)
+    }
+
+    async updateUserPassword({ id, newPassword }: UpdateUserPasswordInput) {
+        const userToUpdate = await this.findUserById(id)
+
+        const userUpdated = this.db.merge(userToUpdate, {
+            password: newPassword,
+        })
 
         await validateData(userUpdated)
 

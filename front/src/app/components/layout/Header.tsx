@@ -32,11 +32,9 @@ const Header = () => {
 
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [loggedUser, setLoggedUser] = useState<string | undefined>(undefined);
-  const [userUserPicture, setUserUserPicture] = useState<string | undefined>(
-    undefined
-  );
-  const { getUser, user, updateUser } = useContext(AuthContext);
+  const [loggedUser, setLoggedUser] = useState<string>();
+  const [userPicture, setUserPicture] = useState<string>();
+  const { getUser, updateUser } = useContext(AuthContext);
 
   const [getUserDatas, { data, loading, error }] = useGetProfileLazyQuery({
     fetchPolicy: "network-only", // Used for first execution
@@ -44,8 +42,8 @@ const Header = () => {
   });
 
   useEffect(() => {
-    if (!loading && !error && data) {
-      setUserUserPicture(data?.getProfile?.profilePicture ?? undefined);
+    if (data) {
+      setUserPicture(data?.getProfile.profilePicture ?? undefined);
     }
   }, [data, loading, error]);
 
@@ -63,7 +61,7 @@ const Header = () => {
     }
     getUserDatas();
     setLoggedUser(getUser?.toString());
-  }, [getUser, user, updateUser, getUserDatas]);
+  }, [getUser, updateUser, getUserDatas]);
 
   const handleCloseMenu = () => {
     setAnchorEl(null);
@@ -114,7 +112,7 @@ const Header = () => {
                 }}
                 color="inherit"
               >
-                <Avatar alt="profile picture" src={userUserPicture} />
+                <Avatar alt="profile picture" src={userPicture} />
               </IconButton>
             </Tooltip>
 

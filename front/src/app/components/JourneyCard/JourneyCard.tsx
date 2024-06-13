@@ -27,32 +27,30 @@ const JourneyCard = ({
   destination,
   totalPrice,
   availableSeats,
-  user,
+  user: { averageRate, firstname, profilePicture },
   id,
-}: JourneyCardProps) => {
-  return (
-    <Grid item sm={10} md={5}>
-      <Link
-        href={`${routes.journey.pathname}/${id}`}
-        className="flex flex-col rounded-2xl bg-white p-6 gap-6 hover:shadow-xl transition duration-300 ease-in-out"
-      >
-        <JourneyCardHeader
-          departureTime={departureTime}
-          origin={origin}
-          destination={destination}
-        />
-        <AvatarJourney
-          firstname={user.firstname}
-          rating={user.averageRate ? user.averageRate : undefined}
-          profilePicture={user.profilePicture ?? ""}
-        />
-        <JourneyCardFooter
-          totalPrice={totalPrice}
-          availableSeats={availableSeats}
-        />
-      </Link>
-    </Grid>
-  );
-};
+}: JourneyCardProps) => (
+  <Grid item sm={10} md={5}>
+    <Link
+      href={`${routes.journey.pathname}/${id}`}
+      className="flex flex-col rounded-2xl bg-white p-6 gap-6 hover:shadow-xl transition duration-300 ease-in-out"
+    >
+      <JourneyCardHeader
+        departureTime={departureTime}
+        origin={origin}
+        destination={destination}
+      />
+      <AvatarJourney
+        firstname={firstname}
+        rating={averageRate}
+        profilePicture={profilePicture ?? undefined}
+      />
+      <JourneyCardFooter
+        totalPrice={totalPrice}
+        availableSeats={availableSeats}
+      />
+    </Link>
+  </Grid>
+);
 
 export default JourneyCard;

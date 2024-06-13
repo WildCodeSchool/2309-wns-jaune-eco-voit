@@ -2,7 +2,6 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-// Components
 import { Button } from "@mui/material";
 import { routes } from "./lib/routes";
 
