@@ -18,7 +18,7 @@ const AvatarJourney = ({
           alt="profile picture"
           src={profilePicture}
           sx={{ width: 70, height: 70 }}
-        />{" "}
+        />
         <div className=" flex flex-col justify-around">
           <div className="flex text-lg gap-2">
             <p className="font-semibold">{firstname}</p>
