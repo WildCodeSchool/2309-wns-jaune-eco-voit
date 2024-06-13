@@ -94,6 +94,10 @@ export default class BookingResolver {
         if (availableSeats <= 0)
             throw new Error('No available seats for this journey')
 
+        if (data.user.id === driverId) {
+            throw new Error("You can't book your own journey")
+        }
+
         const newBooking = await new BookingService().createBooking({
             ...data,
             status: automaticAccept ? 'ACCEPTED' : 'PENDING',

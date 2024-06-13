@@ -26,7 +26,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -f http://backend:4000/graphql?query=%7B__typename%7D -H 'Apollo-Require-Preflight: true' || exit 1",  
+          "curl -f http://backend:4000/graphql?query=%7B__typename%7D -H 'Apollo-Require-Preflight: true' || exit 1",
         ]
       interval: 10s
       timeout: 30s
@@ -54,7 +54,7 @@ services:
     healthcheck:
       # les commandes à executer pour run le health check.
       test: ["CMD-SHELL", "pg_isready -d ecovoit -U ecovoit_user"]
-      # le temps entre chaque execution du health check
+      # le temps entre chaque execution du health chceck
       interval: 5s
       # Le temps max que doit prendre l'execution du health check
       timeout: 5s
