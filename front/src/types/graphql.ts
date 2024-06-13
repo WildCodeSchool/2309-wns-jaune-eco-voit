@@ -382,6 +382,7 @@ export type UserWithoutPassord = {
   __typename?: 'UserWithoutPassord';
   email: Scalars['EmailAddress']['output'];
   firstname: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
   lastname: Scalars['String']['output'];
 };
 
