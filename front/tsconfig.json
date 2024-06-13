@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "types": ["@types/jest", "@testing-library/jest-dom"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -11,7 +12,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "paths": {
       "@/*": ["./src/*"]
@@ -28,7 +29,9 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "build/types/**/*.ts",
-    "src/app/components/UploadProfilePicture"
+    "src/app/components/UploadProfilePicture",
+    "src/**/*",
+    "./jest.setup.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "./cypress.config.ts"]
 }

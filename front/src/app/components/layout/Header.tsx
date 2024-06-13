@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 //Assets
-import logo from "@/assets/Logo.webp";
+// import logo from "@/assets/Logo.webp";
 import {
   Avatar,
   Button,
@@ -78,9 +78,9 @@ const Header = () => {
 
   return (
     <header className="flex justify-between items-center py-6 px-6 bg-white">
-      <Link href={`${routes["home"].pathname}`}>
+      {/* <Link href={`${routes["home"].pathname}`}>
         <Image src={logo} alt="Ecovoit" height={45} />
-      </Link>
+      </Link> */}
       <nav className="flex gap-4 items-center">
         {!loggedUser ? (
           <>
@@ -135,7 +135,9 @@ const Header = () => {
 
               <Divider />
 
-              <MenuItem onClick={() => router.push(routes.journeysUser.pathname)}>
+              <MenuItem
+                onClick={() => router.push(routes.journeysUser.pathname)}
+              >
                 <div className="w-48 flex justify-between">
                   <DirectionsCarFilledOutlinedIcon /> <p>Mes trajets</p>
                   <KeyboardArrowRightOutlinedIcon />
