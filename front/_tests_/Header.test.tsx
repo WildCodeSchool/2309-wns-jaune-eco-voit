@@ -3,7 +3,6 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import { MockedProvider } from "@apollo/client/testing";
 import { GET_PROFILE } from "@/requetes/queries/user.queries";
-import { AppRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { AuthContext } from "@/context/authContext";
 
 jest.mock("next/navigation", () => require("next-router-mock"));
