@@ -67,4 +67,9 @@ export const routes: { [key: string]: Route } = {
     title: "Booking rating",
     protected: "PRIVATE",
   },
+  "booking accept": {
+    pathname: "/booking/accept",
+    title: "Booking accept",
+    protected: "PRIVATE",
+  },
 };

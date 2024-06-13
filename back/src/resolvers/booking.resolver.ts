@@ -131,24 +131,48 @@ export default class BookingResolver {
     async acceptBooking(@Arg('id') id: string, @Ctx() { user }: MyContext) {
         const bookingService = new BookingService()
 
-        const { journey } = await bookingService.findBookingById(id)
+        const {
+            journey: { id: journeyId, availableSeats },
+            user: { email: passengerEmail },
+        } = await bookingService.findBookingById(id)
 
-        const { user: journeyUser } =
-            await new JourneysService().findJourneyById(journey.id)
+        const {
+            user: { id: driverId, firstname: driverFirstname },
+        } = await new JourneysService().findJourneyById(journeyId)
 
-        userAuthorized([journeyUser.id], user)
+        userAuthorized([driverId], user)
 
-        if (journey.availableSeats <= 0)
+        if (availableSeats <= 0)
             throw new Error('No available seats for this journey')
 
         await new JourneysService().updateJourney({
-            id: journey.id,
-            availableSeats: journey.availableSeats - 1,
+            id: journeyId,
+            availableSeats: availableSeats - 1,
         })
 
-        return await bookingService.updateBooking(id, {
+        const bookingAccepted = await bookingService.updateBooking(id, {
             status: 'ACCEPTED',
         })
+
+        if (bookingAccepted) {
+            const journeyDetailLink = `${process.env.CLIENT_URL}/journey/${journeyId}`
+
+            const mailOptions = {
+                from: 'La super team Ecovoit',
+                to: passengerEmail,
+                subject: 'Réservation acceptée',
+                text: `${driverFirstname} a accepté votre réservation! Vous pouvez maintenant communiquer: ${journeyDetailLink} `,
+            }
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.log(error)
+                }
+                console.log('Message sent: %s', info.messageId)
+            })
+        }
+
+        return bookingAccepted
     }
 
     @Authorized()
@@ -156,16 +180,38 @@ export default class BookingResolver {
     async rejectBooking(@Arg('id') id: string, @Ctx() { user }: MyContext) {
         const bookingService = new BookingService()
 
-        const { journey } = await bookingService.findBookingById(id)
+        const {
+            journey: { id: journeyId },
+            user: { email: passengerEmail },
+        } = await bookingService.findBookingById(id)
 
-        const { user: journeyUser } =
-            await new JourneysService().findJourneyById(journey.id)
+        const {
+            user: { id: driverId, firstname: driverFirstname },
+        } = await new JourneysService().findJourneyById(journeyId)
 
-        userAuthorized([journeyUser.id], user)
+        userAuthorized([driverId], user)
 
-        return await bookingService.updateBooking(id, {
+        const bookingRejected = await bookingService.updateBooking(id, {
             status: 'REJECTED',
         })
+
+        if (bookingRejected) {
+            const mailOptions = {
+                from: 'La super team Ecovoit',
+                to: passengerEmail,
+                subject: 'Réservation rejetée',
+                text: `${driverFirstname} a refusé votre réservation. Trouvez dès maintenant un nouveau trajet ! ${process.env.CLIENT_URL} `,
+            }
+
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.log(error)
+                }
+                console.log('Message sent: %s', info.messageId)
+            })
+        }
+
+        return bookingRejected
     }
 
     @Authorized()
