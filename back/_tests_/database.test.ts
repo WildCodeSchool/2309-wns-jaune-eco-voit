@@ -121,8 +121,6 @@ describe('Test sur une base de donnée de test', () => {
 
         assert(response.body.kind === 'single')
 
-        console.log(marielouPassenger)
-
         expect(response.body.singleResult.data).toEqual({
             updateUser: {
                 id: marielouPassenger?.id,
@@ -187,12 +185,9 @@ describe('Test sur une base de donnée de test', () => {
                         user: {
                             id: marielouPassenger?.id,
                         },
-                        totalPrice: journeyBeforeBooking?.totalPrice,
                         journey: {
                             id: journeyBeforeBooking?.id,
                         },
-                        arrivalTime: journeyBeforeBooking?.arrival_time,
-                        departureTime: journeyBeforeBooking?.departure_time,
                     },
                 },
             })
@@ -204,7 +199,6 @@ describe('Test sur une base de donnée de test', () => {
                 user: {
                     id: marielouPassenger?.id,
                 },
-                totalPrice: journeyBeforeBooking?.totalPrice,
                 status: 'ACCEPTED',
                 journey: {
                     id: journeyBeforeBooking?.id,
@@ -239,6 +233,9 @@ describe('Test sur une base de donnée de test', () => {
         const journey =
             responseListJourney.body.singleResult.data?.listJourneys[0]
 
+        console.log(journey?.user)
+        console.log(olivierDriver?.id)
+
         const responseCreateBooking =
             await server.executeOperation<ResponseCreateBooking>({
                 query: CREATE_BOOKING,
@@ -247,12 +244,9 @@ describe('Test sur une base de donnée de test', () => {
                         user: {
                             id: olivierDriver?.id,
                         },
-                        totalPrice: journey?.totalPrice,
                         journey: {
                             id: journey?.id,
                         },
-                        arrivalTime: journey?.arrival_time,
-                        departureTime: journey?.departure_time,
                     },
                 },
             })
@@ -262,7 +256,5 @@ describe('Test sur une base de donnée de test', () => {
         expect(
             responseCreateBooking.body.singleResult.errors?.[0].message
         ).toEqual("You can't book your own journey")
-
-        console.log(JSON.stringify(responseCreateBooking.body.singleResult))
     })
 })

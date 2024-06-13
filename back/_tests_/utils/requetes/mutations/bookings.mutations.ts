@@ -4,7 +4,6 @@ export const CREATE_BOOKING = `#graphql
       user {
         id
       }
-      totalPrice
       status
       journey {
         id

@@ -28,6 +28,9 @@ export const LIST_JOURNEYS = `#graphql
       origin
       status
       totalPrice
+      user {
+        id
+      } 
     }
   }
 `
