@@ -93,6 +93,8 @@ export default class UserResolver {
                 // car sign() attend en premier argument un Uint8Array et non une string, d'ou l'utilisation de TextEncoder
                 .sign(new TextEncoder().encode(`${process.env.SECRET_KEY}`))
 
+            console.log(req)
+
             // On crée une instance de la classe Cookies en lui passant la req et la res du context crée dans l'expressMiddleware (index.ts)
             const cookies = new Cookies(req, res)
             // On set un nouveau cookie nommé 'token' contenant le token créé
