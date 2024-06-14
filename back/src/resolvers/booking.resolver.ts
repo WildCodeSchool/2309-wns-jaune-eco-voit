@@ -140,6 +140,7 @@ export default class BookingResolver {
         const {
             journey: { id: journeyId, availableSeats },
             user: { email: passengerEmail },
+            nbPassenger
         } = await bookingService.findBookingById(id)
 
         const {
@@ -148,12 +149,12 @@ export default class BookingResolver {
 
         userAuthorized([driverId], user)
 
-        if (availableSeats <= 0)
-            throw new Error('No available seats for this journey')
+        if (availableSeats <= 0 || availableSeats < nbPassenger)
+            throw new Error('Le nombre de places disponibles est insuffisant')
 
         await new JourneysService().updateJourney({
             id: journeyId,
-            availableSeats: availableSeats - 1,
+            availableSeats: availableSeats - nbPassenger,
         })
 
         const bookingAccepted = await bookingService.updateBooking(id, {
@@ -225,7 +226,7 @@ export default class BookingResolver {
     async cancelBooking(@Arg('id') id: string, @Ctx() { user }: MyContext) {
         const bookingService = new BookingService()
 
-        const { journey, user: userBooking } =
+        const { journey, user: userBooking, nbPassenger } =
             await bookingService.findBookingById(id)
 
         userAuthorized([userBooking.id], user)
@@ -238,7 +239,7 @@ export default class BookingResolver {
 
         await new JourneysService().updateJourney({
             id: journey.id,
-            availableSeats: journey.availableSeats + 1,
+            availableSeats: journey.availableSeats + nbPassenger,
         })
 
         const mailOptions = {
