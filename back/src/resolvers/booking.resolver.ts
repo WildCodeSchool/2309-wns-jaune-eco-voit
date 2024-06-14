@@ -6,6 +6,7 @@ import UsersService from '../services/users.service'
 import JourneysService from '../services/journeys.service'
 import { userAuthorized } from '../utils/userAuthorized'
 import { transporter } from '../utils/emailTransporter'
+import { ValidationError } from 'class-validator'
 
 @Resolver(() => BookingEntity)
 export default class BookingResolver {
@@ -228,13 +229,30 @@ export default class BookingResolver {
 
         userAuthorized([userBooking.id], user)
 
+        const archivedBooking = await new BookingService().updateBooking(id, {
+            status: 'CANCELLED',
+        })
+
+        if (archivedBooking instanceof ValidationError) return //TODO vérifier le type de l'erreur
+
         await new JourneysService().updateJourney({
             id: journey.id,
             availableSeats: journey.availableSeats + 1,
         })
 
-        return await new BookingService().updateBooking(id, {
-            status: 'CANCELLED',
+        const mailOptions = {
+            from: 'La super team Ecovoit',
+            to: journey.user.email,
+            subject: 'Réservation annulée',
+            text: `Nous sommes désolé, ${userBooking.firstname} a annulé sa réservation.`,
+        }
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log(error)
+            }
+            console.log('Message sent: %s', info.messageId)
         })
+        return archivedBooking
     }
 }
