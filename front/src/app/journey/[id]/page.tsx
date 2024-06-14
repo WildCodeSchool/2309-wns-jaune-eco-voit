@@ -10,11 +10,12 @@ import {
   Divider,
   Button,
   CircularProgress,
+  TextField,
 } from "@mui/material";
 import AvatarJourney from "@/app/components/Avatar/AvatarJouney";
 import JourneyTimeline from "@/app/components/JourneyCard/JourneyTimeline";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "@/context/authContext";
 import JourneyMessages from "@/app/components/JourneyMessages/JourneyMessages";
 import BookJourneyButton from "@/app/components/Buttons/BookJourneyButton";
@@ -23,7 +24,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const { id: journeyId } = params;
 
   const { getUser: userContextId } = useContext(AuthContext);
-
+  const [passengerNb, setPassengerNb] = useState(1);
   const {
     data: journeyData,
     loading: journeyLoading,
@@ -43,6 +44,14 @@ export default function Page({ params }: { params: { id: string } }) {
   if (!journeyData || journeyError) {
     //TODO renvoyer vers la page d'erreur
     return <div>Quelque chose s&apos;est mal passé</div>;
+  }
+
+  function maxPassengerNb(nb: number) {
+    if (nb > 0) {
+      return nb > availableSeats ? availableSeats : nb;
+    } else {
+      return 1;
+    }
   }
 
   const {
@@ -117,6 +126,41 @@ export default function Page({ params }: { params: { id: string } }) {
                 {availableSeats}
               </Typography>
             </Stack>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              sx={{ my: 4 }}
+            >
+              <Typography variant="h6" component="p">
+                Nombre de passager(s)
+              </Typography>
+              <TextField
+                id="outlined-number"
+                label="Nombre de passagers"
+                type="number"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                inputProps={{ min: 0, max: availableSeats }}
+                variant="outlined"
+                value={passengerNb}
+                onChange={(e) =>
+                  setPassengerNb(maxPassengerNb(parseInt(e.target.value)))
+                }
+              />
+            </Stack>
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              sx={{ my: 4 }}
+            >
+              <Typography variant="h6" component="p">
+                Total
+              </Typography>
+              <Typography variant="h6" component="p">
+                {totalPrice * passengerNb} €
+              </Typography>
+            </Stack>
             <Divider />
             <AvatarJourney
               firstname={driver.firstname}
@@ -168,7 +212,10 @@ export default function Page({ params }: { params: { id: string } }) {
               origin={origin}
               destination={destination}
             />
-            <BookJourneyButton journey={journeyData.findJourneyById} />
+            <BookJourneyButton
+              journey={journeyData.findJourneyById}
+              passenger={passengerNb}
+            />
           </Grid>
         </Grid>
 

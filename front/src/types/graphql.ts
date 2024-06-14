@@ -25,6 +25,7 @@ export type BookingEntity = {
   createdAt: Scalars['DateTimeISO']['output'];
   id: Scalars['ID']['output'];
   journey: JourneyEntity;
+  nbPassenger: Scalars['Float']['output'];
   status: Scalars['String']['output'];
   updatedAt?: Maybe<Scalars['DateTimeISO']['output']>;
   user: UserEntity;
@@ -32,6 +33,7 @@ export type BookingEntity = {
 
 export type CreateBookingInput = {
   journey: PartialBookingInput;
+  nbPassenger: Scalars['Float']['input'];
   status?: InputMaybe<Scalars['String']['input']>;
   user: PartialBookingInput;
 };

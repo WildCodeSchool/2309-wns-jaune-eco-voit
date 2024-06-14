@@ -92,17 +92,18 @@ export default class BookingResolver {
             user: { email: driverEmail, id: driverId },
         } = await journeyService.findJourneyById(data.journey.id)
 
-        if (availableSeats <= 0)
-            throw new Error('No available seats for this journey')
-
+        if (availableSeats <= 0 || availableSeats < data.nbPassenger)
+            throw new Error('Le nombre de places disponibles est insuffisant')
+       
         if (data.user.id === driverId) {
-            throw new Error("You can't book your own journey")
+            throw new Error("Vous ne pouvez pas réserver votre propre trajet")
         }
 
         const newBooking = await new BookingService().createBooking({
             ...data,
             status: automaticAccept ? 'ACCEPTED' : 'PENDING',
         })
+        
 
         if (!automaticAccept) {
             const acceptLink = `${process.env.CLIENT_URL}/booking/accept/${newBooking.id}/${driverId}`
@@ -125,7 +126,7 @@ export default class BookingResolver {
         automaticAccept &&
             (await journeyService.updateJourney({
                 id: data.journey.id,
-                availableSeats: availableSeats - 1,
+                availableSeats: availableSeats - data.nbPassenger,
             }))
 
         return newBooking
