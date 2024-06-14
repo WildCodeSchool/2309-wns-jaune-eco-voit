@@ -58,24 +58,26 @@ const MyJourneysTab = ({
                     Départ : {formattedDate(departure_time)}
                   </Typography>
                   <div className="flex flex-col items-center justify-evenly gap-2 m-2">
-                    {status === "PLANNED" &&
-                      (bookings.length === 0 ? (
-                        <Button
-                          className=""
-                          onClick={() => {
-                            console.log("edit");
-                          }}
-                        >
-                          Modifier
-                        </Button>
-                      ) : (
+                    {status === "PLANNED" && (
+                      <>
                         <Button
                           className=""
                           onClick={() => onCancelJourney(id)}
                         >
                           Annuler
                         </Button>
-                      ))}
+                        {bookings.length === 0 && (
+                          <Button
+                            className=""
+                            onClick={() => {
+                              console.log("edit");
+                            }}
+                          >
+                            Modifier
+                          </Button>
+                        )}
+                      </>
+                    )}
                   </div>
                 </div>
                 <Typography

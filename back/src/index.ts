@@ -51,7 +51,7 @@ async function main() {
 
     // la variable job est necessaire pour créé le cron mais n'est jamais appelée a proprement parlé dans le code
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const job = schedule.scheduleJob('*/1 * * * *', async function () {
+    const job = schedule.scheduleJob('*/20 * * * *', async function () {
         await handleJourneysDone()
     })
 
