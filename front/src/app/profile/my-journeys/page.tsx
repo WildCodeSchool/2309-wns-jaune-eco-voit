@@ -6,6 +6,8 @@ import {
   useListJourneysByUserLazyQuery,
   useListBookingsByUserQuery,
   useCancelBookingMutation,
+  useUpdateJourneyStatusMutation,
+  ListJourneysByUserQuery,
 } from "@/types/graphql";
 import { AuthContext } from "@/context/authContext";
 import {
@@ -20,11 +22,19 @@ import {
 import TabContext from "@mui/lab/TabContext";
 import { TabList, TabPanel } from "@mui/lab";
 import dayjs from "dayjs";
+import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
+import { routes } from "@/app/lib/routes";
+import { useRouter } from "next/navigation";
 
 export default function MyJourneys() {
+  const router = useRouter();
+
   const { getUser: userId } = useContext(AuthContext);
 
   const [value, setValue] = useState("1");
+  const [userJourneys, setUserJourneys] =
+    useState<ListJourneysByUserQuery["listJourneysByUser"]>();
+
   const [
     getUserBookings,
     { data: bookingData, loading: bookingLoading, error: bookingError },
@@ -34,27 +44,83 @@ export default function MyJourneys() {
     { data: journeyData, loading: journeyLoading, error: journeyError },
   ] = useListJourneysByUserLazyQuery({ fetchPolicy: "network-only" });
 
-  const [cancelBooking] = useCancelBookingMutation({
-    fetchPolicy: "network-only",
-  });
+  const [cancelBooking, { error: cancelBookingError }] =
+    useCancelBookingMutation({
+      fetchPolicy: "network-only",
+    });
+
+  const [
+    updateJourneyStatus,
+    { data, error: updateJourneyError, loading: updateJourneyStatusLoading },
+  ] = useUpdateJourneyStatusMutation();
+
+  const handleCancelJourney = (journeyId: string) => {
+    updateJourneyStatus({
+      variables: {
+        data: { id: journeyId, status: "CANCELLED" },
+      },
+      onCompleted: () => {
+        console.log(data);
+        if (userId) {
+          getUserJourneys({ variables: { userId } });
+        }
+      },
+    });
+  };
+
+  const handleCancelBooking = (bookingIdToDelete: string) => {
+    cancelBooking({
+      variables: { cancelBookingId: bookingIdToDelete },
+      onCompleted: () => {
+        if (userId) {
+          getUserBookings({
+            variables: { userId },
+            fetchPolicy: "network-only",
+          });
+        }
+      },
+    });
+  };
 
   useEffect(() => {
     if (userId) {
       getUserBookings({
-        variables: { userId: userId },
+        variables: { userId },
       });
       getUserJourneys({
-        variables: { userId: userId },
+        variables: { userId },
+        onCompleted: (data) => {
+          setUserJourneys(data?.listJourneysByUser);
+        },
       });
     }
   }, [getUserBookings, getUserJourneys, userId]);
 
-  if (!userId || bookingLoading || journeyLoading) {
-    return <div>Loading ...</div>;
-  }
+  useEffect(() => {
+    if (journeyData) {
+      setUserJourneys(journeyData?.listJourneysByUser);
+    }
+  }, [journeyData]);
 
-  if (bookingError || journeyError) {
-    return <div>Error</div>;
+  useEffect(() => {
+    if (
+      bookingError ||
+      journeyError ||
+      updateJourneyError ||
+      cancelBookingError
+    ) {
+      router.push(`${routes["error"].pathname}`);
+    }
+  }, [
+    bookingError,
+    journeyError,
+    updateJourneyError,
+    cancelBookingError,
+    router,
+  ]);
+
+  if (bookingLoading || journeyLoading) {
+    return <CircularLoading />;
   }
 
   const formattedTime = (time: Date) => {
@@ -69,18 +135,6 @@ export default function MyJourneys() {
     setValue(newValue);
   };
 
-  const handleCancelBooking = (bookingIdToDelete: string) => {
-    cancelBooking({
-      variables: { cancelBookingId: bookingIdToDelete },
-      onCompleted: () => {
-        getUserBookings({
-          variables: { userId: userId },
-          fetchPolicy: "network-only",
-        });
-      },
-    });
-  };
-
   return (
     <div>
       <TabContext value={value}>
@@ -91,70 +145,83 @@ export default function MyJourneys() {
           </TabList>
         </Box>
         <TabPanel value="1">
-          {journeyData?.listJourneysByUser.map((journey, index) => (
-            <Card
-              key={index}
-              className="flex items-center mb-4 p-4 m-auto  w-1/2"
-            >
-              <Avatar
-                alt="profile picture"
-                src={journey?.user?.profilePicture ?? ""}
-              />
+          {userJourneys &&
+            userJourneys.map((journey, index) => {
+              const {
+                user: { profilePicture, firstname },
+                origin,
+                destination,
+                departure_time,
+                availableSeats,
+                totalPrice,
+                bookings,
+                id,
+                status,
+              } = journey;
+              return (
+                <Card
+                  key={index}
+                  className="flex items-center mb-4 p-4 m-auto  w-1/2"
+                >
+                  <Avatar alt="profile picture" src={profilePicture ?? ""} />
 
-              <CardContent className="flex-grow ">
-                <div className="flex items-center justify-between">
-                  <Typography
-                    variant="h6"
-                    component="h6"
-                    className="font-semibold"
-                  >
-                    {journey.user.firstname}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    className="text-sm"
-                  >
-                    {formattedDate(journey.departure_time)} <br />
-                    Départ : {formattedTime(journey.departure_time)}
-                  </Typography>
-                  <div className="flex flex-col items-center justify-evenly gap-2  m-2">
-                    <Button
-                      className=" "
-                      onClick={() => {
-                        console.log("edit");
-                      }}
+                  <CardContent className="flex-grow ">
+                    <div className="flex items-center justify-between">
+                      <Typography
+                        variant="h6"
+                        component="h6"
+                        className="font-semibold"
+                      >
+                        {firstname}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        className="text-sm"
+                      >
+                        {formattedTime(departure_time)}
+                        <br />
+                        Départ : {formattedDate(departure_time)}
+                      </Typography>
+                      <div className="flex flex-col items-center justify-evenly gap-2  m-2">
+                        {/* TODO faire la fonction de modification des journeys */}
+                        {status === "PLANNED" &&
+                          (bookings.length === 0 ? (
+                            <Button
+                              className=" "
+                              onClick={() => {
+                                console.log("edit");
+                              }}
+                            >
+                              Modifier
+                            </Button>
+                          ) : (
+                            <Button
+                              className=""
+                              onClick={() => handleCancelJourney(id)}
+                            >
+                              Annuler
+                            </Button>
+                          ))}
+                      </div>
+                    </div>
+                    <Typography
+                      variant="body1"
+                      className="mt-2 text-gray-700 whitespace-pre-wrap"
                     >
-                      Modifier
-                    </Button>{" "}
-                    {/* TODO faire la fonction de modification des journeys */}
-                    <Button
-                      className=""
-                      onClick={() => {
-                        console.log("cancel");
-                      }}
+                      De {origin} à {destination}
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      className="mt-2 text-gray-700 whitespace-pre-wrap"
                     >
-                      Annuler
-                    </Button>{" "}
-                    {/* TODO faire la fonction de suppression des journeyx */}
-                  </div>
-                </div>
-                <Typography
-                  variant="body1"
-                  className="mt-2 text-gray-700 whitespace-pre-wrap"
-                >
-                  De {journey.origin} à {journey.destination}
-                </Typography>
-                <Typography
-                  variant="body1"
-                  className="mt-2 text-gray-700 whitespace-pre-wrap"
-                >
-                  Siége dispobible : {journey.availableSeats}
-                </Typography>
-                <Typography>Prix : {journey.totalPrice}€</Typography>
-              </CardContent>
-            </Card>
-          ))}
+                      Siége dispobible : {availableSeats}
+                    </Typography>
+                    <Typography>Prix : {totalPrice}€</Typography>
+                  </CardContent>
+                </Card>
+              );
+            })}
         </TabPanel>
         <TabPanel value="2">
           {bookingData?.listBookingsByUser.map((booking, index) => (
