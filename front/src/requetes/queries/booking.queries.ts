@@ -7,6 +7,7 @@ export const LIST_BOOKINGS = gql`
       status
       createdAt
       updatedAt
+      nbPassenger
       user {
         id
         firstname
@@ -52,6 +53,7 @@ export const LIST_BOOKINGS_BY_USER = gql`
   query ListBookingsByUser($userId: String!) {
     listBookingsByUser(userId: $userId) {
       id
+      nbPassenger
       status
       createdAt
       updatedAt
@@ -101,6 +103,7 @@ export const LIST_BOOKINGS_BY_JOURNEY = gql`
     listBookingsByJourney(journeyId: $journeyId) {
       id
       status
+      nbPassenger
       createdAt
       updatedAt
       user {
@@ -149,6 +152,7 @@ export const FIND_BOOKING_BY_ID = gql`
     findBookingById(id: $findBookingById) {
       id
       status
+      nbPassenger
       createdAt
       updatedAt
       user {

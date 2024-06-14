@@ -7,7 +7,7 @@ import { CreateBookingInput } from "@/types/graphql";
 import { useRouter } from "next/navigation";
 import { routes } from "@/app/lib/routes";
 
-const BookJourneyButton = ({ journey }: any) => {
+const BookJourneyButton = ({ journey, passenger }: any) => {
   const { getUser: userId } = useContext(AuthContext);
 
   console.log("journey in btn", journey);
@@ -30,6 +30,7 @@ const BookJourneyButton = ({ journey }: any) => {
       user: { id: userId! },
       journey: { id: journey.id },
       status: journey.status,
+      nbPassenger: passenger,
     };
     console.log("booking", booking);
     createBookingMutation({

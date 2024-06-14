@@ -92,17 +92,18 @@ export default class BookingResolver {
             user: { email: driverEmail, id: driverId },
         } = await journeyService.findJourneyById(data.journey.id)
 
-        if (availableSeats <= 0)
-            throw new Error('No available seats for this journey')
-
+        if (availableSeats <= 0 || availableSeats < data.nbPassenger)
+            throw new Error('Le nombre de places disponibles est insuffisant')
+       
         if (data.user.id === driverId) {
-            throw new Error("You can't book your own journey")
+            throw new Error("Vous ne pouvez pas réserver votre propre trajet")
         }
 
         const newBooking = await new BookingService().createBooking({
             ...data,
             status: automaticAccept ? 'ACCEPTED' : 'PENDING',
         })
+        
 
         if (!automaticAccept) {
             const acceptLink = `${process.env.CLIENT_URL}/booking/accept/${newBooking.id}/${driverId}`
@@ -125,7 +126,7 @@ export default class BookingResolver {
         automaticAccept &&
             (await journeyService.updateJourney({
                 id: data.journey.id,
-                availableSeats: availableSeats - 1,
+                availableSeats: availableSeats - data.nbPassenger,
             }))
 
         return newBooking
@@ -139,6 +140,7 @@ export default class BookingResolver {
         const {
             journey: { id: journeyId, availableSeats },
             user: { email: passengerEmail },
+            nbPassenger
         } = await bookingService.findBookingById(id)
 
         const {
@@ -147,12 +149,12 @@ export default class BookingResolver {
 
         userAuthorized([driverId], user)
 
-        if (availableSeats <= 0)
-            throw new Error('No available seats for this journey')
+        if (availableSeats <= 0 || availableSeats < nbPassenger)
+            throw new Error('Le nombre de places disponibles est insuffisant')
 
         await new JourneysService().updateJourney({
             id: journeyId,
-            availableSeats: availableSeats - 1,
+            availableSeats: availableSeats - nbPassenger,
         })
 
         const bookingAccepted = await bookingService.updateBooking(id, {
@@ -224,7 +226,7 @@ export default class BookingResolver {
     async cancelBooking(@Arg('id') id: string, @Ctx() { user }: MyContext) {
         const bookingService = new BookingService()
 
-        const { journey, user: userBooking } =
+        const { journey, user: userBooking, nbPassenger } =
             await bookingService.findBookingById(id)
 
         userAuthorized([userBooking.id], user)
@@ -237,7 +239,7 @@ export default class BookingResolver {
 
         await new JourneysService().updateJourney({
             id: journey.id,
-            availableSeats: journey.availableSeats + 1,
+            availableSeats: journey.availableSeats + nbPassenger,
         })
 
         const mailOptions = {

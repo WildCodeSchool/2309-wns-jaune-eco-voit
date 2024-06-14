@@ -82,7 +82,7 @@ export class JourneyEntity {
     @IsInt({ message: 'Avalaible seats must e a number' })
     // Min to 0 cause when the journey will be full, the number of available seats will be 0
     @Min(0)
-    @Max(8, { message: 'Max available seats is 4' })
+    @Max(8, { message: 'Max available seats is 8' })
     availableSeats: number
 
     @Field(() => [BookingEntity])
@@ -221,4 +221,14 @@ export class ListJourneysWithFilters {
 
     @Field()
     availableSeats: number
+}
+
+
+@InputType()
+export class updateAvailableSeatsInput {
+    @Field(() => ID)
+    id: string
+
+    @Field()
+    seatNb: number
 }

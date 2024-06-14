@@ -16,7 +16,7 @@ const MyJourneysTab = ({
   isLoading,
 }: MyJourneysTabProps) => {
   return (
-    <TabPanel value="JOURNEY">
+    <TabPanel value="JOURNEYS">
       {isLoading ? (
         <CircularLoading />
       ) : (

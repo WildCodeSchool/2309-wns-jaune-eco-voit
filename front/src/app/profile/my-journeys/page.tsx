@@ -119,8 +119,8 @@ export default function MyJourneys() {
       <TabContext value={tabDisplayed}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <TabList onChange={handleChange} aria-label="lab API tabs example">
-            <Tab label="Mes trajets" value="1" />
-            <Tab label="Mes réservations" value="2" />
+            <Tab label="Mes trajets" value="JOURNEYS" />
+            <Tab label="Mes réservations" value="BOOKINGS" />
           </TabList>
         </Box>
 

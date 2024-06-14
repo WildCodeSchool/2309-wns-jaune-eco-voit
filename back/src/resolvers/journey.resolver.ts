@@ -7,6 +7,7 @@ import {
     UpdateJourneyInput,
     UpdateJourneyStatusInput,
     ListJourneysWithFilters,
+    updateAvailableSeatsInput
 } from '../entities/journey.entity'
 import UsersService from '../services/users.service'
 import { MyContext } from '..'
@@ -78,7 +79,7 @@ export default class JourneyResolver {
     @Authorized()
     @Mutation(() => JourneyEntity)
     async decreaseAvailableSeats(
-        @Arg('id') id: string,
+        @Arg('data') {id, seatNb}: updateAvailableSeatsInput,
         @Ctx() { user }: MyContext
     ) {
         const { availableSeats, user: journeyUser } =
@@ -92,14 +93,14 @@ export default class JourneyResolver {
 
         return await new JourneysService().updateJourney({
             id,
-            availableSeats: availableSeats - 1,
+            availableSeats: availableSeats - seatNb,
         })
     }
 
     @Authorized()
     @Mutation(() => JourneyEntity)
     async increaseAvailableSeats(
-        @Arg('id') id: string,
+        @Arg('data') {id, seatNb}: updateAvailableSeatsInput,
         @Ctx() { user }: MyContext
     ) {
         const {
@@ -111,17 +112,17 @@ export default class JourneyResolver {
         userAuthorized([journeyUser.id], user)
 
         if (
-            availableSeats >= 4 ||
+            availableSeats >= 8 ||
             (bookings &&
                 bookings.filter((booking) => booking.status === 'ACCEPTED')
-                    ?.length >= 4)
+                    ?.length >= 8)
         ) {
             throw new Error('Impossible to add a seat')
         }
 
         return await new JourneysService().updateJourney({
             id,
-            availableSeats: availableSeats + 1,
+            availableSeats: availableSeats + seatNb,
         })
     }
 
