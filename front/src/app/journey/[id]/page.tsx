@@ -17,6 +17,7 @@ import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import { useContext } from "react";
 import { AuthContext } from "@/context/authContext";
 import JourneyMessages from "@/app/components/JourneyMessages/JourneyMessages";
+import BookJourneyButton from "@/app/components/Buttons/BookJourneyButton";
 
 export default function Page({ params }: { params: { id: string } }) {
   const { id: journeyId } = params;
@@ -98,7 +99,7 @@ export default function Page({ params }: { params: { id: string } }) {
               sx={{ my: 4 }}
             >
               <Typography variant="h6" component="p">
-                Prix total pour 1 passager
+                Tarif pour 1 passager
               </Typography>
               <Typography variant="h6" component="p">
                 {totalPrice} €
@@ -158,12 +159,16 @@ export default function Page({ params }: { params: { id: string } }) {
             >
               Détail du trajet
             </Typography>
+            <p className={"text-center  mb-10 font-bold text-primary-500"}>
+              Nombre de places disponibles : {availableSeats}
+            </p>
             <JourneyTimeline
               departureTime={departure_time}
               arrivalTime={arrival_time}
               origin={origin}
               destination={destination}
             />
+            <BookJourneyButton journey={journeyData.findJourneyById} />
           </Grid>
         </Grid>
 
