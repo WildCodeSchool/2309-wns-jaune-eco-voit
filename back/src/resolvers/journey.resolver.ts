@@ -12,6 +12,7 @@ import UsersService from '../services/users.service'
 import { MyContext } from '..'
 import { userAuthorized } from '../utils/userAuthorized'
 import BookingsService from '../services/bookings.service'
+import { transporter } from '../utils/emailTransporter'
 
 @Resolver()
 export default class JourneyResolver {
@@ -132,6 +133,7 @@ export default class JourneyResolver {
     ) {
         const journeyService = new JourneysService()
         const bookingService = new BookingsService()
+        const usersService = new UsersService()
 
         const { user: journeyUser, status } =
             await journeyService.findJourneyById(data.id)
@@ -151,16 +153,41 @@ export default class JourneyResolver {
         if (data.status === 'CANCELLED') {
             bookings
                 ?.filter((booking) => booking.status !== 'CANCELLED')
-                .forEach(async (booking) => {
-                    return await bookingService.updateBooking(booking.id, {
+                .forEach(async ({ id: bookingId }) => {
+                    await bookingService.updateBooking(bookingId, {
                         status: 'CANCELLED',
+                    })
+                    const {
+                        user: { email: passengerEmail },
+                        journey: { origin, destination },
+                    } = await bookingService.findBookingById(bookingId)
+
+                    const mailOptions = {
+                        from: 'La super team Ecovoit',
+                        to: passengerEmail,
+                        subject: 'Votre voyage a été annulé',
+                        text: `Votre voyage ${origin} ${destination} a été annulé`,
+                    }
+
+                    transporter.sendMail(mailOptions, (error, info) => {
+                        if (error) {
+                            console.log(error)
+                        }
+                        console.log('Message sent: %s', info.messageId)
                     })
                 })
         }
 
-        const usersService = new UsersService()
-
         if (data.status === 'DONE') {
+            const { tripsAsDriver } = await usersService.findUserById(
+                journeyUser.id
+            )
+
+            usersService.updateUser({
+                id: journeyUser.id,
+                tripsAsDriver: tripsAsDriver + 1,
+            })
+
             bookings
                 ?.filter((booking) => booking.status === 'ACCEPTED')
                 .reduce<string[]>((usersId, booking) => {
@@ -175,15 +202,6 @@ export default class JourneyResolver {
                     })
                 })
         }
-
-        const { tripsAsDriver } = await usersService.findUserById(
-            journeyUser.id
-        )
-
-        usersService.updateUser({
-            id: journeyUser.id,
-            tripsAsDriver: tripsAsDriver + 1,
-        })
 
         return await new JourneysService().updateJourney(data)
     }

@@ -17,7 +17,7 @@ import UsersService from './services/users.service'
 import { customAuthChecker } from './lib/authChecker'
 import JourneyMessageResolver from './resolvers/journeyMessage.resolver'
 import schedule from 'node-schedule'
-import { changeJourneysStatus } from './utils/scheduler'
+import { handleJourneysDone } from './utils/scheduler'
 import RatingResolver from './resolvers/rating.resolver'
 
 export interface MyContext {
@@ -52,7 +52,7 @@ async function main() {
     // la variable job est necessaire pour créé le cron mais n'est jamais appelée a proprement parlé dans le code
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const job = schedule.scheduleJob('*/1 * * * *', async function () {
-        await changeJourneysStatus()
+        await handleJourneysDone()
     })
 
     const server = new ApolloServer<MyContext>({
