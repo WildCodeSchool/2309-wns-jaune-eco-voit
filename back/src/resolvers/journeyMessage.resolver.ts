@@ -42,11 +42,11 @@ export default class JourneyMessageResolver {
         const journeyBookingIds = new Set(
             journeyBookings?.map((booking: BookingEntity) => booking.id)
         )
-        const userisPassenger = userBookings?.some((booking) =>
+        const isPassenger = userBookings?.some((booking) =>
             journeyBookingIds.has(booking.id)
         )
 
-        if (!isDriver && !userisPassenger) {
+        if (!isDriver && !isPassenger) {
             throw new Error('Accès non autorisé')
         }
 
