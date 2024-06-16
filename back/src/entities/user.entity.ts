@@ -269,6 +269,8 @@ export class UpdateUserInput {
     tripsAsPassenger?: number
     @Field({ nullable: true })
     tripsAsDriver?: number
+    @Field({ nullable: true })
+    averageRate?: number
 }
 
 @InputType()

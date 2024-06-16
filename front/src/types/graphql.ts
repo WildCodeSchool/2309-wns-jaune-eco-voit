@@ -122,8 +122,6 @@ export type Mutation = {
   createJourney: JourneyEntity;
   createJourneyMessage: JourneyMessageEntity;
   createRating: RatingEntity;
-  decreaseAvailableSeats: JourneyEntity;
-  increaseAvailableSeats: JourneyEntity;
   register: UserWithoutPassord;
   rejectBooking: BookingEntity;
   updateJourney: JourneyEntity;
@@ -165,16 +163,6 @@ export type MutationCreateJourneyMessageArgs = {
 
 export type MutationCreateRatingArgs = {
   data: CreateRatingInput;
-};
-
-
-export type MutationDecreaseAvailableSeatsArgs = {
-  data: UpdateAvailableSeatsInput;
-};
-
-
-export type MutationIncreaseAvailableSeatsArgs = {
-  data: UpdateAvailableSeatsInput;
 };
 
 
@@ -315,6 +303,7 @@ export type UpdateJourneyStatusInput = {
 };
 
 export type UpdateUserInput = {
+  averageRate?: InputMaybe<Scalars['Float']['input']>;
   dateOfBirth?: InputMaybe<Scalars['DateTimeISO']['input']>;
   email?: InputMaybe<Scalars['EmailAddress']['input']>;
   firstname?: InputMaybe<Scalars['String']['input']>;
@@ -386,11 +375,6 @@ export type UserWithoutPassord = {
   firstname: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   lastname: Scalars['String']['output'];
-};
-
-export type UpdateAvailableSeatsInput = {
-  id: Scalars['ID']['input'];
-  seatNb: Scalars['Float']['input'];
 };
 
 export type RegisterMutationVariables = Exact<{
