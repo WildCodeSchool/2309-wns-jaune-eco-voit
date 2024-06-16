@@ -5,13 +5,13 @@ import { Avatar, Button, Card, CardContent, Typography } from "@mui/material";
 import CircularLoading from "../CircularLoading/CircularLoading";
 
 type MyJourneysTabProps = {
-  journeys?: ListJourneysByUserQuery;
+  journeys?: ListJourneysByUserQuery["listJourneysByUser"];
   onCancelJourney: (id: string) => void;
   isLoading: boolean;
 };
 
 const MyJourneysTab = ({
-  journeys,
+  journeys = [],
   onCancelJourney,
   isLoading,
 }: MyJourneysTabProps) => {
@@ -20,7 +20,7 @@ const MyJourneysTab = ({
       {isLoading ? (
         <CircularLoading />
       ) : (
-        journeys?.listJourneysByUser.map((journey, index) => {
+        journeys.map((journey, index) => {
           const {
             user: { profilePicture, firstname },
             origin,

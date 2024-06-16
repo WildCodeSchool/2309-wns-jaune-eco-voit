@@ -125,13 +125,13 @@ export default function MyJourneys() {
         </Box>
 
         <MyJourneysTab
-          journeys={journeysData}
+          journeys={journeysData?.listJourneysByUser}
           onCancelJourney={handleCancelJourney}
           isLoading={updateJourneyStatusLoading}
         />
 
         <MyBookingsTab
-          bookings={bookingData}
+          bookings={bookingData?.listBookingsByUser}
           onCancelBooking={handleCancelBooking}
           isLoading={cancelBookingLoading}
         />

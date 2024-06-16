@@ -1,209 +1,81 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
-import JourneysService from '../services/journeys.service'
-
 import {
     JourneyEntity,
     CreateJourneyInput,
     UpdateJourneyInput,
     UpdateJourneyStatusInput,
     ListJourneysWithFilters,
-    updateAvailableSeatsInput
 } from '../entities/journey.entity'
-import UsersService from '../services/users.service'
 import { MyContext } from '..'
 import { userAuthorized } from '../utils/userAuthorized'
-import BookingsService from '../services/bookings.service'
-import { transporter } from '../utils/emailTransporter'
 
 @Resolver()
 export default class JourneyResolver {
     @Query(() => [JourneyEntity])
     async listJourneys(
+        @Ctx() { journeyService }: MyContext,
         @Arg('filters', { nullable: true }) filters?: ListJourneysWithFilters
     ) {
-        return await new JourneysService().listJourneys(filters)
+        return await journeyService.listJourneys(filters)
     }
 
     @Query(() => JourneyEntity)
-    async findJourneyById(@Arg('id') id: string) {
-        return await new JourneysService().findJourneyById(id)
+    async findJourneyById(
+        @Ctx() { journeyService }: MyContext,
+        @Arg('id') id: string
+    ) {
+        return await journeyService.findJourneyById(id)
     }
 
     @Authorized()
     @Query(() => [JourneyEntity])
     async listJourneysByUser(
         @Arg('userId') userId: string,
-        @Ctx() { user }: MyContext
+        @Ctx() { user, journeyService }: MyContext
     ) {
-        // On vérifie l'id envoyé en argument correspond bien à un user existant
-        // Si ce n'est pas le cas, une erreur sera envoyé directement depuis la méthode findUserById du userService
-        // Donc pas besoin de le gérer ici
-        // On n'a pas besoin de créer de stocker la data dans une variable puisque le but ici est simplement de vérifier que le user existe
-        await new UsersService().findUserById(userId)
-
         userAuthorized([userId], user)
 
-        return await new JourneysService().listJourneysByUser({
-            userId,
-        })
+        return await journeyService.listJourneysByUser(userId)
     }
 
     @Authorized()
     @Mutation(() => JourneyEntity)
     async createJourney(
         @Arg('data') data: CreateJourneyInput,
-        @Ctx() { user }: MyContext
+        @Ctx() { user, journeyService }: MyContext
     ) {
         userAuthorized([data.user.id], user)
 
-        return await new JourneysService().createJourney(data)
+        return await journeyService.createJourney(data)
     }
 
     @Authorized()
     @Mutation(() => JourneyEntity)
     async updateJourney(
         @Arg('data') data: UpdateJourneyInput,
-        @Ctx() { user }: MyContext
+        @Ctx() { user, journeyService }: MyContext
     ) {
-        const journeyService = new JourneysService()
+        const {
+            user: { id: driverId },
+        } = await journeyService.findJourneyById(data.id)
 
-        const { user: journeyUser } = await journeyService.findJourneyById(
-            data.id
-        )
-
-        userAuthorized([journeyUser.id], user)
+        userAuthorized([driverId], user)
 
         return await journeyService.updateJourney(data)
     }
 
     @Authorized()
     @Mutation(() => JourneyEntity)
-    async decreaseAvailableSeats(
-        @Arg('data') {id, seatNb}: updateAvailableSeatsInput,
-        @Ctx() { user }: MyContext
-    ) {
-        const { availableSeats, user: journeyUser } =
-            await new JourneysService().findJourneyById(id)
-
-        if (availableSeats <= 0) {
-            throw Error("There's no more available seats for this journey")
-        }
-
-        userAuthorized([journeyUser.id], user)
-
-        return await new JourneysService().updateJourney({
-            id,
-            availableSeats: availableSeats - seatNb,
-        })
-    }
-
-    @Authorized()
-    @Mutation(() => JourneyEntity)
-    async increaseAvailableSeats(
-        @Arg('data') {id, seatNb}: updateAvailableSeatsInput,
-        @Ctx() { user }: MyContext
-    ) {
-        const {
-            availableSeats,
-            bookings,
-            user: journeyUser,
-        } = await new JourneysService().findJourneyById(id)
-
-        userAuthorized([journeyUser.id], user)
-
-        if (
-            availableSeats >= 8 ||
-            (bookings &&
-                bookings.filter((booking) => booking.status === 'ACCEPTED')
-                    ?.length >= 8)
-        ) {
-            throw new Error('Impossible to add a seat')
-        }
-
-        return await new JourneysService().updateJourney({
-            id,
-            availableSeats: availableSeats + seatNb,
-        })
-    }
-
-    @Authorized()
-    @Mutation(() => JourneyEntity)
     async updateJourneyStatus(
         @Arg('data') data: UpdateJourneyStatusInput,
-        @Ctx() { user }: MyContext
-    ) {
-        const journeyService = new JourneysService()
-        const bookingService = new BookingsService()
-        const usersService = new UsersService()
+        @Ctx() { user, journeyService }: MyContext
+    ): Promise<JourneyEntity> {
+        const {
+            user: { id: driverId },
+        } = await journeyService.findJourneyById(data.id)
 
-        const { user: journeyUser, status } =
-            await journeyService.findJourneyById(data.id)
+        userAuthorized([driverId], user)
 
-        const bookings = await bookingService.listBookingsByJourneyId(data.id)
-
-        userAuthorized([journeyUser.id], user)
-
-        if (status === 'CANCELLED')
-            throw new Error('This journey had been cancelled')
-
-        if (status === 'DONE') throw new Error('This journey is done')
-
-        if (data.status === status)
-            throw new Error('Journey already has this status')
-
-        if (data.status === 'CANCELLED') {
-            bookings
-                ?.filter((booking) => booking.status !== 'CANCELLED')
-                .forEach(async ({ id: bookingId }) => {
-                    await bookingService.updateBooking(bookingId, {
-                        status: 'CANCELLED',
-                    })
-                    const {
-                        user: { email: passengerEmail },
-                        journey: { origin, destination },
-                    } = await bookingService.findBookingById(bookingId)
-
-                    const mailOptions = {
-                        from: 'La super team Ecovoit',
-                        to: passengerEmail,
-                        subject: 'Votre voyage a été annulé',
-                        text: `Votre voyage ${origin} ${destination} a été annulé`,
-                    }
-
-                    transporter.sendMail(mailOptions, (error, info) => {
-                        if (error) {
-                            console.log(error)
-                        }
-                        console.log('Message sent: %s', info.messageId)
-                    })
-                })
-        }
-
-        if (data.status === 'DONE') {
-            const { tripsAsDriver } = await usersService.findUserById(
-                journeyUser.id
-            )
-
-            usersService.updateUser({
-                id: journeyUser.id,
-                tripsAsDriver: tripsAsDriver + 1,
-            })
-
-            bookings
-                ?.filter((booking) => booking.status === 'ACCEPTED')
-                .reduce<string[]>((usersId, booking) => {
-                    return [...usersId, booking.user.id]
-                }, [])
-                .forEach(async (userId) => {
-                    const { tripsAsPassenger } =
-                        await usersService.findUserById(userId)
-                    usersService.updateUser({
-                        id: userId,
-                        tripsAsPassenger: tripsAsPassenger + 1,
-                    })
-                })
-        }
-
-        return await new JourneysService().updateJourney(data)
+        return await journeyService.updateJourneyStatus(data)
     }
 }

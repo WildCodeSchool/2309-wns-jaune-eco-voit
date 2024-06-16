@@ -13,17 +13,29 @@ import UserResolver from './resolvers/user.resolver'
 import Cookies from 'cookies'
 import { jwtVerify } from 'jose'
 import { UserEntity } from './entities/user.entity'
-import UsersService from './services/users.service'
+import UsersService from './services/user.service'
 import { customAuthChecker } from './lib/authChecker'
 import JourneyMessageResolver from './resolvers/journeyMessage.resolver'
 import schedule from 'node-schedule'
 import { handleJourneysDone } from './utils/scheduler'
 import RatingResolver from './resolvers/rating.resolver'
+import BookingService from './services/booking.service'
+import JourneyService from './services/journey.service'
+import SendEmailService from './services/sendEmail.service'
+import UserService from './services/user.service'
+import RatingService from './services/rating.service'
+import JourneyMessageService from './services/journeyMessage.service'
 
 export interface MyContext {
     req: express.Request
     res: express.Response
     user: UserEntity | null
+    bookingService: BookingService
+    journeyService: JourneyService
+    sendEmailService: SendEmailService
+    userService: UsersService
+    ratingsService: RatingService
+    journeyMessageService: JourneyMessageService
 }
 
 export interface Payload {
@@ -32,9 +44,16 @@ export interface Payload {
     id: string
 }
 
-const app = express()
 // Création d'un serveur HTTP à partir de la bibliothéque d'express
+const app = express()
 const httpServer = http.createServer(app)
+
+const bookingService = new BookingService()
+const journeyService = new JourneyService()
+const sendEmailService = new SendEmailService()
+const userService = new UserService()
+const ratingsService = new RatingService()
+const journeyMessageService = new JourneyMessageService()
 
 async function main() {
     const schema = await buildSchema({
@@ -49,18 +68,19 @@ async function main() {
         authChecker: customAuthChecker,
     })
 
+    const server = new ApolloServer<MyContext>({
+        schema,
+        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    })
+
+    // Lancement du server
+    await server.start()
+
     // la variable job est necessaire pour créé le cron mais n'est jamais appelée a proprement parlé dans le code
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const job = schedule.scheduleJob('*/20 * * * *', async function () {
         await handleJourneysDone()
     })
-
-    const server = new ApolloServer<MyContext>({
-        schema,
-        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-    })
-    // Lancement du server
-    await server.start()
 
     app.use(
         '/',
@@ -101,7 +121,18 @@ async function main() {
                         console.log(err)
                     }
                 }
-                return { req, res, user }
+
+                return {
+                    req,
+                    res,
+                    user,
+                    bookingService,
+                    journeyService,
+                    sendEmailService,
+                    userService,
+                    ratingsService,
+                    journeyMessageService,
+                }
             },
         })
     )

@@ -45,14 +45,13 @@ export class BookingEntity {
     @ManyToOne(() => UserEntity, (u) => u.bookings)
     user: UserEntity
 
-
     @Field()
     @Column({ default: 1 })
     @IsInt({ message: 'Le nombre de passager doit être un nombre' })
     @Min(1)
     @Max(8, { message: 'Le nombre maximum de passagers est de 8' })
     nbPassenger: number
-    
+
     @Field(() => JourneyEntity)
     @ManyToOne(() => JourneyEntity, (j) => j.bookings)
     journey: JourneyEntity
@@ -91,6 +90,9 @@ export class CreateBookingInput {
 
 @InputType()
 export class UpdateBookingInput {
+    @Field(() => ID)
+    id: string
+
     @Field()
     status: Status
 }

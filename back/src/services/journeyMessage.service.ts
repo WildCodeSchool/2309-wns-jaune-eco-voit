@@ -5,7 +5,9 @@ import {
 } from '../entities/journeyMessage.entity'
 
 import datasource from '../db'
-import { assertDataExists, validateData } from '../utils/errorHandlers'
+import { assertDataExists } from '../utils/errorHandlers'
+import JourneyService from './journey.service'
+import BookingService from './booking.service'
 
 export default class JourneyMessageService {
     db: Repository<JourneyMessageEntity>
@@ -40,13 +42,47 @@ export default class JourneyMessageService {
         return message as JourneyMessageEntity
     }
 
-    async createJourneyMessage(data: CreateJourneyMessageInput) {
-        const newMessage: JourneyMessageEntity = this.db.create(data)
+    async createJourneyMessage({
+        data,
+        userCtxId,
+    }: {
+        data: CreateJourneyMessageInput
+        userCtxId: string
+    }): Promise<JourneyMessageEntity> {
+        const journeyService = new JourneyService()
 
-        await validateData(newMessage)
+        const bookingService = new BookingService()
 
-        const messageSaved = await this.db.save(newMessage)
+        const {
+            journey: { id: journeyId },
+        } = data
 
-        return this.findMessageById(messageSaved.id)
+        const journeyData = await journeyService.findJourneyById(journeyId)
+
+        if (!journeyData) {
+            throw new Error('Journey not found')
+        }
+
+        const { user: driver, bookings: journeyBookings } = journeyData
+
+        const isDriver = driver && driver.id === userCtxId
+
+        const userBookings = await bookingService.listBookingsFilter({
+            userId: userCtxId,
+        })
+
+        const journeyBookingIds = journeyBookings?.map((booking) => booking.id)
+
+        const isPassenger = userBookings.some(({ id: bookingId }) =>
+            journeyBookingIds?.some((id) => id === bookingId)
+        )
+
+        if (!isDriver && !isPassenger) {
+            throw new Error('Accès non autorisé')
+        }
+
+        const journeyMessage = this.db.create(data)
+
+        return await this.db.save(journeyMessage)
     }
 }

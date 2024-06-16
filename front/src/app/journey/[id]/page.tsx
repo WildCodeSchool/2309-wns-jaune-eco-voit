@@ -15,13 +15,16 @@ import {
 import AvatarJourney from "@/app/components/Avatar/AvatarJouney";
 import JourneyTimeline from "@/app/components/JourneyCard/JourneyTimeline";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/authContext";
 import JourneyMessages from "@/app/components/JourneyMessages/JourneyMessages";
 import BookJourneyButton from "@/app/components/Buttons/BookJourneyButton";
+import { routes } from "@/app/lib/routes";
+import { useRouter } from "next/navigation";
 
 export default function Page({ params }: { params: { id: string } }) {
   const { id: journeyId } = params;
+  const router = useRouter();
 
   const { getUser: userContextId } = useContext(AuthContext);
   const [passengerNb, setPassengerNb] = useState(1);
@@ -41,9 +44,20 @@ export default function Page({ params }: { params: { id: string } }) {
     },
   });
 
-  if (!journeyData || journeyError) {
-    //TODO renvoyer vers la page d'erreur
-    return <div>Quelque chose s&apos;est mal passé</div>;
+  if (journeyError) {
+    router.push(`${routes["error"].pathname}`);
+  }
+
+  if (journeyLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <CircularProgress />
+      </div>
+    );
+  }
+
+  if (!journeyData) {
+    return null;
   }
 
   function maxPassengerNb(nb: number) {
@@ -78,14 +92,6 @@ export default function Page({ params }: { params: { id: string } }) {
 
     return isDriver || isPassenger;
   };
-
-  if (journeyLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <CircularProgress />
-      </div>
-    );
-  }
 
   return (
     <Stack className="h-full w-10/12 mx-auto">

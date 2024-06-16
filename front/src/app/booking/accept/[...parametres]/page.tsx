@@ -74,10 +74,10 @@ const AcceptPage = ({
     }
   }, [bookingId, driverId, findBookingById, findUserById]);
 
-  useEffect(() => {
-    (userError || bookingError || acceptBookingError || rejectBookingError) &&
-      router.push(`${routes["error"].pathname}`);
-  }, [rejectBookingError, acceptBookingError, userError, bookingError, router]);
+  // useEffect(() => {
+  //   (userError || bookingError || acceptBookingError || rejectBookingError) &&
+  //     router.push(`${routes["error"].pathname}`);
+  // }, [rejectBookingError, acceptBookingError, userError, bookingError, router]);
 
   if (!bookingDatas || !userDatas) {
     return null;

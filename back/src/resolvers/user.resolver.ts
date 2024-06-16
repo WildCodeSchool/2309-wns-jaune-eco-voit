@@ -9,9 +9,6 @@ import {
     UserProfile,
     UserWithoutPassord,
 } from '../entities/user.entity'
-import UsersService from '../services/users.service'
-import argon2 from 'argon2'
-import { SignJWT } from 'jose'
 import { MyContext } from '..'
 import Cookies from 'cookies'
 import { userAuthorized } from '../utils/userAuthorized'
@@ -20,13 +17,16 @@ import { userAuthorized } from '../utils/userAuthorized'
 export default class UserResolver {
     @Authorized(['ADMIN'])
     @Query(() => [UserEntity])
-    async listUsers() {
-        return await new UsersService().listUser()
+    async listUsers(@Ctx() { userService }: MyContext) {
+        return await userService.listUser()
     }
 
     @Query(() => UserEntity)
-    async findUserById(@Arg('id') id: string) {
-        return await new UsersService().findUserById(id)
+    async findUserById(
+        @Arg('id') id: string,
+        @Ctx() { userService }: MyContext
+    ) {
+        return await userService.findUserById(id)
     }
 
     @Authorized()
@@ -65,61 +65,37 @@ export default class UserResolver {
     @Query(() => UserEntity)
     async login(
         @Arg('data') { email, password }: LoginInput,
-        @Ctx() { req, res }: MyContext
+        @Ctx() { req, res, userService }: MyContext
     ) {
-        const userService = new UsersService()
+        const result = await userService.login(email, password)
 
-        const user = await userService.findUserByEmailWitoutAsserting(email)
+        if (!result) throw new Error('Vérifiez vos informations')
 
-        if (!user) throw new Error('Vérifiez vos informations')
+        const { user, token } = result
 
-        const isPasswordValid = await argon2.verify(user.password, password)
+        const cookies = new Cookies(req, res)
 
-        if (isPasswordValid) {
-            const token = await new SignJWT({
-                email,
-                role: user.role,
-                id: user.id,
-            })
-                // alg = algorithme à utiliser pour hasher la signature
-                // typ = le type de token qui est généré
-                .setProtectedHeader({
-                    alg: 'HS256',
-                    typ: 'jwt',
-                })
-                // Durée de validité du token
-                .setExpirationTime('2 h')
-                // La méthode encode() de la classe TextEncoder permet d'obtenir un flux d'octets encodés en utf-8 à partir d'une chaine de caractère
-                // car sign() attend en premier argument un Uint8Array et non une string, d'ou l'utilisation de TextEncoder
-                .sign(new TextEncoder().encode(`${process.env.SECRET_KEY}`))
+        cookies.set('token', token, { httpOnly: true })
 
-            console.log(req)
-
-            // On crée une instance de la classe Cookies en lui passant la req et la res du context crée dans l'expressMiddleware (index.ts)
-            const cookies = new Cookies(req, res)
-            // On set un nouveau cookie nommé 'token' contenant le token créé
-            // httpOnly s'assure que le cookie n'est pas modifiable depuis le client (readonly)
-            // Evite les attaques cross site scripting (XSS)
-            cookies.set('token', token, { httpOnly: true })
-
-            return user
-        }
-
-        throw new Error('Vérifiez vos informations')
+        return user
     }
 
     @Mutation(() => UserWithoutPassord)
-    async register(@Arg('data') data: CreateUserInput) {
-        return await new UsersService().create(data)
+    async register(
+        @Arg('data') data: CreateUserInput,
+        @Ctx() { userService }: MyContext
+    ) {
+        return await userService.create(data)
     }
 
     @Query(() => UserMessage)
     async logout(@Ctx() { req, res, user }: MyContext) {
-        if (user) {
-            const cookies = new Cookies(req, res)
-
-            cookies.set('token') // sans valeur, le cookie token sera supprimé
+        if (!user) {
+            return new UserMessage(true, 'Aucun utilisateur connecté')
         }
+        const cookies = new Cookies(req, res)
+
+        cookies.set('token', '', { httpOnly: true, expires: new Date(0) })
         return new UserMessage(true, 'Vous avez été déconnecté')
     }
 
@@ -127,41 +103,34 @@ export default class UserResolver {
     @Mutation(() => UserEntity)
     async updateUser(
         @Arg('data') data: UpdateUserInput,
-        @Ctx() { user }: MyContext
+        @Ctx() { user, userService }: MyContext
     ) {
         userAuthorized([data.id], user)
 
-        return await new UsersService().updateUser(data)
+        return await userService.updateUser(data)
     }
 
     @Authorized()
     @Mutation(() => UserEntity)
     async updateUserPassword(
         @Arg('data') data: UpdateUserPasswordInput,
-        @Ctx() { user }: MyContext
+        @Ctx() { user, userService }: MyContext
     ) {
-        const { id, oldPassword } = data
+        const { id } = data
 
         userAuthorized([id], user)
 
-        if (!user) {
-            throw new Error('Non autorisé')
-        }
-
-        const isPasswordValid = await argon2.verify(user.password, oldPassword)
-
-        if (!isPasswordValid) {
-            throw new Error('Old password unvalid')
-        }
-
-        return await new UsersService().updateUserPassword(data)
+        return await userService.updateUserPassword(data)
     }
 
     @Authorized()
     @Mutation(() => UserEntity)
-    async archiveUser(@Arg('id') id: string, @Ctx() { user }: MyContext) {
+    async archiveUser(
+        @Arg('id') id: string,
+        @Ctx() { user, userService }: MyContext
+    ) {
         userAuthorized([id], user)
 
-        return await new UsersService().updateUser({ id, status: 'ARCHIVED' })
+        return await userService.updateUser({ id, status: 'ARCHIVED' })
     }
 }
