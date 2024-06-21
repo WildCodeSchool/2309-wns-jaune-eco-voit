@@ -109,13 +109,13 @@ async function main() {
 
                 if (token) {
                     try {
-                        const verify = await jwtVerify<Payload>(
+                        const { payload } = await jwtVerify<Payload>(
                             token,
                             new TextEncoder().encode(process.env.SECRET_KEY)
                         )
                         user =
                             await new UsersService().findUserByEmailWitoutAsserting(
-                                verify.payload.email
+                                payload.email
                             )
                     } catch (err) {
                         console.log(err)
