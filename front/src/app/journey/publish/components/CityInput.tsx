@@ -3,11 +3,13 @@ import React, { Dispatch, SetStateAction } from "react";
 import { JourneyData } from "../page";
 
 export type FromTo = "origin" | "destination";
+
 type CityInputProps = {
   setJourneyData: Dispatch<SetStateAction<JourneyData>>;
   fromTo: FromTo;
   defaultValue?: string;
 };
+
 const CityInput = ({
   setJourneyData,
   fromTo,
