@@ -10,7 +10,7 @@ on:
       - reopened
 
 jobs:
-  run-linters:
+  linters:
     name: 🧼 Run linters
     runs-on: ubuntu-latest
     steps:
@@ -45,9 +45,9 @@ jobs:
       - name: 🤗 Hello CI
         run: echo "This job's status is ${{ job.status }}."
 
-  Test:
-    needs: run-linters
-    name: 👤 Test
+  tests:
+    needs: linters
+    name: 👤 Run Tests back &
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -78,7 +78,7 @@ jobs:
           npm run test-ci
 
   builds:
-    needs: Test
+    needs: tests
     name: Build back & front
     runs-on: ubuntu-latest
     steps:
@@ -96,9 +96,7 @@ jobs:
           npm run build
 
   docker:
-    needs:
-      - Test
-      - builds
+    needs: builds
     name: 🐳 Push on Docker
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
