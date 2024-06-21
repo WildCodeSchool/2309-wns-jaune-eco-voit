@@ -68,15 +68,11 @@ export default class UserResolver {
         @Ctx() { req, res, userService }: MyContext
     ) {
         const result = await userService.login(email, password)
-
         if (!result) throw new Error('Vérifiez vos informations')
 
         const { user, token } = result
-
         const cookies = new Cookies(req, res)
-
         cookies.set('token', token, { httpOnly: true })
-
         return user
     }
 

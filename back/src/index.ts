@@ -84,6 +84,7 @@ async function main() {
 
     app.use(
         '/',
+        express.json(),
         cors<cors.CorsRequest>({
             origin: [
                 'http://localhost:3002',
@@ -95,12 +96,9 @@ async function main() {
             ],
             credentials: true,
         }),
-        express.json(),
 
         // intégre Apollo Server à Express
         expressMiddleware(server, {
-            // On passe dans ce callback à chaque requette
-            // On retourne un objet contenant res et req à tous les resolvers
             context: async ({ req, res }) => {
                 let user: UserEntity | null = null
 
@@ -109,13 +107,13 @@ async function main() {
 
                 if (token) {
                     try {
-                        const verify = await jwtVerify<Payload>(
+                        const { payload } = await jwtVerify<Payload>(
                             token,
                             new TextEncoder().encode(process.env.SECRET_KEY)
                         )
                         user =
                             await new UsersService().findUserByEmailWitoutAsserting(
-                                verify.payload.email
+                                payload.email
                             )
                     } catch (err) {
                         console.log(err)
@@ -136,6 +134,7 @@ async function main() {
             },
         })
     )
+
     await db.initialize()
 
     await new Promise<void>((resolve) => {
