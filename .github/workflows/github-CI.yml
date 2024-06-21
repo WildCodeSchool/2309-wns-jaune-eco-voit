@@ -1,23 +1,18 @@
 name: 🚗 CI EcoVoit
 
 on:
-  push: # Lors du push sur toutes les branches
-    branches:
-      - "*"
-  pull_request: # Lors de la création ou la mise à jour d'une PR
+  pull_request:
     branches:
       - "*"
     types:
       - opened
       - synchronize
       - reopened
-      - closed
 
 jobs:
   run-linters:
     name: 🧼 Run linters
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
     steps:
       - name: 📌 Check out Git repository
         uses: actions/checkout@v3
@@ -54,7 +49,6 @@ jobs:
     needs: run-linters
     name: 👤 Test
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
     services:
       postgres:
         image: postgres
