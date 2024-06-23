@@ -117,14 +117,14 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          context: ./back
+          context: ${{ github.workspace }}/back
           tags: "${{ secrets.DOCKERHUB_USERNAME }}/back-ecovoit:latest"
 
       - name: 🔨 Build and push front
         uses: docker/build-push-action@v4
         with:
           push: true
-          context: ./front
+          context: ${{ github.workspace }}/front
           tags: "${{ secrets.DOCKERHUB_USERNAME }}/front-ecovoit:latest"
 
   webhook:
