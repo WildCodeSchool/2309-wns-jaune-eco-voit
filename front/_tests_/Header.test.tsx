@@ -52,7 +52,6 @@ describe("Header", () => {
         <MockedProvider mocks={mocks} addTypename={false}>
           <Header />
         </MockedProvider>
-        //{" "}
       </AuthContext.Provider>
     );
 
