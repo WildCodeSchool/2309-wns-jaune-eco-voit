@@ -10,11 +10,7 @@ import initialDatasource from '../src/db'
 import UserService from '../src/services/user.service'
 import JourneyService from '../src/services/journey.service'
 import BookingService from '../src/services/booking.service'
-import {
-    CreateUserInput,
-    UpdateUserInput,
-    UserEntity,
-} from '../src/entities/user.entity'
+import { CreateUserInput, UserEntity } from '../src/entities/user.entity'
 import { JourneyEntity } from '../src/entities/journey.entity'
 import { BookingEntity } from '../src/entities/booking.entity'
 import {
