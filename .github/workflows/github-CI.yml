@@ -8,6 +8,7 @@ on:
       - opened
       - synchronize
       - reopened
+      - closed
 
 jobs:
   linters:
@@ -47,7 +48,7 @@ jobs:
 
   tests:
     needs: linters
-    name: 👤 Run Tests back &
+    name: 👤 Run Tests back & front
     runs-on: ubuntu-latest
     services:
       postgres:
