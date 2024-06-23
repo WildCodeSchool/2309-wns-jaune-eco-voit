@@ -9,6 +9,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/fr";
 import { AuthProvider } from "@/context/authContext";
+import { Suspense } from "react";
+import CircularLoading from "./components/CircularLoading/CircularLoading";
 
 export default function RootLayout({
   children,
@@ -33,7 +35,9 @@ export default function RootLayout({
               <body className="font-stolzl bg-primary10">
                 <main className="min-h-screen flex flex-col justify-between">
                   <Header />
-                  <div className="flex-1">{children}</div>
+                  <Suspense fallback={<CircularLoading />}>
+                    <div className="flex-1">{children}</div>
+                  </Suspense>
                   <Footer />
                 </main>
               </body>

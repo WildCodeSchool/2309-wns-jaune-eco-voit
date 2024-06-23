@@ -13,7 +13,6 @@ import UserResolver from './resolvers/user.resolver'
 import Cookies from 'cookies'
 import { jwtVerify } from 'jose'
 import { UserEntity } from './entities/user.entity'
-import UsersService from './services/user.service'
 import { customAuthChecker } from './lib/authChecker'
 import JourneyMessageResolver from './resolvers/journeyMessage.resolver'
 import schedule from 'node-schedule'
@@ -33,7 +32,7 @@ export interface MyContext {
     bookingService: BookingService
     journeyService: JourneyService
     sendEmailService: SendEmailService
-    userService: UsersService
+    userService: UserService
     ratingsService: RatingService
     journeyMessageService: JourneyMessageService
 }
@@ -52,7 +51,7 @@ const bookingService = new BookingService()
 const journeyService = new JourneyService()
 const sendEmailService = new SendEmailService()
 const userService = new UserService()
-const ratingsService = new RatingService()
+const ratingService = new RatingService()
 const journeyMessageService = new JourneyMessageService()
 
 async function main() {
@@ -68,7 +67,7 @@ async function main() {
         authChecker: customAuthChecker,
     })
 
-    const server = new ApolloServer<MyContext>({
+    const server = new ApolloServer({
         schema,
         plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
     })
@@ -109,13 +108,13 @@ async function main() {
 
                 if (token) {
                     try {
-                        const verify = await jwtVerify<Payload>(
+                        const { payload } = await jwtVerify<Payload>(
                             token,
                             new TextEncoder().encode(process.env.SECRET_KEY)
                         )
                         user =
-                            await new UsersService().findUserByEmailWitoutAsserting(
-                                verify.payload.email
+                            await new UserService().findUserByEmailWitoutAsserting(
+                                payload.email
                             )
                     } catch (err) {
                         console.log(err)
@@ -130,7 +129,7 @@ async function main() {
                     journeyService,
                     sendEmailService,
                     userService,
-                    ratingsService,
+                    ratingService,
                     journeyMessageService,
                 }
             },

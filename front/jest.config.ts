@@ -1,9 +1,3 @@
-//frontend/jest.config.ts
-/**
- * For a detailed explanation regarding each configuration property, visit:
- * https://jestjs.io/docs/configuration
- */
-
 import type { Config } from "jest";
 
 const config: Config = {
@@ -11,12 +5,21 @@ const config: Config = {
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   testEnvironment: "jsdom",
   transform: {
-    "^.+\\.tsx?$": "ts-jest",
+    "^.+.(ts|js)x?$": "ts-jest",
   },
   testMatch: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[tj]s?(x)"],
+  // moduleNameMapper: {
+  //   "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":
+  //     "<rootDir>/__mocks__/fileMock.js",
+  //   "^@/(.*)$": "<rootDir>/src/$1",
+  // },
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
+    "\\.(jpg|jpeg|png|webp)$": "<rootDir>/__mocks__/fileMock.js",
+    "^@/(.*)$": "<rootDir>/src/$1",
   },
+
+  preset: "ts-jest",
+  testPathIgnorePatterns: ["\\node_modules\\", "<rootDir>/cypress/"],
 };
 
 export default config;

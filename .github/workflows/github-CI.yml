@@ -1,23 +1,18 @@
 name: 🚗 CI EcoVoit
 
 on:
-  push: # Lors du push sur toutes les branches
-    branches:
-      - "*"
-  pull_request: # Lors de la création ou la mise à jour d'une PR
+  pull_request:
     branches:
       - "*"
     types:
       - opened
       - synchronize
       - reopened
-      - closed
 
 jobs:
-  run-linters:
+  linters:
     name: 🧼 Run linters
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
     steps:
       - name: 📌 Check out Git repository
         uses: actions/checkout@v3
@@ -50,11 +45,10 @@ jobs:
       - name: 🤗 Hello CI
         run: echo "This job's status is ${{ job.status }}."
 
-  Test:
-    needs: run-linters
-    name: 👤 Test
+  tests:
+    needs: linters
+    name: 👤 Run Tests back &
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
     services:
       postgres:
         image: postgres
@@ -84,7 +78,7 @@ jobs:
           npm run test-ci
 
   builds:
-    needs: Test
+    needs: tests
     name: Build back & front
     runs-on: ubuntu-latest
     steps:
@@ -102,9 +96,7 @@ jobs:
           npm run build
 
   docker:
-    needs:
-      - Test
-      - builds
+    needs: builds
     name: 🐳 Push on Docker
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
