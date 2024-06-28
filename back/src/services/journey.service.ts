@@ -1,6 +1,6 @@
 import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm'
-
-import DataSource from '../db'
+import datasource from '../db'
+import datasourceTest from '../db_test'
 import {
     JourneyEntity,
     CreateJourneyInput,
@@ -18,7 +18,10 @@ export default class JourneyService {
     db: Repository<JourneyEntity>
 
     constructor() {
-        this.db = DataSource.getRepository(JourneyEntity)
+        this.db =
+            process.env.NODE_ENV === 'test'
+                ? datasourceTest.getRepository(JourneyEntity)
+                : datasource.getRepository(JourneyEntity)
     }
 
     async findJourneyById(id: string): Promise<JourneyEntity> {

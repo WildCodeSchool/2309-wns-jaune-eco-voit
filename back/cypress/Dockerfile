@@ -19,4 +19,4 @@ COPY ../src ./src
 COPY ../tsconfig.json ./tsconfig.json
 
 # Spécifie la commande par défaut à exécuter quand le conteneur démarre
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start:test"]

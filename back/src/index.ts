@@ -9,6 +9,7 @@ import BookingResolver from './resolvers/booking.resolver'
 import JourneyResolver from './resolvers/journey.resolver'
 import { ApolloServer } from '@apollo/server'
 import db from './db'
+import db_test from './db_test'
 import UserResolver from './resolvers/user.resolver'
 import Cookies from 'cookies'
 import { jwtVerify } from 'jose'
@@ -81,24 +82,29 @@ async function main() {
         await handleJourneysDone()
     })
 
+    const origins =
+        process.env.NODE_ENV === 'test'
+            ? ['http://localhost:3003', 'https://studio.apollographql.com']
+            : [
+                  'http://localhost:3002',
+                  'https://studio.apollographql.com',
+                  'https://preprod.0923-jaune-1.wns.wilders.dev',
+                  'https://0923-jaune-1.wns.wilders.dev',
+                  'http://localhost:8000/profile',
+                  'http://localhost:8000',
+              ]
+
     app.use(
         '/',
         cors<cors.CorsRequest>({
-            origin: [
-                'http://localhost:3002',
-                'https://studio.apollographql.com',
-                'https://preprod.0923-jaune-1.wns.wilders.dev',
-                'https://0923-jaune-1.wns.wilders.dev',
-                'http://localhost:8000/profile',
-                'http://localhost:8000',
-            ],
+            origin: origins,
             credentials: true,
         }),
         express.json(),
 
         // intégre Apollo Server à Express
         expressMiddleware(server, {
-            // On passe dans ce callback à chaque requette
+            // On passe dans ce callback à chaque requête
             // On retourne un objet contenant res et req à tous les resolvers
             context: async ({ req, res }) => {
                 let user: UserEntity | null = null
@@ -135,11 +141,23 @@ async function main() {
             },
         })
     )
-    await db.initialize()
+
+    const isTestEnv = process.env.NODE_ENV === 'test'
+    const port = isTestEnv ? 4003 : 4000
+
+    if (isTestEnv) {
+        await db_test.initialize()
+    } else {
+        await db.initialize()
+    }
 
     await new Promise<void>((resolve) => {
-        httpServer.listen({ port: 4000 }, resolve)
-        console.log('Server is running on port', 4000)
+        httpServer.listen({ port }, resolve)
+        console.log('Server is running on port', port)
     })
 }
-main()
+
+main().catch((error) => {
+    console.error('Failed to start server:', error)
+    process.exit(1)
+})
