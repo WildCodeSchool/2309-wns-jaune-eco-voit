@@ -16,7 +16,4 @@ COPY ../codegen.ts codegen.ts
 
 COPY ../next.config.mjs next.config.mjs 
 
-# COPY start.sh start.sh
-# RUN chmod +x start.sh
-
 CMD PORT=3003 npm run dev  & npm run generate

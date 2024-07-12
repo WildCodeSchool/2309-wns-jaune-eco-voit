@@ -40,6 +40,7 @@
     "@graphql-codegen/typescript-operations": "^4.1.2",
     "@graphql-codegen/typescript-react-apollo": "^4.3.0",
     "@parcel/watcher": "^2.4.1",
+    "@testing-library/cypress": "^10.0.2",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^14.3.1",
     "@types/jest": "^29.5.12",

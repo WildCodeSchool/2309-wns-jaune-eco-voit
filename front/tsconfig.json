@@ -1,8 +1,17 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "types": ["@types/jest", "@testing-library/jest-dom"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "types": [
+      "@types/jest",
+      "@testing-library/jest-dom",
+      "cypress",
+      "@testing-library/cypress"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -12,10 +21,12 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "react-jsx",
+    "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     },
     "plugins": [
       {
@@ -33,5 +44,8 @@
     "src/**/*",
     "./jest.setup.ts"
   ],
-  "exclude": ["node_modules", "./cypress.config.ts"]
+  "exclude": [
+    "node_modules",
+    "./cypress.config.ts"
+  ]
 }

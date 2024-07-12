@@ -1,37 +1,39 @@
 /// <reference types="cypress" />
-// ***********************************************
-// This example commands.ts shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-//
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
+import "@testing-library/cypress/add-commands";
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      register(): Chainable<void>;
+      login(): Chainable<void>;
+    }
+  }
+}
+
+Cypress.Commands.add("register", () => {
+  cy.visit("/auth/register");
+  cy.url().should("eq", "http://localhost:3003/auth/register");
+
+  cy.findByRole("textbox", { name: "Email" }).type("sakogm38@gmail.com");
+  // Les textbox de mot de passe ont un role différent
+  cy.findByLabelText("Mot de passe").type("sakogm38");
+  cy.findByLabelText("Confirmez le mot de passe").type("sakogm38");
+  cy.findByRole("textbox", { name: "Prénom" }).type("oliv");
+  cy.findByRole("textbox", { name: "Nom" }).type("ier");
+  cy.findByRole("textbox", { name: "Date de naissance" }).type("07/05/1992");
+
+  cy.findByRole("button", { name: "S'inscrire" })
+    .contains("S'inscrire")
+    .click();
+});
+
+Cypress.Commands.add("login", () => {
+  cy.visit("/auth/login");
+  cy.url().should("eq", "http://localhost:3003/auth/login");
+
+  cy.findByRole("textbox", { name: "Email" }).type("sakogm38@gmail.com");
+  cy.findByLabelText("Mot de passe").type("sakogm38");
+  cy.findByRole("button", { name: "Se connecter" }).click();
+
+  cy.url().should("eq", "http://localhost:3003/");
+});
