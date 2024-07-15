@@ -5,6 +5,7 @@ import {
 } from '../entities/journeyMessage.entity'
 
 import datasource from '../db'
+import datasourceTest from '../db_test'
 import { assertDataExists } from '../utils/errorHandlers'
 import JourneyService from './journey.service'
 import BookingService from './booking.service'
@@ -13,7 +14,10 @@ export default class JourneyMessageService {
     db: Repository<JourneyMessageEntity>
 
     constructor() {
-        this.db = datasource.getRepository(JourneyMessageEntity)
+        this.db =
+            process.env.NODE_ENV === 'test'
+                ? datasourceTest.getRepository(JourneyMessageEntity)
+                : datasource.getRepository(JourneyMessageEntity)
     }
 
     async listJourneyMessagesByJourney(journeyId: string) {

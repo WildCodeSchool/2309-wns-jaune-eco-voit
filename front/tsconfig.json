@@ -2,7 +2,12 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "types": ["@types/jest", "@testing-library/jest-dom"],
+    "types": [
+      "@types/jest",
+      "@testing-library/jest-dom",
+      "cypress",
+      "@testing-library/cypress"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,

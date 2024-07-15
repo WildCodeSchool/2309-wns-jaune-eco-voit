@@ -1,7 +1,6 @@
 "use client";
 //chore
 import React, { useContext, useEffect, useState } from "react";
-import Image from "next/image";
 //Assets
 // import logo from "@/app/assets/logo.png";
 import {
@@ -91,7 +90,7 @@ const Header = () => {
               onClick={() => router.push(routes.register.pathname)}
               variant="contained"
             >
-              S&apos;inscrire
+              Inscription
             </Button>
           </>
         ) : (

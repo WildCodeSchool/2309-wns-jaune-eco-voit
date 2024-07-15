@@ -2,12 +2,12 @@ import { DataSource } from 'typeorm'
 
 export default new DataSource({
     type: 'postgres',
-    host: 'localhost',
-    port: 5435,
-    username: 'ecovoit_user',
-    password: 'ecovoit_password',
-    database: 'ecovoit',
+    host: 'db_test',
+    port: 5432,
+    username: process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PASSWORD,
+    database: process.env.POSTGRES_DB,
     synchronize: true, //en dev, en prod on préfera utiliser les migrations
-    // logging: ['query', 'error'],
-    entities: ['src/entities/*.ts'],
+    logging: ['query'],
+    entities: [__dirname + '/entities/*.{js,ts}'],
 })

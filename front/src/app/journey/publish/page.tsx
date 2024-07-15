@@ -69,8 +69,9 @@ const PublishJourney = () => {
       totalPrice === 0 ||
       availableSeats === 0 ||
       !userId
-    )
+    ) {
       return;
+    }
 
     const journey: CreateJourneyInput = {
       departure_time: departure_date.toISOString(),

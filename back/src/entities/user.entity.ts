@@ -150,10 +150,6 @@ export class UserEntity {
     @UpdateDateColumn({ nullable: true })
     updatedAt?: Date
 
-    // @Field(() => [AddressEntity])
-    // @OneToMany(() => AddressEntity, (a) => a.user)
-    // addresses: AddressEntity[];
-
     @Field(() => [JourneyEntity], { nullable: true })
     @OneToMany(() => JourneyEntity, (j) => j.user)
     journeys?: JourneyEntity[]
@@ -177,14 +173,6 @@ export class UserEntity {
         (journeyMessage) => journeyMessage.user
     )
     journeyMessages?: JourneyMessageEntity[]
-
-    // @Field(() => [VehiculeEntity])
-    // @OneToMany(() => VehiculeEntity, (v) => v.user)
-    // vehicules: VehiculeEntity[];
-
-    // @Field(() => [MessageEntity])
-    // @OneToMany(() => MessageEntity, (m) => m.user)
-    // messages: MessageEntity[];
 }
 
 @ObjectType()

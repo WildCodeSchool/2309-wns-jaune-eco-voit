@@ -37,6 +37,47 @@ services:
         # La db doit avoir été démarrer et etre considérée comme healthy (voir health check dans db service)
         condition: service_healthy
 
+  backend_test:
+    # Construit une image à partir du Dockerfile situé dans /back/cypress
+    build:
+      context: ./back
+      dockerfile: cypress/Dockerfile
+    # A gauche le port en local, à droite celui dans Docker
+    ports:
+      - 4003:4003
+    # Persist les données en dehors du conteneur et les partage entre local et conteneur
+    # Quand on modifie le fichier /back >>> modifie aussi le conteneur
+    # A gauche > local / A droite > conteneur
+    volumes:
+      - ./back/src:/app/src
+      # - ./back/package.json:/app/package.json
+      # - ./back/tsconfig.json:/app/tsconfig.json
+    # Pour les utilisateurs de Windows, sinon error
+    environment:
+      - WDS_SOCKET_HOST=127.0.0.1
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - CLIENT_URL=http://localhost:3003
+      - GMAIL_ADDRESS=ecovoit.wild@gmail.com
+      - GMAIL_PASS=dhaq iyzm xiap odec
+    env_file:
+      - back/.env
+      - ./secret.env
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost:4003/graphql?query=%7B__typename%7D -H 'Apollo-Require-Preflight: true' || exit 1",
+        ]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+    depends_on:
+      # Nom du service dont backend dépend
+      db_test:
+        # La db doit avoir démarré et être considérée comme healthy (voir health check dans db service)
+        condition: service_healthy
+
   images:
     build: ./images
     ports:
@@ -110,6 +151,26 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
       - NEXT_PUBLIC_APOLLO_CLIENT_URI=http://localhost:4000
+      - NEXT_PUBLIC_IMAGES_URI=http://localhost:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  frontend_test:
+    build:
+      context: ./front
+      dockerfile: cypress/Dockerfile
+    env_file:
+      - ./secret.env
+    ports:
+      - 3003:3003
+    volumes:
+      - ./front/src:/app/src
+    environment:
+      - WDS_SOCKET_HOST=127.0.0.1
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - NEXT_PUBLIC_APOLLO_CLIENT_URI=http://localhost:4003
       - NEXT_PUBLIC_IMAGES_URI=http://localhost:8000
     depends_on:
       backend:

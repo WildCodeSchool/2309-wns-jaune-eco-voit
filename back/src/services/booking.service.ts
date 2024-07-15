@@ -1,5 +1,6 @@
 import { Repository } from 'typeorm'
 import datasource from '../db'
+import datasourceTest from '../db_test'
 import {
     BookingEntity,
     CreateBookingInput,
@@ -13,7 +14,10 @@ export default class BookingService {
     db: Repository<BookingEntity>
 
     constructor() {
-        this.db = datasource.getRepository(BookingEntity)
+        this.db =
+            process.env.NODE_ENV === 'test'
+                ? datasourceTest.getRepository(BookingEntity)
+                : datasource.getRepository(BookingEntity)
     }
 
     async listBookings(): Promise<BookingEntity[]> {

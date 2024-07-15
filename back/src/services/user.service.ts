@@ -1,5 +1,6 @@
 import { Repository } from 'typeorm'
 import datasource from '../db'
+import datasourceTest from '../db_test'
 import {
     CreateUserInput,
     UpdateUserInput,
@@ -14,7 +15,10 @@ export default class UserService {
     db: Repository<UserEntity>
 
     constructor() {
-        this.db = datasource.getRepository(UserEntity)
+        this.db =
+            process.env.NODE_ENV === 'test'
+                ? datasourceTest.getRepository(UserEntity)
+                : datasource.getRepository(UserEntity)
     }
 
     public getNewDriverGrade = (
