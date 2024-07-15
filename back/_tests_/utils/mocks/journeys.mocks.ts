@@ -11,7 +11,7 @@ export const journeysData: Omit<JourneyEntity, 'user'>[] = [
         id: 'dd78cf00-e747-4eee-8ac4-353b3e5820d0',
         origin: 'Paris',
         status: 'DONE',
-        totalPrice: 50,
+        price: 50,
     },
     {
         departure_time: new Date('2024-10-05T14:48:00.000Z'),
@@ -23,6 +23,6 @@ export const journeysData: Omit<JourneyEntity, 'user'>[] = [
         id: 'f6a70694-0557-4b5d-b3be-02b83a5f4067',
         origin: 'Paris',
         status: 'CANCELLED',
-        totalPrice: 50,
+        price: 50,
     },
 ]

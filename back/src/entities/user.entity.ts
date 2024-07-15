@@ -17,7 +17,7 @@ import {
 } from 'typeorm'
 import { JourneyEntity } from './journey.entity'
 import { BookingEntity } from './booking.entity'
-import { GraphQLEmailAddress, GraphQLPhoneNumber } from 'graphql-scalars'
+import { GraphQLEmailAddress } from 'graphql-scalars'
 import argon2 from 'argon2'
 import {
     IsDate,
@@ -44,6 +44,9 @@ export class UserEntity {
             this.password = await argon2.hash(this.password)
         }
     }
+    protected async emailToLowerCase() {
+        this.email = this.email.toLocaleLowerCase()
+    }
 
     @Field(() => ID)
     @PrimaryGeneratedColumn('uuid')
@@ -65,15 +68,6 @@ export class UserEntity {
     @Column({
         length: 50,
         unique: true,
-        //transformer permet de formater la donnée à la volée (ici on passe tout en lowercase)
-        transformer: {
-            from(value: string) {
-                return value.toLowerCase()
-            },
-            to(value: string) {
-                return value.toLowerCase()
-            },
-        },
     })
     @IsEmail({}, { message: 'Email must be a valid email address' })
     email: string
@@ -87,16 +81,6 @@ export class UserEntity {
     @Column({ type: 'timestamptz' })
     @IsDate({ message: 'Date of birth must be a valid date' })
     dateOfBirth: Date
-
-    //TODO formatage phone number
-    // @Field(() => GraphQLPhoneNumber, { nullable: true })
-    @Field({ nullable: true })
-    @Column({ nullable: true })
-    @IsOptional()
-    // @IsMobilePhone(undefined, undefined, {
-    //     message: 'Please provide a valid phone number',
-    // })
-    phoneNumber?: string
 
     @Field({ nullable: true })
     @Column({
@@ -114,13 +98,13 @@ export class UserEntity {
     })
     role: Role
 
-    @Field({ nullable: true })
+    @Field()
     @Column({
         type: 'text',
         enum: ['BEGINNER', 'CONFIRMED', 'AMBASSADOR'],
         default: 'BEGINNER',
     })
-    grade?: Grade
+    grade: Grade
 
     @Field()
     @Column({ default: 0 })
@@ -160,8 +144,7 @@ export class UserEntity {
 
     @Field({ nullable: true })
     @Column('float', { nullable: true })
-    // @Max(5)
-    averageRate: number
+    averageRate?: number
 
     @Field(() => [BookingEntity], { nullable: true })
     @OneToMany(() => BookingEntity, (b) => b.user)
@@ -185,9 +168,6 @@ export class UserProfile {
 
     @Field()
     lastname: string
-
-    @Field({ nullable: true })
-    phoneNumber?: string
 
     @Field({ nullable: true })
     profilePicture?: string
@@ -222,8 +202,6 @@ export class CreateUserInput {
     @Field(() => GraphQLISODateTime)
     dateOfBirth: Date
     @Field({ nullable: true })
-    phoneNumber?: string
-    @Field({ nullable: true })
     profilePicture?: string
     @Field({ nullable: true })
     role?: Role
@@ -243,8 +221,6 @@ export class UpdateUserInput {
     password?: string
     @Field(() => GraphQLISODateTime, { nullable: true })
     dateOfBirth?: Date
-    @Field(() => GraphQLPhoneNumber, { nullable: true })
-    phoneNumber?: string
     @Field({ nullable: true })
     profilePicture?: string
     @Field({ nullable: true })

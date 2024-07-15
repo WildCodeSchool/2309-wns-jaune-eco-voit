@@ -77,7 +77,7 @@ export default function Page({ params }: { params: { id: string } }) {
       origin,
       destination,
       availableSeats,
-      totalPrice,
+      price,
     },
   } = journeyData;
 
@@ -117,7 +117,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 Tarif pour 1 passager
               </Typography>
               <Typography variant="h6" component="p">
-                {totalPrice} €
+                {price} €
               </Typography>
             </Stack>
             <Stack
@@ -164,7 +164,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 Total
               </Typography>
               <Typography variant="h6" component="p">
-                {totalPrice * passengerNb} €
+                {price * passengerNb} €
               </Typography>
             </Stack>
             <Divider />

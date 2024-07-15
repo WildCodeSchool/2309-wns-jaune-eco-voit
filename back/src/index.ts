@@ -172,14 +172,15 @@ async function main() {
         const query = `
         INSERT INTO "user_entity" (
           "id", "firstname", "lastname", "email", "password", "dateOfBirth", 
-          "phoneNumber", "profilePicture", "role", "grade", "tripsAsPassenger", 
+          "profilePicture", "role", "grade", "tripsAsPassenger", 
           "tripsAsDriver", "status", "createdAt", "updatedAt", "averageRate"
         ) 
         VALUES (
-          DEFAULT, $1, $2, $3, $4, $5, DEFAULT, DEFAULT, DEFAULT, DEFAULT, 
+          DEFAULT, $1, $2, $3, $4, $5, DEFAULT, DEFAULT, DEFAULT, 
           DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT
         ) 
       `
+
         const parameters = [
             'oliv', // firstname
             'ier', // lastname

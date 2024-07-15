@@ -14,10 +14,7 @@ import {
     OneToMany,
     UpdateDateColumn,
 } from 'typeorm'
-// import { VehiculeEntity } from "../../later/vehicule.entity";
 import { UserEntity } from './user.entity'
-// import { MessageEntity } from "../../later/message.entity";
-// import { StepEntity } from "../../later/step.entity";
 import { BookingEntity } from './booking.entity'
 import { IsBoolean, IsDate, IsInt, Length, Max, Min } from 'class-validator'
 import { Float } from 'type-graphql'
@@ -33,20 +30,8 @@ export class JourneyEntity {
     id: string
 
     @Field(() => UserEntity)
-@ManyToOne(() => UserEntity, (user) => user.journeys /*, {eager: true} */) // eager : permet de faire les relations directement (à mettre d'un côté seulement)
+    @ManyToOne(() => UserEntity, (user) => user.journeys /*, {eager: true} */) // eager : permet de faire les relations directement (à mettre d'un côté seulement)
     user: UserEntity
-
-    // @Field(() => VehiculeEntity)
-    // @ManyToOne(() => VehiculeEntity, (v) => v.journeys)
-    // vehicule: VehiculeEntity;
-
-    // @Field(() => [MessageEntity])
-    // @OneToMany(() => MessageEntity, (m) => m.journey)
-    // messages: MessageEntity[];
-
-    // @Field(() => [StepEntity])
-    // @OneToMany(() => StepEntity, (s) => s.journey)
-    // steps: StepEntity[];
 
     @Field()
     @Column({ length: 50 })
@@ -65,7 +50,7 @@ export class JourneyEntity {
     @Field(() => Float)
     @Column({ type: 'float' })
     @Min(0.1, { message: 'Total price must be greater than zero.' })
-    totalPrice: number
+    price: number
 
     @Field()
     @Column('timestamp')
@@ -122,13 +107,6 @@ export class JourneyEntity {
  *?               Inputs
  *=============================================**/
 
-// Ne pas oublier d'enlever les commentaires
-// @InputType()
-// export class PartialVehiculeInput {
-//   @Field(() => ID)
-//   id: string;
-// }
-
 @InputType()
 export class PartialUserInput {
     @Field(() => ID)
@@ -137,9 +115,6 @@ export class PartialUserInput {
 
 @InputType()
 export class CreateJourneyInput {
-    // @Field()
-    // vehicule: PartialVehiculeInput;
-
     @Field()
     departure_time: Date
 
@@ -153,7 +128,7 @@ export class CreateJourneyInput {
     destination: string
 
     @Field(() => Float)
-    totalPrice: number
+    price: number
 
     @Field()
     automaticAccept: boolean
@@ -183,7 +158,7 @@ export class UpdateJourneyInput {
     destination?: string
 
     @Field(() => Float, { nullable: true })
-    totalPrice?: number
+    price?: number
 
     @Field({ nullable: true })
     automaticAccept?: boolean
@@ -193,8 +168,6 @@ export class UpdateJourneyInput {
 
     @Field({ nullable: true })
     availableSeats?: number
-
-    // vehicule: PartialVehiculeInput;
 }
 
 @InputType()
@@ -222,7 +195,6 @@ export class ListJourneysWithFilters {
     @Field()
     availableSeats: number
 }
-
 
 @InputType()
 export class updateAvailableSeatsInput {

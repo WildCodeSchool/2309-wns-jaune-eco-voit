@@ -9,7 +9,6 @@ export const LOGIN = gql`
       email
       password
       dateOfBirth
-      phoneNumber
       profilePicture
       role
       grade

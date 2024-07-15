@@ -6,7 +6,7 @@ export const CREATE_JOURNEY = gql`
       id
       origin
       destination
-      totalPrice
+      price
       departure_time
       arrival_time
       availableSeats
@@ -22,7 +22,6 @@ export const CREATE_JOURNEY = gql`
         password
         dateOfBirth
         averageRate
-        phoneNumber
         profilePicture
         role
         grade
@@ -48,7 +47,7 @@ export const UPDATE_JOURNEY = gql`
       id
       origin
       destination
-      totalPrice
+      price
       departure_time
       arrival_time
       availableSeats
@@ -69,7 +68,6 @@ export const UPDATE_JOURNEY = gql`
         email
         password
         dateOfBirth
-        phoneNumber
         profilePicture
         role
         grade
@@ -90,7 +88,7 @@ export const UPDATE_JOURNEY_STATUS = gql`
       id
       origin
       destination
-      totalPrice
+      price
       departure_time
       arrival_time
       availableSeats
@@ -105,7 +103,6 @@ export const UPDATE_JOURNEY_STATUS = gql`
         email
         password
         dateOfBirth
-        phoneNumber
         profilePicture
         averageRate
         role

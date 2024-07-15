@@ -37,7 +37,6 @@ export default class UserResolver {
             user: {
                 firstname,
                 lastname,
-                phoneNumber,
                 profilePicture,
                 email,
                 role,
@@ -51,7 +50,6 @@ export default class UserResolver {
         return {
             firstname,
             lastname,
-            phoneNumber,
             profilePicture,
             email,
             role,
@@ -64,10 +62,10 @@ export default class UserResolver {
 
     @Query(() => UserEntity)
     async login(
-        @Arg('data') { email, password }: LoginInput,
+        @Arg('data') data: LoginInput,
         @Ctx() { req, res, userService }: MyContext
     ) {
-        const result = await userService.login(email, password)
+        const result = await userService.login(data)
 
         if (!result) throw new Error('Vérifiez vos informations')
 

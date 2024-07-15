@@ -24,7 +24,7 @@ app.get("/", (req: any, res: Response) => {
 });
 
 app.post("/profile", upload.single("avatar"), (req: any, res: Response) => {
-  fs.readFile(req.file.path, (err, content) => {
+  fs.readFile(req.file.path, (err: any) => {
     if (err) {
       res.status(500).send({ error: err });
     }

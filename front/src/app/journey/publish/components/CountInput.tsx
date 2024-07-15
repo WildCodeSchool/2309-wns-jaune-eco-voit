@@ -5,7 +5,7 @@ import { JourneyData } from "../page";
 type CountInputProps = {
   journeyData: JourneyData;
   setJourneyData: React.Dispatch<React.SetStateAction<JourneyData>>;
-  availableSeatsOrTotalPrice: "availableSeats" | "totalPrice";
+  availableSeatsOrPrice: "availableSeats" | "price";
   minValue?: number;
   maxValue?: number;
 };
@@ -13,7 +13,7 @@ type CountInputProps = {
 const CountInput = ({
   journeyData,
   setJourneyData,
-  availableSeatsOrTotalPrice,
+  availableSeatsOrPrice,
   minValue = 0,
   maxValue,
 }: CountInputProps) => {
@@ -25,21 +25,21 @@ const CountInput = ({
           onClick={() =>
             setJourneyData((prevState) => ({
               ...prevState,
-              [availableSeatsOrTotalPrice]:
-                prevState[availableSeatsOrTotalPrice] > 1
-                  ? prevState[availableSeatsOrTotalPrice] - 1
-                  : prevState[availableSeatsOrTotalPrice],
+              [availableSeatsOrPrice]:
+                prevState[availableSeatsOrPrice] > 1
+                  ? prevState[availableSeatsOrPrice] - 1
+                  : prevState[availableSeatsOrPrice],
             }))
           }
         >
           -
         </button>
         <TextField
-          value={journeyData[availableSeatsOrTotalPrice]}
+          value={journeyData[availableSeatsOrPrice]}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             setJourneyData((prevState) => ({
               ...prevState,
-              [availableSeatsOrTotalPrice]:
+              [availableSeatsOrPrice]:
                 parseInt(event.target.value) < minValue || !event.target.value
                   ? minValue
                   : maxValue && parseInt(event.target.value) > maxValue
@@ -55,7 +55,7 @@ const CountInput = ({
               if (event.target instanceof HTMLInputElement) event.target.blur();
             },
             inputProps: { min: minValue },
-            startAdornment: availableSeatsOrTotalPrice === "totalPrice" && (
+            startAdornment: availableSeatsOrPrice === "price" && (
               <InputAdornment position="start">€</InputAdornment>
             ),
           }}
@@ -65,12 +65,12 @@ const CountInput = ({
           onClick={() =>
             setJourneyData((prevState) => ({
               ...prevState,
-              [availableSeatsOrTotalPrice]:
-                (availableSeatsOrTotalPrice === "availableSeats" &&
-                  prevState[availableSeatsOrTotalPrice] < 8) ||
-                availableSeatsOrTotalPrice === "totalPrice"
-                  ? prevState[availableSeatsOrTotalPrice] + 1
-                  : prevState[availableSeatsOrTotalPrice],
+              [availableSeatsOrPrice]:
+                (availableSeatsOrPrice === "availableSeats" &&
+                  prevState[availableSeatsOrPrice] < 8) ||
+                availableSeatsOrPrice === "price"
+                  ? prevState[availableSeatsOrPrice] + 1
+                  : prevState[availableSeatsOrPrice],
             }))
           }
         >

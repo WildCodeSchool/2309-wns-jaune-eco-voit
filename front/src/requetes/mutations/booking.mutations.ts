@@ -15,7 +15,6 @@ export const CREATE_BOOKING = gql`
         averageRate
         password
         dateOfBirth
-        phoneNumber
         profilePicture
         role
         grade
@@ -29,7 +28,7 @@ export const CREATE_BOOKING = gql`
         id
         origin
         destination
-        totalPrice
+        price
         departure_time
         arrival_time
         availableSeats
@@ -57,7 +56,6 @@ export const ACCEPT_BOOKING = gql`
         password
         averageRate
         dateOfBirth
-        phoneNumber
         profilePicture
         role
         grade
@@ -71,7 +69,7 @@ export const ACCEPT_BOOKING = gql`
         id
         origin
         destination
-        totalPrice
+        price
         departure_time
         arrival_time
         availableSeats
@@ -98,7 +96,6 @@ export const REJECT_BOOKING = gql`
         email
         password
         dateOfBirth
-        phoneNumber
         averageRate
         profilePicture
         role
@@ -113,7 +110,7 @@ export const REJECT_BOOKING = gql`
         id
         origin
         destination
-        totalPrice
+        price
         departure_time
         arrival_time
         availableSeats
@@ -140,7 +137,6 @@ export const CANCEL_BOOKING = gql`
         email
         password
         dateOfBirth
-        phoneNumber
         profilePicture
         averageRate
         role
@@ -155,7 +151,7 @@ export const CANCEL_BOOKING = gql`
         id
         origin
         destination
-        totalPrice
+        price
         departure_time
         arrival_time
         availableSeats

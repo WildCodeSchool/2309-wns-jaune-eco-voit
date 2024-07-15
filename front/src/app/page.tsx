@@ -77,7 +77,7 @@ export default function Home() {
               ({
                 id,
                 departure_time,
-                totalPrice,
+                price,
                 user,
                 origin,
                 destination,
@@ -90,10 +90,10 @@ export default function Home() {
                     departureTime={departure_time}
                     key={id}
                     id={id}
-                    totalPrice={
+                    price={
                       filters?.availableSeats
-                        ? totalPrice * filters?.availableSeats
-                        : totalPrice
+                        ? price * filters?.availableSeats
+                        : price
                     }
                     user={user}
                     origin={origin}

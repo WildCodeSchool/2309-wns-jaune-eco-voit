@@ -67,7 +67,7 @@ beforeAll(async () => {
         }
     )
 
-    await datasource.initialize() //initialisation de la datasource
+    await datasource.initialize()
 
     const createUser = async (data: CreateUserInput) => {
         return server.executeOperation<ResponseRegisterData>(
@@ -106,7 +106,6 @@ beforeAll(async () => {
     })
     assert(passengerResponse.body.kind === 'single')
 
-    console.log(JSON.stringify(passengerResponse.body))
     marielouPassenger = passengerResponse.body.singleResult.data?.register
 
     const userReponse = await createUser({
@@ -122,7 +121,7 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
-    await datasource.dropDatabase() //suppression de la base de donnée
+    await datasource.dropDatabase()
 })
 
 describe('Test sur une base de donnée de test', () => {
@@ -241,7 +240,7 @@ describe('Test sur une base de donnée de test', () => {
                             departure_time: '2011-10-05T14:48:00.000Z',
                             destination: 'Paris',
                             origin: 'Nantes',
-                            totalPrice: 35,
+                            price: 35,
                             user: {
                                 id: olivierDriver?.id,
                             },
@@ -256,6 +255,7 @@ describe('Test sur une base de donnée de test', () => {
                 }
             )
         assert(responseCreateJourney.body.kind === 'single')
+        console.log(JSON.stringify(responseCreateJourney.body.singleResult))
         expect(responseCreateJourney.body.singleResult.data).toEqual({
             createJourney: {
                 destination: 'Paris',

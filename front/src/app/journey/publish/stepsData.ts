@@ -49,7 +49,7 @@ export const stepsData = (
     {
       stepName: "Passagers",
       stepContent: CountInput({
-        availableSeatsOrTotalPrice: "availableSeats",
+        availableSeatsOrPrice: "availableSeats",
         setJourneyData,
         journeyData,
         minValue: 1,
@@ -60,7 +60,7 @@ export const stepsData = (
     {
       stepName: "Prix",
       stepContent: CountInput({
-        availableSeatsOrTotalPrice: "totalPrice",
+        availableSeatsOrPrice: "price",
         setJourneyData,
         journeyData,
       }),

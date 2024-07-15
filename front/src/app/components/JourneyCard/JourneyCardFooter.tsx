@@ -1,12 +1,12 @@
 import PersonIcon from "@mui/icons-material/Person";
 
 type JourneyCardFooterProps = {
-  totalPrice: number;
+  price: number;
   availableSeats: number;
 };
 
 const JourneyCardFooter = ({
-  totalPrice,
+  price,
   availableSeats,
 }: JourneyCardFooterProps) => {
   return (
@@ -20,7 +20,7 @@ const JourneyCardFooter = ({
       <div className="flex font-bold text-xl items-center">
         {" "}
         <p className="font-medium text-lg pr-2">Prix total: </p>
-        <p> {totalPrice} €</p>
+        <p> {price} €</p>
       </div>
     </div>
   );

@@ -112,15 +112,8 @@ function MyProfile() {
     return <div>Error</div>;
   }
 
-  const {
-    firstname,
-    lastname,
-    email,
-    dateOfBirth,
-    phoneNumber,
-    role,
-    profilePicture,
-  } = updateInfos;
+  const { firstname, lastname, email, dateOfBirth, role, profilePicture } =
+    updateInfos;
 
   return (
     <div className="home_page flex flex-col gap-6  bg-primary10 py-10">
@@ -154,7 +147,6 @@ function MyProfile() {
               Date de naissance :{" "}
               {dayjs(updateInfos?.dateOfBirth).format("DD/MM/YYYY")}
             </h4>
-            <h4>Numéro de téléphone : {phoneNumber}</h4>
             <h4>Role : {role}</h4>
 
             <div className="ModalPassword bg-primary10 flex flex-col justify-center items-center py-10">
@@ -218,20 +210,6 @@ function MyProfile() {
                     dateOfBirth: e.target.value,
                   }))
                 }
-              />
-            </FormControl>
-
-            <FormControl className="">
-              <FormLabel>Numéro de téléphone :</FormLabel>
-              <Input
-                onChange={(e) =>
-                  setUpdateInfos((prevState: any) => ({
-                    ...prevState,
-                    phoneNumber: e.target.value,
-                  }))
-                }
-                value={phoneNumber}
-                sx={{ marginTop: "0.5em!important" }}
               />
             </FormControl>
 

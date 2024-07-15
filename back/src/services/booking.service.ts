@@ -4,6 +4,7 @@ import datasourceTest from '../db_test'
 import {
     BookingEntity,
     CreateBookingInput,
+    ListBookingsFilterInput,
     UpdateBookingInput,
 } from '../entities/booking.entity'
 import { validateData, assertDataExists } from '../utils/errorHandlers'
@@ -40,10 +41,7 @@ export default class BookingService {
     async listBookingsFilter({
         journeyId,
         userId,
-    }: {
-        journeyId?: string
-        userId?: string
-    }): Promise<BookingEntity[]> {
+    }: ListBookingsFilterInput): Promise<BookingEntity[]> {
         return await this.db.find({
             where: {
                 user: { id: userId ?? undefined },
