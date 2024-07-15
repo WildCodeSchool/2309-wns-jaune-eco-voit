@@ -118,7 +118,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          context: back
+          context: .
           tags: "${{ secrets.DOCKERHUB_USERNAME }}/back-ecovoit:latest"
 
       - name: 🔨 Build and push front
