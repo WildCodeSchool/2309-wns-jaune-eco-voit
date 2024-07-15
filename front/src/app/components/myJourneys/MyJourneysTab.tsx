@@ -27,7 +27,7 @@ const MyJourneysTab = ({
             destination,
             departure_time,
             availableSeats,
-            totalPrice,
+            price,
             bookings,
             id,
             status,
@@ -92,7 +92,7 @@ const MyJourneysTab = ({
                 >
                   Siége disponible : {availableSeats}
                 </Typography>
-                <Typography>Prix : {totalPrice}€</Typography>
+                <Typography>Prix : {price}€</Typography>
               </CardContent>
             </Card>
           );

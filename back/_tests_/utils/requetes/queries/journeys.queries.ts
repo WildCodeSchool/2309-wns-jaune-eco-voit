@@ -7,7 +7,7 @@ query Query($findJourneyByIdId: String!) {
       id
     }
     status
-    totalPrice
+    price
     origin
     destination
     automaticAccept
@@ -27,7 +27,7 @@ export const LIST_JOURNEYS = `#graphql
       id
       origin
       status
-      totalPrice
+      price
       user {
         id
       } 

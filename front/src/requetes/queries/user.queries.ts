@@ -9,7 +9,6 @@ export const LIST_USERS = gql`
       email
       password
       dateOfBirth
-      phoneNumber
       profilePicture
       role
       grade
@@ -23,7 +22,7 @@ export const LIST_USERS = gql`
         id
         origin
         destination
-        totalPrice
+        price
         departure_time
         arrival_time
         availableSeats
@@ -50,8 +49,6 @@ export const FIND_USER_BY_ID = gql`
       lastname
       email
       password
-      dateOfBirth
-      phoneNumber
       profilePicture
       averageRate
       role
@@ -65,7 +62,7 @@ export const FIND_USER_BY_ID = gql`
         id
         origin
         destination
-        totalPrice
+        price
         departure_time
         arrival_time
         availableSeats
@@ -89,7 +86,6 @@ export const GET_PROFILE = gql`
     getProfile {
       lastname
       firstname
-      phoneNumber
       averageRate
       profilePicture
       email

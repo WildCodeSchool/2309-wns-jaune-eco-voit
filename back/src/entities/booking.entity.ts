@@ -96,3 +96,12 @@ export class UpdateBookingInput {
     @Field()
     status: Status
 }
+
+@InputType()
+export class ListBookingsFilterInput {
+    @Field({ nullable: true })
+    userId?: string
+
+    @Field({ nullable: true })
+    journeyId?: string
+}

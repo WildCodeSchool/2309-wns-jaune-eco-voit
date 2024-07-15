@@ -20,7 +20,7 @@ export type JourneyData = {
   origin: string;
   destination: string;
   departure_date: Dayjs;
-  totalPrice: number;
+  price: number;
   automaticAccept: boolean;
   availableSeats: number;
 };
@@ -37,7 +37,7 @@ const PublishJourney = () => {
     origin: "",
     destination: "",
     departure_date: dayjs(),
-    totalPrice: 0,
+    price: 0,
     automaticAccept: true,
     availableSeats: 1,
   });
@@ -57,7 +57,7 @@ const PublishJourney = () => {
     departure_date,
     destination,
     availableSeats,
-    totalPrice,
+    price,
     automaticAccept,
   } = journeyData;
 
@@ -66,7 +66,7 @@ const PublishJourney = () => {
       !origin ||
       !destination ||
       departure_date < dayjs() ||
-      totalPrice === 0 ||
+      price === 0 ||
       availableSeats === 0 ||
       !userId
     ) {
@@ -78,7 +78,7 @@ const PublishJourney = () => {
       arrival_time: departure_date.add(2, "hour").toISOString(),
       origin,
       destination,
-      totalPrice,
+      price,
       availableSeats,
       automaticAccept,
       user: { id: userId },
@@ -156,7 +156,7 @@ const PublishJourney = () => {
                   disabled={
                     (activeStep === 0 && !origin) ||
                     (activeStep === 1 && !destination) ||
-                    (activeStep === 5 && totalPrice === 0)
+                    (activeStep === 5 && price === 0)
                   }
                 >
                   Suivant

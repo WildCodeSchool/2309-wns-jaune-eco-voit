@@ -15,7 +15,7 @@ type JourneyCardProps = {
   departureTime: Date;
   origin: string;
   destination: string;
-  totalPrice: number;
+  price: number;
   availableSeats: number;
   user: User;
   id: string;
@@ -25,7 +25,7 @@ const JourneyCard = ({
   departureTime,
   origin,
   destination,
-  totalPrice,
+  price,
   availableSeats,
   user: { averageRate, firstname, profilePicture },
   id,
@@ -45,10 +45,7 @@ const JourneyCard = ({
         rating={averageRate}
         profilePicture={profilePicture ?? undefined}
       />
-      <JourneyCardFooter
-        totalPrice={totalPrice}
-        availableSeats={availableSeats}
-      />
+      <JourneyCardFooter price={price} availableSeats={availableSeats} />
     </Link>
   </Grid>
 );

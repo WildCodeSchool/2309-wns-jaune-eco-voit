@@ -15,7 +15,6 @@ export const LIST_BOOKINGS = gql`
         email
         password
         dateOfBirth
-        phoneNumber
         profilePicture
         role
         grade
@@ -30,7 +29,7 @@ export const LIST_BOOKINGS = gql`
         id
         origin
         destination
-        totalPrice
+        price
         departure_time
         arrival_time
         availableSeats
@@ -64,7 +63,6 @@ export const LIST_BOOKINGS_BY_USER = gql`
         email
         password
         dateOfBirth
-        phoneNumber
         profilePicture
         role
         grade
@@ -79,7 +77,7 @@ export const LIST_BOOKINGS_BY_USER = gql`
         id
         origin
         destination
-        totalPrice
+        price
         departure_time
         arrival_time
         availableSeats
@@ -113,7 +111,6 @@ export const LIST_BOOKINGS_BY_JOURNEY = gql`
         email
         password
         dateOfBirth
-        phoneNumber
         averageRate
         profilePicture
         role
@@ -128,7 +125,7 @@ export const LIST_BOOKINGS_BY_JOURNEY = gql`
         id
         origin
         destination
-        totalPrice
+        price
         departure_time
         arrival_time
         availableSeats
@@ -162,7 +159,6 @@ export const FIND_BOOKING_BY_ID = gql`
         email
         password
         dateOfBirth
-        phoneNumber
         profilePicture
         role
         grade
@@ -177,7 +173,7 @@ export const FIND_BOOKING_BY_ID = gql`
         id
         origin
         destination
-        totalPrice
+        price
         departure_time
         arrival_time
         availableSeats

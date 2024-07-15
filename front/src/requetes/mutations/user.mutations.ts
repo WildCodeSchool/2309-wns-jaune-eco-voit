@@ -9,7 +9,6 @@ export const UPDATE_USER = gql`
       email
       password
       dateOfBirth
-      phoneNumber
       profilePicture
       role
       grade
@@ -23,7 +22,7 @@ export const UPDATE_USER = gql`
         id
         origin
         destination
-        totalPrice
+        price
         departure_time
         arrival_time
         availableSeats
@@ -59,7 +58,6 @@ export const ARCHIVE_USER = gql`
       email
       password
       dateOfBirth
-      phoneNumber
       profilePicture
       role
       grade
@@ -73,7 +71,7 @@ export const ARCHIVE_USER = gql`
         id
         origin
         destination
-        totalPrice
+        price
         departure_time
         arrival_time
         availableSeats

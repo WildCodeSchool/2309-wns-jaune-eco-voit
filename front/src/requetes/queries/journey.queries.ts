@@ -18,7 +18,7 @@ export const LIST_JOURNEYS = gql`
       id
       origin
       status
-      totalPrice
+      price
       updatedAt
       user {
         email
@@ -38,7 +38,7 @@ export const LIST_JOURNEYS_BY_USER = gql`
       id
       origin
       destination
-      totalPrice
+      price
       departure_time
       arrival_time
       availableSeats
@@ -53,7 +53,6 @@ export const LIST_JOURNEYS_BY_USER = gql`
         email
         password
         dateOfBirth
-        phoneNumber
         profilePicture
         role
         grade
@@ -80,7 +79,7 @@ export const FIND_JOURNEY_BY_ID = gql`
       id
       origin
       destination
-      totalPrice
+      price
       departure_time
       arrival_time
       availableSeats
@@ -101,7 +100,6 @@ export const FIND_JOURNEY_BY_ID = gql`
         email
         password
         dateOfBirth
-        phoneNumber
         profilePicture
         role
         grade

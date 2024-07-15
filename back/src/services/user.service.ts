@@ -3,6 +3,7 @@ import datasource from '../db'
 import datasourceTest from '../db_test'
 import {
     CreateUserInput,
+    LoginInput,
     UpdateUserInput,
     UpdateUserPasswordInput,
     UserEntity,
@@ -21,7 +22,7 @@ export default class UserService {
                 : datasource.getRepository(UserEntity)
     }
 
-    public getNewDriverGrade = (
+    public getDriverNewGrade = (
         tripsAsDriver: number
     ): 'BEGINNER' | 'CONFIRMED' | 'AMBASSADOR' => {
         if (tripsAsDriver < 5) {
@@ -44,10 +45,10 @@ export default class UserService {
         })
     }
 
-    async login(
-        email: string,
-        password: string
-    ): Promise<{ user: UserEntity; token: string } | null> {
+    async login({
+        email,
+        password,
+    }: LoginInput): Promise<{ user: UserEntity; token: string } | null> {
         const user = await this.findUserByEmailWitoutAsserting(email)
 
         if (!user) {
@@ -117,16 +118,6 @@ export default class UserService {
             relations: { journeys: true, bookings: true, ratings: true },
         })
 
-        assertDataExists(user)
-
-        return user as UserEntity
-    }
-
-    async findUserByEmail(email: string): Promise<UserEntity> {
-        const user = await this.db.findOne({
-            where: { email },
-            relations: { journeys: true, bookings: true, ratings: true },
-        })
         assertDataExists(user)
 
         return user as UserEntity

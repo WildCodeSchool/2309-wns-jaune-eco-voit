@@ -8,7 +8,6 @@ import datasource from '../db'
 import datasourceTest from '../db_test'
 import { assertDataExists } from '../utils/errorHandlers'
 import JourneyService from './journey.service'
-import BookingService from './booking.service'
 
 export default class JourneyMessageService {
     db: Repository<JourneyMessageEntity>
@@ -46,18 +45,13 @@ export default class JourneyMessageService {
         return message as JourneyMessageEntity
     }
 
-    async createJourneyMessage({
-        data,
-        userCtxId,
-    }: {
+    async createJourneyMessage(
         data: CreateJourneyMessageInput
-        userCtxId: string
-    }): Promise<JourneyMessageEntity> {
+    ): Promise<JourneyMessageEntity> {
         const journeyService = new JourneyService()
 
-        const bookingService = new BookingService()
-
         const {
+            user: { id: userId },
             journey: { id: journeyId },
         } = data
 
@@ -69,16 +63,10 @@ export default class JourneyMessageService {
 
         const { user: driver, bookings: journeyBookings } = journeyData
 
-        const isDriver = driver && driver.id === userCtxId
+        const isDriver = driver && driver.id === userId
 
-        const userBookings = await bookingService.listBookingsFilter({
-            userId: userCtxId,
-        })
-
-        const journeyBookingIds = journeyBookings?.map((booking) => booking.id)
-
-        const isPassenger = userBookings.some(({ id: bookingId }) =>
-            journeyBookingIds?.some((id) => id === bookingId)
+        const isPassenger = journeyBookings?.some(
+            ({ user: { id: bookingUserId } }) => bookingUserId === userId
         )
 
         if (!isDriver && !isPassenger) {
@@ -88,5 +76,9 @@ export default class JourneyMessageService {
         const journeyMessage = this.db.create(data)
 
         return await this.db.save(journeyMessage)
+    }
+
+    async deleteJourneyMessage(id: string) {
+        await this.db.delete(id)
     }
 }

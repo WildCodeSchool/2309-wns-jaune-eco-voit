@@ -46,20 +46,11 @@ query ListUsers {
     lastname
     email
     password
-    # phoneNumber
-    # profilPicture
     role
     grade
     tripsAsPassenger
     tripsAsDriver
     status
-    # updatedAt
-    # journeys {
-
-    # }
-    # bookings {
-
-    # }
   }
 }`
 
@@ -131,9 +122,6 @@ beforeAll(async () => {
             },
         },
     })
-    // server = new ApolloServer({
-    //     schema: baseSchema
-    // })
     server = new ApolloServer({
         schema: addMocksToSchema({
             schema: baseSchema,

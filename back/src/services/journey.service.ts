@@ -27,7 +27,7 @@ export default class JourneyService {
     async findJourneyById(id: string): Promise<JourneyEntity> {
         const journey = await this.db.findOne({
             where: { id },
-            relations: { user: true, bookings: true },
+            relations: ['user', 'bookings', 'bookings.user'],
         })
 
         assertDataExists(journey)
@@ -88,10 +88,8 @@ export default class JourneyService {
         const newJourney: JourneyEntity = this.db.create(data)
 
         await validateData(newJourney)
-
         const { id } = await this.db.save(newJourney)
-
-        return this.findJourneyById(id)
+        return await this.findJourneyById(id)
     }
 
     async updateJourney({
@@ -170,7 +168,7 @@ export default class JourneyService {
             await userService.updateUser({
                 id: driverId,
                 tripsAsDriver: tripsAsDriver + 1,
-                grade: userService.getNewDriverGrade(tripsAsDriver),
+                grade: userService.getDriverNewGrade(tripsAsDriver),
             })
 
             this.updateJourney({ id: journeyId, status: newStatus })

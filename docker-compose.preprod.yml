@@ -87,4 +87,4 @@ services:
 
 volumes:
   ecovoit-data:
-  ecovoit-data-test: # web-frontend-build:
+  ecovoit-data-test:

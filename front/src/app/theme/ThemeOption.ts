@@ -30,7 +30,7 @@ export const stolzl = localFont({
 
 // MUI theme
 export const themeOptions: ThemeOptions = {
-   breakpoints: {
+  breakpoints: {
     values: {
       xs: 0,
       sm: 640,
@@ -87,9 +87,7 @@ export const themeOptions: ThemeOptions = {
             },
           }),
         }),
-        outlined: {
-          //
-        },
+        outlined: {},
         contained: {
           boxShadow: "none",
           "&:hover": {
