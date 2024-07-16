@@ -147,59 +147,9 @@ async function main() {
             },
         })
     )
-
     const port = 4000
 
-    // if (isTestEnv) {
-    //     await db_test.initialize()
-    //     // Création d'un query runner
-    //     // Un QueryRunner est une interface dans TypeORM permettant d'exécuter des requêtes SQL brutes et de gérer des transactions sur une connexion de base de données spécifique.
-    //     const queryRunner = db_test.createQueryRunner()
-    //     await queryRunner.connect()
-    //     // Désactivation des contraintes de clé étrangère
-    //     await queryRunner.query('SET session_replication_role = replica;')
-    //     // Vide les tables
-    //     const tables = await queryRunner.query(`
-    //         SELECT tablename FROM pg_tables
-    //         WHERE schemaname = 'public';
-    //       `)
 
-    //     for (const table of tables) {
-    //         await queryRunner.query(
-    //             `TRUNCATE TABLE "${table.tablename}" CASCADE;`
-    //         )
-    //     }
-
-    //     // Réactive les contraintes de clé étrangère
-    //     await queryRunner.query('SET session_replication_role = DEFAULT;')
-
-    //     // Cree un user
-    //     const query = `
-    //     INSERT INTO "user_entity" (
-    //       "id", "firstname", "lastname", "email", "password", "dateOfBirth",
-    //       "profilePicture", "role", "grade", "tripsAsPassenger",
-    //       "tripsAsDriver", "status", "createdAt", "updatedAt", "averageRate"
-    //     )
-    //     VALUES (
-    //       DEFAULT, $1, $2, $3, $4, $5, DEFAULT, DEFAULT, DEFAULT,
-    //       DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT
-    //     )
-    //   `
-
-    //     const parameters = [
-    //         'oliv', // firstname
-    //         'ier', // lastname
-    //         'sakogm38@gmail.com', // email
-    //         '$argon2id$v=19$m=65536,t=3,p=4$xDzd4HYFQIgD3+9h1k5LTA$40zPPZZdDo7waQwMg9a5MwzguAPjppLWbYEq4q3aa0U', // password
-    //         '1992-05-06T22:00:00.000Z', // dateOfBirth
-    //     ]
-
-    //     await queryRunner.query(query, parameters)
-    //     // Libère le query runner
-    //     await queryRunner.release()
-
-    //     console.log('db_test has been initialized, cleared, and synchronized.')
-    // } else {
     await db.initialize()
 
     await new Promise<void>((resolve) => {
