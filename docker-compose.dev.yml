@@ -46,6 +46,7 @@ services:
     volumes:
       - ./images/src:/app/src
       - ./images/uploads:/app/uploads
+      - ecovoit-image:/app/updloads
 
   db:
     # on utilise l'image officiel de postgres
@@ -120,3 +121,4 @@ services:
 volumes:
   ecovoit-data:
   ecovoit-data-test:
+  ecovoit-image:
