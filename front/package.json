@@ -10,7 +10,8 @@
     "test": "jest --watch",
     "test-ci": "jest",
     "generate": "graphql-codegen --watch",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "API": "cd ../back npm start:dev"
   },
   "dependencies": {
     "@apollo/client": "^3.9.4",
