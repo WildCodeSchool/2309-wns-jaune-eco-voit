@@ -81,7 +81,7 @@ jobs:
         run: |
           cd ./back
           npm run start:test &
-          npx wait-on tcp:5432
+          npx wait-on http://localhost:4000
 
       - name: Install frontend dependencies
         run: |
