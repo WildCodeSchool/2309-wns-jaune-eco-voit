@@ -63,9 +63,9 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
+          install: npm i
+          build: npm run build
           start: npm run dev
-          wait-on: "http://localhost:3000"
-          runTests: npm run cypress:run
         env:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
