@@ -53,13 +53,12 @@ jobs:
       - name: 🗂️ Check out code
         uses: actions/checkout@v2
 
-      - name: Start Frontend
+      - name: Start backend for testing
         run: |
-          cd ./front
-          npm install
-          nohup npm run dev &
-          echo $! > frontend_pid.txt
-          npx wait-on http://localhost:3000
+          cd ./back
+          nohup npm run start:test &
+          echo $! > backend_pid.txt
+          npx wait-on http://localhost:4000
 
       - name: Cypress run
         uses: cypress-io/github-action@v2
@@ -72,10 +71,9 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
 
-      - name: Stop backend and frontend
+      - name: Stop backend
         run: |
           kill $(cat backend_pid.txt)
-          kill $(cat frontend_pid.txt)
 
   tests:
     needs: cypress
