@@ -3,13 +3,13 @@ import { waitFor } from "@testing-library/react";
 describe("Journey publish page", () => {
   it("Publish journey and leave message", () => {
     /*------ Login ------*/
-    cy.login();
+    cy.login("sakogm38@gmail.com", "sakogm38");
 
-    cy.url().should("eq", "http://localhost:3003/");
+    cy.url().should("eq", "http://localhost:3002/");
 
     /*------ Journey publish page ------*/
     cy.findByRole("link", { name: "Publier un trajet" }).click();
-    cy.url().should("eq", "http://localhost:3003/journey/publish");
+    cy.url().should("eq", "http://localhost:3002/journey/publish");
 
     /*------ Departure ------*/
     cy.get("h3").contains("D'où partez-vous?");
@@ -71,13 +71,16 @@ describe("Journey publish page", () => {
     );
 
     waitFor(() => {
-      cy.url().should("include", "http://localhost:3003/journey/");
+      cy.url().should("include", "http://localhost:3002/journey/");
     });
 
     cy.contains("Félicitations, votre trajet est en ligne!").should(
       "be.visible"
     );
 
+    waitFor(() => {
+      cy.findByRole("textbox", { name: "Votre message" });
+    });
     cy.findByRole("textbox", { name: "Votre message" }).type(
       "Voici mon message"
     );
