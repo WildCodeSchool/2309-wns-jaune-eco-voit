@@ -48,7 +48,7 @@ jobs:
 
   tests:
     needs: linters
-    name: 👤 Run Tests back & front
+    name: 👤 Run Tests Jest
     runs-on: ubuntu-latest
     services:
       postgres:
@@ -68,47 +68,28 @@ jobs:
       - name: 🗂️ Check out code
         uses: actions/checkout@v2
 
-      - name: Install backend dependencies
-        run: |
-          cd ./back
-          npm install
-
-      - name: Start backend for testing
-        env:
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-        run: |
-          cd ./back
-          npm run start:test &
-          npx wait-on http://localhost:4000
-
-      - name: Install frontend dependencies
-        run: |
-          cd ./front 
-          npm install
-
-      - name: Run Cypress tests
-        run: |
-          cd ./front 
-          npm run cypress:open
-
       - name: 🧐 Run backend tests
         run: |
           cd ./back 
-          npm run test-ci
+          npm run test
 
       - name: 🧐 Run frontend tests
         run: |
           cd ./front 
           npm run test-ci
 
-  cypress-run:
+  cypress:
     runs-on: ubuntu:latest
+    name: 👤 Run Tests cypress
+    needs: tests
     steps:
       - name: 🗂️ Check out code
         uses: actions/checkout@v2
       - name: "Start Backend"
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         run: |
           cd ./back 
           npm i
@@ -126,7 +107,7 @@ jobs:
           start: npm run dev
 
   builds:
-    needs: tests
+    needs: cypress
     name: Build back & front
     runs-on: ubuntu-latest
     steps:
