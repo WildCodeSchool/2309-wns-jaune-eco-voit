@@ -4,9 +4,12 @@ interface TableResult {
 }
 
 before(() => {
-  cy.log("😭");
+  cy.log("Starting database cleanup...");
+
+  // Désactive les contraintes de clés étrangères
   cy.task("dbQuery", "SET session_replication_role = replica;")
     .then(() => {
+      // Récupère toutes les tables sur schéma public
       return cy.task(
         "dbQuery",
         `
@@ -17,6 +20,8 @@ before(() => {
     })
     .then((result: any) => {
       const tables = (result as TableResult).rows;
+
+      // Vide toutes les tables
       return Promise.all(
         tables.map((table) => {
           return cy.task(
@@ -26,6 +31,8 @@ before(() => {
         })
       );
     })
+
+    // Réactive toutes les contraintes de clés étrangères
     .then(() => cy.task("dbQuery", "SET session_replication_role = DEFAULT;"))
     .then(() => {
       console.log("Nettoyage de la base de données terminé.");
