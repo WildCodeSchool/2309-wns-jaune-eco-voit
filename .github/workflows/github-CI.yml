@@ -68,12 +68,13 @@ jobs:
       - name: 🗂️ Check out code
         uses: actions/checkout@v2
       - name: Run Cypress tests
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         run: |
           cd ./back
           npm i
-          echo "POSTGRES_USER=$POSTGRES_USER" >> $GITHUB_ENV
-          echo "POSTGRES_PASSWORD=$POSTGRES_PASSWORD" >> $GITHUB_ENV
-          echo "POSTGRES_DB=$POSTGRES_DB" >> $GITHUB_ENV
           npm run start:test
           cd ../front 
           npm i
