@@ -6,7 +6,7 @@ services:
     ports:
       - 4000:4000
     # Décommenter cette ligne quand on veut lancer les tests en local
-    command: sh -c "npm run start:test"
+    # command: sh -c "npm run start:test"
     # persist les datas en dehors du container et les partage entre local et container
     # quand on modifie le fichier /back >>> modifie aussi le container
     # a gauche > local / a droite > container
