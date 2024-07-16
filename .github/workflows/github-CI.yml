@@ -63,6 +63,7 @@ jobs:
           npm i
           nohup npm run start:test &
           echo $! > backend_pid.txt
+          npx wait-on http://localhost:4000 --timeout=60000  # Timeout après 60 secondes
 
       - name: Cypress run
         uses: cypress-io/github-action@v2
