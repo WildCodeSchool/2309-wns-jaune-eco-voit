@@ -81,7 +81,7 @@ jobs:
         run: |
           cd ./back
           npm i
-          nohup node index.js
+          nohup npm start:dev
 
       - name: Install frontend dependencies
         working-directory: ./front
