@@ -94,6 +94,7 @@ jobs:
           working-directory: ./front
           start: npm run dev
           browser: chrome
+          config-file: cypress.config.ts
 
   tests:
     needs: cypress
