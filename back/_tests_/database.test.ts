@@ -264,6 +264,7 @@ describe('Test sur une base de donnée de test', () => {
                     id: olivierDriver?.id,
                 },
                 availableSeats: 3,
+                automaticAccept: true,
             },
         })
     })
