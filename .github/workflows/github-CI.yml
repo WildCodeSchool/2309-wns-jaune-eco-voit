@@ -67,6 +67,14 @@ jobs:
     steps:
       - name: 🗂️ Check out code
         uses: actions/checkout@v2
+      - name: Run Cypress tests
+        run: |
+          cd ./back
+          npm i
+          npm run start:test
+          cd ../front 
+          npm i
+          npm run cypress:open
       - name: 🧐 Go to tests and run test back
         run: |
           cd ./back 
