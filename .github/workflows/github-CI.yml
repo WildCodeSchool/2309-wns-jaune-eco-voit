@@ -49,6 +49,7 @@ jobs:
   cypress:
     runs-on: ubuntu-16.04
     needs: linters
+    name: 🧼 Tests Cypress
     steps:
       - name: Checkout
         uses: actions/checkout@v1
