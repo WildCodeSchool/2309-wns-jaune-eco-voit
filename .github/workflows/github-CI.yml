@@ -93,7 +93,7 @@ jobs:
           start: |
             cd back
             npm run start:dev
-            cd front
+            cd ../front
             npm run dev
           browser: chrome
           config-file: cypress.config.ts
