@@ -46,8 +46,39 @@ jobs:
       - name: 🤗 Hello CI
         run: echo "This job's status is ${{ job.status }}."
 
-  tests:
+  cypress:
+    runs-on: ubuntu-latest
     needs: linters
+    steps:
+      - name: 🗂️ Check out code
+        uses: actions/checkout@v2
+
+      - name: Start Frontend
+        run: |
+          cd ./front
+          npm install
+          nohup npm run dev &
+          echo $! > frontend_pid.txt
+          npx wait-on http://localhost:3000
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          start: npm run dev
+          wait-on: "http://localhost:3000"
+          runTests: npm run cypress:run
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+
+      - name: Stop backend and frontend
+        run: |
+          kill $(cat backend_pid.txt)
+          kill $(cat frontend_pid.txt)
+
+  tests:
+    needs: cypress
     name: 👤 Run Tests Jest
     runs-on: ubuntu-latest
     services:
@@ -80,39 +111,8 @@ jobs:
           npm i
           npm run test-ci
 
-  cypress:
-    runs-on: ubuntu-latest
-    needs: tests
-    steps:
-      - name: 🗂️ Check out code
-        uses: actions/checkout@v2
-
-      - name: Start Frontend
-        run: |
-          cd ./front
-          npm install
-          nohup npm run dev &
-          echo $! > frontend_pid.txt
-          npx wait-on http://localhost:3000
-
-      - name: Cypress run
-        uses: cypress-io/github-action@v2
-        with:
-          start: npm run dev
-          wait-on: "http://localhost:3000"
-          runTests: npm run cypress:run
-        env:
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-
-      - name: Stop backend and frontend
-        run: |
-          kill $(cat backend_pid.txt)
-          kill $(cat frontend_pid.txt)
-
   builds:
-    needs: cypress
+    needs: tests
     name: Build back & front
     runs-on: ubuntu-latest
     steps:
