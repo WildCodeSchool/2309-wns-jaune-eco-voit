@@ -9,9 +9,6 @@ import { routes } from "@/app/lib/routes";
 
 const BookJourneyButton = ({ journey, passenger }: any) => {
   const { getUser: userId } = useContext(AuthContext);
-
-  console.log("journey in btn", journey);
-  console.log("userId", userId);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const [
@@ -32,11 +29,9 @@ const BookJourneyButton = ({ journey, passenger }: any) => {
       status: journey.status,
       nbPassenger: passenger,
     };
-    console.log("booking", booking);
     createBookingMutation({
       variables: { data: booking },
       onCompleted: (res) => {
-        console.log("res", res);
         setTimeout(() => {
           router.push(`/booking/${res.createBooking.id}`);
         }, 100);

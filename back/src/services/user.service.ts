@@ -15,10 +15,7 @@ export default class UserService {
     db: Repository<UserEntity>
 
     constructor() {
-        this.db =
-            // process.env.NODE_ENV === 'test'
-            //     ? datasourceTest.getRepository(UserEntity)
-            datasource.getRepository(UserEntity)
+        this.db = datasource.getRepository(UserEntity)
     }
 
     public getDriverNewGrade = (

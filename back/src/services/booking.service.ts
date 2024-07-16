@@ -14,10 +14,7 @@ export default class BookingService {
     db: Repository<BookingEntity>
 
     constructor() {
-        // this.db =
-        //     process.env.NODE_ENV === 'test'
-        //         ? datasourceTest.getRepository(BookingEntity)
-        datasource.getRepository(BookingEntity)
+        this.db = datasource.getRepository(BookingEntity)
     }
 
     async listBookings(): Promise<BookingEntity[]> {

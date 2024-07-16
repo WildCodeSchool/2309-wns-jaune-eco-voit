@@ -9,10 +9,7 @@ export default class RatingService {
     db: Repository<RatingEntity>
 
     constructor() {
-        this.db =
-            // process.env.NODE_ENV === 'test'
-            //     ? datasourceTest.getRepository(RatingEntity)
-            datasource.getRepository(RatingEntity)
+        this.db = datasource.getRepository(RatingEntity)
     }
 
     async listRatingsByUser(id: string) {

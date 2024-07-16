@@ -12,10 +12,7 @@ export default class JourneyMessageService {
     db: Repository<JourneyMessageEntity>
 
     constructor() {
-        this.db =
-            // process.env.NODE_ENV === 'test'
-            //     ? datasourceTest.getRepository(JourneyMessageEntity)
-            datasource.getRepository(JourneyMessageEntity)
+        this.db = datasource.getRepository(JourneyMessageEntity)
     }
 
     async listJourneyMessagesByJourney(journeyId: string) {
