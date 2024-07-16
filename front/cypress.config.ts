@@ -11,7 +11,6 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       on("task", {
         async dbQuery(requestString) {
-          console.log("RESULT", requestString);
           const client = new Client({
             user: "ecovoit_user",
             password: "ecovoit_password",
@@ -21,10 +20,8 @@ export default defineConfig({
           });
           await client.connect();
           const res = await client.query(requestString);
-          console.log("🏆", res);
           await client.end();
           return res;
-          // return requestString;
         },
       });
     },

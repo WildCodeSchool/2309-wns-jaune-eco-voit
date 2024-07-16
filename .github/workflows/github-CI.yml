@@ -89,11 +89,9 @@ jobs:
           npm install
 
       - name: Run Cypress tests
-        uses: cypress-io/github-action@v2
-        with:
-          start: npm run start
-          wait-on: "http://localhost:3002"
-          runTests: npm run cypress:run
+        run: |
+          cd ./front 
+          npm run cypress
 
       - name: 🧐 Run backend tests
         run: |
