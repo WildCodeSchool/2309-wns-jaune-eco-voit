@@ -67,33 +67,39 @@ jobs:
     steps:
       - name: 🗂️ Check out code
         uses: actions/checkout@v2
+
       - name: Install backend dependencies
         run: |
           cd ./back
           npm install
+
+      - name: Start backend for testing
         env:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-      - name: Start backend for testing
         run: |
           cd ./back
           npm run start:test &
           npx wait-on tcp:5432
+
       - name: Install frontend dependencies
         run: |
           cd ./front 
           npm install
+
       - name: Run Cypress tests
         uses: cypress-io/github-action@v2
         with:
           start: npm run start
           wait-on: "http://localhost:3002"
           runTests: npm run cypress:run
+
       - name: 🧐 Run backend tests
         run: |
           cd ./back 
           npm run test-ci
+
       - name: 🧐 Run frontend tests
         run: |
           cd ./front 
