@@ -54,6 +54,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Start backend for testing
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         run: |
           cd ./back
           npm i
@@ -66,10 +70,6 @@ jobs:
           install: npm i
           build: npm run build
           start: npm run dev
-        env:
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
 
       - name: Stop backend
         run: |
