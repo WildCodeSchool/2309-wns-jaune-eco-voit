@@ -71,11 +71,13 @@ jobs:
       - name: 🧐 Run backend tests
         run: |
           cd ./back 
-          npm run test
+          npm i
+          npm run test-ci
 
       - name: 🧐 Run frontend tests
         run: |
           cd ./front 
+          npm i
           npm run test-ci
 
   cypress:
