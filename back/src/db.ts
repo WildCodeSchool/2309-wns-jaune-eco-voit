@@ -2,7 +2,8 @@ import { DataSource } from 'typeorm'
 
 export default new DataSource({
     type: 'postgres',
-    host: process.env.NODE_ENV === 'test' ? 'localhost' : 'db',
+    // host: process.env.NODE_ENV === 'test' ? 'localhost' : 'db',
+    host: 'db',
     port: 5432,
     username: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,

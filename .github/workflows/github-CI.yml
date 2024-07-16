@@ -81,7 +81,7 @@ jobs:
         run: |
           cd ./back
           npm i
-          nohup npm run start:test
+          nohup npm run start:test > backend.log 2>&1 &
 
       - name: Install frontend dependencies
         working-directory: ./front
