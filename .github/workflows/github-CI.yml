@@ -103,6 +103,28 @@ jobs:
           cd ./front 
           npm run test-ci
 
+  cypress-run:
+    runs-on: ubuntu:latest
+    steps:
+      - name: 🗂️ Check out code
+        uses: actions/checkout@v2
+      - name: "Start Backend"
+        run: |
+          cd ./back 
+          npm i
+          npm run start:test 
+          sleep 5 
+          curl http://localhost:4000 -I
+      - name: "Start Frontend"
+        run: |
+          cd ./front
+          npm i
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          build: npm run build
+          start: npm run dev
+
   builds:
     needs: tests
     name: Build back & front
