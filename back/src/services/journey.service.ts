@@ -17,10 +17,7 @@ export default class JourneyService {
     db: Repository<JourneyEntity>
 
     constructor() {
-        this.db =
-            // process.env.NODE_ENV === 'test'
-            //     ? datasourceTest.getRepository(JourneyEntity)
-            datasource.getRepository(JourneyEntity)
+        this.db = datasource.getRepository(JourneyEntity)
     }
 
     async findJourneyById(id: string): Promise<JourneyEntity> {

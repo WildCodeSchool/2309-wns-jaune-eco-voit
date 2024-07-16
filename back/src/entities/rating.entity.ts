@@ -38,7 +38,6 @@ export class RatingEntity {
 
     @Field(() => UserEntity)
     @ManyToOne(() => UserEntity, (u) => u.ratings)
-    // @Column('uuid')
     userRated: UserEntity
 
     @Field(() => BookingEntity)

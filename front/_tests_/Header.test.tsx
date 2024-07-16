@@ -56,7 +56,6 @@ describe("Header", () => {
     );
 
     const connexion = screen.queryByText("Connexion");
-    console.log(connexion);
 
     expect(screen.getByText("Publier un trajet")).toBeInTheDocument();
 

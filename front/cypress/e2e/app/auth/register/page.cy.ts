@@ -16,7 +16,6 @@ before(() => {
       );
     })
     .then((result: any) => {
-      console.log("😅", result);
       const tables = (result as TableResult).rows;
       return Promise.all(
         tables.map((table) => {

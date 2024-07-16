@@ -1,6 +1,5 @@
 import { DataSource } from 'typeorm'
 
-console.log('PROCESS', process.env.NODE_ENV)
 export default new DataSource({
     type: 'postgres',
     host: process.env.NODE_ENV === 'test' ? 'localhost' : 'db',
