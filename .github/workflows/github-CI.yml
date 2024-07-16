@@ -47,12 +47,10 @@ jobs:
         run: echo "This job's status is ${{ job.status }}."
 
   cypress:
-    runs-on: ubuntu-latest
-    needs: linters
+    runs-on: ubuntu-16.04
     steps:
-      - name: 🗂️ Check out code
-        uses: actions/checkout@v2
-
+      - name: Checkout
+        uses: actions/checkout@v1
       - name: Start backend for testing
         env:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
@@ -61,20 +59,42 @@ jobs:
         run: |
           cd ./back
           npm i
-          nohup npm run start:test &
-          echo $! > backend_pid.txt
-          npx wait-on http://localhost:4000 --timeout=60000  # Timeout après 60 secondes
-
+          npm run start:test 
+          npx wait-on http://localhost:4000
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
-          install: npm i
-          build: npm run build
+          working-directory: ./front
           start: npm run dev
+          browser: chrome
+    # runs-on: ubuntu-latest
+    # needs: linters
+    # steps:
+    #   - name: 🗂️ Check out code
+    #     uses: actions/checkout@v2
 
-      - name: Stop backend
-        run: |
-          kill $(cat backend_pid.txt)
+    #   - name: Start backend for testing
+    #     env:
+    #       POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+    #       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+    #       POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+    #     run: |
+    #       cd ./back
+    #       npm i
+    #       npm run start:test &
+    #       echo $! > backend_pid.txt
+    #       npx wait-on http://localhost:4000 --timeout=60000  # Timeout après 60 secondes
+
+    #   - name: Cypress run
+    #     uses: cypress-io/github-action@v2
+    #     with:
+    #       install: cd ./front npm i
+    #       build: npm run build
+    #       start: npm run dev
+
+    #   - name: Stop backend
+    #     run: |
+    #       kill $(cat backend_pid.txt)
 
   tests:
     needs: cypress
