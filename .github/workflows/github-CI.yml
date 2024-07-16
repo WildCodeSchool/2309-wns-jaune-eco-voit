@@ -91,7 +91,7 @@ jobs:
       - name: Run Cypress tests
         run: |
           cd ./front 
-          npm run cypress
+          npm run cypress:open
 
       - name: 🧐 Run backend tests
         run: |
