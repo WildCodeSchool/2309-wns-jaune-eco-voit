@@ -1,7 +1,6 @@
 import { Repository } from 'typeorm'
 import { CreateRatingInput, RatingEntity } from '../entities/rating.entity'
 import datasource from '../db'
-import datasourceTest from '../db_test'
 import { assertDataExists, validateData } from '../utils/errorHandlers'
 import BookingService from './booking.service'
 import UserService from './user.service'
@@ -11,9 +10,9 @@ export default class RatingService {
 
     constructor() {
         this.db =
-            process.env.NODE_ENV === 'test'
-                ? datasourceTest.getRepository(RatingEntity)
-                : datasource.getRepository(RatingEntity)
+            // process.env.NODE_ENV === 'test'
+            //     ? datasourceTest.getRepository(RatingEntity)
+            datasource.getRepository(RatingEntity)
     }
 
     async listRatingsByUser(id: string) {

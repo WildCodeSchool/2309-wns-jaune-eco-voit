@@ -6,7 +6,7 @@ import { ApolloServer } from '@apollo/server'
 import assert from 'assert'
 
 import datasource from '../src/db_test_jest'
-import initialDatasource from '../src/db_test'
+import initialDatasource from '../src/db'
 import UserService from '../src/services/user.service'
 import JourneyService from '../src/services/journey.service'
 import BookingService from '../src/services/booking.service'
