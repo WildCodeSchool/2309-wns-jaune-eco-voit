@@ -73,10 +73,15 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install backend dependencies
+      - name: Run backend nohup
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         run: |
           cd ./back
           npm i
+          nohup npm run start:test > backend.log 2>&1 &
 
       - name: Install frontend dependencies
         working-directory: ./front
@@ -85,16 +90,9 @@ jobs:
 
       - name: Cypress run
         uses: cypress-io/github-action@v2
-        env:
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         with:
-          start: |
-            cd back
-            npm run start:dev
-            cd ../front
-            npm run dev
+          working-directory: ./front
+          start: npm run dev
           browser: chrome
           config-file: cypress.config.ts
           wait-on: "http://localhost:3002, http://localhost:4000"
