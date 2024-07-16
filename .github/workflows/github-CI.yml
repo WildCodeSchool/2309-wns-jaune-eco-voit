@@ -81,7 +81,7 @@ jobs:
         run: |
           cd ./back
           npm i
-          nohup npm start:test
+          nohup npm run start:test
 
       - name: Install frontend dependencies
         working-directory: ./front
