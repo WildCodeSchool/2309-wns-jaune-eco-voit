@@ -23,9 +23,9 @@ Cypress.Commands.add("register", (email: string) => {
   cy.findByLabelText("Confirmez le mot de passe").type("sakogm38");
   cy.findByRole("textbox", { name: "Prénom" }).type("oliv");
   cy.findByRole("textbox", { name: "Nom" }).type("ier");
-  cy.findByRole("textbox", { name: "Date de naissance" }).type("07/05/1992", {
-    force: true,
-  });
+  // cy.findByRole("textbox", { name: "Date de naissance" }).type("07/05/1992", {
+  //   force: true,
+  // });
   // cy.findByRole("button", { name: "Choose date" }).click();
 
   // cy.findByRole("button", {
@@ -34,7 +34,9 @@ Cypress.Commands.add("register", (email: string) => {
   // cy.findByRole("radio", { name: "2000" }).click();
   // cy.findByRole("gridcell", { name: "17" }).click();
 
-  // cy.findByLabelText("Date de naissance").type("07/05/1992");
+  cy.findByLabelText("Date de naissance").type("07/05/1992", {
+    force: true,
+  });
 
   cy.findByRole("button", { name: "S'inscrire" }).click();
 });
