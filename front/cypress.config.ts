@@ -16,7 +16,7 @@ export default defineConfig({
             password: "ecovoit_password",
             database: "ecovoit",
             host: "localhost",
-            port: 5434,
+            port: process.env.CYPRESS_BASE_URL ? 5432 : 5434,
           });
           await client.connect();
           const res = await client.query(requestString);
