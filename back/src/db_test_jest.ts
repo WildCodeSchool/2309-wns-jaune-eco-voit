@@ -7,7 +7,7 @@ export default new DataSource({
     username: 'ecovoit_user',
     password: 'ecovoit_password',
     database: 'ecovoit',
-    synchronize: true, //en dev, en prod on préfera utiliser les migrations
+    synchronize: true, // en dev, en prod on préfera utiliser les migrations
     // logging: ['query', 'error'],
     entities: ['src/entities/*.ts'],
 })
