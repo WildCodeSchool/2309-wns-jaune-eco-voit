@@ -1,5 +1,6 @@
 /// <reference types="cypress" />
 import "@testing-library/cypress/add-commands";
+import { waitFor } from "@testing-library/react";
 
 declare global {
   namespace Cypress {
@@ -23,7 +24,15 @@ Cypress.Commands.add("register", (email: string) => {
   cy.findByRole("textbox", { name: "Prénom" }).type("oliv");
   cy.findByRole("textbox", { name: "Nom" }).type("ier");
   // cy.findByRole("textbox", { name: "Date de naissance" }).type("07/05/1992");
-  cy.findByLabelText("Date de naissance").type("07/05/1992");
+  cy.findByRole("button", { name: "Choose date" }).click();
+
+  cy.findByRole("button", {
+    name: "calendar view is open, switch to year view",
+  }).click();
+  cy.findByRole("radio", { name: "2000" }).click();
+  cy.findByRole("gridcell", { name: "17" }).click();
+
+  // cy.findByLabelText("Date de naissance").type("07/05/1992");
 
   cy.findByRole("button", { name: "S'inscrire" }).click();
 });
@@ -36,5 +45,7 @@ Cypress.Commands.add("login", (email: string, password: string) => {
   cy.findByLabelText("Mot de passe").type(password);
   cy.findByRole("button", { name: "Se connecter" }).click();
 
-  cy.url().should("eq", baseUrl);
+  waitFor(() => {
+    cy.url().should("eq", baseUrl);
+  });
 });
