@@ -5,8 +5,10 @@ services:
     # A gauche le port en local, à droite celui dans docker
     ports:
       - 4000:4000
+
     # Décommenter cette ligne quand on veut lancer les tests en local
     # command: sh -c "npm run start:test"
+
     # persist les datas en dehors du container et les partage entre local et container
     # quand on modifie le fichier /back >>> modifie aussi le container
     # a gauche > local / a droite > container
@@ -38,6 +40,8 @@ services:
       db:
         # La db doit avoir été démarrer et etre considérée comme healthy (voir health check dans db service)
         condition: service_healthy
+      db_test:
+        condition: service_healthy
 
   images:
     build: ./images
@@ -66,7 +70,7 @@ services:
     env_file:
       - back/.env
     ports:
-      - 5433:5432
+      - 5432:5432
     volumes:
       - ecovoit-data:/var/lib/postgresql/data
 
@@ -88,7 +92,7 @@ services:
     env_file:
       - back/.env
     ports:
-      - 5432:5432
+      - 5434:5432
     volumes:
       - ecovoit-data-test:/var/lib/postgresql/data
 

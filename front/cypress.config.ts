@@ -8,7 +8,7 @@ interface TableResult {
 export default defineConfig({
   e2e: {
     baseUrl: "http://localhost:3002",
-    setupNodeEvents(on, config) {
+    setupNodeEvents(on) {
       on("task", {
         async dbQuery(requestString) {
           const client = new Client({
@@ -16,7 +16,7 @@ export default defineConfig({
             password: "ecovoit_password",
             database: "ecovoit",
             host: "localhost",
-            port: 5432,
+            port: 5434,
           });
           await client.connect();
           const res = await client.query(requestString);
