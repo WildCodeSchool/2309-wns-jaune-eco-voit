@@ -81,7 +81,6 @@ jobs:
         run: |
           cd ./back
           npm i
-          nohup npm run start:test > backend.log 2>&1 &
 
       - name: Install frontend dependencies
         working-directory: ./front
@@ -92,7 +91,7 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           working-directory: ./front
-          start: npm run dev
+          start: npm run dev, npm run api
           browser: chrome
           config-file: cypress.config.ts
           wait-on: "http://localhost:3000"
