@@ -3,6 +3,8 @@ interface TableResult {
   rows: { tablename: string }[];
 }
 
+const baseUrl = Cypress.config("baseUrl");
+
 before(() => {
   cy.log("Starting database cleanup...");
 
@@ -44,12 +46,7 @@ describe("Register user page", () => {
     cy.register("sakogm38@gmail.com");
 
     waitFor(() => {
-      cy.url().should(
-        "eq",
-        process.env.CYPRESS_BASE_URL
-          ? `${process.env.CYPRESS_BASE_URL}/auth/login`
-          : "http://localhost:3002/auth/login"
-      );
+      cy.url().should("eq", `${baseUrl}/auth/login`);
     });
   });
 
