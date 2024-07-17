@@ -81,7 +81,7 @@ jobs:
         run: |
           cd ./back
           npm i
-          nohup npm run start:dev > backend.log 2>&1 &
+          nohup npm run start:test > backend.log 2>&1 &
 
       - name: Install frontend dependencies
         working-directory: ./front
@@ -95,7 +95,7 @@ jobs:
           start: npm run dev
           browser: chrome
           config-file: cypress.config.ts
-          wait-on: "http://localhost:3000, http://localhost:4000"
+          wait-on: "http://localhost:3000"
           wait-on-timeout: 120
           headless: true # Exécuter Cypress en mode headless
           record: false
