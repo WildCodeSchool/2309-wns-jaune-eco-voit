@@ -33,7 +33,7 @@ export default function RootLayout({
               className={`${stolzl.variable} ${gatwick.variable}`}
             >
               <body className="font-stolzl bg-primary10">
-                <main className="min-h-screen flex flex-col justify-between">
+                <main className="h-screen flex flex-col justify-between">
                   <Header />
                   <Suspense fallback={<CircularLoading />}>
                     <div className="flex-1">{children}</div>
