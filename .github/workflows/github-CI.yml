@@ -91,7 +91,7 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           working-directory: ./front
-          start: npm run dev, npm run api
+          start: npm run dev, npm run API
           browser: chrome
           config-file: cypress.config.ts
           wait-on: "http://localhost:3000"
