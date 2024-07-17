@@ -7,7 +7,7 @@ interface TableResult {
 
 export default defineConfig({
   e2e: {
-    baseUrl: "http://localhost:3002",
+    baseUrl: process.env.CYPRESS_BASE_URL || "http://localhost:3002",
     setupNodeEvents(on) {
       on("task", {
         async dbQuery(requestString) {

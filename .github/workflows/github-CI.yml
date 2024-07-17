@@ -99,6 +99,8 @@ jobs:
           wait-on-timeout: 120
           headless: true # Exécuter Cypress en mode headless
           record: false
+        env:
+          CYPRESS_baseUrl: http://localhost:3000
 
   tests:
     needs: cypress
