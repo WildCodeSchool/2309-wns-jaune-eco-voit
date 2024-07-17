@@ -1,5 +1,7 @@
 import { waitFor } from "@testing-library/react";
 
+const baseUrl = Cypress.config("baseUrl");
+
 describe("Journey publish page", () => {
   it("Publish journey and leave message", () => {
     /*------ Login ------*/
@@ -9,12 +11,7 @@ describe("Journey publish page", () => {
 
     /*------ Journey publish page ------*/
     cy.findByRole("link", { name: "Publier un trajet" }).click();
-    cy.url().should(
-      "eq",
-      process.env.CYPRESS_BASE_URL
-        ? `${process.env.CYPRESS_BASE_URL}/journey/publish`
-        : "http://localhost:3002/journey/publish"
-    );
+    cy.url().should("eq", `${baseUrl}/journey/publish`);
 
     /*------ Departure ------*/
     cy.get("h3").contains("D'où partez-vous?");
@@ -76,12 +73,7 @@ describe("Journey publish page", () => {
     );
 
     waitFor(() => {
-      cy.url().should(
-        "include",
-        process.env.CYPRESS_BASE_URL
-          ? `${process.env.CYPRESS_BASE_URL}/journey/`
-          : "http://localhost:3002/journey/"
-      );
+      cy.url().should("include", `${baseUrl}/journey/`);
     });
 
     cy.contains("Félicitations, votre trajet est en ligne!").should(
