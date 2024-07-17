@@ -99,7 +99,7 @@ jobs:
           headless: true # Exécuter Cypress en mode headless
           record: false
         env:
-          CYPRESS_BASEURL: http://localhost:3000
+          CYPRESS_baseUrl: http://localhost:3000
           DB_PORT: 5432
 
   tests:
