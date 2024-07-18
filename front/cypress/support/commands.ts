@@ -15,6 +15,7 @@ const baseUrl = Cypress.config("baseUrl");
 
 Cypress.Commands.add("register", (email: string) => {
   cy.visit("/auth/register");
+  console.log("BASEURL", baseUrl);
   cy.url().should("eq", `${baseUrl}/auth/register`);
 
   cy.findByRole("textbox", { name: "Email" }).type(email);
