@@ -3,7 +3,7 @@ import { DataSource } from 'typeorm'
 export default new DataSource({
     type: 'postgres',
     host: 'localhost',
-    port: 5432,
+    port: 5434,
     username: 'ecovoit_user',
     password: 'ecovoit_password',
     database: 'ecovoit',
