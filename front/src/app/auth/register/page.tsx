@@ -25,7 +25,7 @@ import CardButton from "@/app/components/Buttons/CardButton";
 import ConnexionCard from "@/app/components/Profile/ConnexionCard";
 
 const EMAIL_REGEX =
-  /  ^[a-zA-Z0-9.!#$%&’*+=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  /^[a-zA-Z0-9.!#$%&’*+=?^_`{|}~-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/;
 
 function Register() {
   const router = useRouter();
@@ -63,11 +63,9 @@ function Register() {
     }
     return match;
   };
-
   const checkEmailValidity = (email: string): boolean => {
     setEmailValid(EMAIL_REGEX.test(email));
-
-    return !EMAIL_REGEX.test(email);
+    return EMAIL_REGEX.test(email);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -79,7 +77,10 @@ function Register() {
     const { email, password, firstname, lastname, dateOfBirth } =
       Object.fromEntries(formData) as CreateUserInput;
 
-    if (!checkEmailValidity(email)) return;
+    if (!checkEmailValidity(email)) {
+      setEmailValid(false);
+      return;
+    }
 
     if (email && password && firstname && lastname && dateOfBirth) {
       register({
