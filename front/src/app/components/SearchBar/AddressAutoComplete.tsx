@@ -90,7 +90,7 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
       }
       setLoading(true);
       const encoded = encodeURI(value);
-      fetch(`/api/autocomplete?address=${encoded}`)
+      fetch(`/api/autocomplete?city=${encoded}`)
         .then((res) => res.json())
         .then((data: ApiResponse) => {
           setOptions(data.features.map((feature) => feature.properties.label));
