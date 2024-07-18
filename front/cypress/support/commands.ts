@@ -38,8 +38,7 @@ Cypress.Commands.add("register", (email: string) => {
     force: true,
   });
 
-  // cy.findByLabelText("S'inscrire").click();
-  cy.get("input[name='s'inscrire']").click();
+  cy.findByLabelText("S'inscrire").click();
 });
 
 Cypress.Commands.add("login", (email: string, password: string) => {
@@ -48,7 +47,7 @@ Cypress.Commands.add("login", (email: string, password: string) => {
 
   cy.findByRole("textbox", { name: "Email" }).type(email);
   cy.findByLabelText("Mot de passe").type(password);
-  cy.get("input[name='se connecter']").click();
+  cy.findByRole("button", { name: "Se connecter" }).click();
 
   waitFor(() => {
     cy.url().should("eq", baseUrl);
