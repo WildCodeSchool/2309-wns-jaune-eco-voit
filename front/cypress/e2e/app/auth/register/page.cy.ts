@@ -41,25 +41,12 @@ before(() => {
 
       // Crée un utilisateur
       const createUserQuery = `
-        INSERT INTO "user" (id, firstname, lastname, email, password, dateOfBirth, profilePicture, role, grade, tripsAsPassenger, tripsAsDriver, status, createdAt, updatedAt, averageRate)
-        VALUES (
-          uuid_generate_v4(),
-          'John',
-          'Doe',
-          'john.doe@example.com',
-          '$argon2i$v=19$m=4096,t=3,p=1$TWFuRG9lUGFzc3dvcmQ$KxkfpEoGZhXcFLKcKHkRLg', -- Exemple de mot de passe haché
-          '1990-01-01',
-          'https://example.com/profile.jpg',
-          'USER',
-          'BEGINNER',
-          0,
-          0,
-          'ACTIVE',
-          now(),
-          now(),
-          null
-        );
-      `;
+      INSERT INTO "user" (id, firstname, lastname, email, password, dateOfBirth, role, grade, tripsAsPassenger, tripsAsDriver, status, createdAt)
+      VALUES (
+          DEFAULT, oliv, Ier, sakogm38@gmail.com, $argon2id$v=19$m=65536,t=3,p=4$Xm7/taqNkaEKuvBDjdm4lg$SgMsAr9hjSu4Va+M27J9esYip6BZrtBX3nKU0vkBWYY	, 1992-05-06T22:00:00.000Z, DEFAULT, DEFAULT, DEFAULT, 
+          DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT
+      );
+    `;
 
       return cy.task("dbQuery", createUserQuery);
     })
