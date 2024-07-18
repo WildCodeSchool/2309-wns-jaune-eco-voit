@@ -93,7 +93,7 @@ jobs:
           start: npm run dev, npm run API
           browser: chrome
           config-file: cypress.config.ts
-          wait-on: "http://localhost:3000"
+          wait-on: "http://localhost:3000, http://localhost:4000"
           wait-on-timeout: 120
           record: false
         env:
