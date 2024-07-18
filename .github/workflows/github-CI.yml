@@ -87,7 +87,7 @@ jobs:
           npm i
 
       - name: Cypress run
-        uses: cypress-io/github-action@v6
+        uses: cypress-io/github-action@v5
         with:
           working-directory: ./front
           start: npm run dev, npm run API
@@ -95,7 +95,6 @@ jobs:
           config-file: cypress.config.ts
           wait-on: "http://localhost:3000"
           wait-on-timeout: 120
-          headless: true # Exécuter Cypress en mode headless
           record: false
         env:
           CYPRESS_BASE_URL: http://localhost:3000
