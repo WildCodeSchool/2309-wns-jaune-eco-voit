@@ -37,7 +37,34 @@ before(() => {
     // Réactive toutes les contraintes de clés étrangères
     .then(() => cy.task("dbQuery", "SET session_replication_role = DEFAULT;"))
     .then(() => {
-      console.log("Nettoyage de la base de données terminé.");
+      cy.log("Nettoyage de la base de données terminé.");
+
+      // Crée un utilisateur
+      const createUserQuery = `
+        INSERT INTO "user" (id, firstname, lastname, email, password, dateOfBirth, profilePicture, role, grade, tripsAsPassenger, tripsAsDriver, status, createdAt, updatedAt, averageRate)
+        VALUES (
+          uuid_generate_v4(),
+          'John',
+          'Doe',
+          'john.doe@example.com',
+          '$argon2i$v=19$m=4096,t=3,p=1$TWFuRG9lUGFzc3dvcmQ$KxkfpEoGZhXcFLKcKHkRLg', -- Exemple de mot de passe haché
+          '1990-01-01',
+          'https://example.com/profile.jpg',
+          'USER',
+          'BEGINNER',
+          0,
+          0,
+          'ACTIVE',
+          now(),
+          now(),
+          null
+        );
+      `;
+
+      return cy.task("dbQuery", createUserQuery);
+    })
+    .then(() => {
+      console.log("Utilisateur créé avec succès.");
     });
 });
 
