@@ -84,7 +84,7 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         run: |
-          nohup npm start:test &
+          nohup npm run start:test &
 
       - name: Install frontend dependencies
         working-directory: ./front
