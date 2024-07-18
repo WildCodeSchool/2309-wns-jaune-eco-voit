@@ -43,8 +43,18 @@ before(() => {
       const createUserQuery = `
       INSERT INTO "user" (id, firstname, lastname, email, password, dateOfBirth, role, grade, tripsAsPassenger, tripsAsDriver, status, createdAt)
       VALUES (
-          DEFAULT, oliv, Ier, sakogm38@gmail.com, $argon2id$v=19$m=65536,t=3,p=4$Xm7/taqNkaEKuvBDjdm4lg$SgMsAr9hjSu4Va+M27J9esYip6BZrtBX3nKU0vkBWYY	, 1992-05-06T22:00:00.000Z, DEFAULT, DEFAULT, DEFAULT, 
-          DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT
+        uuid_generate_v4(),
+        'Oliv',
+        'Ier',
+        'sakogm38@gmail.com',
+        '$argon2id$v=19$m=65536,t=3,p=4$Xm7/taqNkaEKuvBDjdm4lg$SgMsAr9hjSu4Va+M27J9esYip6BZrtBX3nKU0vkBWYY',
+        '1992-05-06T22:00:00.000Z',
+        'USER',
+        'BEGINNER',
+        0,
+        0,
+        'ACTIVE',
+        now()
       );
     `;
 
