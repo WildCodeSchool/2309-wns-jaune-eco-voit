@@ -72,6 +72,11 @@ jobs:
         with:
           node-version: 18
 
+      - name: Install backend dependencies
+        working-directory: ./back
+        run: |
+          npm i
+
       - name: Start backend server
         working-directory: ./back
         env:
@@ -79,7 +84,7 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         run: |
-          nohup npm start &
+          nohup npm start:test &
 
       - name: Install frontend dependencies
         working-directory: ./front
