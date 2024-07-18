@@ -24,6 +24,8 @@ Cypress.Commands.add("register", (email: string) => {
   cy.findByLabelText("Confirmez le mot de passe").type("sakogm38");
   cy.findByRole("textbox", { name: "Prénom" }).type("oliv");
   cy.findByRole("textbox", { name: "Nom" }).type("ier");
+  console.log("nom", cy.findByRole("textbox", { name: "Nom" }));
+
   // cy.findByRole("textbox", { name: "Date de naissance" }).type("07/05/1992", {
   //   force: true,
   // });
