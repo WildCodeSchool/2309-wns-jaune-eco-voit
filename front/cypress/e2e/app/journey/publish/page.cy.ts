@@ -45,7 +45,7 @@ before(() => {
 
       // Crée un utilisateur
       const createUserQuery = `
-      INSERT INTO "user_entity" (id, firstname, lastname, email, password, dateOfBirth, role, grade, tripsAsPassenger, tripsAsDriver, status, createdAt)
+      INSERT INTO "user_entity" (id, firstname, lastname, email, password, "dateOfBirth", role, grade, "tripsAsPassenger", "tripsAsDriver", status, "createdAt")
       VALUES (
         uuid_generate_v4(),
         'Oliv',

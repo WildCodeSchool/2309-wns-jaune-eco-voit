@@ -6,7 +6,7 @@ export default defineConfig({
     baseUrl: process.env.CYPRESS_BASE_URL || "http://localhost:3002",
     setupNodeEvents(on) {
       on("task", {
-        async dbQuery(requestString, params?) {
+        async dbQuery(requestString) {
           const client = new Client({
             user: "ecovoit_user",
             password: "ecovoit_password",
@@ -15,7 +15,7 @@ export default defineConfig({
             port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 5434,
           });
           await client.connect();
-          const res = await client.query(requestString, params);
+          const res = await client.query(requestString);
           await client.end();
           return res;
         },
