@@ -26,17 +26,6 @@ Cypress.Commands.add("register", (email: string) => {
   cy.findByRole("textbox", { name: "Nom" }).type("ier");
   console.log("nom", cy.findByRole("textbox", { name: "Nom" }));
 
-  // cy.findByRole("textbox", { name: "Date de naissance" }).type("07/05/1992", {
-  //   force: true,
-  // });
-  // cy.findByRole("button", { name: "Choose date" }).click();
-
-  // cy.findByRole("button", {
-  //   name: "calendar view is open, switch to year view",
-  // }).click();
-  // cy.findByRole("radio", { name: "2000" }).click();
-  // cy.findByRole("gridcell", { name: "17" }).click();
-
   cy.findByLabelText("Date de naissance").type("07/05/1992", {
     force: true,
   });

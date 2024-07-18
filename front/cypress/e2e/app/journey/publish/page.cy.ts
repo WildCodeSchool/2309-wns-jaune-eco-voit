@@ -73,8 +73,9 @@ describe("Journey publish page", () => {
   it("Publish journey and leave message", () => {
     /*------ Login ------*/
     cy.login("sakogm38@gmail.com", "sakogm38");
-
-    cy.url().should("eq", "http://localhost:3002/");
+    waitFor(() => {
+      cy.url().should("eq", baseUrl);
+    });
 
     /*------ Journey publish page ------*/
     cy.findByRole("link", { name: "Publier un trajet" }).click();
