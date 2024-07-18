@@ -38,7 +38,7 @@ Cypress.Commands.add("register", (email: string) => {
     force: true,
   });
 
-  cy.findByLabelText("S'inscrire").click();
+  cy.findByRole("button", { name: "S'inscrire" }).click();
 });
 
 Cypress.Commands.add("login", (email: string, password: string) => {
