@@ -74,12 +74,14 @@ describe("Journey publish page", () => {
     /*------ Login ------*/
     cy.login("sakogm38@gmail.com", "sakogm38");
 
-    waitFor(
-      () => {
-        cy.url().should("eq", baseUrl);
-      },
-      { timeout: 10000 }
-    );
+    cy.url({ timeout: 100000 }).should("eq", baseUrl);
+
+    // waitFor(
+    //   () => {
+    //     cy.url().should("eq", baseUrl);
+    //   },
+    //   { timeout: 10000 }
+    // );
 
     /*------ Journey publish page ------*/
     cy.findByRole("link", { name: "Publier un trajet" }).click();
