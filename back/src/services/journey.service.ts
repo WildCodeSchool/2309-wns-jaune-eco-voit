@@ -59,7 +59,7 @@ export default class JourneyService {
         })
     }
 
-    async istJourneysForScheduler(): Promise<JourneyEntity[]> {
+    async listJourneysForScheduler(): Promise<JourneyEntity[]> {
         return await this.db.find({
             where: {
                 departure_time: LessThanOrEqual(
