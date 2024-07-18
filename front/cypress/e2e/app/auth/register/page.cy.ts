@@ -22,10 +22,13 @@ before(() => {
     })
     .then((result: any) => {
       const tables = (result as TableResult).rows;
+      cy.log("TABLES", JSON.stringify(tables));
 
       // Vide toutes les tables
       return Promise.all(
         tables.map((table) => {
+          cy.log("TABLE", JSON.stringify(table));
+
           return cy.task(
             "dbQuery",
             `TRUNCATE TABLE "${table.tablename}" CASCADE;`
