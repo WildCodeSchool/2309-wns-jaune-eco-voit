@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer'
+import { UserEntity } from '../entities/user.entity'
 
 type MailOptions = {
     from: string
@@ -41,6 +42,28 @@ export default class SendEmailService {
             to: recipient,
             subject: 'Nouvelle demande de réservation',
             text: `Un passager souhaite réserver votre trajet ! Voici le lien pour l'accepter: ${newBookingLink}`,
+        }
+
+        this.sendEmail(mailOptions)
+    }
+
+    sendNewBookingAutoAcceptedEmail({
+        recipient,
+        passenger,
+        nbPassenger,
+    }: {
+        recipient: string
+        passenger: UserEntity
+        nbPassenger: number
+    }) {
+        const passengerProfileLink = `${process.env.CLIENT_URL}/profile/${passenger.id}`
+
+        const mailOptions = {
+            from: 'La super team Ecovoit',
+            to: recipient,
+            subject: 'Nouvelle réservation sur votre trajet',
+            text: `${passenger.firstname} ${passenger.lastname} à réservé ${nbPassenger} place(s) sur votre trajet !
+            Consulter le profil de ${passenger.firstname} : ${passengerProfileLink}`,
         }
 
         this.sendEmail(mailOptions)

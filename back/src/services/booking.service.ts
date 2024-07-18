@@ -10,6 +10,7 @@ import {
 import { validateData, assertDataExists } from '../utils/errorHandlers'
 import JourneyService from './journey.service'
 import SendEmailService from './sendEmail.service'
+import UserService from './user.service'
 
 export default class BookingService {
     db: Repository<BookingEntity>
@@ -30,7 +31,7 @@ export default class BookingService {
     async findBookingById(id: string): Promise<BookingEntity> {
         const book = await this.db.findOne({
             where: { id },
-            relations: ['user', 'journey', 'journey.user'],
+            relations: ['user', 'journey', 'journey.user', 'journey.bookings'],
         })
 
         assertDataExists(book)
@@ -69,6 +70,7 @@ export default class BookingService {
     async createBooking(data: CreateBookingInput): Promise<BookingEntity> {
         const journeyService = new JourneyService()
         const sendEmailService = new SendEmailService()
+        const userService = new UserService()
 
         const { journey, user, nbPassenger } = data
 
@@ -77,6 +79,8 @@ export default class BookingService {
             automaticAccept,
             user: { id: driverId, email: driverEmail },
         } = await journeyService.findJourneyById(journey.id)
+
+        const passenger = await userService.findUserById(user.id)
 
         if (availableSeats <= 0 || availableSeats < nbPassenger) {
             throw new Error('Le nombre de places disponibles est insuffisant')
@@ -104,10 +108,18 @@ export default class BookingService {
         }
 
         if (automaticAccept) {
-            await journeyService.updateJourney({
-                id: journey.id,
-                availableSeats: availableSeats - nbPassenger,
-            })
+            await journeyService
+                .updateJourney({
+                    id: journey.id,
+                    availableSeats: availableSeats - nbPassenger,
+                })
+                .then(() => {
+                    sendEmailService.sendNewBookingAutoAcceptedEmail({
+                        recipient: driverEmail,
+                        passenger,
+                        nbPassenger,
+                    })
+                })
         }
 
         return await this.findBookingById(newBooking.id)
@@ -138,7 +150,6 @@ export default class BookingService {
 
         const bookingAccepted = await this.updateBookingStatus({
             id,
-
             status: 'ACCEPTED',
         })
 
@@ -147,6 +158,19 @@ export default class BookingService {
                 recipient: passengerEmail,
                 journeyId,
                 driverFirstname,
+            })
+        }
+
+        const journey = await journeyService.findJourneyById(journeyId)
+
+        if (journey.availableSeats === 0) {
+            journey.bookings?.forEach((booking) => {
+                if (booking.status === 'PENDING') {
+                    this.updateBookingStatus({
+                        id: booking.id,
+                        status: 'REJECTED',
+                    })
+                }
             })
         }
 

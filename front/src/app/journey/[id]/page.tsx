@@ -2,7 +2,11 @@
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 dayjs.locale("fr");
-import { useFindJourneyByIdQuery, useFindUserByIdQuery } from "@/types/graphql";
+import {
+  JourneyEntity,
+  useFindJourneyByIdQuery,
+  useFindUserByIdQuery,
+} from "@/types/graphql";
 import {
   Stack,
   Typography,
@@ -21,6 +25,7 @@ import JourneyMessages from "@/app/components/JourneyMessages/JourneyMessages";
 import BookJourneyButton from "@/app/components/Buttons/BookJourneyButton";
 import { routes } from "@/app/lib/routes";
 import { useRouter } from "next/navigation";
+import { Grade } from "@/types/user";
 
 export default function Page({ params }: { params: { id: string } }) {
   const { id: journeyId } = params;
@@ -132,29 +137,33 @@ export default function Page({ params }: { params: { id: string } }) {
                 {availableSeats}
               </Typography>
             </Stack>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              sx={{ my: 4 }}
-            >
-              <Typography variant="h6" component="p">
-                Nombre de passager(s)
-              </Typography>
-              <TextField
-                id="outlined-number"
-                label="Nombre de passagers"
-                type="number"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                inputProps={{ min: 0, max: availableSeats }}
-                variant="outlined"
-                value={passengerNb}
-                onChange={(e) =>
-                  setPassengerNb(maxPassengerNb(parseInt(e.target.value)))
-                }
-              />
-            </Stack>
+            {userContextId &&
+            driver.id !== userContextId &&
+            availableSeats > 0 ? (
+              <Stack
+                direction="row"
+                justifyContent="space-between"
+                sx={{ my: 4 }}
+              >
+                <Typography variant="h6" component="p">
+                  Nombre de passager(s)
+                </Typography>
+                <TextField
+                  id="outlined-number"
+                  label="Nombre de passagers"
+                  type="number"
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  inputProps={{ min: 0, max: availableSeats }}
+                  variant="outlined"
+                  value={passengerNb}
+                  onChange={(e) =>
+                    setPassengerNb(maxPassengerNb(parseInt(e.target.value)))
+                  }
+                />
+              </Stack>
+            ) : null}
             <Stack
               direction="row"
               justifyContent="space-between"
@@ -172,19 +181,9 @@ export default function Page({ params }: { params: { id: string } }) {
               firstname={driver.firstname}
               rating={driver.averageRate}
               profilePicture={driver.profilePicture!}
+              grade={driver.grade as Grade}
             />
             <Divider />
-            {driver.id !== userContextId && (
-              <Button
-                variant="contained"
-                fullWidth
-                startIcon={<QuestionAnswerIcon />}
-                sx={{ borderRadius: "20px" }}
-                size="large"
-              >
-                Contacter {driver.firstname}
-              </Button>
-            )}
           </Grid>
           <Grid
             item
@@ -219,7 +218,7 @@ export default function Page({ params }: { params: { id: string } }) {
               destination={destination}
             />
             <BookJourneyButton
-              journey={journeyData.findJourneyById}
+              journey={journeyData.findJourneyById as JourneyEntity}
               passenger={passengerNb}
             />
           </Grid>

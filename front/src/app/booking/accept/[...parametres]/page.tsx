@@ -13,6 +13,7 @@ import { routes } from "@/app/lib/routes";
 import JourneyCardHeader from "@/app/components/JourneyCard/JourneyCardHeader";
 import AvatarJourney from "@/app/components/Avatar/AvatarJouney";
 import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
+import { Grade } from "@/types/user";
 
 const AcceptPage = ({
   params: {
