@@ -50,7 +50,7 @@ before(() => {
         uuid_generate_v4(),
         'Oliv',
         'Ier',
-        "sakogm38@gmail.com",
+        'sakogm38@gmail.com',
         'sakogm38',
         '1992-05-06T22:00:00.000Z',
         'USER',
