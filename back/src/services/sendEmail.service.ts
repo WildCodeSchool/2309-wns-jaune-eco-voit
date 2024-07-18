@@ -49,12 +49,10 @@ export default class SendEmailService {
 
     sendNewBookingAutoAcceptedEmail({
         recipient,
-        newBookingId,
         passenger,
         nbPassenger,
     }: {
         recipient: string
-        newBookingId: string
         passenger: UserEntity
         nbPassenger: number
     }) {

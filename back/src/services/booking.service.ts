@@ -116,7 +116,6 @@ export default class BookingService {
                 .then(() => {
                     sendEmailService.sendNewBookingAutoAcceptedEmail({
                         recipient: driverEmail,
-                        newBookingId: newBooking.id,
                         passenger,
                         nbPassenger,
                     })
