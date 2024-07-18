@@ -125,7 +125,9 @@ const Header = () => {
               anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               className="m-4"
             >
-              <MenuItem onClick={() => router.push(routes.profile.pathname)}>
+              <MenuItem
+                onClick={() => router.push(routes["my-profile"].pathname)}
+              >
                 <div className="w-48 flex justify-between">
                   <PersonRoundedIcon /> <p>Mon profil</p>{" "}
                   <KeyboardArrowRightOutlinedIcon />

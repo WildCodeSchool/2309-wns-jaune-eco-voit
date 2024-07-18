@@ -1,13 +1,17 @@
+import { GradeFrench } from "@/app/utils/generals";
+import { Grade } from "@/types/user";
 import { Avatar, Rating } from "@mui/material";
 
 type AvatarJourneyProps = {
   firstname: string;
+  grade?: Grade;
   rating?: number | null;
   profilePicture?: string;
 };
 
 const AvatarJourney = ({
   firstname,
+  grade,
   rating,
   profilePicture,
 }: AvatarJourneyProps) => {
@@ -22,13 +26,11 @@ const AvatarJourney = ({
         <div className=" flex flex-col justify-around">
           <div className="flex text-lg gap-2">
             <p className="font-semibold">{firstname}</p>
-            <p>(Mercedes Benz)</p>
+            {grade ? <p>({GradeFrench[grade]})</p> : null}
           </div>
-          {rating && (
-            <div>
-              <Rating value={rating} disabled />
-            </div>
-          )}
+          <div>
+            <Rating value={rating} disabled />
+          </div>
         </div>
       </div>
     </div>
