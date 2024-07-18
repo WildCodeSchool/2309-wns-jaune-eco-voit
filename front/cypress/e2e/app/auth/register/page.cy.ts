@@ -62,6 +62,7 @@ before(() => {
     `;
 
       return cy.task("dbQuery", createUserQuery);
+      cy.log("ici");
     })
     .then(() => {
       console.log("Utilisateur créé avec succès.");
