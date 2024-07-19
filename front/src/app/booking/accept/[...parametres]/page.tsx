@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   useAcceptBookingMutation,
   useFindBookingByIdLazyQuery,
@@ -9,11 +9,9 @@ import {
 import { AuthContext } from "@/context/authContext";
 import { Button, Rating } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { routes } from "@/app/lib/routes";
 import JourneyCardHeader from "@/app/components/JourneyCard/JourneyCardHeader";
 import AvatarJourney from "@/app/components/Avatar/AvatarJouney";
 import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
-import { Grade } from "@/types/user";
 
 const AcceptPage = ({
   params: {
@@ -75,11 +73,6 @@ const AcceptPage = ({
     }
   }, [bookingId, driverId, findBookingById, findUserById]);
 
-  // useEffect(() => {
-  //   (userError || bookingError || acceptBookingError || rejectBookingError) &&
-  //     router.push(`${routes["error"].pathname}`);
-  // }, [rejectBookingError, acceptBookingError, userError, bookingError, router]);
-
   if (!bookingDatas || !userDatas) {
     return null;
   }
@@ -97,6 +90,7 @@ const AcceptPage = ({
     findBookingById: {
       journey: { departure_time, origin, destination },
       user: {
+        id: passengerId,
         firstname: passengerFirstname,
         profilePicture: passengerProfilPicture,
       },
@@ -126,6 +120,7 @@ const AcceptPage = ({
       <div className="booking_infos flex flex-col items-center text-center">
         <div className="flex flex-col gap-3 shadow-md py-6 px-10 rounded-lg">
           <AvatarJourney
+            id={passengerId}
             firstname={passengerFirstname}
             profilePicture={passengerProfilPicture ?? undefined}
           />

@@ -24,6 +24,7 @@ import BookJourneyButton from "@/app/components/Buttons/BookJourneyButton";
 import { routes } from "@/app/lib/routes";
 import { useRouter } from "next/navigation";
 import { Grade } from "@/types/user";
+import { tooLateToBook } from "@/app/utils/date";
 
 export default function Page({ params }: { params: { id: string } }) {
   const { id: journeyId } = params;
@@ -137,7 +138,8 @@ export default function Page({ params }: { params: { id: string } }) {
             </Stack>
             {userContextId &&
             driver.id !== userContextId &&
-            availableSeats > 0 ? (
+            availableSeats > 0 &&
+            !tooLateToBook(departure_time) ? (
               <Stack
                 direction="row"
                 justifyContent="space-between"
@@ -176,6 +178,7 @@ export default function Page({ params }: { params: { id: string } }) {
             </Stack>
             <Divider />
             <AvatarJourney
+              id={driver.id}
               firstname={driver.firstname}
               rating={driver.averageRate}
               profilePicture={driver.profilePicture!}

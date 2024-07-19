@@ -1,8 +1,19 @@
 import { formattedDate, formattedTime } from "@/app/utils/date";
 import { ListJourneysByUserQuery } from "@/types/graphql";
-import { TabPanel } from "@mui/lab";
-import { Avatar, Button, Card, CardContent, Typography } from "@mui/material";
+import {
+  TabPanel,
+  Timeline,
+  TimelineConnector,
+  TimelineContent,
+  TimelineItem,
+  TimelineSeparator,
+} from "@mui/lab";
 import CircularLoading from "../CircularLoading/CircularLoading";
+import TripOriginOutlinedIcon from "@mui/icons-material/TripOriginOutlined";
+import { timelineItemClasses } from "@mui/lab/TimelineItem";
+import { Button } from "@mui/material";
+import Link from "next/link";
+import { routes } from "@/app/lib/routes";
 
 type MyJourneysTabProps = {
   journeys?: ListJourneysByUserQuery["listJourneysByUser"];
@@ -18,87 +29,129 @@ const MyJourneysTab = ({
   onEditJourney,
 }: MyJourneysTabProps) => {
   return (
-    <TabPanel value="JOURNEYS">
+    <TabPanel
+      value="JOURNEYS"
+      className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
+    >
       {isLoading ? (
         <CircularLoading />
       ) : (
-        journeys.map((journey, index) => {
-          const {
-            user: { profilePicture, firstname },
-            origin,
-            destination,
-            departure_time,
-            availableSeats,
-            price,
-            bookings,
-            id,
-            status,
-          } = journey;
-          return (
-            <Card
-              key={index}
-              className="flex items-center mb-4 p-4 m-auto w-1/2"
-            >
-              <Avatar alt="profile picture" src={profilePicture ?? ""} />
-
-              <CardContent className="flex-grow">
-                <div className="flex items-center justify-between">
-                  <Typography
-                    variant="h6"
-                    component="h6"
-                    className="font-semibold"
-                  >
-                    {firstname}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    className="text-sm"
-                  >
-                    {formattedTime(departure_time)}
-                    <br />
-                    Départ : {formattedDate(departure_time)}
-                  </Typography>
-                  <div className="flex flex-col items-center justify-evenly gap-2 m-2">
-                    {status === "PLANNED" && (
-                      <>
-                        <Button
-                          className=""
-                          onClick={() => onCancelJourney(id)}
-                        >
-                          Annuler
-                        </Button>
-                        {bookings.length === 0 && (
+        [...journeys]
+          .sort(
+            (a, b) => +new Date(a.departure_time) - +new Date(b.departure_time)
+          )
+          .map((journey, index) => {
+            const {
+              origin,
+              destination,
+              departure_time,
+              availableSeats,
+              price,
+              bookings,
+              id,
+              status,
+            } = journey;
+            return (
+              <div
+                key={index}
+                className="my_journey_card w-full flex p-4 rounded-md shadow-md"
+              >
+                <div className="w-full flex flex-col gap-3">
+                  <div className="flex flex-col xs:flex-row w-full xs:justify-between gap-4">
+                    <p className="text-base">
+                      {formattedDate(departure_time)} à{" "}
+                      {formattedTime(departure_time)}
+                      <br />
+                      <span className="text-sm text-dark60">
+                        ({availableSeats} siège{availableSeats > 1 && "s"}{" "}
+                        disponible{availableSeats > 1 && "s"})
+                      </span>
+                    </p>
+                    <p className="price text-sm px-3 py-1 rounded-md bg-primary100 text-white w-fit h-fit flex-shrink-0">
+                      {price} €
+                    </p>
+                  </div>
+                  <div className="TimeLine flex items-center w-full border border-dark20 rounded-md p-4 h-fit">
+                    <Timeline
+                      sx={{
+                        "ul.MuiTimeline-root": { padding: 0 },
+                        ".MuiTimelineItem-root": { padding: 0, minHeight: 0 },
+                        [`& .${timelineItemClasses.root}:before`]: {
+                          flex: 0,
+                          padding: 0,
+                        },
+                      }}
+                    >
+                      <TimelineItem className="h-20">
+                        <TimelineSeparator>
+                          <TripOriginOutlinedIcon
+                            fontSize="small"
+                            color="primary"
+                            sx={{ marginBottom: 0, padding: 0 }}
+                          />
+                          <TimelineConnector
+                            sx={{
+                              bgcolor: "primary.main",
+                              height: "200px",
+                              width: "3px",
+                            }}
+                          />
+                        </TimelineSeparator>
+                        <TimelineContent>
+                          <div>
+                            <p className="text-xs text-dark80">ORIGINE</p>
+                            <p>{origin}</p>
+                          </div>
+                        </TimelineContent>
+                      </TimelineItem>
+                      <TimelineItem className="h-fit">
+                        <TripOriginOutlinedIcon
+                          fontSize="small"
+                          color="primary"
+                        />
+                        <TimelineContent>
+                          <div>
+                            <p className="text-xs text-dark80">DESTINATION</p>
+                            <p>{destination}</p>
+                          </div>
+                        </TimelineContent>
+                      </TimelineItem>
+                    </Timeline>
+                  </div>
+                  <div className="card_footer flex flex-col item-start xs:flex-row xs:justify-between xs:items-end gap-3">
+                    <div className="buttons flex gap-3">
+                      {status === "PLANNED" && (
+                        <>
                           <Button
                             className=""
-                            onClick={() => {
-                              onEditJourney(id);
-                            }}
+                            onClick={() => onCancelJourney(id)}
                           >
-                            Modifier
+                            Annuler
                           </Button>
-                        )}
-                      </>
-                    )}
+                          {bookings.length === 0 && (
+                            <Button
+                              className=""
+                              onClick={() => {
+                                onEditJourney(id);
+                              }}
+                            >
+                              Modifier
+                            </Button>
+                          )}
+                        </>
+                      )}
+                    </div>
+                    <Link
+                      href={`${routes["journey"].pathname}/${id}`}
+                      className="text-sm underline text-dark80"
+                    >
+                      Voir le trajet
+                    </Link>
                   </div>
                 </div>
-                <Typography
-                  variant="body1"
-                  className="mt-2 text-gray-700 whitespace-pre-wrap"
-                >
-                  De {origin} à {destination}
-                </Typography>
-                <Typography
-                  variant="body1"
-                  className="mt-2 text-gray-700 whitespace-pre-wrap"
-                >
-                  Siége disponible : {availableSeats}
-                </Typography>
-                <Typography>Prix : {price}€</Typography>
-              </CardContent>
-            </Card>
-          );
-        })
+              </div>
+            );
+          })
       )}
     </TabPanel>
   );

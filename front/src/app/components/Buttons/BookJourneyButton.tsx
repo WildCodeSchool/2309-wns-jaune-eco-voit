@@ -1,11 +1,11 @@
 import { JourneyEntity, useCreateBookingMutation } from "@/types/graphql";
 import { Button } from "@mui/material";
-
 import { useContext, useState } from "react";
 import { AuthContext } from "@/context/authContext";
 import { CreateBookingInput } from "@/types/graphql";
 import { useRouter } from "next/navigation";
 import { routes } from "@/app/lib/routes";
+import { tooLateToBook } from "@/app/utils/date";
 
 type BookJourneyButtonProps = {
   journey: JourneyEntity;
@@ -46,7 +46,12 @@ const BookJourneyButton = ({ journey, passenger }: BookJourneyButtonProps) => {
       {userId !== journey.user.id && journey.availableSeats > 0 ? (
         userId ? (
           <div className="flex justify-center">
-            <Button variant="contained" size="large" onClick={BookJourney}>
+            <Button
+              variant="contained"
+              size="large"
+              onClick={BookJourney}
+              disabled={tooLateToBook(journey.departure_time)}
+            >
               Réserver
             </Button>
             <div>{errorMessage}</div>

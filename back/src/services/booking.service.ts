@@ -10,7 +10,16 @@ import { validateData, assertDataExists } from '../utils/errorHandlers'
 import JourneyService from './journey.service'
 import SendEmailService from './sendEmail.service'
 import UserService from './user.service'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+// import fr from 'dayjs/locale/fr'
+// import timezone from 'dayjs/plugin/timezone'
 
+dayjs.extend(utc)
+// dayjs.extend(timezone)
+// dayjs.locale(fr)
+
+// dayjs.tz.setDefault('Europe/Paris')
 export default class BookingService {
     db: Repository<BookingEntity>
 
@@ -73,6 +82,7 @@ export default class BookingService {
         const {
             availableSeats,
             automaticAccept,
+            departure_time,
             user: { id: driverId, email: driverEmail },
         } = await journeyService.findJourneyById(journey.id)
 
@@ -80,6 +90,15 @@ export default class BookingService {
 
         if (availableSeats <= 0 || availableSeats < nbPassenger) {
             throw new Error('Le nombre de places disponibles est insuffisant')
+        }
+
+        const nowUTC = dayjs().utc()
+        const departureTimeUTCMinus45minutes = dayjs(departure_time)
+            .subtract(45, 'minutes')
+            .utc()
+
+        if (departureTimeUTCMinus45minutes.isBefore(nowUTC)) {
+            throw new Error('Il est trop tard pour réserver ce trajet')
         }
 
         if (user.id === driverId) {
