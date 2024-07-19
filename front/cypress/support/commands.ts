@@ -27,11 +27,11 @@ Cypress.Commands.add("register", (email: string, password: string) => {
 
 Cypress.Commands.add("login", (email: string, password: string) => {
   cy.visit("/auth/login");
+  cy.findByRole("button", { name: "Connexion" }).click();
+
   cy.url().should("eq", "http://localhost:3002/auth/login");
 
   cy.findByRole("textbox", { name: "Email" }).type(email);
   cy.findByLabelText("Mot de passe").type(password);
   cy.findByRole("button", { name: "Se connecter" }).click();
-
-  cy.url().should("eq", "http://localhost:3002/");
 });

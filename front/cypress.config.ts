@@ -12,7 +12,7 @@ export default defineConfig({
             password: "ecovoit_password",
             database: "ecovoit",
             host: "localhost",
-            port: 5434,
+            port: 5435,
           });
           await client.connect();
           const res = await client.query(requestString);

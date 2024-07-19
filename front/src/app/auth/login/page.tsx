@@ -42,7 +42,7 @@ const Login = () => {
     const { email, password } = Object.fromEntries(formData) as LoginInput;
 
     if (!email && !password) {
-      setLoginError("L'email et le mot de passe sont obligatiores");
+      setLoginError("L'email et le mot de passe sont obligatoires");
       return;
     }
 

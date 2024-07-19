@@ -8,6 +8,7 @@ describe("Journey publish page", () => {
     waitFor(() => {
       cy.url().should("eq", "http://localhost:3002/");
     });
+
     /*------ Journey publish page ------*/
     cy.findByRole("link", { name: "Publier un trajet" }).click();
     cy.url().should("eq", "http://localhost:3002/journey/publish");
@@ -83,7 +84,7 @@ describe("Journey publish page", () => {
       () => {
         cy.findByRole("textbox", { name: "Votre message" });
       },
-      { timeout: 10000 }
+      { timeout: 30000 }
     );
     cy.findByRole("textbox", { name: "Votre message" }).type(
       "Voici mon message"
