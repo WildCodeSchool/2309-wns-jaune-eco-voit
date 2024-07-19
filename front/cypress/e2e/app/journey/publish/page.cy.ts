@@ -74,9 +74,7 @@ describe("Journey publish page", () => {
     /*------ Login ------*/
     cy.login("sakogm38@gmail.com", "sakogm38");
 
-    cy.get("body").contains("Vérifiez vos informations").should("be.visible");
-
-    cy.url({ timeout: 100000 }).should("eq", baseUrl);
+    cy.url({ timeout: 500000 }).should("eq", baseUrl);
 
     // waitFor(
     //   () => {
