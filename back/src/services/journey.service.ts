@@ -113,9 +113,22 @@ export default class JourneyService {
         return await this.db.save(journeyToSave)
     }
 
+    async updateAvailableSeats({
+        id,
+        availableSeats,
+    }: {
+        id: string
+        availableSeats: number
+    }) {
+        const journeyToUpdate = await this.findJourneyById(id)
+        const journeyToSave = this.db.merge(journeyToUpdate, { availableSeats })
+
+        return await this.db.save(journeyToSave)
+    }
+
     async updateJourneyStatus({
         status: newStatus,
-        id: journeyToUpdateId,
+        id: id,
     }: UpdateJourneyStatusInput): Promise<JourneyEntity> {
         const bookingService = new BookingService()
         const sendEmailService = new SendEmailService()
@@ -125,7 +138,7 @@ export default class JourneyService {
             user: { id: driverId },
             status: journeyStatus,
             id: journeyId,
-        } = await this.findJourneyById(journeyToUpdateId)
+        } = await this.findJourneyById(id)
 
         if (journeyStatus === 'CANCELLED') {
             throw new Error('This journey has been cancelled')

@@ -113,7 +113,7 @@ export default class BookingService {
 
         if (automaticAccept) {
             await journeyService
-                .updateJourney({
+                .updateAvailableSeats({
                     id: journey.id,
                     availableSeats: availableSeats - nbPassenger,
                 })
@@ -147,7 +147,7 @@ export default class BookingService {
             throw new Error('Le nombre de places disponibles est insuffisant')
         }
 
-        await journeyService.updateJourney({
+        await journeyService.updateAvailableSeats({
             id: journeyId,
             availableSeats: availableSeats - nbPassenger,
         })
@@ -227,7 +227,7 @@ export default class BookingService {
 
         validateData(cancelledBooking)
 
-        await journeyService.updateJourney({
+        await journeyService.updateAvailableSeats({
             id: journeyId,
             availableSeats: availableSeats + nbPassenger,
         })
