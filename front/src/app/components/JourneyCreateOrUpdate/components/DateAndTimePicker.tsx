@@ -54,7 +54,6 @@ const DateAndTimePicker = ({
           value={setDepartureTime(departure_date)}
           onChange={(newValue) => {
             if (newValue) {
-              console.log(newValue);
               setJourneyData((prevState: JourneyData) => ({
                 ...prevState,
                 departure_date: newValue,
