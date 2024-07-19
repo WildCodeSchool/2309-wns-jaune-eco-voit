@@ -12,14 +12,8 @@ import SendEmailService from './sendEmail.service'
 import UserService from './user.service'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
-// import fr from 'dayjs/locale/fr'
-// import timezone from 'dayjs/plugin/timezone'
 
 dayjs.extend(utc)
-// dayjs.extend(timezone)
-// dayjs.locale(fr)
-
-// dayjs.tz.setDefault('Europe/Paris')
 export default class BookingService {
     db: Repository<BookingEntity>
 
