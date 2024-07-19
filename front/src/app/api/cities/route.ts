@@ -3,7 +3,9 @@ export async function GET(request: Request) {
   const address = searchParams.get("city");
 
   const res = await fetch(
-    `https://api-adresse.data.gouv.fr/search/?q=${encodeURI(address!)}&type=municipality`,
+    `https://api-adresse.data.gouv.fr/search/?q=${encodeURI(
+      address!
+    )}&type=municipality`,
     {
       headers: {
         "Content-Type": "application/json",

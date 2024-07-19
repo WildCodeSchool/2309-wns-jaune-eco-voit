@@ -3,6 +3,8 @@ export const CREATE_JOURNEY = `#graphql
     createJourney(data: $data) {
         destination
         origin
+        originCoordonates
+        destinationCoordonates
         availableSeats
         user {
           id

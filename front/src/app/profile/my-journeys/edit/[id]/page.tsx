@@ -37,7 +37,9 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const [updatedJourneyData, setUpdatedJourneyData] = useState<JourneyData>({
     origin: "",
+    originCoordonates: "",
     destination: "",
+    destinationCoordonates: "",
     departure_date: dayjs(),
     price: 0,
     automaticAccept: true,
@@ -53,6 +55,8 @@ export default function Page({ params }: { params: { id: string } }) {
         price,
         automaticAccept,
         availableSeats,
+        originCoordonates,
+        destinationCoordonates,
       } = journeyData.findJourneyById;
       setUpdatedJourneyData({
         origin,
@@ -61,6 +65,8 @@ export default function Page({ params }: { params: { id: string } }) {
         price,
         automaticAccept,
         availableSeats,
+        originCoordonates,
+        destinationCoordonates,
       });
     }
   }, [journeyData?.findJourneyById]);

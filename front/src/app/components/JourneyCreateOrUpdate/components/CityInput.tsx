@@ -24,13 +24,9 @@ const CityInput = ({
 }: CityInputProps) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleSelectCity = (value: AddressResponse) => {
-    if (!value) {
-      return;
-    }
-
+  const handleSelectCity = ({ city, geometry }: AddressResponse) => {
     if (fromTo === "destination") {
-      if (journeyData?.origin === value.city) {
+      if (journeyData?.origin === city) {
         setErrorMessage(
           "Votre point d&apos;arrivée ne peut pas être le meme que votre point de départ"
         );
@@ -38,9 +34,12 @@ const CityInput = ({
       }
     }
 
+    console.log("coord", geometry);
+
     setJourneyData((prevState) => ({
       ...prevState,
-      [fromTo]: value.city ?? "",
+      [fromTo]: city ?? "",
+      // [`${fromTo}Coordonates`]: coordinates,
     }));
   };
 

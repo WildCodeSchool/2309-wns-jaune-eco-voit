@@ -1,7 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Button, Step, StepLabel, Stepper } from "@mui/material";
-import { useRouter } from "next/navigation";
 import { stepsData as steps } from "./stepsData";
 
 export type JourneyData = {
@@ -11,10 +10,12 @@ export type JourneyData = {
   price: number;
   automaticAccept: boolean;
   availableSeats: number;
+  originCoordonates: string;
+  destinationCoordonates: string;
 };
 
 export type UpdateOrCreateJourneyProps = {
-  setJourneyData: React.Dispatch<React.SetStateAction<JourneyData>>;
+  setJourneyData: Dispatch<SetStateAction<JourneyData>>;
   journeyData: JourneyData;
   errorMessage?: string;
   successMessage?: string;
@@ -28,7 +29,6 @@ const UpdateOrCreateJourney = ({
   handleOnValidateForm,
 }: UpdateOrCreateJourneyProps) => {
   const [activeStep, setActiveStep] = useState(0);
-  const router = useRouter();
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
