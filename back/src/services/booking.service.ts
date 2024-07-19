@@ -88,6 +88,10 @@ export default class BookingService {
 
         const passenger = await userService.findUserById(user.id)
 
+        if (user.id === driverId) {
+            throw new Error('Vous ne pouvez pas réserver votre propre trajet')
+        }
+
         if (availableSeats <= 0 || availableSeats < nbPassenger) {
             throw new Error('Le nombre de places disponibles est insuffisant')
         }
@@ -99,10 +103,6 @@ export default class BookingService {
 
         if (departureTimeUTCMinus45minutes.isBefore(nowUTC)) {
             throw new Error('Il est trop tard pour réserver ce trajet')
-        }
-
-        if (user.id === driverId) {
-            throw new Error('Vous ne pouvez pas réserver votre propre trajet')
         }
 
         const newBooking = this.db.create({
