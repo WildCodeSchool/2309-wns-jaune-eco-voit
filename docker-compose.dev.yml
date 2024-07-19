@@ -92,7 +92,7 @@ services:
     env_file:
       - back/.env
     ports:
-      - 5434:5432
+      - 5435:5432
     volumes:
       - ecovoit-data-test:/var/lib/postgresql/data
 
