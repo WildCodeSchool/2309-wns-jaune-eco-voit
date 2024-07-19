@@ -1,10 +1,12 @@
+import {
+  JourneyData,
+  UpdateOrCreateJourneyProps,
+} from "@/app/components/JourneyCreateOrUpdate/UpdateOrCreate";
 import { Checkbox, FormControlLabel } from "@mui/material";
-import React from "react";
-import { JourneyData } from "../page";
 
 type OptionsProps = {
   journeyData: JourneyData;
-  setJourneyData: React.Dispatch<React.SetStateAction<JourneyData>>;
+  setJourneyData: UpdateOrCreateJourneyProps["setJourneyData"];
 };
 
 const Options = ({

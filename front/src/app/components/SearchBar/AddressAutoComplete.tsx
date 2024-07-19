@@ -65,6 +65,7 @@ type AddressAutoCompleteProps = {
   defaultValue?: string;
   sx?: SxProps<Theme>;
   gotAdornment?: boolean; // Corrected type definition for sx prop
+  handleOnChange?: () => void;
 };
 
 const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
@@ -74,12 +75,12 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
   defaultValue,
   sx,
   gotAdornment,
+  handleOnChange,
 }) => {
   const [options, setOptions] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [apiResponse, setApiResponse] = useState<Feature[]>([]);
-  const [geometry, setGeometry] = useState<string[]>([]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const fetchSuggestions = useCallback(
@@ -111,10 +112,13 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
     value: string | null,
     reason: AutocompleteChangeReason
   ) => {
+    handleOnChange?.();
+
     if (reason === "clear") {
       clearAddress();
       return;
     }
+
     const data = apiResponse.find(
       (feature: any) => feature.properties.label === value
     );

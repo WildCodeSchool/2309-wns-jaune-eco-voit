@@ -8,12 +8,14 @@ type MyJourneysTabProps = {
   journeys?: ListJourneysByUserQuery["listJourneysByUser"];
   onCancelJourney: (id: string) => void;
   isLoading: boolean;
+  onEditJourney: (id: string) => void;
 };
 
 const MyJourneysTab = ({
   journeys = [],
   onCancelJourney,
   isLoading,
+  onEditJourney,
 }: MyJourneysTabProps) => {
   return (
     <TabPanel value="JOURNEYS">
@@ -70,7 +72,7 @@ const MyJourneysTab = ({
                           <Button
                             className=""
                             onClick={() => {
-                              console.log("edit");
+                              onEditJourney(id);
                             }}
                           >
                             Modifier

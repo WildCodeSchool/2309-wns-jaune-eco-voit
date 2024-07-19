@@ -49,35 +49,9 @@ export const UPDATE_JOURNEY = gql`
       destination
       price
       departure_time
-      arrival_time
       availableSeats
       status
       automaticAccept
-      createdAt
-      updatedAt
-      bookings {
-        id
-        status
-        createdAt
-        updatedAt
-      }
-      user {
-        id
-        firstname
-        lastname
-        email
-        password
-        dateOfBirth
-        profilePicture
-        role
-        grade
-        averageRate
-        tripsAsPassenger
-        tripsAsDriver
-        status
-        createdAt
-        updatedAt
-      }
     }
   }
 `;

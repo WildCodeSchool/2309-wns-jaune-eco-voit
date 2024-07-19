@@ -1,10 +1,13 @@
+import {
+  JourneyData,
+  UpdateOrCreateJourneyProps,
+} from "@/app/components/JourneyCreateOrUpdate/UpdateOrCreate";
 import { InputAdornment, TextField } from "@mui/material";
 import { Dispatch, SetStateAction, ChangeEvent } from "react";
-import { JourneyData } from "../page";
 
 type CountInputProps = {
   journeyData: JourneyData;
-  setJourneyData: Dispatch<SetStateAction<JourneyData>>;
+  setJourneyData: UpdateOrCreateJourneyProps["setJourneyData"];
   availableSeatsOrPrice: "availableSeats" | "price";
   minValue?: number;
   maxValue?: number;
@@ -18,7 +21,7 @@ const CountInput = ({
   maxValue,
 }: CountInputProps) => {
   const handleDecrement = () => {
-    setJourneyData((prevState) => {
+    setJourneyData((prevState: JourneyData) => {
       const newValue = Math.max(prevState[availableSeatsOrPrice] - 1, minValue);
       return {
         ...prevState,
@@ -28,7 +31,7 @@ const CountInput = ({
   };
 
   const handleIncrement = () => {
-    setJourneyData((prevState) => {
+    setJourneyData((prevState: JourneyData) => {
       const newValue = maxValue
         ? Math.min(prevState[availableSeatsOrPrice] + 1, maxValue)
         : prevState[availableSeatsOrPrice] + 1;
@@ -41,7 +44,7 @@ const CountInput = ({
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value);
-    setJourneyData((prevState) => ({
+    setJourneyData((prevState: JourneyData) => ({
       ...prevState,
       [availableSeatsOrPrice]: isNaN(value)
         ? minValue

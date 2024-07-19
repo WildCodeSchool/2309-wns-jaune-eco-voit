@@ -1,4 +1,12 @@
 import { validate } from 'class-validator'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import fr from 'dayjs/locale/fr'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+
+dayjs.extend(utc)
+dayjs.extend(customParseFormat)
+dayjs.locale(fr)
 
 export const validateData = async (dataToValidate: object) => {
     const errors = await validate(dataToValidate)
@@ -13,4 +21,30 @@ export const validateData = async (dataToValidate: object) => {
 
 export const assertDataExists = (data: object | null) => {
     if (!data) throw new Error('Data not found')
+}
+
+export const validateJourneyInputs = ({
+    origin,
+    destination,
+    departure_time,
+    price,
+}: {
+    price?: number
+    origin?: string
+    destination?: string
+    departure_time?: Date
+}) => {
+    const now = dayjs()
+
+    if (dayjs(departure_time) < now.add(2, 'hour')) {
+        throw new Error('Departure time must be at least in two hours')
+    }
+
+    if (origin === destination) {
+        throw new Error('Origin must be different than destination')
+    }
+
+    if (price && price <= 0) {
+        throw new Error('Price must be more than zero')
+    }
 }

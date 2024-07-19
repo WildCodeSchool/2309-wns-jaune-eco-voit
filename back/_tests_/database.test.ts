@@ -234,10 +234,10 @@ describe('Test sur une base de donnée de test', () => {
                     query: CREATE_JOURNEY,
                     variables: {
                         data: {
-                            arrival_time: '2011-10-05T14:48:00.000Z',
+                            arrival_time: '2025-10-05T16:48:00.000Z',
                             automaticAccept: true,
                             availableSeats: 3,
-                            departure_time: '2011-10-05T14:48:00.000Z',
+                            departure_time: '2025-10-05T14:48:00.000Z',
                             destination: 'Paris',
                             origin: 'Nantes',
                             price: 35,
@@ -316,6 +316,8 @@ describe('Test sur une base de donnée de test', () => {
             )
 
         assert(responseCreateBooking.body.kind === 'single')
+
+        console.log(JSON.stringify(responseCreateBooking.body.singleResult))
 
         expect(responseCreateBooking.body.singleResult.data).toEqual({
             createBooking: {

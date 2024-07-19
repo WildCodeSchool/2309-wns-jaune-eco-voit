@@ -10,7 +10,7 @@ import {
 import { AuthContext } from "@/context/authContext";
 import { Box, Tab } from "@mui/material";
 import TabContext from "@mui/lab/TabContext";
-import { TabList, TabPanel } from "@mui/lab";
+import { TabList } from "@mui/lab";
 import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
 import { routes } from "@/app/lib/routes";
 import { useRouter } from "next/navigation";
@@ -61,9 +61,9 @@ export default function MyJourneys() {
     });
   };
 
-  const handleCancelBooking = (bookingIdToDelete: string) => {
+  const handleCancelBooking = (bookingId: string) => {
     cancelBooking({
-      variables: { cancelBookingId: bookingIdToDelete },
+      variables: { cancelBookingId: bookingId },
       onCompleted: () => {
         if (userId) {
           getUserBookings({
@@ -73,6 +73,10 @@ export default function MyJourneys() {
         }
       },
     });
+  };
+
+  const handleEditJourney = (journeyId: string) => {
+    router.push(`${routes.journeysUser.pathname}/edit/${journeyId}`);
   };
 
   useEffect(() => {
@@ -127,6 +131,7 @@ export default function MyJourneys() {
         <MyJourneysTab
           journeys={journeysData?.listJourneysByUser}
           onCancelJourney={handleCancelJourney}
+          onEditJourney={handleEditJourney}
           isLoading={updateJourneyStatusLoading}
         />
 

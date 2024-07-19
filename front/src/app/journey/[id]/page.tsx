@@ -12,14 +12,12 @@ import {
   Typography,
   Grid,
   Divider,
-  Button,
   CircularProgress,
   TextField,
 } from "@mui/material";
 import AvatarJourney from "@/app/components/Avatar/AvatarJouney";
 import JourneyTimeline from "@/app/components/JourneyCard/JourneyTimeline";
-import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "@/context/authContext";
 import JourneyMessages from "@/app/components/JourneyMessages/JourneyMessages";
 import BookJourneyButton from "@/app/components/Buttons/BookJourneyButton";
