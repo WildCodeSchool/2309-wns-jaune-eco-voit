@@ -7,7 +7,11 @@ import {
     ListJourneysWithFilters,
     UpdateJourneyStatusInput,
 } from '../entities/journey.entity'
-import { validateData, assertDataExists } from '../utils/errorHandlers'
+import {
+    validateData,
+    assertDataExists,
+    validateJourneyInputs,
+} from '../utils/errorHandlers'
 import dayjs from 'dayjs'
 import BookingService from './booking.service'
 import UserService from './user.service'
@@ -81,6 +85,7 @@ export default class JourneyService {
     }
 
     async createJourney(data: CreateJourneyInput): Promise<JourneyEntity> {
+        validateJourneyInputs(data)
         const newJourney: JourneyEntity = this.db.create(data)
 
         await validateData(newJourney)
@@ -94,11 +99,18 @@ export default class JourneyService {
     }: UpdateJourneyInput): Promise<JourneyEntity> {
         const journeyToUpdate = await this.findJourneyById(id)
 
+        const { bookings } = journeyToUpdate
+
+        if (bookings && bookings.length > 0) {
+            throw new Error('You can not edit this journey')
+        }
+
+        validateJourneyInputs(body)
+        await validateData(journeyToUpdate)
+
         const journeyToSave = this.db.merge(journeyToUpdate, body)
 
-        await validateData(journeyToSave)
-
-        return await this.db.save(journeyToUpdate)
+        return await this.db.save(journeyToSave)
     }
 
     async updateJourneyStatus({

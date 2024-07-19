@@ -425,7 +425,7 @@ export type UpdateJourneyMutationVariables = Exact<{
 }>;
 
 
-export type UpdateJourneyMutation = { __typename?: 'Mutation', updateJourney: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, price: number, departure_time: any, arrival_time: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, bookings: Array<{ __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null }>, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, profilePicture?: string | null, role: string, grade: string, averageRate?: number | null, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null } } };
+export type UpdateJourneyMutation = { __typename?: 'Mutation', updateJourney: { __typename?: 'JourneyEntity', id: string, origin: string, destination: string, price: number, departure_time: any, availableSeats: number, status: string, automaticAccept: boolean } };
 
 export type UpdateJourneyStatusMutationVariables = Exact<{
   data: UpdateJourneyStatusInput;
@@ -926,35 +926,9 @@ export const UpdateJourneyDocument = gql`
     destination
     price
     departure_time
-    arrival_time
     availableSeats
     status
     automaticAccept
-    createdAt
-    updatedAt
-    bookings {
-      id
-      status
-      createdAt
-      updatedAt
-    }
-    user {
-      id
-      firstname
-      lastname
-      email
-      password
-      dateOfBirth
-      profilePicture
-      role
-      grade
-      averageRate
-      tripsAsPassenger
-      tripsAsDriver
-      status
-      createdAt
-      updatedAt
-    }
   }
 }
     `;

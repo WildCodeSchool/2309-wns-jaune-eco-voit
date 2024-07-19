@@ -2,8 +2,8 @@ import { Dispatch, SetStateAction } from "react";
 import CityInput from "./components/CityInput";
 import CountInput from "./components/CountInput";
 import DateAndTimePicker from "./components/DateAndTimePicker";
-import { JourneyData } from "./page";
 import Options from "./components/Options";
+import { JourneyData } from "./UpdateOrCreate";
 
 export const stepsData = (
   setJourneyData: Dispatch<SetStateAction<JourneyData>>,
@@ -25,6 +25,7 @@ export const stepsData = (
         setJourneyData,
         fromTo: "destination",
         defaultValue: journeyData?.destination,
+        journeyData,
       }),
       stepTitle: "Où allez-vous?",
     },
@@ -68,7 +69,10 @@ export const stepsData = (
     },
     {
       stepName: "Options",
-      stepContent: Options({ setJourneyData, journeyData }),
+      stepContent: Options({
+        setJourneyData,
+        journeyData,
+      }),
       stepTitle: "Activer la réservation automatique?",
     },
   ];
