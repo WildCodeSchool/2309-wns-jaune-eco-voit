@@ -90,7 +90,7 @@ export class JourneyEntity {
     status: JourneyStatus
 
     @Field()
-    @Column()
+    @Column({ default: true })
     @IsBoolean({ message: 'AutomaticAccept must be a boolean' })
     automaticAccept: boolean
 

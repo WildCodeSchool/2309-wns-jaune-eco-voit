@@ -255,7 +255,6 @@ describe('Test sur une base de donnée de test', () => {
                 }
             )
         assert(responseCreateJourney.body.kind === 'single')
-        console.log(JSON.stringify(responseCreateJourney.body.singleResult))
         expect(responseCreateJourney.body.singleResult.data).toEqual({
             createJourney: {
                 destination: 'Paris',

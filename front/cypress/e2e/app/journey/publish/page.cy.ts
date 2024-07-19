@@ -1,91 +1,16 @@
 import { waitFor } from "@testing-library/react";
 
-interface TableResult {
-  rows: { tablename: string }[];
-}
-
-const baseUrl = Cypress.config("baseUrl");
-
-before(() => {
-  cy.log("Starting database cleanup...");
-
-  // Désactive les contraintes de clés étrangères
-  cy.task("dbQuery", "SET session_replication_role = replica;")
-    .then(() => {
-      // Récupère toutes les tables sur schéma public
-      return cy.task(
-        "dbQuery",
-        `
-        SELECT tablename FROM pg_tables
-        WHERE schemaname = 'public';
-      `
-      );
-    })
-    .then((result: any) => {
-      const tables = (result as TableResult).rows;
-      cy.log("TABLES", JSON.stringify(tables));
-
-      // Vide toutes les tables
-      return Promise.all(
-        tables.map((table) => {
-          cy.log("TABLE", JSON.stringify(table));
-
-          return cy.task(
-            "dbQuery",
-            `TRUNCATE TABLE "${table.tablename}" CASCADE;`
-          );
-        })
-      );
-    })
-
-    // Réactive toutes les contraintes de clés étrangères
-    .then(() => cy.task("dbQuery", "SET session_replication_role = DEFAULT;"))
-    .then(() => {
-      cy.log("Nettoyage de la base de données terminé.");
-
-      // Crée un utilisateur
-      const createUserQuery = `
-      INSERT INTO "user_entity" (id, firstname, lastname, email, password, "dateOfBirth", role, grade, "tripsAsPassenger", "tripsAsDriver", status, "createdAt")
-      VALUES (
-        uuid_generate_v4(),
-        'Oliv',
-        'Ier',
-        'sakogm38@gmail.com',
-        'sakogm38',
-        '1992-05-06T22:00:00.000Z',
-        'USER',
-        'BEGINNER',
-        0,
-        0,
-        'ACTIVE',
-        now()
-      );
-    `;
-
-      return cy.task("dbQuery", createUserQuery);
-    })
-    .then(() => {
-      console.log("Utilisateur créé avec succès.");
-    });
-});
-
 describe("Journey publish page", () => {
   it("Publish journey and leave message", () => {
     /*------ Login ------*/
     cy.login("sakogm38@gmail.com", "sakogm38");
 
-    cy.url({ timeout: 500000 }).should("eq", baseUrl);
-
-    // waitFor(
-    //   () => {
-    //     cy.url().should("eq", baseUrl);
-    //   },
-    //   { timeout: 10000 }
-    // );
-
+    waitFor(() => {
+      cy.url().should("eq", "http://localhost:3002/");
+    });
     /*------ Journey publish page ------*/
     cy.findByRole("link", { name: "Publier un trajet" }).click();
-    cy.url().should("eq", `${baseUrl}/journey/publish`);
+    cy.url().should("eq", "http://localhost:3002/journey/publish");
 
     /*------ Departure ------*/
     cy.get("h3").contains("D'où partez-vous?");
@@ -147,16 +72,19 @@ describe("Journey publish page", () => {
     );
 
     waitFor(() => {
-      cy.url().should("include", `${baseUrl}/journey/`);
+      cy.url().should("include", "http://localhost:3002/journey/");
     });
 
     cy.contains("Félicitations, votre trajet est en ligne!").should(
       "be.visible"
     );
 
-    waitFor(() => {
-      cy.findByRole("textbox", { name: "Votre message" });
-    });
+    waitFor(
+      () => {
+        cy.findByRole("textbox", { name: "Votre message" });
+      },
+      { timeout: 10000 }
+    );
     cy.findByRole("textbox", { name: "Votre message" }).type(
       "Voici mon message"
     );

@@ -11,60 +11,11 @@ on:
       - closed
 
 jobs:
-  # linters:
-  #   name: 🧼 Run linters
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: 📌 Check out Git repository
-  #       uses: actions/checkout@v3
-
-  #     - name: 🛠️ Set up Node.js
-  #       uses: actions/setup-node@v1
-  #       with:
-  #         node-version: 18
-
-  #     - name: 🎯 Install Node.js dependencies for back
-  #       run: |
-  #         cd back
-  #         npm i
-
-  #     - name: 🎯 Install Node.js dependencies for front
-  #       run: |
-  #         cd front
-  #         npm i
-
-  #     - name: 🏃🏽 Run linters back
-  #       run: |
-  #         cd back
-  #         npm run lint
-
-  #     - name: 🏃🏽 Run linters front
-  #       run: |
-  #         cd front
-  #         npm run lint
-
-  #     - name: 🤗 Hello CI
-  #       run: echo "This job's status is ${{ job.status }}."
-
-  cypress:
+  linters:
+    name: 🧼 Run linters
     runs-on: ubuntu-latest
-    name: 🧼 Tests Cypress
-    services:
-      postgres:
-        image: postgres:latest
-        env:
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-          options: >-
-            --health-cmd pg_isready
-            --health-interval 10s
-            --health-timeout 5s
-            --health-retries 5
-        ports:
-          - 5432:5432
     steps:
-      - name: Checkout
+      - name: 📌 Check out Git repository
         uses: actions/checkout@v3
 
       - name: 🛠️ Set up Node.js
@@ -72,41 +23,90 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install backend dependencies
-        working-directory: ./back
+      - name: 🎯 Install Node.js dependencies for back
         run: |
+          cd back
           npm i
 
-      - name: Start backend server
-        working-directory: ./back
-        env:
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      - name: 🎯 Install Node.js dependencies for front
         run: |
-          nohup npm run start:test &
-
-      - name: Install frontend dependencies
-        working-directory: ./front
-        run: |
+          cd front
           npm i
 
-      - name: Cypress run
-        uses: cypress-io/github-action@v5
-        with:
-          working-directory: ./front
-          start: npm run dev
-          browser: chrome
-          config-file: cypress.config.ts
-          wait-on: "http://localhost:3000, http://localhost:4000"
-          wait-on-timeout: 120
-          record: false
-        env:
-          CYPRESS_BASE_URL: http://localhost:3000
-          DB_PORT: 5432
+      - name: 🏃🏽 Run linters back
+        run: |
+          cd back
+          npm run lint
+
+      - name: 🏃🏽 Run linters front
+        run: |
+          cd front
+          npm run lint
+
+      - name: 🤗 Hello CI
+        run: echo "This job's status is ${{ job.status }}."
+
+  # cypress:
+  #   runs-on: ubuntu-latest
+  #   name: 🧼 Tests Cypress
+  #   services:
+  #     postgres:
+  #       image: postgres:latest
+  #       env:
+  #         POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+  #         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+  #         POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+  #         options: >-
+  #           --health-cmd pg_isready
+  #           --health-interval 10s
+  #           --health-timeout 5s
+  #           --health-retries 5
+  #       ports:
+  #         - 5432:5432
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+
+  #     - name: 🛠️ Set up Node.js
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 18
+
+  #     - name: Install backend dependencies
+  #       working-directory: ./back
+  #       run: |
+  #         npm i
+
+  #     - name: Start backend server
+  #       working-directory: ./back
+  #       env:
+  #         POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+  #         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+  #         POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+  #       run: |
+  #         nohup npm run start:test &
+
+  #     - name: Install frontend dependencies
+  #       working-directory: ./front
+  #       run: |
+  #         npm i
+
+  #     - name: Cypress run
+  #       uses: cypress-io/github-action@v5
+  #       with:
+  #         working-directory: ./front
+  #         start: npm run dev
+  #         browser: chrome
+  #         config-file: cypress.config.ts
+  #         wait-on: "http://localhost:3000, http://localhost:4000"
+  #         wait-on-timeout: 120
+  #         record: false
+  #       env:
+  #         CYPRESS_BASE_URL: http://localhost:3000
+  #         DB_PORT: 5432
 
   tests:
-    needs: cypress
+    needs: linters
     name: 👤 Run Tests Jest
     runs-on: ubuntu-latest
     services:
