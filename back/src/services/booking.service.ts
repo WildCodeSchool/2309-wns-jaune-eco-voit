@@ -10,7 +10,10 @@ import { validateData, assertDataExists } from '../utils/errorHandlers'
 import JourneyService from './journey.service'
 import SendEmailService from './sendEmail.service'
 import UserService from './user.service'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 
+dayjs.extend(utc)
 export default class BookingService {
     db: Repository<BookingEntity>
 
@@ -73,17 +76,27 @@ export default class BookingService {
         const {
             availableSeats,
             automaticAccept,
+            departure_time,
             user: { id: driverId, email: driverEmail },
         } = await journeyService.findJourneyById(journey.id)
 
         const passenger = await userService.findUserById(user.id)
 
+        if (user.id === driverId) {
+            throw new Error('Vous ne pouvez pas réserver votre propre trajet')
+        }
+
         if (availableSeats <= 0 || availableSeats < nbPassenger) {
             throw new Error('Le nombre de places disponibles est insuffisant')
         }
 
-        if (user.id === driverId) {
-            throw new Error('Vous ne pouvez pas réserver votre propre trajet')
+        const nowUTC = dayjs().utc()
+        const departureTimeUTCMinus45minutes = dayjs(departure_time)
+            .subtract(45, 'minutes')
+            .utc()
+
+        if (departureTimeUTCMinus45minutes.isBefore(nowUTC)) {
+            throw new Error('Il est trop tard pour réserver ce trajet')
         }
 
         const newBooking = this.db.create({
@@ -91,15 +104,15 @@ export default class BookingService {
             status: automaticAccept ? 'ACCEPTED' : 'PENDING',
         })
 
+        await validateData(newBooking)
+
+        await this.db.save(newBooking)
+
         const {
             id: newBookingId,
             user: { firstname: passengerName },
             nbPassenger: newBookingNbPassenger,
         } = newBooking
-
-        await validateData(newBooking)
-
-        await this.db.save(newBooking)
 
         if (!automaticAccept) {
             sendEmailService.sendNewBookingEmail({

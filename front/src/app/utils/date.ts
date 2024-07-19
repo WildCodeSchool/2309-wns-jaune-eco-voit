@@ -7,3 +7,6 @@ export const formattedTime = (time: Date) => {
 export const formattedDate = (day: Date) => {
   return dayjs(day).locale("fr").format("dddd D MMMM");
 };
+
+export const tooLateToBook = (date: Date) =>
+  dayjs(date).subtract(45, "minute") < dayjs();

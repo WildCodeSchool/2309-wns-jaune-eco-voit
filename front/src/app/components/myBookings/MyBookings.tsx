@@ -1,8 +1,22 @@
 import { formattedDate, formattedTime } from "@/app/utils/date";
 import { ListBookingsByUserQuery } from "@/types/graphql";
-import { TabPanel } from "@mui/lab";
-import { Avatar, Button, Card, CardContent, Typography } from "@mui/material";
+import {
+  TabPanel,
+  Timeline,
+  TimelineConnector,
+  TimelineContent,
+  TimelineItem,
+  TimelineSeparator,
+} from "@mui/lab";
+import { Button, Link } from "@mui/material";
+import TripOriginOutlinedIcon from "@mui/icons-material/TripOriginOutlined";
+import { timelineItemClasses } from "@mui/lab/TimelineItem";
 import CircularLoading from "../CircularLoading/CircularLoading";
+import { routes } from "@/app/lib/routes";
+import { statusFrench } from "@/app/utils/generals";
+import { Grade } from "@/types/user";
+import { Status } from "@/types/booking";
+import AvatarJourney from "../Avatar/AvatarJouney";
 
 type MyBookingsTabProps = {
   bookings?: ListBookingsByUserQuery["listBookingsByUser"];
@@ -16,77 +30,135 @@ const MyBookingsTab = ({
   isLoading,
 }: MyBookingsTabProps) => {
   return (
-    <TabPanel value="BOOKINGS">
+    <TabPanel
+      value="BOOKINGS"
+      className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
+    >
       {isLoading ? (
         <CircularLoading />
       ) : (
-        bookings.map(
-          (
-            {
-              status,
-              id,
-              journey: {
-                departure_time,
-                destination,
-                origin,
-                user: { profilePicture, firstname },
+        [...bookings]
+          .sort(
+            (a, b) =>
+              +new Date(a.journey.departure_time) -
+              +new Date(b.journey.departure_time)
+          )
+          .map(
+            (
+              {
+                status,
+                id,
+                journey: {
+                  id: journeyId,
+                  departure_time,
+                  destination,
+                  origin,
+                  user: {
+                    id: userId,
+                    profilePicture,
+                    firstname,
+                    grade,
+                    averageRate,
+                  },
+                },
               },
-            },
-            index
-          ) => (
-            <Card
-              key={index}
-              className={`flex justify-between items-center mb-4 p-4 m-auto h-full w-1/2 
-            `}
-            >
-              <CardContent
-                className={`flex-grow ${
-                  status !== "ACCEPTED" ? "opacity-50" : ""
+              index
+            ) => (
+              <div
+                key={index}
+                className={`my_journey_card w-full flex p-4 rounded-md shadow-md ${
+                  status === "REJECTED" ||
+                  status === "CANCELLED" ||
+                  status === "PENDING"
+                    ? "opacity-70"
+                    : ""
                 }`}
               >
-                <Avatar
-                  alt="profile picture"
-                  src={profilePicture ?? undefined}
-                />
-                <div className="flex items-center justify-between">
-                  <Typography
-                    variant="h6"
-                    component="h6"
-                    className="font-semibold"
-                  >
-                    {firstname}
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    className="text-sm"
-                  >
-                    {formattedDate(departure_time)} <br />
-                    Départ : {formattedTime(departure_time)}
-                  </Typography>
+                <div className="w-full flex flex-col gap-3">
+                  <div className="flex flex-col xs:flex-row w-full xs:justify-between gap-4">
+                    <p className="text-base">
+                      {formattedDate(departure_time)} à{" "}
+                      {formattedTime(departure_time)}
+                      <br />
+                    </p>
+                    <p className="price text-sm px-3 py-1 rounded-md bg-primary100 text-white w-fit h-fit flex-shrink-0">
+                      {statusFrench[status as Status]}
+                    </p>
+                  </div>
+                  <div className="TimeLine flex items-center w-full border border-dark20 rounded-md p-4 h-fit">
+                    <Timeline
+                      sx={{
+                        "ul.MuiTimeline-root": { padding: 0 },
+                        ".MuiTimelineItem-root": { padding: 0, minHeight: 0 },
+                        [`& .${timelineItemClasses.root}:before`]: {
+                          flex: 0,
+                          padding: 0,
+                        },
+                      }}
+                    >
+                      <TimelineItem className="h-20">
+                        <TimelineSeparator>
+                          <TripOriginOutlinedIcon
+                            fontSize="small"
+                            color="primary"
+                            sx={{ marginBottom: 0, padding: 0 }}
+                          />
+                          <TimelineConnector
+                            sx={{
+                              bgcolor: "primary.main",
+                              height: "200px",
+                              width: "3px",
+                            }}
+                          />
+                        </TimelineSeparator>
+                        <TimelineContent>
+                          <div>
+                            <p className="text-xs text-dark80">ORIGINE</p>
+                            <p>{origin}</p>
+                          </div>
+                        </TimelineContent>
+                      </TimelineItem>
+                      <TimelineItem className="h-fit">
+                        <TripOriginOutlinedIcon
+                          fontSize="small"
+                          color="primary"
+                        />
+                        <TimelineContent>
+                          <div>
+                            <p className="text-xs text-dark80">DESTINATION</p>
+                            <p>{destination}</p>
+                          </div>
+                        </TimelineContent>
+                      </TimelineItem>
+                    </Timeline>
+                  </div>
+                  <AvatarJourney
+                    id={userId}
+                    firstname={firstname}
+                    grade={grade as Grade}
+                    rating={averageRate}
+                    profilePicture={profilePicture ?? undefined}
+                  />
+                  <div className="card_footer flex flex-col item-start xs:flex-row xs:justify-between xs:items-end gap-3">
+                    <div className="buttons flex gap-3">
+                      <Button
+                        onClick={() => onCancelBooking(id)}
+                        disabled={status !== "ACCEPTED"}
+                      >
+                        Annuler
+                      </Button>
+                    </div>
+                    <Link
+                      href={`${routes["journey"].pathname}/${journeyId}`}
+                      className="text-sm underline text-dark80"
+                    >
+                      Voir le trajet
+                    </Link>
+                  </div>
                 </div>
-                <Typography
-                  variant="body1"
-                  className="mt-2 text-gray-700 whitespace-pre-wrap"
-                >
-                  De {origin} à {destination}
-                </Typography>
-              </CardContent>
-              <div className="flex flex-col gap-2 justify-between items-end h-full">
-                <div className="status rounded-full bg-primary100 py-1 px-2 text-xs text-white w-fit">
-                  {status.toLowerCase()}
-                </div>
-
-                <Button
-                  onClick={() => onCancelBooking(id)}
-                  disabled={status !== "ACCEPTED"}
-                >
-                  Annuler
-                </Button>
               </div>
-            </Card>
+            )
           )
-        )
       )}
     </TabPanel>
   );

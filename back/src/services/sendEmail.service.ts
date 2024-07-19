@@ -39,13 +39,13 @@ export default class SendEmailService {
         passengerName: string
         nbPassengers: number
     }) {
-        const newBookingLink = `${process.env.CLIENT_URL}/booking/accept/${newBookingId}/${driverId}`
+        const newBookingToValidate = `${process.env.CLIENT_URL}/booking/accept/${newBookingId}/${driverId}`
 
         const mailOptions = {
             from: 'La super team Ecovoit',
             to: recipient,
             subject: 'Nouvelle demande de réservation',
-            text: `${passengerName} souhaite réserver ${nbPassengers} place(s) sur votre trajet ! Voici le lien pour l'accepter: ${newBookingLink}`,
+            text: `${passengerName} souhaite réserver ${nbPassengers} place(s) sur votre trajet ! Voici le lien pour l'accepter: ${newBookingToValidate}`,
         }
 
         this.sendEmail(mailOptions)

@@ -86,10 +86,13 @@ export const LIST_BOOKINGS_BY_USER = gql`
         createdAt
         updatedAt
         user {
+          id
           email
           lastname
           firstname
           profilePicture
+          grade
+          averageRate
         }
       }
     }

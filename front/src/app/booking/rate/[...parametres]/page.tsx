@@ -112,6 +112,7 @@ const RatingPage = ({
       <div className="booking_infos flex flex-col items-center text-center">
         <div className="flex flex-col gap-3 shadow-md py-6 px-10 rounded-lg">
           <AvatarJourney
+            id={driverId}
             firstname={firstname}
             profilePicture={profilePicture ?? undefined}
           />
