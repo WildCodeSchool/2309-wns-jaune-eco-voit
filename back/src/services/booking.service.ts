@@ -104,15 +104,15 @@ export default class BookingService {
             status: automaticAccept ? 'ACCEPTED' : 'PENDING',
         })
 
+        await validateData(newBooking)
+
+        await this.db.save(newBooking)
+
         const {
             id: newBookingId,
             user: { firstname: passengerName },
             nbPassenger: newBookingNbPassenger,
         } = newBooking
-
-        await validateData(newBooking)
-
-        await this.db.save(newBooking)
 
         if (!automaticAccept) {
             sendEmailService.sendNewBookingEmail({

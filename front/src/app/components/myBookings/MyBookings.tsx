@@ -40,8 +40,8 @@ const MyBookingsTab = ({
         [...bookings]
           .sort(
             (a, b) =>
-              +new Date(b.journey.departure_time) -
-              +new Date(a.journey.departure_time)
+              +new Date(a.journey.departure_time) -
+              +new Date(b.journey.departure_time)
           )
           .map(
             (
