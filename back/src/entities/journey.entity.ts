@@ -41,11 +41,19 @@ export class JourneyEntity {
     origin: string
 
     @Field()
+    @Column()
+    originCoordonates: string
+
+    @Field()
     @Column({ length: 50 })
     @Length(3, 50, {
         message: 'Destination place must be between 3 and 50 characters.',
     })
     destination: string
+
+    @Field()
+    @Column()
+    destinationCoordonates: string
 
     @Field(() => Float)
     @Column({ type: 'float' })
@@ -127,6 +135,12 @@ export class CreateJourneyInput {
     @Field()
     destination: string
 
+    @Field()
+    originCoordonates: string
+
+    @Field()
+    destinationCoordonates: string
+
     @Field(() => Float)
     price: number
 
@@ -156,6 +170,12 @@ export class UpdateJourneyInput {
 
     @Field({ nullable: true })
     destination?: string
+
+    @Field({ nullable: true })
+    originCoordonates?: string
+
+    @Field({ nullable: true })
+    destinationCoordonates?: string
 
     @Field(() => Float, { nullable: true })
     price?: number

@@ -6,6 +6,8 @@ export const LIST_JOURNEYS = gql`
       arrival_time
       automaticAccept
       availableSeats
+      originCoordonates
+      destinationCoordonates
       bookings {
         createdAt
         id
@@ -41,6 +43,8 @@ export const LIST_JOURNEYS_BY_USER = gql`
       price
       departure_time
       arrival_time
+      originCoordonates
+      destinationCoordonates
       availableSeats
       status
       automaticAccept
@@ -83,6 +87,8 @@ export const FIND_JOURNEY_BY_ID = gql`
       departure_time
       arrival_time
       availableSeats
+      originCoordonates
+      destinationCoordonates
       status
       automaticAccept
       createdAt
