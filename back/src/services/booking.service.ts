@@ -1,6 +1,5 @@
 import { Repository } from 'typeorm'
 import datasource from '../db'
-import datasourceTest from '../db_test'
 import {
     BookingEntity,
     CreateBookingInput,
@@ -16,10 +15,7 @@ export default class BookingService {
     db: Repository<BookingEntity>
 
     constructor() {
-        this.db =
-            process.env.NODE_ENV === 'test'
-                ? datasourceTest.getRepository(BookingEntity)
-                : datasource.getRepository(BookingEntity)
+        this.db = datasource.getRepository(BookingEntity)
     }
 
     async listBookings(): Promise<BookingEntity[]> {
@@ -95,6 +91,12 @@ export default class BookingService {
             status: automaticAccept ? 'ACCEPTED' : 'PENDING',
         })
 
+        const {
+            id: newBookingId,
+            user: { firstname: passengerName },
+            nbPassenger: newBookingNbPassenger,
+        } = newBooking
+
         await validateData(newBooking)
 
         await this.db.save(newBooking)
@@ -102,8 +104,10 @@ export default class BookingService {
         if (!automaticAccept) {
             sendEmailService.sendNewBookingEmail({
                 recipient: driverEmail,
-                newBookingId: newBooking.id,
+                newBookingId: newBookingId,
                 driverId,
+                passengerName,
+                nbPassengers: newBookingNbPassenger,
             })
         }
 

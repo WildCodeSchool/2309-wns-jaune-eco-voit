@@ -9,7 +9,6 @@ import BookingResolver from './resolvers/booking.resolver'
 import JourneyResolver from './resolvers/journey.resolver'
 import { ApolloServer } from '@apollo/server'
 import db from './db'
-import db_test from './db_test'
 import UserResolver from './resolvers/user.resolver'
 import Cookies from 'cookies'
 import { jwtVerify } from 'jose'
@@ -82,22 +81,17 @@ async function main() {
         await handleJourneysDone()
     })
 
-    const origins =
-        process.env.NODE_ENV === 'test'
-            ? ['http://localhost:3003', 'https://studio.apollographql.com']
-            : [
-                  'http://localhost:3002',
-                  'https://studio.apollographql.com',
-                  'https://preprod.0923-jaune-1.wns.wilders.dev',
-                  'https://0923-jaune-1.wns.wilders.dev',
-                  'http://localhost:8000/profile',
-                  'http://localhost:8000',
-              ]
-
     app.use(
         '/',
         cors<cors.CorsRequest>({
-            origin: origins,
+            origin: [
+                'http://localhost:3002',
+                'https://studio.apollographql.com',
+                'https://preprod.0923-jaune-1.wns.wilders.dev',
+                'https://0923-jaune-1.wns.wilders.dev',
+                'http://localhost:8000/profile',
+                'http://localhost:8000',
+            ],
             credentials: true,
         }),
         express.json(),
@@ -142,61 +136,9 @@ async function main() {
         })
     )
 
-    const isTestEnv = process.env.NODE_ENV === 'test'
-    const port = isTestEnv ? 4003 : 4000
+    const port = 4000
 
-    if (isTestEnv) {
-        await db_test.initialize()
-        // Création d'un query runner
-        // Un QueryRunner est une interface dans TypeORM permettant d'exécuter des requêtes SQL brutes et de gérer des transactions sur une connexion de base de données spécifique.
-        const queryRunner = db_test.createQueryRunner()
-        await queryRunner.connect()
-        // Désactivation des contraintes de clé étrangère
-        await queryRunner.query('SET session_replication_role = replica;')
-        // Vide les tables
-        const tables = await queryRunner.query(`
-            SELECT tablename FROM pg_tables
-            WHERE schemaname = 'public';
-          `)
-
-        for (const table of tables) {
-            await queryRunner.query(
-                `TRUNCATE TABLE "${table.tablename}" CASCADE;`
-            )
-        }
-
-        // Réactive les contraintes de clé étrangère
-        await queryRunner.query('SET session_replication_role = DEFAULT;')
-
-        // Cree un user
-        const query = `
-        INSERT INTO "user_entity" (
-          "id", "firstname", "lastname", "email", "password", "dateOfBirth", 
-          "profilePicture", "role", "grade", "tripsAsPassenger", 
-          "tripsAsDriver", "status", "createdAt", "updatedAt", "averageRate"
-        ) 
-        VALUES (
-          DEFAULT, $1, $2, $3, $4, $5, DEFAULT, DEFAULT, DEFAULT, 
-          DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT
-        ) 
-      `
-
-        const parameters = [
-            'oliv', // firstname
-            'ier', // lastname
-            'sakogm38@gmail.com', // email
-            '$argon2id$v=19$m=65536,t=3,p=4$xDzd4HYFQIgD3+9h1k5LTA$40zPPZZdDo7waQwMg9a5MwzguAPjppLWbYEq4q3aa0U', // password
-            '1992-05-06T22:00:00.000Z', // dateOfBirth
-        ]
-
-        await queryRunner.query(query, parameters)
-        // Libère le query runner
-        await queryRunner.release()
-
-        console.log('db_test has been initialized, cleared, and synchronized.')
-    } else {
-        await db.initialize()
-    }
+    await db.initialize()
 
     await new Promise<void>((resolve) => {
         httpServer.listen({ port }, resolve)

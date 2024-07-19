@@ -4,14 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev:test": "next dev -p 3003",
     "build": "next build --debug",
     "start": "next start",
     "lint": "next lint",
     "test": "jest --watch",
     "test-ci": "jest",
     "generate": "graphql-codegen --watch",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "API": "cd ../back npm start:test"
   },
   "dependencies": {
     "@apollo/client": "^3.9.4",
@@ -31,6 +31,7 @@
     "jose": "^5.2.3",
     "js-cookie": "^3.0.5",
     "next": "14.1.0",
+    "pg": "^8.12.0",
     "react": "^18",
     "react-dom": "^18"
   },
@@ -46,6 +47,7 @@
     "@types/jest": "^29.5.12",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
+    "@types/pg": "^8.11.6",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",

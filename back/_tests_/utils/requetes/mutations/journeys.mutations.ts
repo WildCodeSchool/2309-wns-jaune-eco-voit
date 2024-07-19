@@ -7,6 +7,7 @@ export const CREATE_JOURNEY = `#graphql
         user {
           id
         }
+        automaticAccept
       }
     }
     `
