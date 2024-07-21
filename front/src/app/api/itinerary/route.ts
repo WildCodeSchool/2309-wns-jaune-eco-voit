@@ -23,8 +23,6 @@ export async function GET(
     );
   }
 
-  console.log("Received request with start:", start, "end:", end);
-
   const url = `https://wxs.ign.fr/geoportail/itineraire/rest/1.0.0/route`;
   const params = new URLSearchParams({
     resource: "bdtopo-osrm",
@@ -34,8 +32,6 @@ export async function GET(
     profile: "car",
     optimization: "fastest",
   });
-
-  console.log("Request URL:", `${url}?${params.toString()}`);
 
   try {
     const response = await fetch(`${url}?${params.toString()}`, {
@@ -47,7 +43,6 @@ export async function GET(
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.log("Error response:", errorText);
       return NextResponse.json(
         { error: errorText },
         { status: response.status }
@@ -55,10 +50,8 @@ export async function GET(
     }
 
     const data: ResponseGetItinerary = await response.json();
-    console.log("Response Data:", data);
     return NextResponse.json(data, { status: 200 });
   } catch (error: any) {
-    console.log("Catch Error:", error);
     return NextResponse.json({ error: error.toString() }, { status: 500 });
   }
 }

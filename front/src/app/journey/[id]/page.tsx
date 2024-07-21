@@ -139,7 +139,7 @@ export default function Page({ params }: { params: { id: string } }) {
             {userContextId &&
             driver.id !== userContextId &&
             availableSeats > 0 &&
-            !tooLateToBook(departure_time) ? (
+            !tooLateToBook(departureTime) ? (
               <Stack
                 direction="row"
                 justifyContent="space-between"

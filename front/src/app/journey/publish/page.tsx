@@ -71,8 +71,6 @@ const PublishJourney = () => {
       setError
     );
 
-    console.log(duration);
-
     const arrivalTime = departureTime.add(duration, "second");
 
     console.log(arrivalTime);

@@ -76,7 +76,7 @@ export default class BookingService {
         const {
             availableSeats,
             automaticAccept,
-            departure_time,
+            departureTime,
             user: { id: driverId, email: driverEmail },
         } = await journeyService.findJourneyById(journey.id)
 
@@ -91,7 +91,7 @@ export default class BookingService {
         }
 
         const nowUTC = dayjs().utc()
-        const departureTimeUTCMinus45minutes = dayjs(departure_time)
+        const departureTimeUTCMinus45minutes = dayjs(departureTime)
             .subtract(45, 'minutes')
             .utc()
 

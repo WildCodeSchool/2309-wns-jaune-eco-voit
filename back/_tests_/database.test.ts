@@ -317,8 +317,6 @@ describe('Test sur une base de donnée de test', () => {
 
         assert(responseCreateBooking.body.kind === 'single')
 
-        console.log(JSON.stringify(responseCreateBooking.body.singleResult))
-
         expect(responseCreateBooking.body.singleResult.data).toEqual({
             createBooking: {
                 user: {

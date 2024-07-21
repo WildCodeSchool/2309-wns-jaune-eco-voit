@@ -126,8 +126,6 @@ export default function Page({ params }: { params: { id: string } }) {
       setError
     );
 
-    console.log(duration);
-
     const arrivalTime: Dayjs = departureTime.add(duration, "second");
 
     console.log(arrivalTime);
