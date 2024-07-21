@@ -95,7 +95,7 @@ const AcceptPage = ({
 
   const {
     findBookingById: {
-      journey: { departure_time, origin, destination },
+      journey: { departureTime, origin, destination },
       user: {
         firstname: passengerFirstname,
         profilePicture: passengerProfilPicture,
@@ -130,7 +130,7 @@ const AcceptPage = ({
             profilePicture={passengerProfilPicture ?? undefined}
           />
           <JourneyCardHeader
-            departureTime={departure_time}
+            departureTime={departureTime}
             origin={origin}
             destination={destination}
           />

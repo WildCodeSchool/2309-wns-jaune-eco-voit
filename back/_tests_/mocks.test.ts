@@ -37,7 +37,7 @@ const mapUserData = (
 const mapJourneyData = (dataArray: Omit<JourneyEntity, 'user'>[]) => {
     return dataArray.map((el) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { arrival_time, departure_time, createdAt, ...rest } = el
+        const { arrivalTime, departureTime, createdAt, ...rest } = el
         return rest
     })
 }
@@ -112,13 +112,10 @@ describe('Test sur les Users', () => {
         const responseData = response.body.singleResult.data?.listJourneys
 
         const reduces = responseData?.reduce<
-            Omit<
-                JourneyEntity,
-                'departure_time' | 'arrival_time' | 'createdAt'
-            >[]
+            Omit<JourneyEntity, 'departureTime' | 'arrivalTime' | 'createdAt'>[]
         >((acc, curr) => {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { arrival_time, createdAt, departure_time, ...rest } = curr
+            const { arrivalTime, createdAt, departureTime, ...rest } = curr
             return [rest, ...acc]
         }, [])
 

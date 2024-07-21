@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import fr from "dayjs/locale/fr";
@@ -11,6 +11,9 @@ import { routes } from "@/app/lib/routes";
 import UpdateOrCreateJourney, {
   JourneyData,
 } from "@/app/components/JourneyCreateOrUpdate/UpdateOrCreate";
+import { debounce } from "@mui/material";
+import { ResponseError, ResponseGetItinerary } from "@/app/api/itinerary/route";
+import { getItinerary } from "@/app/utils/getItinerary";
 
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
@@ -20,6 +23,8 @@ const PublishJourney = () => {
   const { getUser: userId } = useContext(AuthContext);
   const router = useRouter();
 
+  const [error, setError] = useState(false);
+
   const [
     createJourney,
     { data: createJourneyData, error: createJourneyError },
@@ -27,39 +32,69 @@ const PublishJourney = () => {
 
   const [journeyData, setJourneyData] = useState<JourneyData>({
     origin: "",
+    originCoordinates: "",
     destination: "",
-    departure_date: dayjs(),
+    destinationCoordinates: "",
+    departureTime: dayjs(),
     price: 0,
     automaticAccept: true,
     availableSeats: 1,
   });
 
-  const handleOnValidateForm = () => {
+  const handleOnValidateForm = async () => {
+    const {
+      origin,
+      originCoordinates,
+      destination,
+      destinationCoordinates,
+      price,
+      departureTime,
+      automaticAccept,
+      availableSeats,
+    } = journeyData;
+
     if (
-      !journeyData.origin ||
-      !journeyData.destination ||
-      journeyData.departure_date < dayjs() ||
-      journeyData.price === 0 ||
-      journeyData.availableSeats === 0 ||
+      !origin ||
+      !destination ||
+      departureTime < dayjs() ||
+      price === 0 ||
+      availableSeats === 0 ||
       !userId
     ) {
       return;
+      // TODO gerer erreur
     }
 
+    const { duration }: ResponseGetItinerary = await getItinerary(
+      originCoordinates,
+      destinationCoordinates,
+      setError
+    );
+
+    console.log(duration);
+
+    const arrivalTime = departureTime.add(duration, "second");
+
+    console.log(arrivalTime);
+
     const journey = {
-      departure_time: journeyData.departure_date.toISOString(),
-      arrival_time: journeyData.departure_date.add(2, "hour").toISOString(),
-      origin: journeyData.origin,
-      destination: journeyData.destination,
-      price: journeyData.price,
-      availableSeats: journeyData.availableSeats,
-      automaticAccept: journeyData.automaticAccept,
+      departureTime: departureTime.toISOString(),
+      // A ajouter quand l'API IGN serai ok
+      // arrivalTime: arrivalTime.toISOString(),
+      arrivalTime: departureTime.add(2, "hour").toISOString(),
+      origin: origin,
+      originCoordinates: originCoordinates,
+      destination: destination,
+      destinationCoordinates: destinationCoordinates,
+      price: price,
+      availableSeats: availableSeats,
+      automaticAccept: automaticAccept,
       user: { id: userId },
     };
 
     createJourney({
       variables: { data: journey },
-      onError: (err) => console.error("error", err),
+      onError: (err) => setError(true),
       onCompleted: (res) =>
         router.push(`${routes.journey.pathname}/${res?.createJourney.id}`),
     });
@@ -69,9 +104,7 @@ const PublishJourney = () => {
     <UpdateOrCreateJourney
       setJourneyData={setJourneyData}
       journeyData={journeyData}
-      errorMessage={
-        createJourneyError ? "Impossible de créer le trajet!" : undefined
-      }
+      errorMessage={error ? "Impossible de créer le trajet!" : undefined}
       handleOnValidateForm={handleOnValidateForm}
     />
   );

@@ -26,17 +26,17 @@ export const assertDataExists = (data: object | null) => {
 export const validateJourneyInputs = ({
     origin,
     destination,
-    departure_time,
+    departureTime,
     price,
 }: {
     price?: number
     origin?: string
     destination?: string
-    departure_time?: Date
+    departureTime?: Date
 }) => {
     const now = dayjs()
 
-    if (dayjs(departure_time) < now.add(2, 'hour')) {
+    if (dayjs(departureTime) < now.add(2, 'hour')) {
         throw new Error('Departure time must be at least in two hours')
     }
 

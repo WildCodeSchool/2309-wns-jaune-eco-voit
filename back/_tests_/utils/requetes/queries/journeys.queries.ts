@@ -18,10 +18,10 @@ query Query($findJourneyByIdId: String!) {
 export const LIST_JOURNEYS = `#graphql 
   query Query {
     listJourneys {
-      departure_time
+      departureTime
       availableSeats
       automaticAccept
-      arrival_time
+      arrivalTime
       createdAt
       destination
       id

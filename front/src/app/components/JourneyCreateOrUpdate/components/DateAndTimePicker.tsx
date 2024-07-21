@@ -20,16 +20,16 @@ type DateAndTimeProps = {
 };
 
 const DateAndTimePicker = ({
-  journeyData: { departure_date },
+  journeyData: { departureTime },
   setJourneyData,
   dateTime,
 }: DateAndTimeProps) => {
-  function setDepartureTime(departureDate: Dayjs): Dayjs {
+  function setDepartureTime(departureTime: Dayjs): Dayjs {
     const today = dayjs().startOf("day");
-    if (departureDate.isSame(today, "day")) {
-      return departureDate.add(2, "hour");
+    if (departureTime.isSame(today, "day")) {
+      return departureTime.add(2, "hour");
     } else {
-      return departureDate;
+      return departureTime;
     }
   }
 
@@ -38,11 +38,11 @@ const DateAndTimePicker = ({
       {dateTime === "date" ? (
         <DateCalendar
           className="date_input"
-          value={setDepartureTime(departure_date)}
+          value={setDepartureTime(departureTime)}
           onChange={(newValue) =>
             setJourneyData((prevState: JourneyData) => ({
               ...prevState,
-              departure_date: newValue,
+              departureTime: newValue,
             }))
           }
           minDate={dayjs()}
@@ -51,16 +51,17 @@ const DateAndTimePicker = ({
       ) : (
         <TimePicker
           timezone="system"
-          value={setDepartureTime(departure_date)}
+          value={setDepartureTime(departureTime)}
           onChange={(newValue) => {
             if (newValue) {
+              console.log(newValue);
               setJourneyData((prevState: JourneyData) => ({
                 ...prevState,
-                departure_date: newValue,
+                departureTime: newValue,
               }));
             }
           }}
-          label="departure_time"
+          label="departureTime"
           ampm={false}
         />
       )}

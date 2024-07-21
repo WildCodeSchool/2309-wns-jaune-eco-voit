@@ -76,7 +76,7 @@ export default function Home() {
             {journeys.map(
               ({
                 id,
-                departure_time,
+                departureTime,
                 price,
                 user,
                 origin,
@@ -87,7 +87,7 @@ export default function Home() {
 
                 return (
                   <JourneyCard
-                    departureTime={departure_time}
+                    departureTime={departureTime}
                     key={id}
                     id={id}
                     price={

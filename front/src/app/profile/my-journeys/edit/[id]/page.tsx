@@ -15,12 +15,17 @@ import { useRouter } from "next/navigation";
 import UpdateOrCreateJourney, {
   JourneyData,
 } from "@/app/components/JourneyCreateOrUpdate/UpdateOrCreate";
+import { ResponseGetItinerary } from "@/app/api/itinerary/route";
+import { getItinerary } from "@/app/utils/getItinerary";
+import { Dayjs } from "dayjs";
 
 export default function Page({ params }: { params: { id: string } }) {
   const { id: journeyId } = params;
   const router = useRouter();
 
   const { getUser: userContextId } = useContext(AuthContext);
+
+  const [error, setError] = useState(false);
 
   const {
     data: journeyData,
@@ -37,10 +42,10 @@ export default function Page({ params }: { params: { id: string } }) {
 
   const [updatedJourneyData, setUpdatedJourneyData] = useState<JourneyData>({
     origin: "",
-    originCoordonates: "",
+    originCoordinates: "",
     destination: "",
-    destinationCoordonates: "",
-    departure_date: dayjs(),
+    destinationCoordinates: "",
+    departureTime: dayjs(),
     price: 0,
     automaticAccept: true,
     availableSeats: 1,
@@ -51,22 +56,22 @@ export default function Page({ params }: { params: { id: string } }) {
       const {
         origin,
         destination,
-        departure_time,
+        departureTime,
         price,
         automaticAccept,
         availableSeats,
-        originCoordonates,
-        destinationCoordonates,
+        originCoordinates,
+        destinationCoordinates,
       } = journeyData.findJourneyById;
       setUpdatedJourneyData({
         origin,
         destination,
-        departure_date: dayjs(departure_time),
+        departureTime: dayjs(departureTime),
         price,
         automaticAccept,
         availableSeats,
-        originCoordonates,
-        destinationCoordonates,
+        originCoordinates,
+        destinationCoordinates,
       });
     }
   }, [journeyData?.findJourneyById]);
@@ -95,17 +100,19 @@ export default function Page({ params }: { params: { id: string } }) {
   const {
     origin,
     destination,
-    departure_date,
+    departureTime,
     price,
     availableSeats,
     automaticAccept,
+    originCoordinates,
+    destinationCoordinates,
   } = updatedJourneyData;
 
-  const handleOnValidateForm = () => {
+  const handleOnValidateForm = async () => {
     if (
       !origin ||
       !destination ||
-      departure_date < dayjs() ||
+      departureTime < dayjs() ||
       price === 0 ||
       availableSeats === 0
     ) {
@@ -113,10 +120,24 @@ export default function Page({ params }: { params: { id: string } }) {
       return;
     }
 
+    const { duration }: ResponseGetItinerary = await getItinerary(
+      originCoordinates,
+      destinationCoordinates,
+      setError
+    );
+
+    console.log(duration);
+
+    const arrivalTime: Dayjs = departureTime.add(duration, "second");
+
+    console.log(arrivalTime);
+
     const updateJourneyInput: UpdateJourneyInput = {
       id: journeyId,
-      departure_time: departure_date.toISOString(),
-      arrival_time: departure_date.add(2, "hour").toISOString(),
+      departureTime: departureTime.toISOString(),
+      // A mettre quand l'API IGN sera ok
+      // arrivalTime: arrivalTime.toISOString(),
+      arrivalTime: departureTime.add(2, "hour").toISOString(),
       origin,
       destination,
       price,
@@ -129,7 +150,7 @@ export default function Page({ params }: { params: { id: string } }) {
       onCompleted: () => {
         router.push(`${routes.journeysUser.pathname}`);
       },
-      onError: (err) => console.error("error", err),
+      onError: () => setError(true),
     });
   };
 
@@ -160,9 +181,7 @@ export default function Page({ params }: { params: { id: string } }) {
           <UpdateOrCreateJourney
             journeyData={updatedJourneyData}
             errorMessage={
-              updateJourneyError
-                ? "Votre trajet n&apos;a pas été modifié"
-                : undefined
+              error ? "Votre trajet n&apos;a pas été modifié" : undefined
             }
             setJourneyData={setUpdatedJourneyData}
             handleOnValidateForm={handleOnValidateForm}

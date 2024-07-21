@@ -42,7 +42,7 @@ export class JourneyEntity {
 
     @Field()
     @Column()
-    originCoordonates: string
+    originCoordinates: string
 
     @Field()
     @Column({ length: 50 })
@@ -53,7 +53,7 @@ export class JourneyEntity {
 
     @Field()
     @Column()
-    destinationCoordonates: string
+    destinationCoordinates: string
 
     @Field(() => Float)
     @Column({ type: 'float' })
@@ -63,12 +63,12 @@ export class JourneyEntity {
     @Field()
     @Column('timestamp')
     @IsDate({ message: 'Departure time must be a valide date' })
-    departure_time: Date
+    departureTime: Date
 
     @Field()
     @Column('timestamp')
     @IsDate({ message: 'Arrival time must be a valide date' })
-    arrival_time: Date
+    arrivalTime: Date
 
     @Field()
     @Column()
@@ -124,10 +124,10 @@ export class PartialUserInput {
 @InputType()
 export class CreateJourneyInput {
     @Field()
-    departure_time: Date
+    departureTime: Date
 
     @Field()
-    arrival_time: Date
+    arrivalTime: Date
 
     @Field()
     origin: string
@@ -136,10 +136,10 @@ export class CreateJourneyInput {
     destination: string
 
     @Field()
-    originCoordonates: string
+    originCoordinates: string
 
     @Field()
-    destinationCoordonates: string
+    destinationCoordinates: string
 
     @Field(() => Float)
     price: number
@@ -160,10 +160,10 @@ export class UpdateJourneyInput {
     id: string
 
     @Field({ nullable: true })
-    departure_time?: Date
+    departureTime?: Date
 
     @Field({ nullable: true })
-    arrival_time?: Date
+    arrivalTime?: Date
 
     @Field({ nullable: true })
     origin?: string
@@ -172,10 +172,10 @@ export class UpdateJourneyInput {
     destination?: string
 
     @Field({ nullable: true })
-    originCoordonates?: string
+    originCoordinates?: string
 
     @Field({ nullable: true })
-    destinationCoordonates?: string
+    destinationCoordinates?: string
 
     @Field(() => Float, { nullable: true })
     price?: number

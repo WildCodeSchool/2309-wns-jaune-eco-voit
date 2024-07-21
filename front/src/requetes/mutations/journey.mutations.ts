@@ -7,8 +7,8 @@ export const CREATE_JOURNEY = gql`
       origin
       destination
       price
-      departure_time
-      arrival_time
+      departureTime
+      arrivalTime
       availableSeats
       status
       automaticAccept
@@ -48,7 +48,7 @@ export const UPDATE_JOURNEY = gql`
       origin
       destination
       price
-      departure_time
+      departureTime
       availableSeats
       status
       automaticAccept
@@ -63,8 +63,8 @@ export const UPDATE_JOURNEY_STATUS = gql`
       origin
       destination
       price
-      departure_time
-      arrival_time
+      departureTime
+      arrivalTime
       availableSeats
       status
       automaticAccept

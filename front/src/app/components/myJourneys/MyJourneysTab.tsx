@@ -27,7 +27,7 @@ const MyJourneysTab = ({
             user: { profilePicture, firstname },
             origin,
             destination,
-            departure_time,
+            departureTime,
             availableSeats,
             price,
             bookings,
@@ -55,9 +55,9 @@ const MyJourneysTab = ({
                     color="textSecondary"
                     className="text-sm"
                   >
-                    {formattedTime(departure_time)}
+                    {formattedTime(departureTime)}
                     <br />
-                    Départ : {formattedDate(departure_time)}
+                    Départ : {formattedDate(departureTime)}
                   </Typography>
                   <div className="flex flex-col items-center justify-evenly gap-2 m-2">
                     {status === "PLANNED" && (

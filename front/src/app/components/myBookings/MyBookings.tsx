@@ -26,7 +26,7 @@ const MyBookingsTab = ({
               status,
               id,
               journey: {
-                departure_time,
+                departureTime,
                 destination,
                 origin,
                 user: { profilePicture, firstname },
@@ -61,8 +61,8 @@ const MyBookingsTab = ({
                     color="textSecondary"
                     className="text-sm"
                   >
-                    {formattedDate(departure_time)} <br />
-                    Départ : {formattedTime(departure_time)}
+                    {formattedDate(departureTime)} <br />
+                    Départ : {formattedTime(departureTime)}
                   </Typography>
                 </div>
                 <Typography

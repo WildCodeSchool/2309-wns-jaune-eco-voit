@@ -3,11 +3,11 @@ import { gql } from "@apollo/client";
 export const LIST_JOURNEYS = gql`
   query ListJourneys($filters: ListJourneysWithFilters) {
     listJourneys(filters: $filters) {
-      arrival_time
+      arrivalTime
       automaticAccept
       availableSeats
-      originCoordonates
-      destinationCoordonates
+      originCoordinates
+      destinationCoordinates
       bookings {
         createdAt
         id
@@ -15,7 +15,7 @@ export const LIST_JOURNEYS = gql`
         updatedAt
       }
       createdAt
-      departure_time
+      departureTime
       destination
       id
       origin
@@ -41,10 +41,10 @@ export const LIST_JOURNEYS_BY_USER = gql`
       origin
       destination
       price
-      departure_time
-      arrival_time
-      originCoordonates
-      destinationCoordonates
+      departureTime
+      arrivalTime
+      originCoordinates
+      destinationCoordinates
       availableSeats
       status
       automaticAccept
@@ -84,11 +84,11 @@ export const FIND_JOURNEY_BY_ID = gql`
       origin
       destination
       price
-      departure_time
-      arrival_time
+      departureTime
+      arrivalTime
       availableSeats
-      originCoordonates
-      destinationCoordonates
+      originCoordinates
+      destinationCoordinates
       status
       automaticAccept
       createdAt
