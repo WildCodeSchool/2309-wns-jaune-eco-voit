@@ -30,8 +30,8 @@ export const LIST_BOOKINGS = gql`
         origin
         destination
         price
-        departure_time
-        arrival_time
+        departureTime
+        arrivalTime
         availableSeats
         status
         automaticAccept
@@ -78,8 +78,8 @@ export const LIST_BOOKINGS_BY_USER = gql`
         origin
         destination
         price
-        departure_time
-        arrival_time
+        departureTime
+        arrivalTime
         availableSeats
         status
         automaticAccept
@@ -129,8 +129,8 @@ export const LIST_BOOKINGS_BY_JOURNEY = gql`
         origin
         destination
         price
-        departure_time
-        arrival_time
+        departureTime
+        arrivalTime
         availableSeats
         status
         automaticAccept
@@ -177,8 +177,8 @@ export const FIND_BOOKING_BY_ID = gql`
         origin
         destination
         price
-        departure_time
-        arrival_time
+        departureTime
+        arrivalTime
         availableSeats
         status
         automaticAccept

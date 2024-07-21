@@ -23,8 +23,8 @@ export const UPDATE_USER = gql`
         origin
         destination
         price
-        departure_time
-        arrival_time
+        departureTime
+        arrivalTime
         availableSeats
         status
         automaticAccept
@@ -72,8 +72,8 @@ export const ARCHIVE_USER = gql`
         origin
         destination
         price
-        departure_time
-        arrival_time
+        departureTime
+        arrivalTime
         availableSeats
         status
         automaticAccept

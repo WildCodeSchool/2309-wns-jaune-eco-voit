@@ -38,13 +38,13 @@ const MyJourneysTab = ({
       ) : (
         [...journeys]
           .sort(
-            (a, b) => +new Date(a.departure_time) - +new Date(b.departure_time)
+            (a, b) => +new Date(a.departureTime) - +new Date(b.departureTime)
           )
           .map((journey, index) => {
             const {
               origin,
               destination,
-              departure_time,
+              departureTime,
               availableSeats,
               price,
               bookings,
@@ -59,8 +59,8 @@ const MyJourneysTab = ({
                 <div className="w-full flex flex-col gap-3">
                   <div className="flex flex-col xs:flex-row w-full xs:justify-between gap-4">
                     <p className="text-base">
-                      {formattedDate(departure_time)} à{" "}
-                      {formattedTime(departure_time)}
+                      {formattedDate(departureTime)} à{" "}
+                      {formattedTime(departureTime)}
                       <br />
                       <span className="text-sm text-dark60">
                         ({availableSeats} siège{availableSeats > 1 && "s"}{" "}

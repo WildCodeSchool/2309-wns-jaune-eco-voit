@@ -6,6 +6,7 @@ import {
   UpdateOrCreateJourneyProps,
 } from "@/app/components/JourneyCreateOrUpdate/UpdateOrCreate";
 import { useState } from "react";
+import { convertCoordinates } from "@/app/utils/coordinates";
 
 export type FromTo = "origin" | "destination";
 
@@ -24,7 +25,7 @@ const CityInput = ({
 }: CityInputProps) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleSelectCity = ({ city, geometry }: AddressResponse) => {
+  const handleSelectCity = ({ city, x, y }: AddressResponse) => {
     if (fromTo === "destination") {
       if (journeyData?.origin === city) {
         setErrorMessage(
@@ -34,12 +35,15 @@ const CityInput = ({
       }
     }
 
-    console.log("coord", geometry);
+    const { latitude, longitude } = convertCoordinates(
+      parseFloat(x),
+      parseFloat(y)
+    );
 
     setJourneyData((prevState) => ({
       ...prevState,
       [fromTo]: city ?? "",
-      // [`${fromTo}Coordonates`]: coordinates,
+      [`${fromTo}Coordinates`]: `${latitude},${longitude}`,
     }));
   };
 

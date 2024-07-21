@@ -41,12 +41,14 @@ export type AddressResponse = {
   city: string;
   postCode: string;
   context: string;
-  geometry?: Geometry["coordonates"];
+  geometry?: Geometry["coordinates"];
   label: string;
+  x: string;
+  y: string;
 };
 
 type Geometry = {
-  coordonates: string[];
+  coordinates: string[];
 };
 
 type Feature = {
@@ -127,7 +129,7 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
     if (formattedAddress) {
       const updatedAddress = {
         ...formattedAddress,
-        geometry: data?.geometry.coordonates,
+        geometry: data?.geometry.coordinates,
       };
 
       handleSelectedAddress(updatedAddress);

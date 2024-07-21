@@ -23,8 +23,8 @@ export const LIST_USERS = gql`
         origin
         destination
         price
-        departure_time
-        arrival_time
+        departureTime
+        arrivalTime
         availableSeats
         status
         automaticAccept
@@ -63,8 +63,8 @@ export const FIND_USER_BY_ID = gql`
         origin
         destination
         price
-        departure_time
-        arrival_time
+        departureTime
+        arrivalTime
         availableSeats
         status
         automaticAccept
