@@ -53,8 +53,6 @@ const PublishJourney = () => {
       availableSeats,
     } = journeyData;
 
-  const handleValidateForm = () => {
-    console.log("tik");
     if (
       !origin ||
       !destination ||
