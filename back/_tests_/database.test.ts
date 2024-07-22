@@ -240,6 +240,8 @@ describe('Test sur une base de donnée de test', () => {
                             departureTime: '2025-10-05T14:48:00.000Z',
                             destination: 'Paris',
                             origin: 'Nantes',
+                            originCoordinates: '1.2525,1.2525',
+                            destinationCoordinates: '2.2020,2.2020',
                             price: 35,
                             user: {
                                 id: olivierDriver?.id,
@@ -264,6 +266,8 @@ describe('Test sur une base de donnée de test', () => {
                 },
                 availableSeats: 3,
                 automaticAccept: true,
+                originCoordinates: '1.2525,1.2525',
+                destinationCoordinates: '2.2020,2.2020',
             },
         })
     })
