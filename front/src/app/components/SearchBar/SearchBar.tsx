@@ -45,8 +45,8 @@ const SearchBar = ({ onSearchJourneys }: SearchJourneysProps) => {
   const handleSearch = () => {
     if (origin && destination && departureTime && availableSeats) {
       onSearchJourneys({
-        origin: origin.city,
-        destination: destination.city,
+        origin: origin.nom,
+        destination: destination.nom,
         departureTime,
         availableSeats,
       });
