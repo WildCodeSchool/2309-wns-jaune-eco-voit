@@ -45,6 +45,7 @@ export interface Payload {
 
 // Création d'un serveur HTTP à partir de la bibliothéque d'express
 const app = express()
+
 const httpServer = http.createServer(app)
 
 const bookingService = new BookingService()
