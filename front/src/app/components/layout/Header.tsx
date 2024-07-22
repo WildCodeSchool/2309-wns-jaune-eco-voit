@@ -1,6 +1,6 @@
 "use client";
 //chore
-import React, { useContext, useEffect, useState } from "react";
+import { SyntheticEvent, useContext, useEffect, useState } from "react";
 //Assets
 // import logo from "@/app/assets/logo.png";
 import {
@@ -66,7 +66,7 @@ const Header = () => {
     setAnchorEl(null);
   };
   const handleCloseSnackbar = (
-    event: React.SyntheticEvent | Event,
+    event: SyntheticEvent | Event,
     reason?: string
   ) => {
     if (reason === "clickaway") {

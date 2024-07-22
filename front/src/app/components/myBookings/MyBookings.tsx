@@ -40,8 +40,8 @@ const MyBookingsTab = ({
         [...bookings]
           .sort(
             (a, b) =>
-              +new Date(a.journey.departure_time) -
-              +new Date(b.journey.departure_time)
+              +new Date(a.journey.departureTime) -
+              +new Date(b.journey.departureTime)
           )
           .map(
             (
@@ -50,7 +50,7 @@ const MyBookingsTab = ({
                 id,
                 journey: {
                   id: journeyId,
-                  departure_time,
+                  departureTime,
                   destination,
                   origin,
                   user: {
@@ -77,8 +77,8 @@ const MyBookingsTab = ({
                 <div className="w-full flex flex-col gap-3">
                   <div className="flex flex-col xs:flex-row w-full xs:justify-between gap-4">
                     <p className="text-base">
-                      {formattedDate(departure_time)} à{" "}
-                      {formattedTime(departure_time)}
+                      {formattedDate(departureTime)} à{" "}
+                      {formattedTime(departureTime)}
                       <br />
                     </p>
                     <p className="price text-sm px-3 py-1 rounded-md bg-primary100 text-white w-fit h-fit flex-shrink-0">

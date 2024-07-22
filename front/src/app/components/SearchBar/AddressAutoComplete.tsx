@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, FC, ChangeEvent } from "react";
 import {
   TextField,
   CircularProgress,
@@ -38,25 +38,15 @@ function debounce<Func extends (...args: any[]) => void>(
 }
 
 export type AddressResponse = {
-  city: string;
-  postCode: string;
-  context: string;
-  geometry?: Geometry["coordonates"];
-  label: string;
+  nom: string;
+  codesPostaux: string[];
+  centre: { coordinates: [number, number] };
+  population: number;
 };
 
-type Geometry = {
-  coordonates: string[];
-};
+type Feature = AddressResponse;
 
-type Feature = {
-  properties: AddressResponse;
-  geometry: Geometry;
-};
-
-type ApiResponse = {
-  features: Feature[];
-};
+type ApiResponse = Feature[];
 
 type AddressAutoCompleteProps = {
   label: string;
@@ -64,11 +54,11 @@ type AddressAutoCompleteProps = {
   clearAddress: () => void;
   defaultValue?: string;
   sx?: SxProps<Theme>;
-  gotAdornment?: boolean; // Corrected type definition for sx prop
+  gotAdornment?: boolean;
   handleOnChange?: () => void;
 };
 
-const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
+const AddressAutoComplete: FC<AddressAutoCompleteProps> = ({
   label,
   handleSelectedAddress,
   clearAddress,
@@ -94,13 +84,14 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
       fetch(`/api/autocomplete?city=${encoded}`)
         .then((res) => res.json())
         .then((data: ApiResponse) => {
-          setOptions(data.features.map((feature) => feature.properties.label));
-          setApiResponse(data.features);
+          setOptions(data.map((feature) => feature.nom));
+          setApiResponse(data);
           setLoading(false);
         });
     }, 300),
     []
   );
+
   useEffect(() => {
     if (inputValue.length > 3) {
       fetchSuggestions(inputValue);
@@ -108,7 +99,7 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
   }, [inputValue, fetchSuggestions]);
 
   const handleOptionChange = (
-    _: React.ChangeEvent<{}>,
+    _: ChangeEvent<{}>,
     value: string | null,
     reason: AutocompleteChangeReason
   ) => {
@@ -119,20 +110,13 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
       return;
     }
 
-    const data = apiResponse.find(
-      (feature: any) => feature.properties.label === value
-    );
-    const formattedAddress = data?.properties;
+    const data = apiResponse.find((feature) => feature.nom === value);
 
-    if (formattedAddress) {
-      const updatedAddress = {
-        ...formattedAddress,
-        geometry: data?.geometry.coordonates,
-      };
-
-      handleSelectedAddress(updatedAddress);
+    if (data) {
+      handleSelectedAddress(data);
     }
   };
+
   return (
     <Stack>
       <Autocomplete
@@ -142,6 +126,13 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
         options={options}
         onInputChange={(event, newInputValue) => setInputValue(newInputValue)}
         onChange={handleOptionChange}
+        renderOption={(props, option) => {
+          return (
+            <li {...props} key={option + self.crypto.randomUUID()}>
+              {option}
+            </li>
+          );
+        }}
         renderInput={(params) => (
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {gotAdornment && (
@@ -172,4 +163,5 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
     </Stack>
   );
 };
+
 export default AddressAutoComplete;

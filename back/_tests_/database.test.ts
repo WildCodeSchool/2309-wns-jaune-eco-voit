@@ -7,6 +7,7 @@ import assert from 'assert'
 
 import datasource from '../src/db_test_jest'
 import initialDatasource from '../src/db'
+
 import UserService from '../src/services/user.service'
 import JourneyService from '../src/services/journey.service'
 import BookingService from '../src/services/booking.service'
@@ -234,12 +235,14 @@ describe('Test sur une base de donnée de test', () => {
                     query: CREATE_JOURNEY,
                     variables: {
                         data: {
-                            arrival_time: '2025-10-05T16:48:00.000Z',
+                            arrivalTime: '2025-10-05T16:48:00.000Z',
                             automaticAccept: true,
                             availableSeats: 3,
-                            departure_time: '2025-10-05T14:48:00.000Z',
+                            departureTime: '2025-10-05T14:48:00.000Z',
                             destination: 'Paris',
                             origin: 'Nantes',
+                            originCoordinates: '1.2525,1.2525',
+                            destinationCoordinates: '2.2020,2.2020',
                             price: 35,
                             user: {
                                 id: olivierDriver?.id,
@@ -264,6 +267,8 @@ describe('Test sur une base de donnée de test', () => {
                 },
                 availableSeats: 3,
                 automaticAccept: true,
+                originCoordinates: '1.2525,1.2525',
+                destinationCoordinates: '2.2020,2.2020',
             },
         })
     })
@@ -316,8 +321,6 @@ describe('Test sur une base de donnée de test', () => {
             )
 
         assert(responseCreateBooking.body.kind === 'single')
-
-        console.log(JSON.stringify(responseCreateBooking.body.singleResult))
 
         expect(responseCreateBooking.body.singleResult.data).toEqual({
             createBooking: {

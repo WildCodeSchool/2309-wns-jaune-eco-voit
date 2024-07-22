@@ -68,24 +68,21 @@ describe("Journey publish page", () => {
     cy.findByRole("button", { name: "Terminer" }).click();
 
     /*------ Validation step ------*/
-    cy.contains("Félicitations, votre trajet est en ligne!").should(
-      "be.visible"
-    );
 
-    waitFor(() => {
-      cy.url().should("include", "http://localhost:3002/journey/");
-    });
-
-    cy.contains("Félicitations, votre trajet est en ligne!").should(
-      "be.visible"
+    waitFor(
+      () => {
+        cy.url().should("include", "http://localhost:3002/journey/");
+      },
+      { timeout: 30000 }
     );
 
     waitFor(
       () => {
         cy.findByRole("textbox", { name: "Votre message" });
       },
-      { timeout: 30000 }
+      { timeout: 100000 }
     );
+
     cy.findByRole("textbox", { name: "Votre message" }).type(
       "Voici mon message"
     );

@@ -6,6 +6,7 @@ import {
   UpdateOrCreateJourneyProps,
 } from "@/app/components/JourneyCreateOrUpdate/UpdateOrCreate";
 import { useState } from "react";
+import { convertCoordinates } from "@/app/utils/coordinates";
 
 export type FromTo = "origin" | "destination";
 
@@ -24,13 +25,14 @@ const CityInput = ({
 }: CityInputProps) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleSelectCity = (value: AddressResponse) => {
-    if (!value) {
-      return;
-    }
+  const handleSelectCity = (response: AddressResponse) => {
+    const {
+      nom: city,
+      centre: { coordinates },
+    } = response;
 
     if (fromTo === "destination") {
-      if (journeyData?.origin === value.city) {
+      if (journeyData?.origin === city) {
         setErrorMessage(
           "Votre point d&apos;arrivée ne peut pas être le meme que votre point de départ"
         );
@@ -40,7 +42,8 @@ const CityInput = ({
 
     setJourneyData((prevState) => ({
       ...prevState,
-      [fromTo]: value.city ?? "",
+      [fromTo]: city ?? "",
+      [`${fromTo}Coordinates`]: `${coordinates[0]},${coordinates[1]}`,
     }));
   };
 

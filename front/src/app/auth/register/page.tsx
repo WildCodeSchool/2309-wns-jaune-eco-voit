@@ -18,7 +18,7 @@ import { alpha, useTheme } from "@mui/material/styles";
 
 import { useRouter } from "next/navigation";
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { routes } from "@/app/lib/routes";
 import PasswordInput from "@/app/components/Profile/PasswordInput";
 import CardButton from "@/app/components/Buttons/CardButton";
@@ -68,7 +68,7 @@ function Register() {
     return EMAIL_REGEX.test(email);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!checkIfPasswordMatch()) return;

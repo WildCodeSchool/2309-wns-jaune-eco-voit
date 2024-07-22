@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { ReactNode, useCallback, useMemo, useState } from "react";
 import { createContext } from "react";
 
 export const AuthContext = createContext<{
@@ -13,7 +13,7 @@ export const AuthContext = createContext<{
   contextLogout: () => {},
 });
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<undefined | string>(undefined);
 
   const updateUser = useCallback(

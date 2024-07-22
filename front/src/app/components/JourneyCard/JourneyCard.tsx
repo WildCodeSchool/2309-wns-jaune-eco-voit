@@ -31,7 +31,6 @@ const JourneyCard = ({
   user: { firstname, id: userId, averageRate, profilePicture },
   id,
 }: JourneyCardProps) => {
-  console.log(userId);
   return (
     <Grid item sm={10} md={5}>
       <Link

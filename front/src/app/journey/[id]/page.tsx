@@ -76,8 +76,8 @@ export default function Page({ params }: { params: { id: string } }) {
     findJourneyById: {
       user: driver,
       bookings,
-      departure_time,
-      arrival_time,
+      departureTime,
+      arrivalTime,
       origin,
       destination,
       availableSeats,
@@ -106,7 +106,7 @@ export default function Page({ params }: { params: { id: string } }) {
           align="center"
           sx={{ height: "10vh", my: 4 }}
         >
-          {dayjs(departure_time).format("dddd D MMMM YYYY")}
+          {dayjs(departureTime).format("dddd D MMMM YYYY")}
         </Typography>
 
         <Grid container spacing={4}>
@@ -139,7 +139,7 @@ export default function Page({ params }: { params: { id: string } }) {
             {userContextId &&
             driver.id !== userContextId &&
             availableSeats > 0 &&
-            !tooLateToBook(departure_time) ? (
+            !tooLateToBook(departureTime) ? (
               <Stack
                 direction="row"
                 justifyContent="space-between"
@@ -213,8 +213,8 @@ export default function Page({ params }: { params: { id: string } }) {
               Nombre de places disponibles : {availableSeats}
             </p>
             <JourneyTimeline
-              departureTime={departure_time}
-              arrivalTime={arrival_time}
+              departureTime={departureTime}
+              arrivalTime={arrivalTime}
               origin={origin}
               destination={destination}
             />

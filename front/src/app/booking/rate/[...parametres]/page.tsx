@@ -80,7 +80,7 @@ const RatingPage = ({
 
   const {
     findBookingById: {
-      journey: { departure_time, origin, destination },
+      journey: { departureTime, origin, destination },
       user: { id: passengerId },
       status: bookingStatus,
     },
@@ -117,7 +117,7 @@ const RatingPage = ({
             profilePicture={profilePicture ?? undefined}
           />
           <JourneyCardHeader
-            departureTime={departure_time}
+            departureTime={departureTime}
             origin={origin}
             destination={destination}
           />

@@ -1,6 +1,5 @@
 "use client";
-import React, { useContext, useEffect } from "react";
-import { useState } from "react";
+import { SyntheticEvent, useContext, useEffect, useState } from "react";
 import {
   useListBookingsByUserLazyQuery,
   useListJourneysByUserLazyQuery,
@@ -112,7 +111,7 @@ export default function MyJourneys() {
   }
 
   const handleChange = (
-    event: React.SyntheticEvent,
+    event: SyntheticEvent,
     newValue: "JOURNEYS" | "BOOKINGS"
   ) => {
     setTabDisplayed(newValue);

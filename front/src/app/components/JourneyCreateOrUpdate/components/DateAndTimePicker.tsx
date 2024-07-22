@@ -8,6 +8,7 @@ import {
   JourneyData,
   UpdateOrCreateJourneyProps,
 } from "@/app/components/JourneyCreateOrUpdate/UpdateOrCreate";
+import { useState } from "react";
 
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
@@ -20,29 +21,27 @@ type DateAndTimeProps = {
 };
 
 const DateAndTimePicker = ({
-  journeyData: { departure_date },
+  journeyData: { departureTime },
   setJourneyData,
   dateTime,
 }: DateAndTimeProps) => {
-  function setDepartureTime(departureDate: Dayjs): Dayjs {
-    const today = dayjs().startOf("day");
-    if (departureDate.isSame(today, "day")) {
-      return departureDate.add(2, "hour");
-    } else {
-      return departureDate;
-    }
-  }
+  const [error, setError] = useState(false);
+
+  const getDepartureTime = (departureTime: Dayjs): Dayjs =>
+    departureTime.isSame(dayjs().startOf("day"), "day")
+      ? departureTime.add(2, "hour")
+      : departureTime;
 
   return (
     <>
       {dateTime === "date" ? (
         <DateCalendar
           className="date_input"
-          value={setDepartureTime(departure_date)}
+          value={departureTime}
           onChange={(newValue) =>
             setJourneyData((prevState: JourneyData) => ({
               ...prevState,
-              departure_date: newValue,
+              departureTime: getDepartureTime(newValue),
             }))
           }
           minDate={dayjs()}
@@ -51,19 +50,23 @@ const DateAndTimePicker = ({
       ) : (
         <TimePicker
           timezone="system"
-          value={setDepartureTime(departure_date)}
+          value={departureTime}
           onChange={(newValue) => {
             if (newValue) {
+              if (newValue < dayjs().add(118, "minute")) {
+                setError(true);
+              }
               setJourneyData((prevState: JourneyData) => ({
                 ...prevState,
-                departure_date: newValue,
+                departureTime: newValue,
               }));
             }
           }}
-          label="departure_time"
+          label="departureTime"
           ampm={false}
         />
       )}
+      {error && "Votre heure de départ ne peut pas être dans moins de 2h"}
     </>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 //cores
-import { useState, useContext } from "react";
+import { useState, useContext, FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 //graphQL
 import { LoginInput, useLoginLazyQuery } from "@/types/graphql";
@@ -36,7 +36,7 @@ const Login = () => {
 
   const { updateUser } = useContext(AuthContext);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const { email, password } = Object.fromEntries(formData) as LoginInput;

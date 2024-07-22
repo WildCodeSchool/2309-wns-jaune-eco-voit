@@ -29,8 +29,8 @@ export const CREATE_BOOKING = gql`
         origin
         destination
         price
-        departure_time
-        arrival_time
+        departureTime
+        arrivalTime
         availableSeats
         status
         automaticAccept
@@ -70,8 +70,8 @@ export const ACCEPT_BOOKING = gql`
         origin
         destination
         price
-        departure_time
-        arrival_time
+        departureTime
+        arrivalTime
         availableSeats
         status
         automaticAccept
@@ -111,8 +111,8 @@ export const REJECT_BOOKING = gql`
         origin
         destination
         price
-        departure_time
-        arrival_time
+        departureTime
+        arrivalTime
         availableSeats
         status
         automaticAccept
@@ -152,8 +152,8 @@ export const CANCEL_BOOKING = gql`
         origin
         destination
         price
-        departure_time
-        arrival_time
+        departureTime
+        arrivalTime
         availableSeats
         status
         automaticAccept

@@ -15,12 +15,17 @@ import { useRouter } from "next/navigation";
 import UpdateOrCreateJourney, {
   JourneyData,
 } from "@/app/components/JourneyCreateOrUpdate/UpdateOrCreate";
+import { ResponseGetItinerary } from "@/app/api/itinerary/route";
+import { getItinerary } from "@/app/utils/getItinerary";
+import { Dayjs } from "dayjs";
 
 export default function Page({ params }: { params: { id: string } }) {
   const { id: journeyId } = params;
   const router = useRouter();
 
   const { getUser: userContextId } = useContext(AuthContext);
+
+  const [error, setError] = useState(false);
 
   const {
     data: journeyData,
@@ -32,13 +37,14 @@ export default function Page({ params }: { params: { id: string } }) {
     },
   });
 
-  const [updateJourney, { error: updateJourneyError }] =
-    useUpdateJourneyMutation();
+  const [updateJourney] = useUpdateJourneyMutation();
 
   const [updatedJourneyData, setUpdatedJourneyData] = useState<JourneyData>({
     origin: "",
+    originCoordinates: "",
     destination: "",
-    departure_date: dayjs(),
+    destinationCoordinates: "",
+    departureTime: dayjs(),
     price: 0,
     automaticAccept: true,
     availableSeats: 1,
@@ -49,25 +55,31 @@ export default function Page({ params }: { params: { id: string } }) {
       const {
         origin,
         destination,
-        departure_time,
+        departureTime,
         price,
         automaticAccept,
         availableSeats,
+        originCoordinates,
+        destinationCoordinates,
       } = journeyData.findJourneyById;
       setUpdatedJourneyData({
         origin,
         destination,
-        departure_date: dayjs(departure_time),
+        departureTime: dayjs(departureTime),
         price,
         automaticAccept,
         availableSeats,
+        originCoordinates,
+        destinationCoordinates,
       });
     }
   }, [journeyData?.findJourneyById]);
 
-  if (journeyError) {
-    router.push(`${routes["error"].pathname}`);
-  }
+  useEffect(() => {
+    if (journeyError) {
+      router.push(`${routes["error"].pathname}`);
+    }
+  }, [journeyError, router]);
 
   if (journeyLoading) {
     return (
@@ -89,28 +101,45 @@ export default function Page({ params }: { params: { id: string } }) {
   const {
     origin,
     destination,
-    departure_date,
+    departureTime,
     price,
     availableSeats,
     automaticAccept,
+    originCoordinates,
+    destinationCoordinates,
   } = updatedJourneyData;
 
-  const handleOnValidateForm = () => {
+  const handleOnValidateForm = async () => {
     if (
       !origin ||
       !destination ||
-      departure_date < dayjs() ||
+      departureTime.isBefore(dayjs()) ||
       price === 0 ||
       availableSeats === 0
     ) {
-      //TODO GERER ERREUR
+      // TODO: Handle error
       return;
     }
 
-    const updateJourneyInput: UpdateJourneyInput = {
+    const response: ResponseGetItinerary | undefined = await getItinerary(
+      originCoordinates,
+      destinationCoordinates,
+      setError
+    );
+
+    if (!response?.duration) {
+      setError(true);
+      return;
+    }
+
+    const { duration } = response;
+
+    const arrivalTime = departureTime.add(duration, "second");
+
+    const updateJourneyInput = {
       id: journeyId,
-      departure_time: departure_date.toISOString(),
-      arrival_time: departure_date.add(2, "hour").toISOString(),
+      departureTime: departureTime.toISOString(),
+      arrivalTime: arrivalTime.toISOString(),
       origin,
       destination,
       price,
@@ -123,46 +152,42 @@ export default function Page({ params }: { params: { id: string } }) {
       onCompleted: () => {
         router.push(`${routes.journeysUser.pathname}`);
       },
-      onError: (err) => console.error("error", err),
+      onError: () => setError(true),
     });
   };
 
   return (
-    <Stack className="h-full w-10/12 mx-auto">
-      <Stack direction="column" alignItems="center" spacing={4}>
-        {userContextId !== driverId ? (
-          <Typography
-            variant="h4"
-            component="h1"
-            align="center"
-            sx={{ height: "10vh", my: 4 }}
-          >
-            Vous n&apos;avez pas le droit de modifier ce trajet, il n&apos;est
-            pas le votre !
-          </Typography>
-        ) : bookings.length >= 1 ? (
-          <Typography
-            variant="h4"
-            component="h1"
-            align="center"
-            sx={{ height: "10vh", my: 4 }}
-          >
-            Ayant déjà des réservations sur ce trajet, vous ne pouvez pas le
-            modifier. Annulez le si vous avez un imprévu.
-          </Typography>
-        ) : (
-          <UpdateOrCreateJourney
-            journeyData={updatedJourneyData}
-            errorMessage={
-              updateJourneyError
-                ? "Votre trajet n&apos;a pas été modifié"
-                : undefined
-            }
-            setJourneyData={setUpdatedJourneyData}
-            handleOnValidateForm={handleOnValidateForm}
-          />
-        )}
-      </Stack>
-    </Stack>
+    <>
+      {userContextId !== driverId ? (
+        <Typography
+          variant="h4"
+          component="h1"
+          align="center"
+          sx={{ height: "10vh", my: 4 }}
+        >
+          Vous n&apos;avez pas le droit de modifier ce trajet, il n&apos;est pas
+          le votre !
+        </Typography>
+      ) : bookings.length >= 1 ? (
+        <Typography
+          variant="h4"
+          component="h1"
+          align="center"
+          sx={{ height: "10vh", my: 4 }}
+        >
+          Ayant déjà des réservations sur ce trajet, vous ne pouvez pas le
+          modifier. Annulez le si vous avez un imprévu.
+        </Typography>
+      ) : (
+        <UpdateOrCreateJourney
+          journeyData={updatedJourneyData}
+          errorMessage={
+            error ? "Votre trajet n&apos;a pas été modifié" : undefined
+          }
+          setJourneyData={setUpdatedJourneyData}
+          handleOnValidateForm={handleOnValidateForm}
+        />
+      )}
+    </>
   );
 }

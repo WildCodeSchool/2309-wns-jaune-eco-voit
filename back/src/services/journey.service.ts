@@ -51,7 +51,7 @@ export default class JourneyService {
             where: {
                 origin: filters?.origin,
                 destination: filters?.destination,
-                departure_time: filters?.departureTime
+                departureTime: filters?.departureTime
                     ? MoreThanOrEqual(filters.departureTime)
                     : undefined,
                 automaticAccept: filters?.automaticAccept,
@@ -66,7 +66,7 @@ export default class JourneyService {
     async listJourneysForScheduler(): Promise<JourneyEntity[]> {
         return await this.db.find({
             where: {
-                departure_time: LessThanOrEqual(
+                departureTime: LessThanOrEqual(
                     dayjs().subtract(1, 'day').toDate()
                 ),
                 status: 'PLANNED',
@@ -171,7 +171,7 @@ export default class JourneyService {
                 }) => {
                     await bookingService.updateBookingStatus({
                         id,
-                        status: newStatus,
+                        status: 'CANCELLED',
                     })
 
                     sendEmailService.sendCancelJourneyEmail({
@@ -214,7 +214,7 @@ export default class JourneyService {
 
                     await bookingService.updateBookingStatus({
                         id: bookingId,
-                        status: newStatus,
+                        status: 'DONE',
                     })
 
                     sendEmailService.sendRateEmail({

@@ -3,14 +3,15 @@ export async function GET(request: Request) {
   const address = searchParams.get("city");
 
   const res = await fetch(
-    `https://api-adresse.data.gouv.fr/search/?q=${encodeURI(address!)}&type=municipality`,
+    `https://geo.api.gouv.fr/communes?nom=${encodeURIComponent(
+      address!
+    )}&fields=nom,centre`,
     {
       headers: {
         "Content-Type": "application/json",
-        // 'API-Key': process.env.DATA_API_KEY!,
       },
     }
   );
-  const adressList = await res.json();
-  return Response.json(adressList);
+  const cityList = await res.json();
+  return new Response(JSON.stringify(cityList));
 }

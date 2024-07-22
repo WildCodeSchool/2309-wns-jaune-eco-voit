@@ -34,9 +34,8 @@ const BookJourneyButton = ({ journey, passenger }: BookJourneyButtonProps) => {
           router.push(`/booking/${res.createBooking.id}`);
         }, 100);
       },
-      onError: (err) => {
-        console.log("err", err.message);
-        setErrorMessage(err.message);
+      onError: ({ message }) => {
+        setErrorMessage(message);
       },
     });
   };
@@ -50,7 +49,7 @@ const BookJourneyButton = ({ journey, passenger }: BookJourneyButtonProps) => {
               variant="contained"
               size="large"
               onClick={BookJourney}
-              disabled={tooLateToBook(journey.departure_time)}
+              disabled={tooLateToBook(journey.departureTime)}
             >
               Réserver
             </Button>
