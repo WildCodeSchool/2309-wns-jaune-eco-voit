@@ -26,7 +26,7 @@ export default function JourneyMessagePost({
       direction={"column"}
       spacing={2}
       alignItems={"center"}
-      className="mt-8"
+      className="mt-8 mb-4"
     >
       <TextField
         label="Votre message"

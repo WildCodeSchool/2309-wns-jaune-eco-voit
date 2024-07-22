@@ -100,7 +100,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <Stack className="h-full w-10/12 mx-auto">
-      <Stack direction="column" alignItems="center" spacing={4}>
+      <Stack direction="column" alignItems="center" spacing={4} marginTop={10}>
         <Typography
           variant="h4"
           component="h1"
@@ -225,7 +225,7 @@ export default function Page({ params }: { params: { id: string } }) {
         </Grid>
 
         {userContextId && isUserAllowedToAccessMessage() && (
-          <Grid container spacing={2} alignItems="center" sx={{ mt: 4 }}>
+          <Grid container spacing={2} alignItems="center" sx={{ marginY: 4 }}>
             <Grid item xs={12}>
               <JourneyMessages userId={userContextId} journeyId={journeyId} />
             </Grid>

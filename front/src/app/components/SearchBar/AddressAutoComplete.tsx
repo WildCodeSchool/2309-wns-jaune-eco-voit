@@ -65,6 +65,7 @@ type AddressAutoCompleteProps = {
   defaultValue?: string;
   sx?: SxProps<Theme>;
   gotAdornment?: boolean; // Corrected type definition for sx prop
+  isFirstElement?: boolean; // Corrected type definition for sx prop
 };
 
 const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
@@ -74,12 +75,12 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
   defaultValue,
   sx,
   gotAdornment,
+  isFirstElement,
 }) => {
   const [options, setOptions] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [apiResponse, setApiResponse] = useState<Feature[]>([]);
-  const [geometry, setGeometry] = useState<string[]>([]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const fetchSuggestions = useCallback(
@@ -133,7 +134,12 @@ const AddressAutoComplete: React.FC<AddressAutoCompleteProps> = ({
     <Stack>
       <Autocomplete
         value={defaultValue ?? ""}
-        sx={{ width: 300 }}
+        sx={{
+          maxWidth: { sm: "100%", lg: 300 },
+          minWidth: 200,
+          backgroundColor: "white",
+          borderRadius: isFirstElement ? "32px 0 0 32px" : "0",
+        }}
         freeSolo
         options={options}
         onInputChange={(event, newInputValue) => setInputValue(newInputValue)}
