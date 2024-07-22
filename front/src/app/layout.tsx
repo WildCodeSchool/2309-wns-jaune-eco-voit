@@ -9,13 +9,13 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/fr";
 import { AuthProvider } from "@/context/authContext";
-import { Suspense } from "react";
+import { ReactNode, Suspense } from "react";
 import CircularLoading from "./components/CircularLoading/CircularLoading";
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   const client = new ApolloClient({
     uri: `${process.env.NEXT_PUBLIC_APOLLO_CLIENT_URI}`,

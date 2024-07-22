@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useState } from "react";
+import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import Image from "next/image";
 import { AuthContext } from "@/context/authContext";
 import { GetProfileDocument, useUpdateUserMutation } from "@/types/graphql";
@@ -17,13 +17,13 @@ const UploadPicture = () => {
     refetchQueries: [{ query: GetProfileDocument }],
   });
 
-  const handlePreviewAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePreviewAvatar = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setPreview(URL.createObjectURL(file));
   };
 
-  const handleFileUpload = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleFileUpload = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);

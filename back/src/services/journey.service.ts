@@ -171,7 +171,7 @@ export default class JourneyService {
                 }) => {
                     await bookingService.updateBookingStatus({
                         id,
-                        status: newStatus,
+                        status: 'CANCELLED',
                     })
 
                     sendEmailService.sendCancelJourneyEmail({
@@ -214,7 +214,7 @@ export default class JourneyService {
 
                     await bookingService.updateBookingStatus({
                         id: bookingId,
-                        status: newStatus,
+                        status: 'DONE',
                     })
 
                     sendEmailService.sendRateEmail({

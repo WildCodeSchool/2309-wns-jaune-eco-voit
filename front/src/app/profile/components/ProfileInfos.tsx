@@ -1,7 +1,5 @@
 import { UserEntity } from "@/types/graphql";
 import { Avatar, Rating } from "@mui/material";
-import dayjs from "dayjs";
-import React from "react";
 
 const ProfileInfos = ({ user }: { user: UserEntity }) => {
   const {

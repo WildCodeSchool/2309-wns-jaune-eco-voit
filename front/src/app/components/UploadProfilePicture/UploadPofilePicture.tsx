@@ -1,6 +1,6 @@
 "use client";
 import { Avatar, Button } from "@mui/material";
-import React, { SetStateAction, useContext, useState } from "react";
+import { ChangeEvent, FormEvent, useContext, useState } from "react";
 
 import { AuthContext } from "@/context/authContext";
 import { GetProfileDocument, useUpdateUserMutation } from "@/types/graphql";
@@ -23,7 +23,7 @@ const UploadPofilePicture = ({
   });
   const [preview, setPreview] = useState<string>("");
 
-  const handlePreviewAvatar = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePreviewAvatar = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) {
       setPreview("");
@@ -32,7 +32,7 @@ const UploadPofilePicture = ({
     setPreview(URL.createObjectURL(file));
   };
 
-  const handleFileUpload = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleFileUpload = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formData = new FormData(e.currentTarget);
