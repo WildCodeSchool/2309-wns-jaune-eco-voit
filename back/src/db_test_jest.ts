@@ -2,8 +2,10 @@ import { DataSource } from 'typeorm'
 
 export default new DataSource({
     type: 'postgres',
-    host: 'localhost',
-    port: 5435,
+    host: process.env.DB_TEST_JEST_HOST ?? 'localhost',
+    port: process.env.DB_TEST_JEST_PORT
+        ? parseInt(process.env.DB_TEST_JEST_PORT)
+        : 5435,
     username: 'ecovoit_user',
     password: 'ecovoit_password',
     database: 'ecovoit',
