@@ -8,6 +8,7 @@ import {
   JourneyData,
   UpdateOrCreateJourneyProps,
 } from "@/app/components/JourneyCreateOrUpdate/UpdateOrCreate";
+import { useState } from "react";
 
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
@@ -24,25 +25,23 @@ const DateAndTimePicker = ({
   setJourneyData,
   dateTime,
 }: DateAndTimeProps) => {
-  function setDepartureTime(departureTime: Dayjs): Dayjs {
-    const today = dayjs().startOf("day");
-    if (departureTime.isSame(today, "day")) {
-      return departureTime.add(2, "hour");
-    } else {
-      return departureTime;
-    }
-  }
+  const [error, setError] = useState(false);
+
+  const getDepartureTime = (departureTime: Dayjs): Dayjs =>
+    departureTime.isSame(dayjs().startOf("day"), "day")
+      ? departureTime.add(2, "hour")
+      : departureTime;
 
   return (
     <>
       {dateTime === "date" ? (
         <DateCalendar
           className="date_input"
-          value={setDepartureTime(departureTime)}
+          value={departureTime}
           onChange={(newValue) =>
             setJourneyData((prevState: JourneyData) => ({
               ...prevState,
-              departureTime: newValue,
+              departureTime: getDepartureTime(newValue),
             }))
           }
           minDate={dayjs()}
@@ -51,9 +50,12 @@ const DateAndTimePicker = ({
       ) : (
         <TimePicker
           timezone="system"
-          value={setDepartureTime(departureTime)}
+          value={departureTime}
           onChange={(newValue) => {
             if (newValue) {
+              if (newValue < dayjs().add(118, "minute")) {
+                setError(true);
+              }
               setJourneyData((prevState: JourneyData) => ({
                 ...prevState,
                 departureTime: newValue,
@@ -64,6 +66,7 @@ const DateAndTimePicker = ({
           ampm={false}
         />
       )}
+      {error && "Votre heure de départ ne peut pas être dans moins de 2h"}
     </>
   );
 };

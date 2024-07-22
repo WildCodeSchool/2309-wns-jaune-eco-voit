@@ -36,7 +36,7 @@ export const validateJourneyInputs = ({
 }) => {
     const now = dayjs()
 
-    if (dayjs(departureTime) < now.add(2, 'hour')) {
+    if (dayjs(departureTime) < now.add(110, 'minute')) {
         throw new Error('Departure time must be at least in two hours')
     }
 

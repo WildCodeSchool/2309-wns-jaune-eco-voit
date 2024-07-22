@@ -35,7 +35,7 @@ const PublishJourney = () => {
     originCoordinates: "",
     destination: "",
     destinationCoordinates: "",
-    departureTime: dayjs(),
+    departureTime: dayjs().add(2, "hour"),
     price: 0,
     automaticAccept: true,
     availableSeats: 1,
@@ -65,34 +65,37 @@ const PublishJourney = () => {
       // TODO gerer erreur
     }
 
-    const { duration }: ResponseGetItinerary = await getItinerary(
+    const response: ResponseGetItinerary | undefined = await getItinerary(
       originCoordinates,
       destinationCoordinates,
       setError
     );
 
-    const arrivalTime = departureTime.add(duration, "second");
+    if (!response?.duration) {
+      setError(true);
+      return;
+    }
 
-    console.log(arrivalTime);
+    const { duration } = response;
+
+    const arrivalTime = departureTime.add(duration, "second");
 
     const journey = {
       departureTime: departureTime.toISOString(),
-      // A ajouter quand l'API IGN serai ok
-      // arrivalTime: arrivalTime.toISOString(),
-      arrivalTime: departureTime.add(2, "hour").toISOString(),
-      origin: origin,
-      originCoordinates: originCoordinates,
-      destination: destination,
-      destinationCoordinates: destinationCoordinates,
-      price: price,
-      availableSeats: availableSeats,
-      automaticAccept: automaticAccept,
+      arrivalTime: arrivalTime.toISOString(),
+      origin,
+      originCoordinates,
+      destination,
+      destinationCoordinates,
+      price,
+      availableSeats,
+      automaticAccept,
       user: { id: userId },
     };
 
     createJourney({
       variables: { data: journey },
-      onError: (err) => setError(true),
+      onError: () => setError(true),
       onCompleted: (res) =>
         router.push(`${routes.journey.pathname}/${res?.createJourney.id}`),
     });
@@ -102,7 +105,7 @@ const PublishJourney = () => {
     <UpdateOrCreateJourney
       setJourneyData={setJourneyData}
       journeyData={journeyData}
-      errorMessage={error ? "Impossible de créer le trajet!" : undefined}
+      // errorMessage={error ? "Impossible de créer le trajet!" : undefined}
       handleOnValidateForm={handleOnValidateForm}
     />
   );

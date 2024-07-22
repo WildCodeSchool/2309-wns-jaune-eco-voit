@@ -1,4 +1,8 @@
-import { formattedDate, formattedTime } from "@/app/utils/date";
+import {
+  formattedDate,
+  formattedTime,
+  tooLateToModify,
+} from "@/app/utils/date";
 import { ListJourneysByUserQuery } from "@/types/graphql";
 import {
   TabPanel,
@@ -48,6 +52,7 @@ const MyJourneysTab = ({
               availableSeats,
               price,
               bookings,
+              arrivalTime,
               id,
               status,
             } = journey;
@@ -59,8 +64,11 @@ const MyJourneysTab = ({
                 <div className="w-full flex flex-col gap-3">
                   <div className="flex flex-col xs:flex-row w-full xs:justify-between gap-4">
                     <p className="text-base">
-                      {formattedDate(departureTime)} à{" "}
+                      Départ: {formattedDate(departureTime)} à{" "}
                       {formattedTime(departureTime)}
+                      <br />
+                      Arrivée: {formattedDate(arrivalTime)} à{" "}
+                      {formattedTime(arrivalTime)}
                       <br />
                       <span className="text-sm text-dark60">
                         ({availableSeats} siège{availableSeats > 1 && "s"}{" "}
@@ -128,16 +136,17 @@ const MyJourneysTab = ({
                           >
                             Annuler
                           </Button>
-                          {bookings.length === 0 && (
-                            <Button
-                              className=""
-                              onClick={() => {
-                                onEditJourney(id);
-                              }}
-                            >
-                              Modifier
-                            </Button>
-                          )}
+                          {bookings.length === 0 &&
+                            !tooLateToModify(departureTime) && (
+                              <Button
+                                className=""
+                                onClick={() => {
+                                  onEditJourney(id);
+                                }}
+                              >
+                                Modifier
+                              </Button>
+                            )}
                         </>
                       )}
                     </div>

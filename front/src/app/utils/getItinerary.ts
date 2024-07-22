@@ -4,7 +4,7 @@ export const getItinerary = async (
   start: string,
   end: string,
   onError: (error: boolean) => void
-): Promise<ResponseGetItinerary> => {
+): Promise<ResponseGetItinerary | undefined> => {
   const url = `/api/itinerary?start=${encodeURIComponent(
     start
   )}&end=${encodeURIComponent(end)}`;
@@ -19,10 +19,12 @@ export const getItinerary = async (
 
     if (!response.ok) {
       onError(true);
+      return undefined;
     }
+
     return await response.json();
   } catch (error: any) {
     onError(true);
-    return error.toString();
+    return undefined;
   }
 };

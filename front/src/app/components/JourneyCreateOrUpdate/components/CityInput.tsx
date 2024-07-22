@@ -25,7 +25,12 @@ const CityInput = ({
 }: CityInputProps) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleSelectCity = ({ city, x, y }: AddressResponse) => {
+  const handleSelectCity = (response: AddressResponse) => {
+    const {
+      nom: city,
+      centre: { coordinates },
+    } = response;
+
     if (fromTo === "destination") {
       if (journeyData?.origin === city) {
         setErrorMessage(
@@ -35,15 +40,10 @@ const CityInput = ({
       }
     }
 
-    const { latitude, longitude } = convertCoordinates(
-      parseFloat(x),
-      parseFloat(y)
-    );
-
     setJourneyData((prevState) => ({
       ...prevState,
       [fromTo]: city ?? "",
-      [`${fromTo}Coordinates`]: `${latitude},${longitude}`,
+      [`${fromTo}Coordinates`]: `${coordinates[0]},${coordinates[1]}`,
     }));
   };
 

@@ -26,7 +26,7 @@ export type UpdateOrCreateJourneyProps = {
 const UpdateOrCreateJourney = ({
   setJourneyData,
   journeyData,
-  errorMessage,
+  // errorMessage,
   handleOnValidateForm,
 }: UpdateOrCreateJourneyProps) => {
   const [activeStep, setActiveStep] = useState(0);
@@ -54,48 +54,48 @@ const UpdateOrCreateJourney = ({
       </div>
 
       <div className="publish_content flex-1 h-full flex flex-col items-center">
-        {errorMessage ? (
+        {/* {"aa" == "vv" ? (
           <div className="h-full flex-1 flex flex-col gap-3 items-center justify-center">
             <h3 className="text-2xl text-center xs:text-3xl">
               Impossible de créer le trajet!
             </h3>
           </div>
-        ) : (
-          <>
-            <div className="h-full flex-1 flex flex-col gap-6 items-center justify-center">
-              <h3 className="text-2xl text-center xs:text-3xl">
-                {steps(setJourneyData, journeyData)[activeStep].stepTitle}
-              </h3>
-              {steps(setJourneyData, journeyData)[activeStep].stepContent}
-            </div>
-            <div className="stepper_nav flex gap-4">
-              <Button
-                variant={"contained"}
-                disabled={activeStep === 0}
-                onClick={handleBack}
-              >
-                Retour
+        ) : ( */}
+        <>
+          <div className="h-full flex-1 flex flex-col gap-6 items-center justify-center">
+            <h3 className="text-2xl text-center xs:text-3xl">
+              {steps(setJourneyData, journeyData)[activeStep].stepTitle}
+            </h3>
+            {steps(setJourneyData, journeyData)[activeStep].stepContent}
+          </div>
+          <div className="stepper_nav flex gap-4">
+            <Button
+              variant={"contained"}
+              disabled={activeStep === 0}
+              onClick={handleBack}
+            >
+              Retour
+            </Button>
+            {activeStep === steps(setJourneyData, journeyData).length - 1 ? (
+              <Button onClick={handleOnValidateForm} variant={"contained"}>
+                Terminer
               </Button>
-              {activeStep === steps(setJourneyData, journeyData).length - 1 ? (
-                <Button onClick={handleOnValidateForm} variant={"contained"}>
-                  Terminer
-                </Button>
-              ) : (
-                <Button
-                  onClick={handleNext}
-                  variant={"contained"}
-                  disabled={
-                    (activeStep === 0 && !origin) ||
-                    (activeStep === 1 && !destination) ||
-                    (activeStep === 5 && price === 0)
-                  }
-                >
-                  Suivant
-                </Button>
-              )}
-            </div>
-          </>
-        )}
+            ) : (
+              <Button
+                onClick={handleNext}
+                variant={"contained"}
+                disabled={
+                  (activeStep === 0 && !origin) ||
+                  (activeStep === 1 && !destination) ||
+                  (activeStep === 5 && price === 0)
+                }
+              >
+                Suivant
+              </Button>
+            )}
+          </div>
+        </>
+        {/* )} */}
       </div>
     </div>
   );
