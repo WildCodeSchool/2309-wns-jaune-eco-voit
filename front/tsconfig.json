@@ -36,7 +36,8 @@
     "build/types/**/*.ts",
     "src/app/components/UploadProfilePicture",
     "src/**/*",
-    "./jest.setup.ts"
+    "./jest.setup.ts",
+    "src/types/custom.d.ts"
   ],
   "exclude": ["node_modules", "./cypress.config.ts"]
 }

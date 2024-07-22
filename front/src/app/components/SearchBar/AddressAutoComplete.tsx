@@ -56,6 +56,7 @@ type AddressAutoCompleteProps = {
   sx?: SxProps<Theme>;
   gotAdornment?: boolean;
   handleOnChange?: () => void;
+  isFirstElement?: boolean; // Corrected type definition for sx prop
 };
 
 const AddressAutoComplete: FC<AddressAutoCompleteProps> = ({
@@ -65,6 +66,7 @@ const AddressAutoComplete: FC<AddressAutoCompleteProps> = ({
   defaultValue,
   sx,
   gotAdornment,
+  isFirstElement,
   handleOnChange,
 }) => {
   const [options, setOptions] = useState<string[]>([]);
@@ -121,7 +123,12 @@ const AddressAutoComplete: FC<AddressAutoCompleteProps> = ({
     <Stack>
       <Autocomplete
         value={defaultValue ?? ""}
-        sx={{ width: 300 }}
+        sx={{
+          maxWidth: { sm: "100%", lg: 300 },
+          minWidth: 200,
+          backgroundColor: "white",
+          borderRadius: isFirstElement ? "32px 0 0 32px" : "0",
+        }}
         freeSolo
         options={options}
         onInputChange={(event, newInputValue) => setInputValue(newInputValue)}

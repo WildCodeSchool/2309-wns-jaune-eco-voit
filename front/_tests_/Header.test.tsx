@@ -5,7 +5,19 @@ import { MockedProvider } from "@apollo/client/testing";
 import { GET_PROFILE } from "@/requetes/queries/user.queries";
 import { AuthContext } from "@/context/authContext";
 
-jest.mock("next/navigation", () => require("next-router-mock"));
+// jest.mock("next/navigation", () => require("next-router-mock"));
+jest.mock("next/navigation", () => ({
+  ...require("next-router-mock"),
+  usePathname: jest.fn().mockReturnValue("/"),
+  useSearchParams: jest.fn().mockReturnValue(new URLSearchParams()),
+  useRouter: jest.fn().mockReturnValue({
+    push: jest.fn(),
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+    back: jest.fn(),
+    forward: jest.fn(),
+  }),
+}));
 
 describe("Header", () => {
   it("should display connexion button if user is not connected", () => {
