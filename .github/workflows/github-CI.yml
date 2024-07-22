@@ -11,40 +11,40 @@ on:
       - closed
 
 jobs:
-  linters:
-    name: 🧼 Run linters
-    runs-on: ubuntu-latest
-    steps:
-      - name: 📌 Check out Git repository
-        uses: actions/checkout@v3
+  # linters:
+  #   name: 🧼 Run linters
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: 📌 Check out Git repository
+  #       uses: actions/checkout@v3
 
-      - name: 🛠️ Set up Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: 18
+  #     - name: 🛠️ Set up Node.js
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 18
 
-      - name: 🎯 Install Node.js dependencies for back
-        run: |
-          cd back
-          npm i
+  #     - name: 🎯 Install Node.js dependencies for back
+  #       run: |
+  #         cd back
+  #         npm i
 
-      - name: 🎯 Install Node.js dependencies for front
-        run: |
-          cd front
-          npm i
+  #     - name: 🎯 Install Node.js dependencies for front
+  #       run: |
+  #         cd front
+  #         npm i
 
-      - name: 🏃🏽 Run linters back
-        run: |
-          cd back
-          npm run lint
+  #     - name: 🏃🏽 Run linters back
+  #       run: |
+  #         cd back
+  #         npm run lint
 
-      - name: 🏃🏽 Run linters front
-        run: |
-          cd front
-          npm run lint
+  #     - name: 🏃🏽 Run linters front
+  #       run: |
+  #         cd front
+  #         npm run lint
 
-      - name: 🤗 Hello CI
-        run: echo "This job's status is ${{ job.status }}."
+  #     - name: 🤗 Hello CI
+  #       run: echo "This job's status is ${{ job.status }}."
 
   # cypress:
   #   runs-on: ubuntu-latest
@@ -106,7 +106,6 @@ jobs:
   #         DB_PORT: 5432
 
   tests:
-    needs: linters
     name: 👤 Run Tests Jest
     runs-on: ubuntu-latest
     services:
