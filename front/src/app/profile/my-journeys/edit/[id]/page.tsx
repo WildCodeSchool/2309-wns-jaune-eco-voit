@@ -37,8 +37,7 @@ export default function Page({ params }: { params: { id: string } }) {
     },
   });
 
-  const [updateJourney, { error: updateJourneyError }] =
-    useUpdateJourneyMutation();
+  const [updateJourney] = useUpdateJourneyMutation();
 
   const [updatedJourneyData, setUpdatedJourneyData] = useState<JourneyData>({
     origin: "",
