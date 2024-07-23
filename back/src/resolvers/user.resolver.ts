@@ -121,7 +121,7 @@ export default class UserResolver {
         return await userService.updateUserPassword(data)
     }
 
-    @Authorized()
+    @Authorized(['ADMIN'])
     @Mutation(() => UserEntity)
     async archiveUser(
         @Arg('id') id: string,
@@ -129,6 +129,6 @@ export default class UserResolver {
     ) {
         userAuthorized([id], user)
 
-        return await userService.updateUser({ id, status: 'ARCHIVED' })
+        return await userService.archiveUser(id)
     }
 }

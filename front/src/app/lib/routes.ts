@@ -57,11 +57,6 @@ export const routes: { [key: string]: Route } = {
     title: "Trajet",
     protected: "PUBLIC",
   },
-  messagerie: {
-    pathname: "/profile/messaging",
-    title: "Messagerie",
-    protected: "PRIVATE",
-  },
   error: {
     pathname: "/error",
     title: "Erreur",

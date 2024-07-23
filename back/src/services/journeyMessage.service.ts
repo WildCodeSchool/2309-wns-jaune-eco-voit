@@ -74,7 +74,10 @@ export default class JourneyMessageService {
         return await this.db.save(journeyMessage)
     }
 
-    async deleteJourneyMessage(id: string) {
+    async deleteJourneyMessage(id: string): Promise<void> {
+        const messageToDelete = this.findMessageById(id)
+        if (!messageToDelete) throw new Error('Message not found')
+
         await this.db.delete(id)
     }
 }
