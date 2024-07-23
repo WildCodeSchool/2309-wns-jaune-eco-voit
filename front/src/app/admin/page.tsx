@@ -11,7 +11,7 @@ import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { AuthContext } from "@/context/authContext";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
-const page = () => {
+const Admin = () => {
   const [users, setUsers] = useState<UserEntity[]>([]);
 
   const { getUser: currentUser } = useContext(AuthContext);
@@ -55,7 +55,7 @@ const page = () => {
       );
       setUsers(filteredUsers as UserEntity[]);
     }
-  }, [data]);
+  }, [data, currentUser]);
 
   const columns: GridColDef[] = [
     {
@@ -135,7 +135,7 @@ const page = () => {
   console.log("users", users);
   return (
     <div className="admin-panel flex flex-col gap-8 px-12 py-8">
-      <h2>Panneau d'administration</h2>
+      <h2>Panneau d&apos;administration</h2>
       <div className="users_admin">
         <h3 className="mb-4">Utilisateurs</h3>
         <DataGrid
@@ -148,4 +148,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Admin;

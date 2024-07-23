@@ -12,8 +12,6 @@ import argon2 from 'argon2'
 import { SignJWT } from 'jose'
 import BookingService from './booking.service'
 import JourneyService from './journey.service'
-import JourneyMessageService from './journeyMessage.service'
-
 export default class UserService {
     db: Repository<UserEntity>
 
@@ -154,7 +152,7 @@ export default class UserService {
             throw new Error('User not found')
         }
 
-        const { bookings, journeys, ...rest } = userToArchive
+        const { bookings, journeys } = userToArchive
 
         if (bookings && bookings.length) {
             bookings.forEach(({ status, id: bookingId }) => {
