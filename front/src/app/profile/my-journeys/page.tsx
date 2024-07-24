@@ -15,13 +15,14 @@ import { routes } from "@/app/lib/routes";
 import { useRouter } from "next/navigation";
 import MyJourneysTab from "@/app/components/myJourneys/MyJourneysTab";
 import MyBookingsTab from "@/app/components/myBookings/MyBookings";
+import OnPendingTab from "@/app/components/onPending/OnPending";
 
 export default function MyJourneys() {
   const router = useRouter();
 
   const { getUser: userId } = useContext(AuthContext);
 
-  const [tabDisplayed, setTabDisplayed] = useState<"JOURNEYS" | "BOOKINGS">(
+  const [tabDisplayed, setTabDisplayed] = useState<"JOURNEYS" | "BOOKINGS" | "PENDING">(
     "JOURNEYS"
   );
 
@@ -32,7 +33,7 @@ export default function MyJourneys() {
 
   const [
     getUserJourneys,
-    { data: journeysData, loading: journeyLoading, error: journeyError },
+    { data: journeysData, loading: journeyLoading, error: journeyError, refetch: journeysRefetch },
   ] = useListJourneysByUserLazyQuery({ fetchPolicy: "network-only" });
 
   const [
@@ -112,7 +113,7 @@ export default function MyJourneys() {
 
   const handleChange = (
     event: SyntheticEvent,
-    newValue: "JOURNEYS" | "BOOKINGS"
+    newValue: "JOURNEYS" | "BOOKINGS" | "PENDING"
   ) => {
     setTabDisplayed(newValue);
   };
@@ -124,6 +125,7 @@ export default function MyJourneys() {
           <TabList onChange={handleChange} aria-label="lab API tabs example">
             <Tab label="Mes trajets" value="JOURNEYS" />
             <Tab label="Mes réservations" value="BOOKINGS" />
+            <Tab label="Mes trajets en attente" value="PENDING" />
           </TabList>
         </Box>
 
@@ -139,6 +141,12 @@ export default function MyJourneys() {
           onCancelBooking={handleCancelBooking}
           isLoading={cancelBookingLoading}
         />
+
+        <OnPendingTab
+          journeys={journeysData?.listJourneysByUser}
+          journeysRefetch={journeysRefetch}
+        />
+
       </TabContext>
     </div>
   );
