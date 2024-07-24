@@ -1,0 +1,20 @@
+"use client";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { NextAppDirEmotionCacheProvider } from "./EmotionCache";
+import CssBaseline from "@mui/material/CssBaseline";
+import { themeOptions } from "./ThemeOption";
+import type {} from "@mui/lab/themeAugmentation";
+import { ReactNode } from "react";
+
+const theme = createTheme(themeOptions);
+
+export default function ThemeRegistery({ children }: { children: ReactNode }) {
+  return (
+    <NextAppDirEmotionCacheProvider options={{ key: "mui" }}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {children}
+      </ThemeProvider>
+    </NextAppDirEmotionCacheProvider>
+  );
+}

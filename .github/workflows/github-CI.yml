@@ -1,0 +1,206 @@
+name: 🚗 CI EcoVoit
+
+on:
+  pull_request:
+    branches:
+      - "*"
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - closed
+
+jobs:
+  linters:
+    name: 🧼 Run linters
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📌 Check out Git repository
+        uses: actions/checkout@v3
+
+      - name: 🛠️ Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18
+
+      - name: 🎯 Install Node.js dependencies for back
+        run: |
+          cd back
+          npm i
+
+      - name: 🎯 Install Node.js dependencies for front
+        run: |
+          cd front
+          npm i
+
+      - name: 🏃🏽 Run linters back
+        run: |
+          cd back
+          npm run lint
+
+      - name: 🏃🏽 Run linters front
+        run: |
+          cd front
+          npm run lint
+
+      - name: 🤗 Hello CI
+        run: echo "This job's status is ${{ job.status }}."
+
+  # cypress:
+  #   runs-on: ubuntu-latest
+  #   name: 🧼 Tests Cypress
+  #   services:
+  #     postgres:
+  #       image: postgres:latest
+  #       env:
+  #         POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+  #         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+  #         POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+  #         options: >-
+  #           --health-cmd pg_isready
+  #           --health-interval 10s
+  #           --health-timeout 5s
+  #           --health-retries 5
+  #       ports:
+  #         - 5432:5432
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+
+  #     - name: 🛠️ Set up Node.js
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 18
+
+  #     - name: Install backend dependencies
+  #       working-directory: ./back
+  #       run: |
+  #         npm i
+
+  #     - name: Start backend server
+  #       working-directory: ./back
+  #       env:
+  #         POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+  #         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+  #         POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+  #       run: |
+  #         nohup npm run start:test &
+
+  #     - name: Install frontend dependencies
+  #       working-directory: ./front
+  #       run: |
+  #         npm i
+
+  #     - name: Cypress run
+  #       uses: cypress-io/github-action@v5
+  #       with:
+  #         working-directory: ./front
+  #         start: npm run dev
+  #         browser: chrome
+  #         config-file: cypress.config.ts
+  #         wait-on: "http://localhost:3000, http://localhost:4000"
+  #         wait-on-timeout: 120
+  #         record: false
+  #       env:
+  #         CYPRESS_BASE_URL: http://localhost:3000
+  #         DB_PORT: 5432
+
+  tests:
+    needs: linters
+    name: 👤 Run Tests Jest
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      - name: 🗂️ Check out code
+        uses: actions/checkout@v3
+
+      - name: 🧐 Run backend tests
+        env:
+          DB_TEST_JEST_PORT: 5432
+          DB_TEST_JEST_HOST: db_test
+        run: |
+          cd ./back 
+          npm i
+          npm run test-ci
+
+      - name: 🧐 Run frontend tests
+        run: |
+          cd ./front 
+          npm i
+          npm run test-ci
+
+  builds:
+    needs: tests
+    name: Build back & front
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📌 Check out Git repository
+        uses: actions/checkout@v3
+      - name: Build back
+        working-directory: back
+        run: |
+          npm i 
+          npm run build
+      - name: Build front
+        working-directory: front
+        run: |
+          npm i
+          npm run build
+
+  docker:
+    needs: builds
+    name: 🐳 Push on Docker
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: 📌 Check out Git repository
+        uses: actions/checkout@v3
+
+      - name: 🦅 Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: 🐳 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: 🔐 Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: 🔨 Build and push back
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          context: ./back
+          tags: "${{ secrets.DOCKERHUB_USERNAME }}/back-ecovoit:latest"
+
+      - name: 🔨 Build and push front
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          context: ./front
+          tags: "${{ secrets.DOCKERHUB_USERNAME }}/front-ecovoit:latest"
+
+  webhook:
+    needs:
+      - docker
+    name: 🐳 Trigger webhook
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Webhook update-preprod
+        run: curl https://ops.0923-jaune-1.wns.wilders.dev/hooks/f2dfe092-7444-4b96-ac89-7204e628819b
