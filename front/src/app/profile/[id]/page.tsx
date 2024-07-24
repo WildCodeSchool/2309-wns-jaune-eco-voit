@@ -1,9 +1,9 @@
 "use client";
 import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
-import { useFindUserByIdQuery, UserEntity } from "@/types/graphql";
 import { useEffect, useState } from "react";
 import ProfileInfos from "../components/ProfileInfos";
 import Error from "@/app/error";
+import { UserEntity, useFindUserByIdQuery } from "@/types/graphql";
 
 const Profile = ({ params }: { params: { id: string } }) => {
   const { id: userId } = params;

@@ -24,6 +24,7 @@ export type Status =
     | 'REJECTED'
     | 'CANCELLED'
     | 'ACCEPTED'
+    | 'PAID'
     | 'DONE'
     | 'RATED'
 
@@ -41,6 +42,7 @@ export class BookingEntity {
         default: 'PENDING',
     })
     status: Status // Type créé pour le Statut
+
     @Field(() => UserEntity)
     @ManyToOne(() => UserEntity, (u) => u.bookings)
     user: UserEntity

@@ -2,8 +2,8 @@
 import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import Image from "next/image";
 import { AuthContext } from "@/context/authContext";
-import { GetProfileDocument, useUpdateUserMutation } from "@/types/graphql";
 import { Button } from "@mui/material";
+import { GetProfileDocument, useUpdateUserMutation } from "@/types/graphql";
 
 const UploadPicture = () => {
   const [preview, setPreview] = useState<string>("");
