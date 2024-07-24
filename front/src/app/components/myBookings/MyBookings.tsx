@@ -38,11 +38,15 @@ const MyBookingsTab = ({
         <CircularLoading />
       ) : (
         [...bookings]
-          .sort(
-            (a, b) =>
+          .sort((a, b) => {
+            if (a.status === "ACCEPTED" && b.status !== "ACCEPTED") return -1;
+            if (b.status === "ACCEPTED" && a.status !== "ACCEPTED") return 1;
+
+            return (
               +new Date(a.journey.departureTime) -
               +new Date(b.journey.departureTime)
-          )
+            );
+          })
           .map(
             (
               {
@@ -67,11 +71,7 @@ const MyBookingsTab = ({
               <div
                 key={index}
                 className={`my_journey_card w-full flex p-4 rounded-md shadow-md ${
-                  status === "REJECTED" ||
-                  status === "CANCELLED" ||
-                  status === "PENDING"
-                    ? "opacity-70"
-                    : ""
+                  status !== "ACCEPTED" ? "opacity-70" : ""
                 }`}
               >
                 <div className="w-full flex flex-col gap-3">

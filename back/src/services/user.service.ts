@@ -10,7 +10,8 @@ import {
 import { assertDataExists, validateData } from '../utils/errorHandlers'
 import argon2 from 'argon2'
 import { SignJWT } from 'jose'
-
+import BookingService from './booking.service'
+import JourneyService from './journey.service'
 export default class UserService {
     db: Repository<UserEntity>
 
@@ -51,6 +52,10 @@ export default class UserService {
             throw new Error('Vérifiez vos informations')
         }
 
+        if (user.status === 'ARCHIVED') {
+            throw new Error('Ce compte à été désactivé')
+        }
+
         const isPasswordValid = await argon2.verify(user.password, password)
 
         if (!isPasswordValid) {
@@ -74,7 +79,9 @@ export default class UserService {
 
     async updateUser({ id, ...body }: UpdateUserInput): Promise<UserEntity> {
         const userToUpdate = await this.findUserById(id)
-
+        if (!userToUpdate) {
+            throw new Error('User not found')
+        }
         const userUpdated = this.db.merge(userToUpdate, body)
 
         await validateData(userUpdated)
@@ -111,7 +118,7 @@ export default class UserService {
     async findUserById(id: string): Promise<UserEntity> {
         const user = await this.db.findOne({
             where: { id },
-            relations: { journeys: true, bookings: true, ratings: true },
+            relations: ['journeys', 'bookings', 'ratings'],
         })
 
         assertDataExists(user)
@@ -133,5 +140,38 @@ export default class UserService {
 
     async updateAverageRate(data: { id: string; averageRate: number }) {
         await this.updateUser(data)
+    }
+
+    async archiveUser(id: string): Promise<UserEntity> {
+        const bookingService = new BookingService()
+        const journeyService = new JourneyService()
+
+        const userToArchive = await this.findUserById(id)
+
+        if (!userToArchive) {
+            throw new Error('User not found')
+        }
+
+        const { bookings, journeys } = userToArchive
+
+        if (bookings && bookings.length) {
+            bookings.forEach(({ status, id: bookingId }) => {
+                if (status === 'PENDING' || status === 'ACCEPTED') {
+                    bookingService.cancelBooking(bookingId)
+                }
+            })
+        }
+
+        if (journeys && journeys.length) {
+            journeys.forEach((journey) => {
+                if (journey.status === 'PLANNED') {
+                    journeyService.updateJourneyStatus({
+                        id: journey.id,
+                        status: 'CANCELLED',
+                    })
+                }
+            })
+        }
+        return await this.updateUser({ id, status: 'ARCHIVED' })
     }
 }

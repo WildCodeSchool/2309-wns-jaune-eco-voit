@@ -55,7 +55,9 @@ async function checkToken(token: string | undefined, request: NextRequest) {
     if (email && role && id) {
       //On vérifie que le role de l'utilisateur est "ADMIN" pour les routes "ADMIN"
       if (currentRoute?.protected === "ADMIN" && role !== "ADMIN") {
-        response = NextResponse.redirect(new URL("/error", request.url)); // Créer une page "Access denied"
+        response = NextResponse.redirect(
+          new URL("/errors/unauthorized", request.url)
+        ); // Créer une page "Access denied"
       }
       //On ajoute des cookie avec les infos du user
       response.cookies.set("email", email);

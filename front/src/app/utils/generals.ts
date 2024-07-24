@@ -1,5 +1,5 @@
 import { Status } from "@/types/booking";
-import { Grade } from "@/types/user";
+import { Grade, Role } from "@/types/user";
 
 export const gradeFrench: Record<Grade, string> = {
   BEGINNER: "Débutant",
@@ -14,4 +14,9 @@ export const statusFrench: Record<Status, string> = {
   ACCEPTED: "Accepté",
   DONE: "Effectué",
   RATED: "Effectué",
+};
+
+export const roleFrench: Record<Role, string> = {
+  ADMIN: "Administrateur",
+  USER: "Utilisateur",
 };

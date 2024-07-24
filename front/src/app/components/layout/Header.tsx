@@ -2,7 +2,7 @@
 //chore
 import { SyntheticEvent, useContext, useEffect, useState } from "react";
 //Assets
-// import logo from "@/app/assets/logo.png";
+// import logo from "@/assets/logo.png";
 import {
   Avatar,
   Button,
@@ -13,13 +13,12 @@ import {
   Snackbar,
   Tooltip,
 } from "@mui/material";
-import Link from "next/link";
 import { routes } from "@/app/lib/routes";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import DirectionsCarFilledOutlinedIcon from "@mui/icons-material/DirectionsCarFilledOutlined";
 import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
-import ModeCommentOutlinedIcon from "@mui/icons-material/ModeCommentOutlined";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { AuthContext } from "@/context/authContext";
 import { useRouter } from "next/navigation";
@@ -128,8 +127,10 @@ const Header = () => {
               <MenuItem
                 onClick={() => router.push(routes["my-profile"].pathname)}
               >
-                <div className="w-48 flex justify-between">
-                  <PersonRoundedIcon /> <p>Mon profil</p>{" "}
+                <div className="w-72 flex justify-between">
+                  <div className="entry flex-1 flex gap-2">
+                    <PersonRoundedIcon /> <p>Mon profil</p>
+                  </div>
                   <KeyboardArrowRightOutlinedIcon />
                 </div>
               </MenuItem>
@@ -139,23 +140,31 @@ const Header = () => {
               <MenuItem
                 onClick={() => router.push(routes.journeysUser.pathname)}
               >
-                <div className="w-48 flex justify-between">
-                  <DirectionsCarFilledOutlinedIcon /> <p>Mes trajets</p>
+                <div className="w-72 flex justify-between">
+                  <div className="entry flex-1 flex gap-2">
+                    <DirectionsCarFilledOutlinedIcon /> <p>Mes trajets</p>
+                  </div>
                   <KeyboardArrowRightOutlinedIcon />
                 </div>
               </MenuItem>
 
               <Divider />
 
-              <MenuItem onClick={() => router.push(routes.messaging.pathname)}>
-                <div className="w-48 flex justify-between">
-                  <ModeCommentOutlinedIcon />
-                  <p>Messagerie</p>
-                  <KeyboardArrowRightOutlinedIcon />
-                </div>
-              </MenuItem>
+              {data?.getProfile.role && data?.getProfile.role === "ADMIN" ? (
+                <MenuItem onClick={() => router.push(routes["admin"].pathname)}>
+                  <div className="w-72 flex justify-between">
+                    <div className="entry flex-1 flex gap-2">
+                      <AdminPanelSettingsIcon />
+                      <p>Admin</p>
+                    </div>
+                    <KeyboardArrowRightOutlinedIcon />
+                  </div>
+                </MenuItem>
+              ) : null}
 
-              <Divider />
+              {data?.getProfile.role && data?.getProfile.role === "ADMIN" ? (
+                <Divider />
+              ) : null}
 
               <MenuItem
                 onClick={() => {
@@ -163,9 +172,11 @@ const Header = () => {
                   router.push(routes.logout.pathname);
                 }}
               >
-                <div className="w-48 flex justify-between">
-                  <CloseOutlinedIcon />
-                  <p>Déconnexion</p>
+                <div className="w-72 flex justify-between">
+                  <div className="entry flex-1 flex gap-2">
+                    <CloseOutlinedIcon />
+                    <p>Déconnexion</p>
+                  </div>
                   <KeyboardArrowRightOutlinedIcon />
                 </div>
               </MenuItem>

@@ -106,6 +106,7 @@ export default class JourneyService {
         }
 
         validateJourneyInputs(body)
+
         await validateData(journeyToUpdate)
 
         const journeyToSave = this.db.merge(journeyToUpdate, body)
@@ -134,11 +135,13 @@ export default class JourneyService {
         const sendEmailService = new SendEmailService()
         const userService = new UserService()
 
+        const journeyToUpdate = await this.findJourneyById(id)
+
         const {
             user: { id: driverId },
             status: journeyStatus,
             id: journeyId,
-        } = await this.findJourneyById(id)
+        } = journeyToUpdate
 
         if (journeyStatus === 'CANCELLED') {
             throw new Error('This journey has been cancelled')
@@ -157,7 +160,11 @@ export default class JourneyService {
         })
 
         if (newStatus === 'CANCELLED') {
-            this.updateJourney({ id: journeyId, status: newStatus })
+            const journeyToSave = this.db.merge(journeyToUpdate, {
+                status: newStatus,
+            })
+
+            this.db.save(journeyToSave)
 
             const acceptedBookings = bookings.filter(
                 ({ status }) => status === 'ACCEPTED'
@@ -192,7 +199,11 @@ export default class JourneyService {
                 grade: userService.getDriverNewGrade(tripsAsDriver),
             })
 
-            this.updateJourney({ id: journeyId, status: newStatus })
+            const journeyToSave = this.db.merge(journeyToUpdate, {
+                status: newStatus,
+            })
+
+            this.db.save(journeyToSave)
 
             const acceptedBookings = bookings.filter(
                 ({ status }) => status === 'ACCEPTED'

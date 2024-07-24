@@ -41,9 +41,12 @@ const MyJourneysTab = ({
         <CircularLoading />
       ) : (
         [...journeys]
-          .sort(
-            (a, b) => +new Date(a.departureTime) - +new Date(b.departureTime)
-          )
+          .sort((a, b) => {
+            if (a.status === "PLANNED" && b.status !== "PLANNED") return -1;
+            if (b.status === "PLANNED" && a.status !== "PLANNED") return 1;
+
+            return +new Date(a.departureTime) - +new Date(b.departureTime);
+          })
           .map((journey, index) => {
             const {
               origin,
@@ -59,7 +62,9 @@ const MyJourneysTab = ({
             return (
               <div
                 key={index}
-                className="my_journey_card w-full flex p-4 rounded-md shadow-md"
+                className={`my_journey_card w-full flex p-4 rounded-md shadow-md ${
+                  status !== "PLANNED" && "opacity-50"
+                }`}
               >
                 <div className="w-full flex flex-col gap-3">
                   <div className="flex flex-col xs:flex-row w-full xs:justify-between gap-4">
