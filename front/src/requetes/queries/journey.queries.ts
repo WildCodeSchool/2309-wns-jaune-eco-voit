@@ -33,7 +33,7 @@ export const LIST_JOURNEYS = gql`
     }
   }
 `;
-
+ 
 export const LIST_JOURNEYS_BY_USER = gql`
   query listJourneysByUser($userId: String!) {
     listJourneysByUser(userId: $userId) {

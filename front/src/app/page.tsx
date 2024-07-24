@@ -29,7 +29,6 @@ export type UserInfos = {
 export default function Home() {
   const [journeys, setJourneys] = useState<ListJourneysQuery["listJourneys"]>();
   const router = useRouter();
-
   const [getJourneys, { loading: getJourneyLoading, error: getJourneyError }] =
     useListJourneysLazyQuery({
       fetchPolicy: "no-cache",
@@ -45,6 +44,7 @@ export default function Home() {
       setJourneys(undefined);
       return;
     }
+    console.log("filter", filters);
     setFilters(filters);
     localStorage.setItem("lastSearch", JSON.stringify(filters));
 
@@ -56,7 +56,7 @@ export default function Home() {
   };
 
   useEffect(() => {
-    getJourneyError && router.push(`${routes["error"].pathname}`);
+    getJourneyError && console.log("error", getJourneyError); //router.push(`${routes["error"].pathname}`);
   }, [getJourneyError, router]);
 
   if (getJourneyLoading) {

@@ -1,4 +1,4 @@
-import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm'
+import { LessThanOrEqual, MoreThanOrEqual, Repository, Not } from 'typeorm'
 import datasource from '../db'
 import {
     JourneyEntity,
@@ -47,34 +47,28 @@ export default class JourneyService {
     async listJourneys(
         filters?: ListJourneysWithFilters
     ): Promise<JourneyEntity[]> {
+        const where: any = {
+            origin: filters?.origin,
+            destination: filters?.destination,
+            departureTime: filters?.departureTime
+                ? MoreThanOrEqual(filters.departureTime)
+                : undefined,
+            automaticAccept: filters?.automaticAccept,
+            availableSeats: filters?.availableSeats
+                ? MoreThanOrEqual(filters.availableSeats)
+                : undefined,
+        }
+
+        if (filters?.user?.id) {
+            where.user = { id: Not(filters.user.id) }
+        }
+
         return await this.db.find({
-            where: {
-                origin: filters?.origin,
-                destination: filters?.destination,
-                departureTime: filters?.departureTime
-                    ? MoreThanOrEqual(filters.departureTime)
-                    : undefined,
-                automaticAccept: filters?.automaticAccept,
-                availableSeats: filters?.availableSeats
-                    ? MoreThanOrEqual(filters.availableSeats)
-                    : undefined,
-            },
+            where,
             relations: { user: true, bookings: true },
         })
     }
-
-    async listJourneysForScheduler(): Promise<JourneyEntity[]> {
-        return await this.db.find({
-            where: {
-                departureTime: LessThanOrEqual(
-                    dayjs().subtract(1, 'day').toDate()
-                ),
-                status: 'PLANNED',
-            },
-            relations: { user: true, bookings: true },
-        })
-    }
-
+    
     async listJourneysByUser(userId: string): Promise<JourneyEntity[]> {
         return await this.db.find({
             where: {

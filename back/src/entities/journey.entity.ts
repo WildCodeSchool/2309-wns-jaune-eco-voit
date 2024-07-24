@@ -214,6 +214,9 @@ export class ListJourneysWithFilters {
 
     @Field()
     availableSeats: number
+
+    @Field({ nullable: true })
+    user?: PartialUserInput
 }
 
 @InputType()
