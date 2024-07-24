@@ -17,7 +17,6 @@ import UpdateOrCreateJourney, {
 } from "@/app/components/JourneyCreateOrUpdate/UpdateOrCreate";
 import { ResponseGetItinerary } from "@/app/api/itinerary/route";
 import { getItinerary } from "@/app/utils/getItinerary";
-import { Dayjs } from "dayjs";
 
 export default function Page({ params }: { params: { id: string } }) {
   const { id: journeyId } = params;
