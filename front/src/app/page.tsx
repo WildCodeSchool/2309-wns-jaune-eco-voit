@@ -6,11 +6,6 @@ import Image from "next/image";
 import { CookieValueTypes } from "cookies-next";
 import landingPic from "@/assets/landing-pic.png";
 
-import {
-  ListJourneysQuery,
-  ListJourneysWithFilters,
-  useListJourneysLazyQuery,
-} from "@/types/graphql";
 import { useEffect, useState } from "react";
 
 import dayjs from "dayjs";
@@ -18,6 +13,11 @@ import JourneyCard from "./components/JourneyCard/JourneyCard";
 import CircularLoading from "./components/CircularLoading/CircularLoading";
 import { useRouter } from "next/navigation";
 import { routes } from "./lib/routes";
+import {
+  ListJourneysQuery,
+  ListJourneysWithFilters,
+  useListJourneysLazyQuery,
+} from "@/types/graphql";
 
 export type UserInfos = {
   email: CookieValueTypes;

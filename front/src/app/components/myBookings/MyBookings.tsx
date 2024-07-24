@@ -13,17 +13,16 @@ import TripOriginOutlinedIcon from "@mui/icons-material/TripOriginOutlined";
 import { timelineItemClasses } from "@mui/lab/TimelineItem";
 import CircularLoading from "../CircularLoading/CircularLoading";
 import { routes } from "@/app/lib/routes";
-import { statusFrench } from "@/app/utils/generals";
 import { Grade } from "@/types/user";
-import { Status } from "@/types/booking";
 import AvatarJourney from "../Avatar/AvatarJouney";
+import { statusBookingFrench } from "@/app/utils/generals";
+import { BookingStatus } from "@/types/booking";
 
 type MyBookingsTabProps = {
   bookings?: ListBookingsByUserQuery["listBookingsByUser"];
   onCancelBooking: (id: string) => void;
   isLoading: boolean;
 };
-
 
 const MyBookingsTab = ({
   bookings = [],
@@ -71,8 +70,9 @@ const MyBookingsTab = ({
             ) => (
               <div
                 key={index}
-                className={`my_journey_card w-full flex p-4 rounded-md shadow-md ${status !== "ACCEPTED" ? "opacity-70" : ""
-                  }`}
+                className={`my_journey_card w-full flex p-4 rounded-md shadow-md ${
+                  status !== "ACCEPTED" ? "opacity-70" : ""
+                }`}
               >
                 <div className="w-full flex flex-col gap-3">
                   <div className="flex flex-col xs:flex-row w-full xs:justify-between gap-4">
@@ -82,7 +82,7 @@ const MyBookingsTab = ({
                       <br />
                     </p>
                     <p className="price text-sm px-3 py-1 rounded-md bg-primary100 text-white w-fit h-fit flex-shrink-0">
-                      {statusFrench[status as Status]}
+                      {statusBookingFrench[status as BookingStatus]}
                     </p>
                   </div>
                   <div className="TimeLine flex items-center w-full border border-dark20 rounded-md p-4 h-fit">

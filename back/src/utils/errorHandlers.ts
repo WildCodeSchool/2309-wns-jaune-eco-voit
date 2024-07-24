@@ -36,11 +36,15 @@ export const validateJourneyInputs = ({
 }) => {
     const now = dayjs()
 
-    if (dayjs(departureTime) < now.add(110, 'minute')) {
+    if (
+        departureTime &&
+        dayjs(departureTime).isBefore(now.add(100, 'minute'))
+    ) {
+        console.log('ici')
         throw new Error('Departure time must be at least in two hours')
     }
 
-    if (origin === destination) {
+    if (origin && destination && origin === destination) {
         throw new Error('Origin must be different than destination')
     }
 
