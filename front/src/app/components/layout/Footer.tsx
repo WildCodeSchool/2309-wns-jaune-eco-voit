@@ -1,5 +1,4 @@
 import Image from "next/image";
-//Assets
 import logo from "@/assets/logo_white.webp";
 
 const Footer = () => {
