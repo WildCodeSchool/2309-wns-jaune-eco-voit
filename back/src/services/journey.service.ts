@@ -16,6 +16,9 @@ import dayjs from 'dayjs'
 import BookingService from './booking.service'
 import UserService from './user.service'
 import SendEmailService from './sendEmail.service'
+import utc from 'dayjs/plugin/utc'
+
+dayjs.extend(utc)
 
 export default class JourneyService {
     db: Repository<JourneyEntity>
@@ -67,7 +70,7 @@ export default class JourneyService {
         return await this.db.find({
             where: {
                 departureTime: LessThanOrEqual(
-                    dayjs().subtract(1, 'day').toDate()
+                    dayjs().utc().subtract(1, 'day').toDate()
                 ),
                 status: 'PLANNED',
             },

@@ -18,11 +18,11 @@ export default class SendEmailService {
     })
 
     private sendEmail(mailOptions: MailOptions) {
-        this.transporter.sendMail(mailOptions, (error) => {
+        this.transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.log(error)
             }
-            console.log('Message sent: %s')
+            console.log('Message sent: %s', info)
         })
     }
 
@@ -167,6 +167,29 @@ export default class SendEmailService {
             to: recipient,
             subject: 'Réservation rejetée',
             text: `${driverFirstname} a refusé votre réservation. Trouvez dès maintenant un nouveau trajet ! ${process.env.CLIENT_URL} `,
+        }
+
+        this.sendEmail(mailOptions)
+    }
+
+    sendBookingNotPaidSoCancel({
+        recipient,
+        journeyId,
+        destination,
+        origin,
+    }: {
+        recipient: string
+        journeyId: string
+        destination: string
+        origin: string
+    }) {
+        const journeyDetailUrl = `${process.env.CLIENT_URL}/journey/${journeyId}`
+
+        const mailOptions = {
+            from: 'La super team Ecovoit',
+            to: recipient,
+            subject: 'Réservation rejetée',
+            text: `Votre réservation ${origin} - ${destination} a été annulée faute de paiement de votre part dans les temps impartis ! Retrouver ce trajet : ${journeyDetailUrl} `,
         }
 
         this.sendEmail(mailOptions)

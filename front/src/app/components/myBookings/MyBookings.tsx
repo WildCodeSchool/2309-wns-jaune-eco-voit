@@ -13,7 +13,13 @@ import TripOriginOutlinedIcon from "@mui/icons-material/TripOriginOutlined";
 import { timelineItemClasses } from "@mui/lab/TimelineItem";
 import CircularLoading from "../CircularLoading/CircularLoading";
 import { routes } from "@/app/lib/routes";
+<<<<<<< HEAD
 import { Grade } from "@/types/user";
+=======
+import { statusBookingFrench } from "@/app/utils/generals";
+import { Grade } from "@/types/user";
+import { BookingStatus } from "@/types/booking";
+>>>>>>> 519ca05f (cancelBooking not paid)
 import AvatarJourney from "../Avatar/AvatarJouney";
 import { statusBookingFrench } from "@/app/utils/generals";
 import { BookingStatus } from "@/types/booking";
