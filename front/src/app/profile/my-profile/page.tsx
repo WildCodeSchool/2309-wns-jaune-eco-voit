@@ -56,12 +56,8 @@ function MyProfile() {
   const [updateUserPassword, { error: updatePasswordError }] =
     useUpdateUserPasswordMutation();
 
-  if (!userId) {
-    // TODO Gerer erreur
-    return <div>Erreur</div>;
-  }
-
   const handleSave = () => {
+    if (!userId) return
     updateUser({
       variables: { data: { ...updateInfos, id: userId } },
 
@@ -85,11 +81,13 @@ function MyProfile() {
 
   const handlePasswordSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!userId) return
     if (newPassword !== confirmNewPassword) {
       setIsChangePasswordError(true);
       return;
     }
     updateUserPassword({
+
       variables: {
         data: { id: userId, newPassword, oldPassword },
       },
@@ -103,14 +101,14 @@ function MyProfile() {
     });
   };
 
-  if (loading) {
+  if (error) {
+    return <div>Impossible de récupérer les données utilisateur</div>;
+  }
+
+  if (loading || !updateInfos) {
     return <CircularLoading />;
   }
 
-  //TODO Gérer l'erreur
-  if (error || !data || !updateInfos) {
-    return <div>Error</div>;
-  }
 
   const { firstname, lastname, email, dateOfBirth, role, profilePicture } =
     updateInfos;
