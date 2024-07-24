@@ -47,7 +47,6 @@ const UploadPofilePicture = ({
       .then((data) => {
         if (data.status === "success") {
           const fileUrl = `${process.env.NEXT_PUBLIC_IMAGES_URI}/avatar/${data.filename}`;
-          // Update user profile with new picture
           updateProfilePicture({
             variables: { data: { id: userId, profilePicture: fileUrl } },
           });

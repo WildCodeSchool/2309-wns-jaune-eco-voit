@@ -114,7 +114,6 @@ const PublishJourney = () => {
     <UpdateOrCreateJourney
       setJourneyData={setJourneyData}
       journeyData={journeyData}
-      // errorMessage={error ? "Impossible de créer le trajet!" : undefined}
       handleOnValidateForm={handleOnValidateForm}
     />
   );

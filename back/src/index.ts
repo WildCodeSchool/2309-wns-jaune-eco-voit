@@ -46,7 +46,6 @@ export interface Payload {
     id: string
 }
 
-// Création d'un serveur HTTP à partir de la bibliothéque d'express
 const app = express()
 const httpServer = http.createServer(app)
 
@@ -57,7 +56,6 @@ const userService = new UserService()
 const ratingService = new RatingService()
 const journeyMessageService = new JourneyMessageService()
 
-// This is your Stripe CLI webhook secret for testing your endpoint locally.
 const endpointSecret =
     'whsec_c3667380856ca80657b8b21c4909648a883766adf053a73868bec7ca206521b7'
 
@@ -82,7 +80,6 @@ app.post(
 
         let paymentIntentSucceeded
 
-        // Handle the event
         switch (event.type) {
             case 'payment_intent.succeeded':
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -115,7 +112,6 @@ async function main() {
         plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
     })
 
-    // Lancement du server
     await server.start()
 
     // la variable job est necessaire pour créé le cron mais n'est jamais appelée a proprement parlé dans le code

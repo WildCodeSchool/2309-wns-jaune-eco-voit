@@ -19,7 +19,6 @@ export type JourneyData = {
 export type UpdateOrCreateJourneyProps = {
   setJourneyData: Dispatch<SetStateAction<JourneyData>>;
   journeyData: JourneyData;
-  errorMessage?: string;
   successMessage?: string;
   handleOnValidateForm: () => void;
 };
@@ -27,7 +26,6 @@ export type UpdateOrCreateJourneyProps = {
 const UpdateOrCreateJourney = ({
   setJourneyData,
   journeyData,
-  // errorMessage,
   handleOnValidateForm,
 }: UpdateOrCreateJourneyProps) => {
   const [activeStep, setActiveStep] = useState(0);

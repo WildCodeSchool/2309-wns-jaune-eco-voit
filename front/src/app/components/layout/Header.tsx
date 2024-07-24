@@ -1,7 +1,5 @@
 "use client";
-//chore
 import { SyntheticEvent, useContext, useEffect, useState } from "react";
-//Assets
 import logo from "@/assets/Logo.webp";
 import {
   Avatar,

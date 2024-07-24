@@ -187,7 +187,6 @@ export class UserProfile {
     @Field({ nullable: true })
     averageRate?: number
 }
-// -------------- INPUTS -------------- //
 
 @InputType()
 export class CreateUserInput {
