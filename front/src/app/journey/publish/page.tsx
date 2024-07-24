@@ -11,7 +11,7 @@ import { routes } from "@/app/lib/routes";
 import UpdateOrCreateJourney, {
   JourneyData,
 } from "@/app/components/JourneyCreateOrUpdate/UpdateOrCreate";
-import { ResponseError, ResponseGetItinerary } from "@/app/api/itinerary/route";
+import { ResponseGetItinerary } from "@/app/api/itinerary/route";
 import { getItinerary } from "@/app/utils/getItinerary";
 import { useCreateJourneyMutation } from "@/types/graphql";
 

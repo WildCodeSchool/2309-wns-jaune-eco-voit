@@ -15,6 +15,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { ListJourneysWithFilters } from "@/types/graphql";
 import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import getNearByCities from "@/app/utils/getNearByCities";
 
 const StyledSelect = styled(Select)({
   "& .MuiOutlinedInput-root": {
@@ -38,7 +39,6 @@ const SearchBar = ({ onSearchJourneys }: SearchJourneysProps) => {
   const [origin, setOrigin] = useState<AddressResponse>();
   const [departureTime, setDepartureTime] = useState<Dayjs | null>(null);
   const [availableSeats, setAvailableSeats] = useState<number>(1);
-
   const [warning, setWarning] = useState<string>("");
 
   const theme = useTheme();
@@ -46,11 +46,37 @@ const SearchBar = ({ onSearchJourneys }: SearchJourneysProps) => {
 
   const availableSeatsArray = [1, 2, 3, 4, 5, 6, 7, 8];
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     if (origin && destination && departureTime && availableSeats) {
+      const {
+        nom: originCity,
+        centre: { coordinates: originCoordinates },
+      } = origin;
+      const {
+        nom: destinationCity,
+        centre: { coordinates: destinationCoordinates },
+      } = destination;
+
+      const [originLongitude, originLatitude] = originCoordinates;
+
+      const [destinationLongitude, destinationLatitude] =
+        destinationCoordinates;
+
+      const nearByOrigins = await getNearByCities({
+        latitude: JSON.stringify(originLatitude),
+        longitude: JSON.stringify(originLongitude),
+        radius: 20,
+      });
+
+      const nearByDestinations = await getNearByCities({
+        latitude: JSON.stringify(destinationLatitude),
+        longitude: JSON.stringify(destinationLongitude),
+        radius: 20,
+      });
+
       onSearchJourneys({
-        origin: origin.nom,
-        destination: destination.nom,
+        origins: [...nearByOrigins, originCity],
+        destinations: [...nearByDestinations, destinationCity],
         departureTime,
         availableSeats,
       });

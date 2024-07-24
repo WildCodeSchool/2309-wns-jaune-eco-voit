@@ -5,7 +5,7 @@ export async function GET(request: Request) {
   const res = await fetch(
     `https://geo.api.gouv.fr/communes?nom=${encodeURIComponent(
       address!
-    )}&fields=nom,centre`,
+    )}&fields=nom,centre,codesPostaux`,
     {
       headers: {
         "Content-Type": "application/json",

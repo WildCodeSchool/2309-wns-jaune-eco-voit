@@ -1,4 +1,4 @@
-import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm'
+import { In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm'
 import datasource from '../db'
 import {
     JourneyEntity,
@@ -50,18 +50,49 @@ export default class JourneyService {
     async listJourneys(
         filters?: ListJourneysWithFilters
     ): Promise<JourneyEntity[]> {
+        if (filters) {
+            const {
+                origins,
+                destinations,
+                automaticAccept,
+                availableSeats,
+                departureTime,
+            } = filters
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const where: any = {}
+            console.log(destinations)
+
+            if (origins) {
+                where.origin = In(origins)
+            }
+
+            if (departureTime) {
+                where.departureTime = MoreThanOrEqual(departureTime)
+            }
+
+            if (automaticAccept !== undefined) {
+                where.automaticAccept = automaticAccept
+            }
+
+            if (availableSeats) {
+                where.availableSeats = MoreThanOrEqual(availableSeats)
+            }
+
+            const journeyWithGoodOrigin = await this.db.find({
+                where,
+                relations: { user: true, bookings: true },
+            })
+            console.log(journeyWithGoodOrigin)
+
+            // ret/urn journeyWithGoodOrigin
+
+            return journeyWithGoodOrigin.filter((journey) =>
+                destinations.includes(journey.destination)
+            )
+        }
+
         return await this.db.find({
-            where: {
-                origin: filters?.origin,
-                destination: filters?.destination,
-                departureTime: filters?.departureTime
-                    ? MoreThanOrEqual(filters.departureTime)
-                    : undefined,
-                automaticAccept: filters?.automaticAccept,
-                availableSeats: filters?.availableSeats
-                    ? MoreThanOrEqual(filters.availableSeats)
-                    : undefined,
-            },
             relations: { user: true, bookings: true },
         })
     }
@@ -79,13 +110,12 @@ export default class JourneyService {
     }
 
     async listJourneysByUser(userId: string): Promise<JourneyEntity[]> {
-        
-         const journeys = await this.db.find({
+        const journeys = await this.db.find({
             where: {
                 user: { id: userId },
             },
-            // relations: { 
-            //     user: true, 
+            // relations: {
+            //     user: true,
             //     // bookings: true
             //  },
             //  join: {
@@ -96,7 +126,7 @@ export default class JourneyService {
             //     }
             //  }
 
-            relations: [ 'user', 'bookings', 'bookings.user' ],
+            relations: ['user', 'bookings', 'bookings.user'],
         })
         return journeys
     }

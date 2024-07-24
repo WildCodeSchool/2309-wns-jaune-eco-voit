@@ -200,19 +200,19 @@ export class UpdateJourneyStatusInput {
 
 @InputType()
 export class ListJourneysWithFilters {
-    @Field()
-    origin: string
+    @Field(() => [String])
+    origins: string[]
 
-    @Field()
-    destination: string
+    @Field(() => [String])
+    destinations: string[]
 
-    @Field()
+    @Field(() => Date)
     departureTime: Date
 
     @Field({ nullable: true })
     automaticAccept?: boolean
 
-    @Field()
+    @Field(() => Number)
     availableSeats: number
 }
 
