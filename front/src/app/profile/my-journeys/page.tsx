@@ -27,7 +27,7 @@ export default function MyJourneys() {
 
   const [
     getUserBookings,
-    { data: bookingData, loading: bookingLoading, error: bookingError },
+    { data: bookingData, loading: bookingLoading, error: bookingError, refetch: bookingRefetch },
   ] = useListBookingsByUserLazyQuery({ fetchPolicy: "network-only" }); // Lazy Query permet de créer une fonction quz l'on appelle quand on le veux
 
   const [
@@ -102,6 +102,7 @@ export default function MyJourneys() {
                       });
                     }
                   }}
+                  journeysRefetch={journeysRefetch}
                 />
               ))
           ) : (
@@ -139,6 +140,7 @@ export default function MyJourneys() {
                         });
                       }
                     }}
+                    bookingsRefetch={bookingRefetch}
                   />
                 );
               })
