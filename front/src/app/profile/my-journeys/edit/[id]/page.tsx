@@ -2,11 +2,7 @@
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 dayjs.locale("fr");
-import {
-  UpdateJourneyInput,
-  useFindJourneyByIdQuery,
-  useUpdateJourneyMutation,
-} from "@/types/graphql";
+
 import { Stack, Typography, CircularProgress } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/authContext";
@@ -18,6 +14,10 @@ import UpdateOrCreateJourney, {
 import { ResponseGetItinerary } from "@/app/api/itinerary/route";
 import { getItinerary } from "@/app/utils/getItinerary";
 import { Dayjs } from "dayjs";
+import {
+  useFindJourneyByIdQuery,
+  useUpdateJourneyMutation,
+} from "@/types/graphql";
 
 export default function Page({ params }: { params: { id: string } }) {
   const { id: journeyId } = params;

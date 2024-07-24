@@ -163,3 +163,11 @@ export const CANCEL_BOOKING = gql`
     }
   }
 `;
+
+export const PAID_BOOKING = gql`
+  mutation paidBooking($bookingPaidId: String!) {
+    bookingPaid(id: $bookingPaidId) {
+      id
+    }
+  }
+`;

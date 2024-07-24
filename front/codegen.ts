@@ -14,6 +14,9 @@ const config: CodegenConfig = {
         "typescript-operations",
         "typescript-react-apollo",
       ],
+      config: {
+        skipTypeNameForRoot: true,
+      },
     },
   },
 };
