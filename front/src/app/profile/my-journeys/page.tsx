@@ -143,7 +143,7 @@ export default function MyJourneys() {
                 );
               })
           ) : (
-            <div className="text-center position-relative left-50 ">Vous n&apos;avez aucune réservation !</div>
+            <div>Vous n&apos;avez aucune réservation !</div>
           )}
         </TabPanel>
 
