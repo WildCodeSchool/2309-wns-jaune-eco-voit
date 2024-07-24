@@ -2,7 +2,6 @@ services:
   backend:
     # construit un image à partir du fichier /back
     build: ./back
-
     # A gauche le port en local, à droite celui dans docker
     ports:
       - 4000:4000
