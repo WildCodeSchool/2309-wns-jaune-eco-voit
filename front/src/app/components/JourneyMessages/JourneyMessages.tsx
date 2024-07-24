@@ -62,7 +62,7 @@ export default function JourneyMessages({
 
   return (
     <>
-      <Stack justifyContent={"center"} className="mt-16">
+      <Stack justifyContent={"center"} className="mt-16 w-full">
         <Typography variant="h4" component="h4" align="center" height={"10vh"}>
           Messages
         </Typography>
