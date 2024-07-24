@@ -1,18 +1,16 @@
-"use client";
 import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "@/context/authContext";
 import {
   useArchiveUserMutation,
   useListUsersQuery,
   UserEntity,
   useUpdateUserMutation,
 } from "@/types/graphql";
-import CircularLoading from "../components/CircularLoading/CircularLoading";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import { AuthContext } from "@/context/authContext";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import UsersAdmin from "./components/UsersAdmin";
+import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
 
-const Admin = () => {
+const UsersAdmin = () => {
   const [users, setUsers] = useState<UserEntity[]>([]);
 
   const { getUser: currentUser } = useContext(AuthContext);
@@ -113,7 +111,7 @@ const Admin = () => {
       filterable: false,
       disableColumnMenu: true,
       editable: false,
-      renderCell: (params) => {
+      renderCell: (params: GridRenderCellParams<UserEntity>) => {
         return (
           <DeleteForeverIcon
             className="cursor-pointer"
@@ -134,11 +132,15 @@ const Admin = () => {
   if (error) return <div>Error</div>;
 
   return (
-    <div className="admin-panel flex flex-col gap-8 px-12 py-8">
-      <h2>Panneau d&apos;administration</h2>
-      <UsersAdmin />
-    </div>
+    <section className="users_admin">
+      <h3 className="mb-4">Utilisateurs</h3>
+      <DataGrid
+        columns={columns}
+        rows={users || []}
+        paginationModel={{ page: 0, pageSize: 10 }}
+      />
+    </section>
   );
 };
 
-export default Admin;
+export default UsersAdmin;
