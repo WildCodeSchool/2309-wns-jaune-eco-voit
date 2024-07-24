@@ -1,10 +1,7 @@
 "use client";
-//cores
 import { useState, useContext, FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-//graphQL
 import { LoginInput, useLoginLazyQuery } from "@/types/graphql";
-//
 import { TextField, Stack, Typography, FormControl, Link } from "@mui/material";
 
 import { alpha, useTheme } from "@mui/material/styles";

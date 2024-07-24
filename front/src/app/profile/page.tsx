@@ -39,7 +39,6 @@ const UploadPicture = () => {
       .then((data) => {
         if (data.status === "success") {
           const fileUrl = `${process.env.NEXT_PUBLIC_IMAGES_URI}/avatar/${data.filename}`;
-          // Update user profile with new picture
           updateProfilePicture({
             variables: { data: { id: userId, profilePicture: fileUrl } },
           });
@@ -50,10 +49,7 @@ const UploadPicture = () => {
 
   return (
     <div className="flex flex-col align-center justify-center gap-4 w-full">
-      {
-        //To preview the file thumbnail
-        preview && <Image src={preview} alt="avatar" height={200} width={200} />
-      }
+      {preview && <Image src={preview} alt="avatar" height={200} width={200} />}
       <form
         className="flex flex-col gap-4 text-center"
         onSubmit={(e) => handleFileUpload(e)}

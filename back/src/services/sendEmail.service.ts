@@ -148,7 +148,6 @@ export default class SendEmailService {
             from: 'La super team Ecovoit',
             to: recipient,
             subject: 'Réservation acceptée',
-            // TODO ENVOYER LE LIEN VERS LA PAGE DE PAYMENT ET ENSUITE MARQUER LE BOOKING EN ACCEPTED
             text: `${driverFirstname} a accepté votre réservation! Vous pouvez maintenant procéder au paiement: ${paymentLink} `,
         }
 
