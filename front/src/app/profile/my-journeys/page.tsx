@@ -84,7 +84,7 @@ export default function MyJourneys() {
           className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
         >
           {journeysData?.listJourneysByUser &&
-          journeysData.listJourneysByUser.length > 0 ? (
+            journeysData.listJourneysByUser.length > 0 ? (
             [...journeysData.listJourneysByUser]
               .sort((a, b) => {
                 if (a.status === "PLANNED" && b.status !== "PLANNED") return -1;
@@ -113,7 +113,7 @@ export default function MyJourneys() {
           value="BOOKINGS"
           className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
         >
-          {bookingData ? (
+          {bookingData?.listBookingsByUser.length ? (
             bookingData?.listBookingsByUser.length > 0 &&
             [...bookingData.listBookingsByUser]
               .sort((a, b) => {
@@ -143,7 +143,7 @@ export default function MyJourneys() {
                 );
               })
           ) : (
-            <div>Vous n&apos;avez aucune réservation !</div>
+            <div className="text-center position-relative left-50 ">Vous n&apos;avez aucune réservation !</div>
           )}
         </TabPanel>
 
