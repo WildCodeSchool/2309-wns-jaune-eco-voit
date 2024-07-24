@@ -333,7 +333,6 @@ describe('Test sur une base de donnée de test', () => {
                 },
             },
         })
-
         const responseFindJourneyById =
             await server.executeOperation<ResponseFindJourneyById>(
                 {

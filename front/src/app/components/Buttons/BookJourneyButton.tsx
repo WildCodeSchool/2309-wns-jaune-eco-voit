@@ -1,38 +1,55 @@
-import { JourneyEntity, useCreateBookingMutation } from "@/types/graphql";
 import { Button } from "@mui/material";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/context/authContext";
-import { CreateBookingInput } from "@/types/graphql";
 import { useRouter } from "next/navigation";
 import { routes } from "@/app/lib/routes";
 import { tooLateToBook } from "@/app/utils/date";
+import {
+  CreateBookingInput,
+  JourneyEntity,
+  useCreateBookingMutation,
+} from "@/types/graphql";
 
 type BookJourneyButtonProps = {
   journey: JourneyEntity;
-  passenger: number;
+  nbPassenger: number;
 };
-const BookJourneyButton = ({ journey, passenger }: BookJourneyButtonProps) => {
+
+const BookJourneyButton = ({
+  journey,
+  nbPassenger,
+}: BookJourneyButtonProps) => {
   const { getUser: userId } = useContext(AuthContext);
 
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const [createBookingMutation] = useCreateBookingMutation();
+  const [createBookingMutation, { data: newBooking }] =
+    useCreateBookingMutation();
 
   const router = useRouter();
-  const BookJourney = () => {
+
+  const bookJourney = () => {
     setErrorMessage("");
+
     const booking: CreateBookingInput = {
       user: { id: userId! },
       journey: { id: journey.id },
       status: journey.status,
-      nbPassenger: passenger,
+      nbPassenger,
     };
+
     createBookingMutation({
       variables: { data: booking },
       onCompleted: (res) => {
-        setTimeout(() => {
-          router.push(`/booking/${res.createBooking.id}`);
-        }, 100);
+        if (journey.automaticAccept) {
+          setTimeout(() => {
+            router.push(`/payment/waiting/${res.createBooking.id}`);
+          }, 100);
+        } else {
+          setTimeout(() => {
+            router.push(`/booking/${res.createBooking.id}`);
+          }, 100);
+        }
       },
       onError: ({ message }) => {
         setErrorMessage(message);
@@ -48,7 +65,7 @@ const BookJourneyButton = ({ journey, passenger }: BookJourneyButtonProps) => {
             <Button
               variant="contained"
               size="large"
-              onClick={BookJourney}
+              onClick={bookJourney}
               disabled={tooLateToBook(journey.departureTime)}
             >
               Réserver

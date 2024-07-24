@@ -72,6 +72,13 @@ export const LIST_JOURNEYS_BY_USER = gql`
         status
         createdAt
         updatedAt
+        user {
+          firstname
+          lastname  
+          profilePicture
+        }
+        nbPassenger
+        
       }
     }
   }

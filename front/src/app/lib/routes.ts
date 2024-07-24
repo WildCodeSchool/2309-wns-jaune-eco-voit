@@ -62,6 +62,11 @@ export const routes: { [key: string]: Route } = {
     title: "Erreur",
     protected: "PUBLIC",
   },
+  paymentWaiting: {
+    pathname: "/payment/waiting",
+    title: "Payment waiting",
+    protected: "PRIVATE",
+  },
   "booking rating": {
     pathname: "/booking/rate",
     title: "Booking rating",

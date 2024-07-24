@@ -1,5 +1,7 @@
 import { DataSource } from 'typeorm'
 
+console.log(process.env.DB_TEST_JEST_PORT)
+
 export default new DataSource({
     type: 'postgres',
     host: 'localhost',

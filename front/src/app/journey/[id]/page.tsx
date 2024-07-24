@@ -2,11 +2,7 @@
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 dayjs.locale("fr");
-import {
-  JourneyEntity,
-  useFindJourneyByIdQuery,
-  useFindUserByIdQuery,
-} from "@/types/graphql";
+
 import {
   Stack,
   Typography,
@@ -25,13 +21,18 @@ import { routes } from "@/app/lib/routes";
 import { useRouter } from "next/navigation";
 import { Grade } from "@/types/user";
 import { tooLateToBook } from "@/app/utils/date";
+import {
+  JourneyEntity,
+  useFindJourneyByIdQuery,
+  useFindUserByIdQuery,
+} from "@/types/graphql";
 
 export default function Page({ params }: { params: { id: string } }) {
   const { id: journeyId } = params;
   const router = useRouter();
 
   const { getUser: userContextId } = useContext(AuthContext);
-  const [passengerNb, setPassengerNb] = useState(1);
+  const [nbPassenger, setNbPassenger] = useState(1);
   const {
     data: journeyData,
     loading: journeyLoading,
@@ -64,7 +65,7 @@ export default function Page({ params }: { params: { id: string } }) {
     return null;
   }
 
-  function maxPassengerNb(nb: number) {
+  function maxNbPassenger(nb: number) {
     if (nb > 0) {
       return nb > availableSeats ? availableSeats : nb;
     } else {
@@ -156,9 +157,9 @@ export default function Page({ params }: { params: { id: string } }) {
                   }}
                   inputProps={{ min: 0, max: availableSeats }}
                   variant="outlined"
-                  value={passengerNb}
+                  value={nbPassenger}
                   onChange={(e) =>
-                    setPassengerNb(maxPassengerNb(parseInt(e.target.value)))
+                    setNbPassenger(maxNbPassenger(parseInt(e.target.value)))
                   }
                 />
               </Stack>
@@ -172,7 +173,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 Total
               </Typography>
               <Typography variant="h6" component="p">
-                {price * passengerNb} €
+                {price * nbPassenger} €
               </Typography>
             </Stack>
             <Divider />
@@ -219,7 +220,7 @@ export default function Page({ params }: { params: { id: string } }) {
             />
             <BookJourneyButton
               journey={journeyData.findJourneyById as JourneyEntity}
-              passenger={passengerNb}
+              nbPassenger={nbPassenger}
             />
           </Grid>
         </Grid>

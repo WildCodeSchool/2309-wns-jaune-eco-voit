@@ -16,6 +16,9 @@ import dayjs from 'dayjs'
 import BookingService from './booking.service'
 import UserService from './user.service'
 import SendEmailService from './sendEmail.service'
+import utc from 'dayjs/plugin/utc'
+
+dayjs.extend(utc)
 
 export default class JourneyService {
     db: Repository<JourneyEntity>
@@ -68,14 +71,40 @@ export default class JourneyService {
             relations: { user: true, bookings: true },
         })
     }
-    
-    async listJourneysByUser(userId: string): Promise<JourneyEntity[]> {
+
+    async listJourneysForScheduler(): Promise<JourneyEntity[]> {
         return await this.db.find({
             where: {
-                user: { id: userId },
+                departureTime: LessThanOrEqual(
+                    dayjs().utc().subtract(1, 'day').toDate()
+                ),
+                status: 'PLANNED',
             },
             relations: { user: true, bookings: true },
         })
+    }
+
+    async listJourneysByUser(userId: string): Promise<JourneyEntity[]> {
+        
+         const journeys = await this.db.find({
+            where: {
+                user: { id: userId },
+            },
+            // relations: { 
+            //     user: true, 
+            //     // bookings: true
+            //  },
+            //  join: {
+            //     alias: 'j',
+            //     leftJoinAndSelect: {
+            //         "bookings": "j.bookings",
+            //         "user": "bookings.user"
+            //     }
+            //  }
+
+            relations: [ 'user', 'bookings', 'bookings.user' ],
+        })
+        return journeys
     }
 
     async createJourney(data: CreateJourneyInput): Promise<JourneyEntity> {
@@ -175,7 +204,7 @@ export default class JourneyService {
                         status: 'CANCELLED',
                     })
 
-                    sendEmailService.sendCancelJourneyEmail({
+                    sendEmailService.sendCancelledJourneyEmail({
                         recipient: passengerEmail,
                         origin,
                         destination,

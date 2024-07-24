@@ -1,17 +1,18 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
-import {
-  useAcceptBookingMutation,
-  useFindBookingByIdLazyQuery,
-  useFindUserByIdLazyQuery,
-  useRejectBookingMutation,
-} from "@/types/graphql";
+
 import { AuthContext } from "@/context/authContext";
 import { Button, Rating } from "@mui/material";
 import { useRouter } from "next/navigation";
 import JourneyCardHeader from "@/app/components/JourneyCard/JourneyCardHeader";
 import AvatarJourney from "@/app/components/Avatar/AvatarJouney";
 import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
+import {
+  useAcceptBookingMutation,
+  useFindBookingByIdLazyQuery,
+  useFindUserByIdLazyQuery,
+  useRejectBookingMutation,
+} from "@/types/graphql";
 
 const AcceptPage = ({
   params: {
