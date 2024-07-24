@@ -1,7 +1,8 @@
-export type Status =
+export type BookingStatus =
   | "PENDING"
   | "REJECTED"
   | "CANCELLED"
   | "ACCEPTED"
   | "DONE"
-  | "RATED";
+  | "RATED"
+  | "PAID";

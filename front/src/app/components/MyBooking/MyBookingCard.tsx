@@ -1,6 +1,5 @@
 import { formattedDate, formattedTime } from "@/app/utils/date";
-import { statusFrench } from "@/app/utils/generals";
-import { Status } from "@/types/booking";
+import { statusBookingFrench } from "@/app/utils/generals";
 import {
   Timeline,
   TimelineConnector,
@@ -23,6 +22,7 @@ import {
 } from "@/types/graphql";
 import { useRouter } from "next/navigation";
 import CircularLoading from "../CircularLoading/CircularLoading";
+import { BookingStatus } from "@/types/booking";
 
 type MyBookingCardProps = {
   booking: ArrayElementType<ListBookingsByUserQuery["listBookingsByUser"]>;
@@ -88,6 +88,15 @@ const MyBookingCard = ({
     });
   };
 
+  const showCancelButton = status === "ACCEPTED" || status === "PENDING";
+  const showPaymentButton = status === "ACCEPTED";
+  const showJourneyLink =
+    status === "ACCEPTED" ||
+    status === "PENDING" ||
+    status === "DONE" ||
+    status === "RATED" ||
+    status === "PAID";
+
   if (cancelBookingLoading) {
     return <CircularLoading />;
   }
@@ -95,9 +104,7 @@ const MyBookingCard = ({
   return (
     <div
       className={`my_journey_card w-full flex p-4 rounded-md shadow-md ${
-        status === "REJECTED" || status === "CANCELLED" || status === "PENDING"
-          ? "opacity-70"
-          : ""
+        status === "REJECTED" || status === "CANCELLED" ? "opacity-70" : ""
       }`}
     >
       <div className="w-full flex flex-col gap-3">
@@ -107,7 +114,7 @@ const MyBookingCard = ({
             <br />
           </p>
           <p className="price text-sm px-3 py-1 rounded-md bg-primary100 text-white w-fit h-fit flex-shrink-0">
-            {statusFrench[status as Status]}
+            {statusBookingFrench[status as BookingStatus]}
           </p>
         </div>
         <div className="TimeLine flex items-center w-full border border-dark20 rounded-md p-4 h-fit">
@@ -163,30 +170,22 @@ const MyBookingCard = ({
         />
         <div className="card_footer flex flex-col item-start xs:flex-row xs:justify-between xs:items-end gap-3">
           <div className="buttons flex gap-3">
-            <Button
-              onClick={handleCancelBooking}
-              disabled={
-                status === "RATED" ||
-                status === "REJECTED" ||
-                status === "PAID" ||
-                status === "DONE" ||
-                status === "RATED"
-              }
-            >
-              Annuler
-            </Button>
-            {status === "ACCEPTED" && (
-              <Button onClick={onLaunchPaymentSession}>
-                Payer pour confimer
-              </Button>
+            {showCancelButton && (
+              <Button onClick={handleCancelBooking}>Annuler</Button>
+            )}
+
+            {showPaymentButton && (
+              <Button onClick={onLaunchPaymentSession}>Payer</Button>
             )}
           </div>
-          <Link
-            href={`${routes["journey"].pathname}/${journeyId}`}
-            className="text-sm underline text-dark80"
-          >
-            Voir le trajet
-          </Link>
+          {showJourneyLink && (
+            <Link
+              href={`${routes["journey"].pathname}/${journeyId}`}
+              className="text-sm underline text-dark80"
+            >
+              Voir le trajet
+            </Link>
+          )}
         </div>
       </div>
     </div>
