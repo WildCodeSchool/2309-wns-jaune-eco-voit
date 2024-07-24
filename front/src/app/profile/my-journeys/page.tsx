@@ -147,7 +147,10 @@ export default function MyJourneys() {
           )}
         </TabPanel>
 
-        <TabPanel value="PENDING">
+        <TabPanel
+          value="PENDING"
+          className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
+        >
           <OnPendingTab
             journeys={journeysData?.listJourneysByUser}
             journeysRefetch={journeysRefetch}

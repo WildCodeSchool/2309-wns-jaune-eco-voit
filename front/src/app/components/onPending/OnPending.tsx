@@ -20,8 +20,8 @@ import { Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import AvatarJourney from "../Avatar/AvatarJouney";
 import TripOriginOutlinedIcon from "@mui/icons-material/TripOriginOutlined";
-import { statusFrench } from "@/app/utils/generals";
-import { Status } from "@/types/booking";
+import { BookingStatus } from "@/types/booking";
+import { statusBookingFrench } from "@/app/utils/generals";
 
 type OnPendingTabProps = {
   journeysRefetch: () => void;
@@ -126,14 +126,16 @@ const OnPendingTab = ({ journeys, journeysRefetch }: OnPendingTabProps) => {
             id,
             nbPassenger,
             origin,
-            availableSeats,
             price,
             destination,
             departureTime,
             user: { profilePicture, firstname },
           }) => (
-            <div key={id} className="flex flex-wrap gap-4">
-              <div className="my_pending_card w-full md:w-1/3 lg:w-1/2 flex p-4 rounded-md shadow-md ">
+            <div
+              className="my_journey_card w-full flex p-4 rounded-md shadow-md"
+              key={id}
+            >
+              <div className="w-full flex flex-col gap-3">
                 <div className="w-full flex flex-col gap-3">
                   <div className="flex flex-col xs:flex-row w-full xs:justify-between gap-4">
                     <p className="text-base">
@@ -145,14 +147,14 @@ const OnPendingTab = ({ journeys, journeysRefetch }: OnPendingTabProps) => {
                         {nbPassenger > 1 && "s"})
                       </span>
                     </p>
-                    <p className="price text-sm px-3 py-1 rounded-md bg-primary100 text-white w-fit h-fit flex-shrink-0">
-                      {price * nbPassenger} €
-                    </p>
-                  </div>
-                  <div>
-                    <p className="status text-sm px-3 py-1 rounded-md bg-primary100 text-white w-fit h-fit flex-shrink-0 justify-self-end">
-                      {statusFrench[status as Status]}
-                    </p>
+                    <div className="flex gap-2">
+                      <p className="price text-sm px-3 py-1 rounded-md bg-primary100 text-white w-fit h-fit flex-shrink-0">
+                        {price * nbPassenger} €
+                      </p>{" "}
+                      <p className="status text-sm px-3 py-1 rounded-md bg-primary100 text-white w-fit h-fit flex-shrink-0 justify-self-end">
+                        {statusBookingFrench[status as BookingStatus]}
+                      </p>
+                    </div>
                   </div>
                   <div className="TimeLine flex flex-col lg:flex-row  w-full border border-dark20 rounded-md p-4 h-fit gap-4">
                     <Timeline
