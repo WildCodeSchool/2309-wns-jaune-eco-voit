@@ -12,8 +12,8 @@ import AddressAutoComplete, { AddressResponse } from "./AddressAutoComplete";
 import { useState } from "react";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
-import { ListJourneysWithFilters } from "@/types/graphql";
 import { styled } from "@mui/material/styles";
+import { ListJourneysWithFilters } from "@/types/graphql";
 
 const StyledSelect = styled(Select)({
   "& .MuiOutlinedInput-root": {

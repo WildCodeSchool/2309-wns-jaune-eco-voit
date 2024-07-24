@@ -18,15 +18,15 @@ export default class SendEmailService {
     })
 
     private sendEmail(mailOptions: MailOptions) {
-        this.transporter.sendMail(mailOptions, (error, info) => {
+        this.transporter.sendMail(mailOptions, (error) => {
             if (error) {
                 console.log(error)
             }
-            console.log('Message sent: %s', info.messageId)
+            console.log('Message sent: %s')
         })
     }
 
-    sendNewBookingEmail({
+    sendNewBookingRequestEmail({
         recipient,
         newBookingId,
         driverId,
@@ -51,29 +51,33 @@ export default class SendEmailService {
         this.sendEmail(mailOptions)
     }
 
-    sendNewBookingAutoAcceptedEmail({
+    sendNewAutoacceptedBookingEmail({
         recipient,
-        passenger,
+        passenger: {
+            id: passengerId,
+            firstname: passengerFistname,
+            lastname: passengerLastname,
+        },
         nbPassenger,
     }: {
         recipient: string
         passenger: UserEntity
         nbPassenger: number
     }) {
-        const passengerProfileLink = `${process.env.CLIENT_URL}/profile/${passenger.id}`
+        const passengerProfileLink = `${process.env.CLIENT_URL}/profile/${passengerId}`
 
         const mailOptions = {
             from: 'La super team Ecovoit',
             to: recipient,
             subject: 'Nouvelle réservation sur votre trajet',
-            text: `${passenger.firstname} ${passenger.lastname} à réservé ${nbPassenger} place(s) sur votre trajet !
-            Consulter le profil de ${passenger.firstname} : ${passengerProfileLink}`,
+            text: `${passengerFistname} ${passengerLastname} à réservé ${nbPassenger} place(s) sur votre trajet !
+            Consulter le profil de ${passengerFistname} : ${passengerProfileLink}`,
         }
 
         this.sendEmail(mailOptions)
     }
 
-    sendCancelBookingEmail({
+    sendCancelledBookingEmail({
         recipient,
         passengerFistname,
     }: {
@@ -90,7 +94,7 @@ export default class SendEmailService {
         this.sendEmail(mailOptions)
     }
 
-    sendCancelJourneyEmail({
+    sendCancelledJourneyEmail({
         recipient,
         origin,
         destination,
@@ -129,28 +133,29 @@ export default class SendEmailService {
         this.sendEmail(mailOptions)
     }
 
-    sendAcceptBookingEmail({
+    sendAcceptedBookingEmail({
         recipient,
         driverFirstname,
-        journeyId,
+        bookingId,
     }: {
         recipient: string
         driverFirstname: string
-        journeyId: string
+        bookingId: string
     }) {
-        const journeyDetailLink = `${process.env.CLIENT_URL}/journey/${journeyId}`
+        const paymentLink = `${process.env.CLIENT_URL}/payment/waiting/${bookingId}`
 
         const mailOptions = {
             from: 'La super team Ecovoit',
             to: recipient,
             subject: 'Réservation acceptée',
-            text: `${driverFirstname} a accepté votre réservation! Vous pouvez maintenant communiquer: ${journeyDetailLink} `,
+            // TODO ENVOYER LE LIEN VERS LA PAGE DE PAYMENT ET ENSUITE MARQUER LE BOOKING EN ACCEPTED
+            text: `${driverFirstname} a accepté votre réservation! Vous pouvez maintenant procéder au paiement: ${paymentLink} `,
         }
 
         this.sendEmail(mailOptions)
     }
 
-    sendRejectBookingEmail({
+    sendRejectedBookingEmail({
         recipient,
         driverFirstname,
     }: {

@@ -1,12 +1,12 @@
-import {
-  useListJourneyMessagesByJourneyQuery,
-  usePostJourneyMessageMutation,
-} from "@/types/graphql";
 import { CircularProgress, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import JourneyMessageCard from "./JourneyMessageCard";
 import JourneyMessagePost from "./JourneyMessagePost";
 import CircularLoading from "../CircularLoading/CircularLoading";
+import {
+  useListJourneyMessagesByJourneyQuery,
+  usePostJourneyMessageMutation,
+} from "@/types/graphql";
 
 type JourneyMessagesProps = {
   userId: string;

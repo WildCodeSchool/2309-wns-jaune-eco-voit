@@ -11,6 +11,12 @@ import {
 } from "@mui/material";
 import React, { useContext, useEffect } from "react";
 import { useState } from "react";
+
+import { AuthContext } from "@/context/authContext";
+import dayjs from "dayjs";
+import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
+import UploadProfilePictureModal from "../../components/UploadProfilePicture/UploadProfilePictureModal";
+import ChangePasswordModal from "@/app/components/ChangePassword/ChangePasswordModal";
 import {
   GetProfileDocument,
   UserProfile,
@@ -18,11 +24,6 @@ import {
   useUpdateUserMutation,
   useUpdateUserPasswordMutation,
 } from "@/types/graphql";
-import { AuthContext } from "@/context/authContext";
-import dayjs from "dayjs";
-import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
-import UploadProfilePictureModal from "../../components/UploadProfilePicture/UploadProfilePictureModal";
-import ChangePasswordModal from "@/app/components/ChangePassword/ChangePasswordModal";
 
 function MyProfile() {
   const { data, loading, error } = useGetProfileQuery({

@@ -24,6 +24,9 @@ import SendEmailService from './services/sendEmail.service'
 import UserService from './services/user.service'
 import RatingService from './services/rating.service'
 import JourneyMessageService from './services/journeyMessage.service'
+import PaymentResolver from './resolvers/payment.resolver'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const stripe = require('stripe')(process.env.STRIPE_PRIVATE_API_KEY)
 
 export interface MyContext {
     req: express.Request
@@ -54,6 +57,49 @@ const userService = new UserService()
 const ratingService = new RatingService()
 const journeyMessageService = new JourneyMessageService()
 
+// This is your Stripe CLI webhook secret for testing your endpoint locally.
+const endpointSecret =
+    'whsec_c3667380856ca80657b8b21c4909648a883766adf053a73868bec7ca206521b7'
+
+app.post(
+    '/webhook',
+    express.raw({ type: 'application/json' }),
+    (request, response) => {
+        const sig = request.headers['stripe-signature']
+        console.log('PASSE PAR ICI')
+        let event
+
+        try {
+            event = stripe.webhooks.constructEvent(
+                request.body,
+                sig,
+                endpointSecret
+            )
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            response.status(400).send(`Webhook Error: ${err.message}`)
+            return
+        }
+
+        let paymentIntentSucceeded
+
+        // Handle the event
+        switch (event.type) {
+            case 'payment_intent.succeeded':
+                paymentIntentSucceeded = event.data.object
+                console.log(paymentIntentSucceeded)
+                // Then define and call a function to handle the event payment_intent.succeeded
+                break
+            // ... handle other event types
+            default:
+                console.log(`Unhandled event type ${event.type}`)
+        }
+
+        // Return a 200 response to acknowledge receipt of the event
+        response.send()
+    }
+)
+
 async function main() {
     const schema = await buildSchema({
         resolvers: [
@@ -62,6 +108,7 @@ async function main() {
             JourneyResolver,
             JourneyMessageResolver,
             RatingResolver,
+            PaymentResolver,
         ],
         validate: true,
         authChecker: customAuthChecker,

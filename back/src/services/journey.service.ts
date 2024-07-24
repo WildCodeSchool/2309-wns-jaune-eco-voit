@@ -181,7 +181,7 @@ export default class JourneyService {
                         status: 'CANCELLED',
                     })
 
-                    sendEmailService.sendCancelJourneyEmail({
+                    sendEmailService.sendCancelledJourneyEmail({
                         recipient: passengerEmail,
                         origin,
                         destination,

@@ -11,7 +11,7 @@ export const statusFrench: Record<Status, string> = {
   PENDING: "En attente",
   REJECTED: "Rejeté",
   CANCELLED: "Annulé",
-  ACCEPTED: "Accepté",
+  ACCEPTED: "Accepté en attente de paiement",
   DONE: "Effectué",
   RATED: "Effectué",
 };
