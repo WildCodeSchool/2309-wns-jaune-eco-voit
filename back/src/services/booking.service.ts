@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm'
+import { LessThanOrEqual, Repository } from 'typeorm'
 import datasource from '../db'
 import {
     BookingEntity,
@@ -13,6 +13,7 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 
 dayjs.extend(utc)
+
 export default class BookingService {
     db: Repository<BookingEntity>
 
@@ -47,6 +48,18 @@ export default class BookingService {
                 journey: { id: journeyId ?? undefined },
             },
             relations: ['user', 'journey', 'journey.user'],
+        })
+    }
+
+    async listBookingsForScheduler(): Promise<BookingEntity[]> {
+        return await this.db.find({
+            where: {
+                status: 'ACCEPTED',
+                updatedAt: LessThanOrEqual(
+                    dayjs().utc().subtract(6, 'hour').toDate()
+                ),
+            },
+            relations: ['user', 'journey'],
         })
     }
 
@@ -266,5 +279,33 @@ export default class BookingService {
         })
 
         return bookingPaid
+    }
+
+    async cancelBookingForScheduler(id: string) {
+        const sendEmailService = new SendEmailService()
+        const journeyService = new JourneyService()
+
+        const {
+            journey: { availableSeats, id: journeyId, origin, destination },
+            user: { email },
+            nbPassenger,
+        } = await this.findBookingById(id)
+
+        await journeyService.updateAvailableSeats({
+            id: journeyId,
+            availableSeats: availableSeats + nbPassenger,
+        })
+
+        sendEmailService.sendBookingNotPaidSoCancel({
+            recipient: email,
+            origin,
+            destination,
+            journeyId,
+        })
+
+        await this.updateBookingStatus({
+            id,
+            status: 'CANCELLED',
+        })
     }
 }

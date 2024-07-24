@@ -23,6 +23,8 @@ import {
 } from "@/types/graphql";
 import { ArrayElementType } from "@/types/utils";
 import { useRouter } from "next/navigation";
+import { JourneyStatus } from "@/types/journey";
+import { statusJourneyFrench } from "@/app/utils/generals";
 
 type MyJourneyCardProps = {
   journey: ArrayElementType<ListJourneysByUserQuery["listJourneysByUser"]>;
@@ -70,7 +72,7 @@ const MyJourneyCard = ({
   return (
     <div
       className={`my_journey_card w-full flex p-4 rounded-md shadow-md ${
-        status !== "PLANNED" && "opacity-50"
+        status === "CANCELLED" && "opacity-50"
       }`}
     >
       {" "}
@@ -80,16 +82,19 @@ const MyJourneyCard = ({
             Départ: {formattedDate(departureTime)} à{" "}
             {formattedTime(departureTime)}
             <br />
-            Arrivée: {formattedDate(arrivalTime)} à {formattedTime(arrivalTime)}
-            <br />
             <span className="text-sm text-dark60">
               ({availableSeats} siège{availableSeats > 1 && "s"} disponible
               {availableSeats > 1 && "s"})
             </span>
           </p>
-          <p className="price text-sm px-3 py-1 rounded-md bg-primary100 text-white w-fit h-fit flex-shrink-0">
-            {price} €
-          </p>
+          <div className="flex gap-2">
+            <p className="price text-sm px-3 py-1 rounded-md bg-primary100 text-white w-fit h-fit flex-shrink-0">
+              {price} €
+            </p>
+            <p className="price text-sm px-3 py-1 rounded-md bg-primary100 text-white w-fit h-fit flex-shrink-0">
+              {statusJourneyFrench[status as JourneyStatus]}
+            </p>
+          </div>
         </div>
         <div className="TimeLine flex items-center w-full border border-dark20 rounded-md p-4 h-fit">
           <Timeline
@@ -153,12 +158,15 @@ const MyJourneyCard = ({
               </>
             )}
           </div>
-          <Link
-            href={`${routes["journey"].pathname}/${id}`}
-            className="text-sm underline text-dark80"
-          >
-            Voir le trajet
-          </Link>
+          {status !== "CANCELLED" && (
+            <Link
+              href={`${routes["journey"].pathname}/${id}`}
+              className="text-sm underline text-dark80"
+            >
+              {" "}
+              Voir le trajet
+            </Link>
+          )}
         </div>
       </div>
     </div>
