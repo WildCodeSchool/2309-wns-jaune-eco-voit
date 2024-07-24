@@ -1,5 +1,6 @@
 "use client";
-import { useCallback, useContext, useState } from "react";
+import { useContext, useState } from "react";
+
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import fr from "dayjs/locale/fr";
@@ -11,7 +12,6 @@ import { routes } from "@/app/lib/routes";
 import UpdateOrCreateJourney, {
   JourneyData,
 } from "@/app/components/JourneyCreateOrUpdate/UpdateOrCreate";
-import { debounce } from "@mui/material";
 import { ResponseError, ResponseGetItinerary } from "@/app/api/itinerary/route";
 import { getItinerary } from "@/app/utils/getItinerary";
 
@@ -61,6 +61,15 @@ const PublishJourney = () => {
       availableSeats === 0 ||
       !userId
     ) {
+      console.log(
+        "error",
+        origin,
+        destination,
+        departureTime,
+        price,
+        availableSeats,
+        userId
+      );
       return;
       // TODO gerer erreur
     }

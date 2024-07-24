@@ -2,7 +2,7 @@
 //chore
 import { SyntheticEvent, useContext, useEffect, useState } from "react";
 //Assets
-// import logo from "@/assets/logo.png";
+import logo from "@/assets/Logo.webp";
 import {
   Avatar,
   Button,
@@ -13,6 +13,9 @@ import {
   Snackbar,
   Tooltip,
 } from "@mui/material";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { routes } from "@/app/lib/routes";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
@@ -27,6 +30,7 @@ import { useGetProfileLazyQuery } from "@/types/graphql";
 
 const Header = () => {
   const router = useRouter();
+  const pathname = usePathname();
 
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -76,9 +80,9 @@ const Header = () => {
 
   return (
     <header className="flex justify-between items-center py-6 px-6 bg-white">
-      {/* <Link href={`${routes["home"].pathname}`}>
-        <Image src={logo} alt="Ecovoit" height={45} />
-      </Link> */}
+      <Link href={`${routes["home"].pathname}`}>
+        <Image src={logo} alt="Ecovoit" height={45} width={145} />
+      </Link>
       <nav className="flex gap-4 items-center">
         {!loggedUser ? (
           <>
@@ -94,15 +98,37 @@ const Header = () => {
           </>
         ) : (
           <>
-            <Button
-              href="#"
-              variant="text"
-              className="flex items-center gap-4"
-              onClick={() => router.push(routes["publish-journey"].pathname)}
+            <span
+              className={
+                pathname === routes["publish-journey"].pathname
+                  ? "hidden"
+                  : "block"
+              }
             >
-              <AddCircleOutlineOutlinedIcon />
-              <p className="font-medium text-sm">Publier un trajet</p>
-            </Button>
+              <div className="hidden md:block">
+                <Button
+                  variant="text"
+                  className="flex items-center gap-4"
+                  onClick={() =>
+                    router.push(routes["publish-journey"].pathname)
+                  }
+                >
+                  <AddCircleOutlineOutlinedIcon />
+                  <p className="font-medium text-sm">Publier un trajet</p>
+                </Button>
+              </div>
+              <div className="block md:hidden">
+                <IconButton
+                  aria-label="Nouveau Trajet"
+                  className="flex items-center gap-4"
+                  onClick={() =>
+                    router.push(routes["publish-journey"].pathname)
+                  }
+                >
+                  <AddCircleOutlineOutlinedIcon />
+                </IconButton>
+              </div>
+            </span>
             <Tooltip title="Profile">
               <IconButton
                 onClick={(e) => {
