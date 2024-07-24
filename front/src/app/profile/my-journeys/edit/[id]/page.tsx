@@ -181,9 +181,6 @@ export default function Page({ params }: { params: { id: string } }) {
       ) : (
         <UpdateOrCreateJourney
           journeyData={updatedJourneyData}
-          errorMessage={
-            error ? "Votre trajet n&apos;a pas été modifié" : undefined
-          }
           setJourneyData={setUpdatedJourneyData}
           handleOnValidateForm={handleOnValidateForm}
         />
