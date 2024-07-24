@@ -54,13 +54,6 @@ const UpdateOrCreateJourney = ({
       </div>
 
       <div className="publish_content flex-1 h-full flex flex-col items-center">
-        {/* {"aa" == "vv" ? (
-          <div className="h-full flex-1 flex flex-col gap-3 items-center justify-center">
-            <h3 className="text-2xl text-center xs:text-3xl">
-              Impossible de créer le trajet!
-            </h3>
-          </div>
-        ) : ( */}
         <>
           <div className="h-full flex-1 flex flex-col gap-6 items-center justify-center">
             <h3 className="text-2xl text-center xs:text-3xl">
@@ -95,7 +88,6 @@ const UpdateOrCreateJourney = ({
             )}
           </div>
         </>
-        {/* )} */}
       </div>
     </div>
   );

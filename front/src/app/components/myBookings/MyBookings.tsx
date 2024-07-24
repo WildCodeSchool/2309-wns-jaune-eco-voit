@@ -13,9 +13,9 @@ import TripOriginOutlinedIcon from "@mui/icons-material/TripOriginOutlined";
 import { timelineItemClasses } from "@mui/lab/TimelineItem";
 import CircularLoading from "../CircularLoading/CircularLoading";
 import { routes } from "@/app/lib/routes";
-import { statusFrench } from "@/app/utils/generals";
+import { statusBookingFrench } from "@/app/utils/generals";
 import { Grade } from "@/types/user";
-import { Status } from "@/types/booking";
+import { BookingStatus } from "@/types/booking";
 import AvatarJourney from "../Avatar/AvatarJouney";
 
 type MyBookingsTabProps = {
@@ -82,7 +82,7 @@ const MyBookingsTab = ({
                       <br />
                     </p>
                     <p className="price text-sm px-3 py-1 rounded-md bg-primary100 text-white w-fit h-fit flex-shrink-0">
-                      {statusFrench[status as Status]}
+                      {statusBookingFrench[status as BookingStatus]}
                     </p>
                   </div>
                   <div className="TimeLine flex items-center w-full border border-dark20 rounded-md p-4 h-fit">

@@ -95,7 +95,6 @@ const Admin = () => {
                     data: { id: params.row.id, role: e.target.value },
                   },
                 });
-                console.log(e.target.value);
               }}
             >
               <option value="USER">Utilisateur</option>

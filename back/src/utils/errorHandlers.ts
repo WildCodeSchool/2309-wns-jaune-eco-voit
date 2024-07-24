@@ -1,12 +1,8 @@
 import { validate } from 'class-validator'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
-import fr from 'dayjs/locale/fr'
-import customParseFormat from 'dayjs/plugin/customParseFormat'
 
 dayjs.extend(utc)
-dayjs.extend(customParseFormat)
-dayjs.locale(fr)
 
 export const validateData = async (dataToValidate: object) => {
     const errors = await validate(dataToValidate)
@@ -34,13 +30,12 @@ export const validateJourneyInputs = ({
     destination?: string
     departureTime?: Date
 }) => {
-    const now = dayjs()
+    const now = dayjs().utc()
 
     if (
         departureTime &&
-        dayjs(departureTime).isBefore(now.add(100, 'minute'))
+        dayjs(departureTime).utc().isBefore(now.add(100, 'minute'))
     ) {
-        console.log('ici')
         throw new Error('Departure time must be at least in two hours')
     }
 
