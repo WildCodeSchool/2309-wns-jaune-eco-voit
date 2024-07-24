@@ -12,6 +12,7 @@ const Page = ({ params: { id: bookingId } }: { params: { id: string } }) => {
 
   useEffect(() => {
     paidBooking();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <div>Votre réservation a été prise en compte</div>;
