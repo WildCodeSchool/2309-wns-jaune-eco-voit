@@ -151,8 +151,8 @@ export const FIND_BOOKING_BY_ID = gql`
   query FindBookingById($findBookingById: String!) {
     findBookingById(id: $findBookingById) {
       id
-      status
       nbPassenger
+      status
       createdAt
       updatedAt
       user {
@@ -166,8 +166,8 @@ export const FIND_BOOKING_BY_ID = gql`
         role
         grade
         tripsAsPassenger
-        averageRate
         tripsAsDriver
+        averageRate
         status
         createdAt
         updatedAt
@@ -186,9 +186,12 @@ export const FIND_BOOKING_BY_ID = gql`
         updatedAt
         user {
           id
-          firstname
+          email
           lastname
+          firstname
           profilePicture
+          grade
+          averageRate
         }
       }
     }

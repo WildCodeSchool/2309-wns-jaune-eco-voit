@@ -1,20 +1,19 @@
 "use client";
 import { SyntheticEvent, useContext, useEffect, useState } from "react";
-import {
-  useListBookingsByUserLazyQuery,
-  useListJourneysByUserLazyQuery,
-  useCancelBookingMutation,
-  useUpdateJourneyStatusMutation,
-} from "@/types/graphql";
+
 import { AuthContext } from "@/context/authContext";
 import { Box, Tab } from "@mui/material";
 import TabContext from "@mui/lab/TabContext";
-import { TabList } from "@mui/lab";
+import { TabList, TabPanel } from "@mui/lab";
 import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
 import { routes } from "@/app/lib/routes";
 import { useRouter } from "next/navigation";
-import MyJourneysTab from "@/app/components/myJourneys/MyJourneysTab";
-import MyBookingsTab from "@/app/components/myBookings/MyBookings";
+import {
+  useListBookingsByUserLazyQuery,
+  useListJourneysByUserLazyQuery,
+} from "@/types/graphql";
+import MyJourneyCard from "@/app/components/MyJourney/MyJourneyCard";
+import MyBookingCard from "@/app/components/MyBooking/MyBookingCard";
 import OnPendingTab from "@/app/components/onPending/OnPending";
 
 export default function MyJourneys() {
@@ -22,9 +21,9 @@ export default function MyJourneys() {
 
   const { getUser: userId } = useContext(AuthContext);
 
-  const [tabDisplayed, setTabDisplayed] = useState<"JOURNEYS" | "BOOKINGS" | "PENDING">(
-    "JOURNEYS"
-  );
+  const [tabDisplayed, setTabDisplayed] = useState<
+    "JOURNEYS" | "BOOKINGS" | "PENDING"
+  >("JOURNEYS");
 
   const [
     getUserBookings,
@@ -33,51 +32,13 @@ export default function MyJourneys() {
 
   const [
     getUserJourneys,
-    { data: journeysData, loading: journeyLoading, error: journeyError, refetch: journeysRefetch },
+    {
+      data: journeysData,
+      loading: journeyLoading,
+      error: journeyError,
+      refetch: journeysRefetch,
+    },
   ] = useListJourneysByUserLazyQuery({ fetchPolicy: "network-only" });
-
-  const [
-    cancelBooking,
-    { error: cancelBookingError, loading: cancelBookingLoading },
-  ] = useCancelBookingMutation({
-    fetchPolicy: "network-only",
-  });
-
-  const [
-    updateJourneyStatus,
-    { error: updateJourneyError, loading: updateJourneyStatusLoading },
-  ] = useUpdateJourneyStatusMutation();
-
-  const handleCancelJourney = (journeyId: string) => {
-    updateJourneyStatus({
-      variables: {
-        data: { id: journeyId, status: "CANCELLED" },
-      },
-      onCompleted: () => {
-        if (userId) {
-          getUserJourneys({ variables: { userId } });
-        }
-      },
-    });
-  };
-
-  const handleCancelBooking = (bookingId: string) => {
-    cancelBooking({
-      variables: { cancelBookingId: bookingId },
-      onCompleted: () => {
-        if (userId) {
-          getUserBookings({
-            variables: { userId },
-            fetchPolicy: "network-only",
-          });
-        }
-      },
-    });
-  };
-
-  const handleEditJourney = (journeyId: string) => {
-    router.push(`${routes.journeysUser.pathname}/edit/${journeyId}`);
-  };
 
   useEffect(() => {
     if (userId) {
@@ -91,21 +52,10 @@ export default function MyJourneys() {
   }, [getUserBookings, getUserJourneys, userId]);
 
   useEffect(() => {
-    if (
-      bookingError ||
-      journeyError ||
-      updateJourneyError ||
-      cancelBookingError
-    ) {
+    if (bookingError || journeyError) {
       router.push(`${routes["error"].pathname}`);
     }
-  }, [
-    bookingError,
-    journeyError,
-    updateJourneyError,
-    cancelBookingError,
-    router,
-  ]);
+  }, [bookingError, journeyError, router]);
 
   if (bookingLoading || journeyLoading) {
     return <CircularLoading />;
@@ -129,24 +79,83 @@ export default function MyJourneys() {
           </TabList>
         </Box>
 
-        <MyJourneysTab
-          journeys={journeysData?.listJourneysByUser}
-          onCancelJourney={handleCancelJourney}
-          onEditJourney={handleEditJourney}
-          isLoading={updateJourneyStatusLoading}
-        />
+        <TabPanel
+          value="JOURNEYS"
+          className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
+        >
+          {journeysData?.listJourneysByUser &&
+          journeysData.listJourneysByUser.length > 0 ? (
+            [...journeysData.listJourneysByUser]
+              .sort((a, b) => {
+                if (a.status === "PLANNED" && b.status !== "PLANNED") return -1;
+                if (b.status === "PLANNED" && a.status !== "PLANNED") return 1;
+                return +new Date(a.departureTime) - +new Date(b.departureTime);
+              })
+              .map((journey) => (
+                <MyJourneyCard
+                  key={journey.id}
+                  journey={journey}
+                  onCompleteCancelJourney={() => {
+                    if (userId) {
+                      getUserJourneys({
+                        variables: { userId },
+                      });
+                    }
+                  }}
+                />
+              ))
+          ) : (
+            <div>Vous n&apos;avez aucun trajet !</div>
+          )}
+        </TabPanel>
 
-        <MyBookingsTab
-          bookings={bookingData?.listBookingsByUser}
-          onCancelBooking={handleCancelBooking}
-          isLoading={cancelBookingLoading}
-        />
+        <TabPanel
+          value="BOOKINGS"
+          className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
+        >
+          {bookingData ? (
+            bookingData?.listBookingsByUser.length > 0 &&
+            [...bookingData.listBookingsByUser]
+              .sort((a, b) => {
+                if (a.status === "ACCEPTED" && b.status !== "ACCEPTED")
+                  return -1;
+                if (b.status === "ACCEPTED" && a.status !== "ACCEPTED")
+                  return 1;
 
-        <OnPendingTab
-          journeys={journeysData?.listJourneysByUser}
-          journeysRefetch={journeysRefetch}
-        />
+                return (
+                  +new Date(a.journey.departureTime) -
+                  +new Date(b.journey.departureTime)
+                );
+              })
+              .map((booking) => {
+                return (
+                  <MyBookingCard
+                    key={booking.id}
+                    booking={booking}
+                    onCompleteCancelBooking={() => {
+                      if (userId) {
+                        getUserBookings({
+                          variables: { userId },
+                        });
+                      }
+                    }}
+                  />
+                );
+              })
+          ) : (
+            <div>Vous n&apos;avez aucune réservation !</div>
+          )}
+        </TabPanel>
 
+        <TabPanel
+          value="PENDING"
+          className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
+        >
+          <OnPendingTab
+            journeys={journeysData?.listJourneysByUser}
+            journeysRefetch={journeysRefetch}
+          />
+        </TabPanel>
       </TabContext>
     </div>
   );

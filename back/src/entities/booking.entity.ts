@@ -5,14 +5,14 @@ import {
     CreateDateColumn,
     ManyToOne,
     UpdateDateColumn,
-} from 'typeorm' // Pour définir les entités TypeORM
+} from 'typeorm'
 import {
     Field,
     GraphQLISODateTime,
     ID,
     InputType,
     ObjectType,
-} from 'type-graphql' // Pour définir les Types GraphQL
+} from 'type-graphql'
 
 import { IsInt, Max, Min } from 'class-validator'
 
@@ -24,14 +24,15 @@ export type Status =
     | 'REJECTED'
     | 'CANCELLED'
     | 'ACCEPTED'
+    | 'PAID'
     | 'DONE'
     | 'RATED'
 
 @ObjectType()
 @Entity()
 export class BookingEntity {
-    @Field(() => ID) // pour GraphQL
-    @PrimaryGeneratedColumn('uuid') // pour TypeORM
+    @Field(() => ID)
+    @PrimaryGeneratedColumn('uuid')
     id: string
 
     @Field()
@@ -40,7 +41,8 @@ export class BookingEntity {
         enum: ['PENDING', 'REJECTED', 'ACCEPTED', 'CANCELLED', 'DONE', 'RATED'],
         default: 'PENDING',
     })
-    status: Status // Type créé pour le Statut
+    status: Status
+
     @Field(() => UserEntity)
     @ManyToOne(() => UserEntity, (u) => u.bookings)
     user: UserEntity
@@ -65,7 +67,6 @@ export class BookingEntity {
     updatedAt?: Date
 }
 
-// --------- INPUTS ------------ //
 @ObjectType()
 @InputType()
 export class PartialBookingInput {

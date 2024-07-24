@@ -6,7 +6,6 @@ import {
   UpdateOrCreateJourneyProps,
 } from "@/app/components/JourneyCreateOrUpdate/UpdateOrCreate";
 import { useState } from "react";
-import { convertCoordinates } from "@/app/utils/coordinates";
 
 export type FromTo = "origin" | "destination";
 

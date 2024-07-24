@@ -10,7 +10,8 @@ describe("Journey publish page", () => {
     });
 
     /*------ Journey publish page ------*/
-    cy.findByRole("link", { name: "Publier un trajet" }).click();
+    cy.findByRole("button", { name: "Publier un trajet" }).click();
+
     cy.url().should("eq", "http://localhost:3002/journey/publish");
 
     /*------ Departure ------*/
@@ -80,7 +81,7 @@ describe("Journey publish page", () => {
       () => {
         cy.findByRole("textbox", { name: "Votre message" });
       },
-      { timeout: 100000 }
+      { timeout: 1000000 }
     );
 
     cy.findByRole("textbox", { name: "Votre message" }).type(

@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm'
+import { LessThanOrEqual, Repository } from 'typeorm'
 import datasource from '../db'
 import {
     BookingEntity,
@@ -9,11 +9,11 @@ import {
 import { validateData, assertDataExists } from '../utils/errorHandlers'
 import JourneyService from './journey.service'
 import SendEmailService from './sendEmail.service'
-import UserService from './user.service'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 
 dayjs.extend(utc)
+
 export default class BookingService {
     db: Repository<BookingEntity>
 
@@ -28,14 +28,14 @@ export default class BookingService {
     }
 
     async findBookingById(id: string): Promise<BookingEntity> {
-        const book = await this.db.findOne({
+        const booking = await this.db.findOne({
             where: { id },
             relations: ['user', 'journey', 'journey.user', 'journey.bookings'],
         })
 
-        assertDataExists(book)
+        assertDataExists(booking)
 
-        return book as BookingEntity
+        return booking as BookingEntity
     }
 
     async listBookingsFilter({
@@ -48,6 +48,18 @@ export default class BookingService {
                 journey: { id: journeyId ?? undefined },
             },
             relations: ['user', 'journey', 'journey.user'],
+        })
+    }
+
+    async listBookingsForScheduler(): Promise<BookingEntity[]> {
+        return await this.db.find({
+            where: {
+                status: 'ACCEPTED',
+                updatedAt: LessThanOrEqual(
+                    dayjs().utc().subtract(6, 'hour').toDate()
+                ),
+            },
+            relations: ['user', 'journey'],
         })
     }
 
@@ -69,7 +81,6 @@ export default class BookingService {
     async createBooking(data: CreateBookingInput): Promise<BookingEntity> {
         const journeyService = new JourneyService()
         const sendEmailService = new SendEmailService()
-        const userService = new UserService()
 
         const { journey, user, nbPassenger } = data
 
@@ -79,8 +90,6 @@ export default class BookingService {
             departureTime,
             user: { id: driverId, email: driverEmail },
         } = await journeyService.findJourneyById(journey.id)
-
-        const passenger = await userService.findUserById(user.id)
 
         if (user.id === driverId) {
             throw new Error('Vous ne pouvez pas réserver votre propre trajet')
@@ -99,14 +108,16 @@ export default class BookingService {
             throw new Error('Il est trop tard pour réserver ce trajet')
         }
 
-        const newBooking = this.db.create({
+        const newBookingToSave = this.db.create({
             ...data,
             status: automaticAccept ? 'ACCEPTED' : 'PENDING',
         })
 
-        await validateData(newBooking)
+        await validateData(newBookingToSave)
 
-        await this.db.save(newBooking)
+        await this.db.save(newBookingToSave)
+
+        const newBooking = await this.findBookingById(newBookingToSave.id)
 
         const {
             id: newBookingId,
@@ -115,7 +126,7 @@ export default class BookingService {
         } = newBooking
 
         if (!automaticAccept) {
-            sendEmailService.sendNewBookingEmail({
+            sendEmailService.sendNewBookingRequestEmail({
                 recipient: driverEmail,
                 newBookingId: newBookingId,
                 driverId,
@@ -125,18 +136,10 @@ export default class BookingService {
         }
 
         if (automaticAccept) {
-            await journeyService
-                .updateAvailableSeats({
-                    id: journey.id,
-                    availableSeats: availableSeats - nbPassenger,
-                })
-                .then(() => {
-                    sendEmailService.sendNewBookingAutoAcceptedEmail({
-                        recipient: driverEmail,
-                        passenger,
-                        nbPassenger,
-                    })
-                })
+            await journeyService.updateAvailableSeats({
+                id: journey.id,
+                availableSeats: availableSeats - nbPassenger,
+            })
         }
 
         return await this.findBookingById(newBooking.id)
@@ -171,9 +174,9 @@ export default class BookingService {
         })
 
         if (bookingAccepted) {
-            sendEmailService.sendAcceptBookingEmail({
+            sendEmailService.sendAcceptedBookingEmail({
                 recipient: passengerEmail,
-                journeyId,
+                bookingId: bookingAccepted.id,
                 driverFirstname,
             })
         }
@@ -210,7 +213,7 @@ export default class BookingService {
         })
 
         if (bookingRejected) {
-            sendEmailService.sendRejectBookingEmail({
+            sendEmailService.sendRejectedBookingEmail({
                 recipient: passengerEmail,
                 driverFirstname,
             })
@@ -245,11 +248,64 @@ export default class BookingService {
             availableSeats: availableSeats + nbPassenger,
         })
 
-        sendEmailService.sendCancelBookingEmail({
+        sendEmailService.sendCancelledBookingEmail({
             recipient: driverEmail,
             passengerFistname,
         })
 
         return cancelledBooking
+    }
+
+    async bookingPaid(id: string): Promise<BookingEntity> {
+        const sendEmailService = new SendEmailService()
+
+        const bookingPaid = await this.updateBookingStatus({
+            id,
+            status: 'PAID',
+        })
+
+        const {
+            journey: {
+                user: { email: driverEmail },
+            },
+            user: passenger,
+            nbPassenger,
+        } = bookingPaid
+
+        sendEmailService.sendNewAutoacceptedBookingEmail({
+            recipient: driverEmail,
+            passenger,
+            nbPassenger,
+        })
+
+        return bookingPaid
+    }
+
+    async cancelBookingForScheduler(id: string) {
+        const sendEmailService = new SendEmailService()
+        const journeyService = new JourneyService()
+
+        const {
+            journey: { availableSeats, id: journeyId, origin, destination },
+            user: { email },
+            nbPassenger,
+        } = await this.findBookingById(id)
+
+        await journeyService.updateAvailableSeats({
+            id: journeyId,
+            availableSeats: availableSeats + nbPassenger,
+        })
+
+        sendEmailService.sendBookingNotPaidSoCancel({
+            recipient: email,
+            origin,
+            destination,
+            journeyId,
+        })
+
+        await this.updateBookingStatus({
+            id,
+            status: 'CANCELLED',
+        })
     }
 }

@@ -6,7 +6,6 @@ import utc from "dayjs/plugin/utc";
 import fr from "dayjs/locale/fr";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { AuthContext } from "@/context/authContext";
-import { useCreateJourneyMutation } from "@/types/graphql";
 import { useRouter } from "next/navigation";
 import { routes } from "@/app/lib/routes";
 import UpdateOrCreateJourney, {
@@ -14,6 +13,7 @@ import UpdateOrCreateJourney, {
 } from "@/app/components/JourneyCreateOrUpdate/UpdateOrCreate";
 import { ResponseError, ResponseGetItinerary } from "@/app/api/itinerary/route";
 import { getItinerary } from "@/app/utils/getItinerary";
+import { useCreateJourneyMutation } from "@/types/graphql";
 
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
@@ -114,7 +114,6 @@ const PublishJourney = () => {
     <UpdateOrCreateJourney
       setJourneyData={setJourneyData}
       journeyData={journeyData}
-      // errorMessage={error ? "Impossible de créer le trajet!" : undefined}
       handleOnValidateForm={handleOnValidateForm}
     />
   );

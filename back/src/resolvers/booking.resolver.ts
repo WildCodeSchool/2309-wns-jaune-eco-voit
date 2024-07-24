@@ -107,12 +107,26 @@ export default class BookingResolver {
     async cancelBooking(
         @Arg('id') id: string,
         @Ctx() { user: userCtx, bookingService }: MyContext
-    ): Promise<BookingEntity | null> {
+    ): Promise<BookingEntity> {
         const {
             user: { id: passengerId },
         } = await bookingService.findBookingById(id)
 
         userAuthorized([passengerId], userCtx)
         return await bookingService.cancelBooking(id)
+    }
+
+    @Authorized()
+    @Mutation(() => BookingEntity)
+    async bookingPaid(
+        @Arg('id') id: string,
+        @Ctx() { user: userCtx, bookingService }: MyContext
+    ): Promise<BookingEntity> {
+        const {
+            user: { id: passengerId },
+        } = await bookingService.findBookingById(id)
+
+        userAuthorized([passengerId], userCtx)
+        return await bookingService.bookingPaid(id)
     }
 }

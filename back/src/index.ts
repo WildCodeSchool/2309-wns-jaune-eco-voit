@@ -24,6 +24,9 @@ import SendEmailService from './services/sendEmail.service'
 import UserService from './services/user.service'
 import RatingService from './services/rating.service'
 import JourneyMessageService from './services/journeyMessage.service'
+import PaymentResolver from './resolvers/payment.resolver'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const stripe = require('stripe')(process.env.STRIPE_PRIVATE_API_KEY)
 
 export interface MyContext {
     req: express.Request
@@ -43,7 +46,6 @@ export interface Payload {
     id: string
 }
 
-// Création d'un serveur HTTP à partir de la bibliothéque d'express
 const app = express()
 const httpServer = http.createServer(app)
 
@@ -54,6 +56,43 @@ const userService = new UserService()
 const ratingService = new RatingService()
 const journeyMessageService = new JourneyMessageService()
 
+const endpointSecret =
+    'whsec_c3667380856ca80657b8b21c4909648a883766adf053a73868bec7ca206521b7'
+
+app.post(
+    '/webhook',
+    express.raw({ type: 'application/json' }),
+    (request, response) => {
+        const sig = request.headers['stripe-signature']
+        let event
+
+        try {
+            event = stripe.webhooks.constructEvent(
+                request.body,
+                sig,
+                endpointSecret
+            )
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (err: any) {
+            response.status(400).send(`Webhook Error: ${err.message}`)
+            return
+        }
+
+        let paymentIntentSucceeded
+
+        switch (event.type) {
+            case 'payment_intent.succeeded':
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                paymentIntentSucceeded = event.data.object
+                // Ajouter les méthodes a exécuter
+                break
+            default:
+                console.log(`Unhandled event type ${event.type}`)
+        }
+        response.send()
+    }
+)
+
 async function main() {
     const schema = await buildSchema({
         resolvers: [
@@ -62,6 +101,7 @@ async function main() {
             JourneyResolver,
             JourneyMessageResolver,
             RatingResolver,
+            PaymentResolver,
         ],
         validate: true,
         authChecker: customAuthChecker,
@@ -72,13 +112,13 @@ async function main() {
         plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
     })
 
-    // Lancement du server
     await server.start()
 
     // la variable job est necessaire pour créé le cron mais n'est jamais appelée a proprement parlé dans le code
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const job = schedule.scheduleJob('*/20 * * * *', async function () {
+    const jobJourneys = schedule.scheduleJob('*/20 * * * *', async function () {
         await handleJourneysDone()
+        // await handleBookingsNotPaid()
     })
 
     app.use(
