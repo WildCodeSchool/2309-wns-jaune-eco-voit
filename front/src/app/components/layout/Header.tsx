@@ -76,9 +76,10 @@ const Header = () => {
 
   return (
     <header className="flex justify-between items-center py-6 px-6 bg-white">
-      {/* <Link href={`${routes["home"].pathname}`}>
-        <Image src={logo} alt="Ecovoit" height={45} />
-      </Link> */}
+      <Link href={`${routes["home"].pathname}`}>
+        {/* <Image src={logo} alt="Ecovoit" height={45} /> */}
+        Accueil
+      </Link>
       <nav className="flex gap-4 items-center">
         {!loggedUser ? (
           <>

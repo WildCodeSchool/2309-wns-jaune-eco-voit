@@ -24,6 +24,7 @@ type MyBookingsTabProps = {
   isLoading: boolean;
 };
 
+
 const MyBookingsTab = ({
   bookings = [],
   onCancelBooking,
@@ -70,9 +71,8 @@ const MyBookingsTab = ({
             ) => (
               <div
                 key={index}
-                className={`my_journey_card w-full flex p-4 rounded-md shadow-md ${
-                  status !== "ACCEPTED" ? "opacity-70" : ""
-                }`}
+                className={`my_journey_card w-full flex p-4 rounded-md shadow-md ${status !== "ACCEPTED" ? "opacity-70" : ""
+                  }`}
               >
                 <div className="w-full flex flex-col gap-3">
                   <div className="flex flex-col xs:flex-row w-full xs:justify-between gap-4">

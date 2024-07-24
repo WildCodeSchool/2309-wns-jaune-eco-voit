@@ -5,9 +5,12 @@ import {
     ListJourneysByUserQuery,
     UserEntity,
     useAcceptBookingMutation,
+    useListJourneysByUserQuery,
     useRejectBookingMutation,
 } from "@/types/graphql";
-import { TabPanel, Timeline, TimelineConnector, TimelineContent, TimelineItem, timelineItemClasses, TimelineSeparator } from "@mui/lab";
+import {
+    TabPanel, Timeline, TimelineConnector, TimelineContent, TimelineItem, timelineItemClasses, TimelineSeparator
+} from "@mui/lab";
 import { Avatar, Button, Card, CardContent, Link, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import AvatarJourney from "../Avatar/AvatarJouney";
@@ -17,28 +20,22 @@ import { Status } from "@/types/booking";
 
 type OnPendingTabProps = {
     journeys?: ListJourneysByUserQuery["listJourneysByUser"];
-
 };
+
 
 type BookingsArrayWithJourneyInfos = Omit<BookingEntity, "journey" | "user"> &
     Pick<
         JourneyEntity,
         | "destination"
-        | "arrival_time"
+        | "arrivalTime"
         | "availableSeats"
-        | "departure_time"
+        | "departureTime"
         | "price"
         | "origin"
     > & { user: Pick<UserEntity, "firstname" | "lastname" | "profilePicture"> };
 
-const OnPendingTab = ({ journeys = [] }: OnPendingTabProps,) => {
-
-
-
-    const [bookingsPending, setBookingsPending] = useState<
-        BookingsArrayWithJourneyInfos[]
-    >([]);
-
+const OnPendingTab = ({ journeys }: OnPendingTabProps) => {
+    const [bookingsPending, setBookingsPending] = useState<BookingsArrayWithJourneyInfos[]>([]);
     const [isAccepted, setIsAccepted] = useState<boolean>();
 
     const [
@@ -51,10 +48,10 @@ const OnPendingTab = ({ journeys = [] }: OnPendingTabProps,) => {
         { error: rejectBookingError, loading: rejectBookingLoading },
     ] = useRejectBookingMutation({});
 
-    const handleAccept = () => {
+    const handleAccept = (bookingId: string) => {
         acceptBooking({
             variables: {
-                acceptBookingId: bookingsPending[0].id,
+                acceptBookingId: bookingId,
             },
             onCompleted: () => {
                 setIsAccepted(true);
@@ -62,10 +59,10 @@ const OnPendingTab = ({ journeys = [] }: OnPendingTabProps,) => {
         });
     };
 
-    const handleReject = () => {
+    const handleReject = (bookingId: string) => {
         rejectBooking({
             variables: {
-                rejectBookingId: bookingsPending[0].id,
+                rejectBookingId: bookingId,
             },
             onCompleted: () => {
                 setIsAccepted(false);
@@ -73,28 +70,25 @@ const OnPendingTab = ({ journeys = [] }: OnPendingTabProps,) => {
         });
     };
 
-
-
     useEffect(() => {
-        if (journeys.length) {
+        if (journeys && journeys.length) {
             const bookingsPendingArray: BookingsArrayWithJourneyInfos[] = [];
-
             journeys.forEach((journey) => {
                 if (journey.bookings.length) {
                     journey.bookings.forEach(
                         ({ createdAt, id, status, user, nbPassenger }) => {
                             if (status === "PENDING") {
                                 const {
-                                    arrival_time,
-                                    departure_time,
+                                    arrivalTime,
+                                    departureTime,
                                     origin,
                                     availableSeats,
                                     price,
                                     destination,
                                 } = journey;
                                 bookingsPendingArray.push({
-                                    arrival_time,
-                                    departure_time,
+                                    arrivalTime,
+                                    departureTime,
                                     origin,
                                     availableSeats,
                                     price,
@@ -118,13 +112,12 @@ const OnPendingTab = ({ journeys = [] }: OnPendingTabProps,) => {
         }
     }, [journeys]);
 
-
+    console.log("bookingsPending", bookingsPending)
     return (
         <>
-            <TabPanel value="OnPending">
-
-                {bookingsPending.length
-                    ? bookingsPending.map(
+            <TabPanel value="PENDING">
+                {bookingsPending.length ? (
+                    bookingsPending.map(
                         ({
                             status,
                             id,
@@ -133,19 +126,15 @@ const OnPendingTab = ({ journeys = [] }: OnPendingTabProps,) => {
                             availableSeats,
                             price,
                             destination,
-                            departure_time,
+                            departureTime,
                             user: { profilePicture, firstname },
                         }) => (
-
-                            <div
-                                key={id}
-                                className="my_pending_card w-1/3 flex p-4 rounded-md shadow-md"
-                            >
+                            <div key={id} className="my_pending_card w-1/3 flex p-4 rounded-md shadow-md">
                                 <div className="w-full flex flex-col gap-3">
                                     <div className="flex flex-col xs:flex-row w-full xs:justify-between gap-4">
                                         <p className="text-base">
-                                            {formattedDate(departure_time)} à{" "}
-                                            {formattedTime(departure_time)}
+                                            {formattedDate(departureTime)} à{" "}
+                                            {formattedTime(departureTime)}
                                             <br />
                                             <span className="text-sm text-dark60">
                                                 ({nbPassenger} siège{nbPassenger > 1 && "s"}{" "}
@@ -172,7 +161,6 @@ const OnPendingTab = ({ journeys = [] }: OnPendingTabProps,) => {
                                                 },
                                             }}
                                         >
-
                                             <TimelineItem className="h-20">
                                                 <TimelineSeparator>
                                                     <TripOriginOutlinedIcon
@@ -211,36 +199,28 @@ const OnPendingTab = ({ journeys = [] }: OnPendingTabProps,) => {
                                         <AvatarJourney
                                             id={id}
                                             firstname={firstname}
-                                            // grade={grade as Grade}
-                                            // rating={averageRate}
                                             profilePicture={profilePicture ?? undefined}
                                         />
-
-
                                     </div>
                                     <div className="card_footer flex flex-col item-start xs:flex-row xs:justify-between xs:items-end gap-3">
                                         <div className="buttons flex gap-3 justify-content-center">
                                             {status === "PENDING" && (
                                                 <>
-                                                    <Button onClick={handleAccept}>Accepter</Button>
-                                                    <Button onClick={handleReject}>Refuser</Button>
-
-
+                                                    <Button onClick={() => handleAccept(id)}>Accepter</Button>
+                                                    <Button onClick={() => handleReject(id)}>Refuser</Button>
                                                 </>
-
                                             )}
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-
                         )
                     )
-                    : <Typography variant="body1" className="text-center mt-4">Vous n&apos;avez pas de booking en attente.</Typography>
-
-                }
-
+                ) : (
+                    <Typography variant="body1" className="text-center mt-4">
+                        Vous n&apos;avez pas de booking en attente.
+                    </Typography>
+                )}
             </TabPanel>
         </>
     );

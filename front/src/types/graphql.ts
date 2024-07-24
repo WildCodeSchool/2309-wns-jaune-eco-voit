@@ -525,7 +525,7 @@ export type ListJourneysByUserQueryVariables = Exact<{
 }>;
 
 
-export type ListJourneysByUserQuery = { __typename?: 'Query', listJourneysByUser: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, price: number, departureTime: any, arrivalTime: any, originCoordinates: string, destinationCoordinates: string, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, profilePicture?: string | null, role: string, grade: string, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null, averageRate?: number | null }, bookings: Array<{ __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null }> }> };
+export type ListJourneysByUserQuery = { __typename?: 'Query', listJourneysByUser: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, price: number, departureTime: any, arrivalTime: any, originCoordinates: string, destinationCoordinates: string, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null, user: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, profilePicture?: string | null, role: string, grade: string, tripsAsPassenger: number, tripsAsDriver: number, status?: string | null, createdAt: any, updatedAt?: any | null, averageRate?: number | null }, bookings: Array<{ __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null, nbPassenger: number, user: { __typename?: 'UserEntity', firstname: string, lastname: string, profilePicture?: string | null } }> }> };
 
 export type FindJourneyByIdQueryVariables = Exact<{
   findJourneyById: Scalars['String']['input'];
@@ -1800,6 +1800,12 @@ export const ListJourneysByUserDocument = gql`
       status
       createdAt
       updatedAt
+      user {
+        firstname
+        lastname
+        profilePicture
+      }
+      nbPassenger
     }
   }
 }
