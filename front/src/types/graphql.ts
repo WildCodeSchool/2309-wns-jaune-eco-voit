@@ -107,8 +107,8 @@ export type ListJourneysWithFilters = {
   automaticAccept?: InputMaybe<Scalars['Boolean']['input']>;
   availableSeats: Scalars['Float']['input'];
   departureTime: Scalars['DateTimeISO']['input'];
-  destination: Scalars['String']['input'];
-  origin: Scalars['String']['input'];
+  destinations: Array<Scalars['String']['input']>;
+  origins: Array<Scalars['String']['input']>;
   user?: InputMaybe<PartialUserInput>;
 };
 

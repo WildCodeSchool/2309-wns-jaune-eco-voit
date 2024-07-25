@@ -63,7 +63,7 @@ export default class JourneyService {
                 user
             } = filters
             
-            const where = {
+            const where:any = {
                     origin: In(origins),
                     destination: In(destinations),
                     departureTime: MoreThanOrEqual(departureTime),
@@ -73,12 +73,17 @@ export default class JourneyService {
      
            if (user?.id) {
             where.user = { id: Not(user.id) }
-        }
-            return await this.db.find({where},
+            }
+            return await this.db.find({
+                where,
                 relations: { user: true, bookings: true },
             })
         }
+        return await this.db.find({
+            relations: { user: true, bookings: true },
+        })
     }
+
 
     async listJourneysForScheduler(): Promise<JourneyEntity[]> {
         return await this.db.find({
