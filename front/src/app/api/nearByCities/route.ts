@@ -40,6 +40,7 @@ export async function GET(req: NextRequest) {
     }
 
     const data = await response.json();
+
     const cities = data.list
       .filter((city: any) => {
         const cityCoords = {
