@@ -147,10 +147,7 @@ export default class UserService {
         const journeyService = new JourneyService()
 
         const userToArchive = await this.findUserById(id)
-
-        if (!userToArchive) {
-            throw new Error('User not found')
-        }
+        assertDataExists(userToArchive)
 
         const { bookings, journeys } = userToArchive
 
@@ -173,5 +170,12 @@ export default class UserService {
             })
         }
         return await this.updateUser({ id, status: 'ARCHIVED' })
+    }
+
+    async unarchiveUser(id: string): Promise<UserEntity> {
+        const userToUnarchive = await this.findUserById(id)
+        assertDataExists(userToUnarchive)
+
+        return await this.updateUser({ id, status: 'ACTIVE' })
     }
 }

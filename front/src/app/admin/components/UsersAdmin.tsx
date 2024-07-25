@@ -4,6 +4,7 @@ import {
   useArchiveUserMutation,
   useListUsersQuery,
   UserEntity,
+  useUnarchiveUserMutation,
   useUpdateUserMutation,
 } from "@/types/graphql";
 import {
@@ -16,6 +17,7 @@ import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
 import { Tooltip } from "@mui/material";
 import { userStatusFrench } from "@/app/utils/generals";
 import { UserStatus } from "@/types/user";
+import HistoryIcon from "@mui/icons-material/History";
 
 const UsersAdmin = () => {
   const [users, setUsers] = useState<UserEntity[]>([]);
@@ -46,8 +48,14 @@ const UsersAdmin = () => {
     onCompleted: () => {
       refetchUsers();
     },
-    onError: (err) => {
-      console.log("err", err.message);
+  });
+
+  const [
+    unarchiveUser,
+    { error: unarchiveUserError, loading: unarchiveUserLoading },
+  ] = useUnarchiveUserMutation({
+    onCompleted: () => {
+      refetchUsers();
     },
   });
 
@@ -88,24 +96,25 @@ const UsersAdmin = () => {
       renderCell(params: GridRenderCellParams<UserEntity>) {
         if (updateUserError) return <div>Une erreur est survenue</div>;
         if (updateUserLoading) return <CircularLoading size={30} />;
-        if (params.row.id !== currentUser) {
-          return (
-            <select
-              className="w-full bg-primary"
-              defaultValue={params.row.role}
-              onChange={(e) => {
-                updateUser({
-                  variables: {
-                    data: { id: params.row.id, role: e.target.value },
-                  },
-                });
-              }}
-            >
-              <option value="USER">Utilisateur</option>
-              <option value="ADMIN">Administrateur</option>
-            </select>
-          );
-        }
+        return params.row.id !== currentUser &&
+          params.row.status === "ACTIVE" ? (
+          <select
+            className="w-full bg-primary"
+            defaultValue={params.row.role}
+            onChange={(e) => {
+              updateUser({
+                variables: {
+                  data: { id: params.row.id, role: e.target.value },
+                },
+              });
+            }}
+          >
+            <option value="USER">Utilisateur</option>
+            <option value="ADMIN">Administrateur</option>
+          </select>
+        ) : (
+          "-"
+        );
       },
     },
     {
@@ -126,8 +135,10 @@ const UsersAdmin = () => {
       disableColumnMenu: true,
       editable: false,
       renderCell: (params: GridRenderCellParams<UserEntity>) => {
-        if (archiveUserError) return <div>Une erreur est survenue</div>;
-        if (archiveUserLoading) return <CircularLoading size={30} />;
+        if (archiveUserError || unarchiveUserError)
+          return <div>Une erreur est survenue</div>;
+        if (archiveUserLoading || unarchiveUserLoading)
+          return <CircularLoading size={30} />;
         return params.row.status === "ACTIVE" ? (
           <Tooltip title="Archiver l'utilisateur">
             <GridDeleteForeverIcon
@@ -142,7 +153,18 @@ const UsersAdmin = () => {
             />
           </Tooltip>
         ) : (
-          "-"
+          <Tooltip title="Restaurer l'utilisateur">
+            <HistoryIcon
+              className="cursor-pointer"
+              onClick={() => {
+                unarchiveUser({
+                  variables: {
+                    unarchiveUserId: params.row.id,
+                  },
+                });
+              }}
+            />
+          </Tooltip>
         );
       },
     },
