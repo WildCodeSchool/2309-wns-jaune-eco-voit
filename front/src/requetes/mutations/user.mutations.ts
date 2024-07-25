@@ -89,3 +89,19 @@ export const ARCHIVE_USER = gql`
     }
   }
 `;
+
+export const UNARCHIVE_USER = gql`
+  mutation unarchiveUser($unarchiveUserId: String!) {
+    unarchiveUser(id: $unarchiveUserId) {
+      id
+      firstname
+      lastname
+      email
+      profilePicture
+      role
+      grade
+      averageRate
+      status
+    }
+  }
+`;

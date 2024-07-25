@@ -1,142 +1,44 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
-import {
-  useArchiveUserMutation,
-  useListUsersQuery,
-  UserEntity,
-  useUpdateUserMutation,
-} from "@/types/graphql";
-import CircularLoading from "../components/CircularLoading/CircularLoading";
-import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import { AuthContext } from "@/context/authContext";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { SyntheticEvent, useState } from "react";
+import BookingsAdmin from "./components/BookingsAdmin";
+import JourneysAdmin from "./components/JourneysAdmin";
 import UsersAdmin from "./components/UsersAdmin";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import { Box, Tab } from "@mui/material";
 
+export type AdminTabs = "USERS" | "BOOKINGS" | "JOURNEYS";
 const Admin = () => {
-  const [users, setUsers] = useState<UserEntity[]>([]);
+  const [tabDisplayed, setTabDisplayed] = useState<AdminTabs>("JOURNEYS");
 
-  const { getUser: currentUser } = useContext(AuthContext);
-
-  const {
-    data,
-    error,
-    loading,
-    refetch: refetchUsers,
-  } = useListUsersQuery({
-    fetchPolicy: "network-only",
-    nextFetchPolicy: "cache-first",
-  });
-
-  const [updateUser, { error: updateUserError, loading: updateUserLoading }] =
-    useUpdateUserMutation({
-      onCompleted: () => {
-        refetchUsers();
-      },
-      onError: (err) => {
-        console.log("err", err.message);
-      },
-    });
-
-  const [
-    archiveUser,
-    { error: archiveUserError, loading: archiveUserLoading },
-  ] = useArchiveUserMutation({
-    onCompleted: () => {
-      refetchUsers();
-    },
-    onError: (err) => {
-      console.log("err", err.message);
-    },
-  });
-
-  useEffect(() => {
-    if ((data?.listUsers, currentUser)) {
-      const filteredUsers = data?.listUsers.filter(
-        (user) => user.id !== currentUser && user.status !== "ARCHIVED"
-      );
-      setUsers(filteredUsers as UserEntity[]);
-    }
-  }, [data, currentUser]);
-
-  const columns: GridColDef[] = [
-    {
-      field: "firstname",
-      headerName: "Utilisateur",
-      width: 150,
-      flex: 1,
-      renderCell: (params: GridRenderCellParams<UserEntity>) => (
-        <div>
-          {params.row.firstname} {params.row.lastname}
-        </div>
-      ),
-    },
-    {
-      field: "email",
-      headerName: "Email",
-      width: 250,
-      flex: 1,
-    },
-    {
-      field: "role",
-      headerName: "Droits",
-      width: 180,
-      filterable: false,
-      disableColumnMenu: true,
-      editable: false,
-      renderCell(params: GridRenderCellParams<UserEntity>) {
-        if (params.row.id !== currentUser)
-          return (
-            <select
-              className="w-full bg-primary"
-              defaultValue={params.row.role}
-              onChange={(e) => {
-                updateUser({
-                  variables: {
-                    data: { id: params.row.id, role: e.target.value },
-                  },
-                });
-              }}
-            >
-              <option value="USER">Utilisateur</option>
-              <option value="ADMIN">Administrateur</option>
-            </select>
-          );
-      },
-    },
-    {
-      field: "deleteButton",
-      headerName: "Actions",
-      description: "Actions column",
-      sortable: false,
-      align: "center",
-      filterable: false,
-      disableColumnMenu: true,
-      editable: false,
-      renderCell: (params) => {
-        return (
-          <DeleteForeverIcon
-            className="cursor-pointer"
-            onClick={() => {
-              archiveUser({
-                variables: {
-                  archiveUserId: params.row.id,
-                },
-              });
-            }}
-          />
-        );
-      },
-    },
-  ];
-
-  if (loading) return <CircularLoading />;
-  if (error) return <div>Error</div>;
+  const handleChange = (e: SyntheticEvent, newValue: AdminTabs) => {
+    setTabDisplayed(newValue);
+  };
 
   return (
-    <div className="admin-panel flex flex-col gap-8 px-12 py-8">
-      <h2>Panneau d&apos;administration</h2>
-      <UsersAdmin />
-    </div>
+    // <div className="admin-panel flex flex-col gap-8 px-12 py-8">
+    <TabContext value={tabDisplayed}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <TabList onChange={handleChange} aria-label="Administration tabs">
+          <Tab label="Trajets" value="JOURNEYS" />
+          <Tab label="Réservations" value="BOOKINGS" />
+          <Tab label="Utilisateurs" value="USERS" />
+        </TabList>
+      </Box>
+      <TabPanel value="JOURNEYS">
+        <JourneysAdmin />
+      </TabPanel>
+      <TabPanel value="BOOKINGS">
+        <BookingsAdmin />
+      </TabPanel>
+      <TabPanel value="USERS">
+        <UsersAdmin />
+      </TabPanel>
+    </TabContext>
+    // {/* <h2>Panneau d&apos;administration</h2> */}
+    // {/* <BookingsAdmin />
+    // <JourneysAdmin />
+    // <UsersAdmin /> */}
+    // </div>
   );
 };
 

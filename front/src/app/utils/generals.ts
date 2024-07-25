@@ -1,6 +1,6 @@
 import { BookingStatus } from "@/types/booking";
 import { JourneyStatus } from "@/types/journey";
-import { Grade, Role } from "@/types/user";
+import { Grade, Role, UserStatus } from "@/types/user";
 
 export const gradeFrench: Record<Grade, string> = {
   BEGINNER: "Débutant",
@@ -13,9 +13,9 @@ export const statusBookingFrench: Record<BookingStatus, string> = {
   REJECTED: "Rejeté",
   CANCELLED: "Annulé",
   ACCEPTED: "Paiement en attente",
+  PAID: "Accepté",
   DONE: "Effectué",
   RATED: "Effectué",
-  PAID: "Accepté",
 };
 
 export const statusJourneyFrench: Record<JourneyStatus, string> = {
@@ -27,4 +27,9 @@ export const statusJourneyFrench: Record<JourneyStatus, string> = {
 export const roleFrench: Record<Role, string> = {
   ADMIN: "Administrateur",
   USER: "Utilisateur",
+};
+
+export const userStatusFrench: Record<UserStatus, string> = {
+  ACTIVE: "Actif",
+  ARCHIVED: "Archivé",
 };

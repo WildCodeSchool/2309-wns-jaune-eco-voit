@@ -1,8 +1,8 @@
 import { CircularProgress } from "@mui/material";
 
-const CircularLoading = () => (
+const CircularLoading = ({ size = 50 }: { size?: number }) => (
   <div className="flex items-center justify-center h-screen">
-    <CircularProgress />
+    <CircularProgress size={size} />
   </div>
 );
 

@@ -131,4 +131,15 @@ export default class UserResolver {
 
         return await userService.archiveUser(id)
     }
+
+    @Authorized(['ADMIN'])
+    @Mutation(() => UserEntity)
+    async unarchiveUser(
+        @Arg('id') id: string,
+        @Ctx() { user, userService }: MyContext
+    ) {
+        userAuthorized([id], user)
+
+        return await userService.unarchiveUser(id)
+    }
 }

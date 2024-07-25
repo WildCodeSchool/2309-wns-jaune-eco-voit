@@ -129,6 +129,7 @@ export type Mutation = {
   deleteJourneyMessage: JourneyMessageEntity;
   register: UserWithoutPassord;
   rejectBooking: BookingEntity;
+  unarchiveUser: UserEntity;
   updateJourney: JourneyEntity;
   updateJourneyStatus: JourneyEntity;
   updateUser: UserEntity;
@@ -187,6 +188,11 @@ export type MutationRegisterArgs = {
 
 
 export type MutationRejectBookingArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationUnarchiveUserArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -500,6 +506,13 @@ export type ArchiveUserMutationVariables = Exact<{
 
 
 export type ArchiveUserMutation = { archiveUser: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, password: string, dateOfBirth: any, profilePicture?: string | null, role: string, grade: string, tripsAsPassenger: number, tripsAsDriver: number, averageRate?: number | null, status?: string | null, createdAt: any, updatedAt?: any | null, journeys?: Array<{ __typename?: 'JourneyEntity', id: string, origin: string, destination: string, price: number, departureTime: any, arrivalTime: any, availableSeats: number, status: string, automaticAccept: boolean, createdAt: any, updatedAt?: any | null }> | null, bookings?: Array<{ __typename?: 'BookingEntity', id: string, status: string, createdAt: any, updatedAt?: any | null }> | null } };
+
+export type UnarchiveUserMutationVariables = Exact<{
+  unarchiveUserId: Scalars['String']['input'];
+}>;
+
+
+export type UnarchiveUserMutation = { unarchiveUser: { __typename?: 'UserEntity', id: string, firstname: string, lastname: string, email: any, profilePicture?: string | null, role: string, grade: string, averageRate?: number | null, status?: string | null } };
 
 export type LoginQueryVariables = Exact<{
   data: LoginInput;
@@ -1346,6 +1359,47 @@ export function useArchiveUserMutation(baseOptions?: Apollo.MutationHookOptions<
 export type ArchiveUserMutationHookResult = ReturnType<typeof useArchiveUserMutation>;
 export type ArchiveUserMutationResult = Apollo.MutationResult<ArchiveUserMutation>;
 export type ArchiveUserMutationOptions = Apollo.BaseMutationOptions<ArchiveUserMutation, ArchiveUserMutationVariables>;
+export const UnarchiveUserDocument = gql`
+    mutation unarchiveUser($unarchiveUserId: String!) {
+  unarchiveUser(id: $unarchiveUserId) {
+    id
+    firstname
+    lastname
+    email
+    profilePicture
+    role
+    grade
+    averageRate
+    status
+  }
+}
+    `;
+export type UnarchiveUserMutationFn = Apollo.MutationFunction<UnarchiveUserMutation, UnarchiveUserMutationVariables>;
+
+/**
+ * __useUnarchiveUserMutation__
+ *
+ * To run a mutation, you first call `useUnarchiveUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnarchiveUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unarchiveUserMutation, { data, loading, error }] = useUnarchiveUserMutation({
+ *   variables: {
+ *      unarchiveUserId: // value for 'unarchiveUserId'
+ *   },
+ * });
+ */
+export function useUnarchiveUserMutation(baseOptions?: Apollo.MutationHookOptions<UnarchiveUserMutation, UnarchiveUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UnarchiveUserMutation, UnarchiveUserMutationVariables>(UnarchiveUserDocument, options);
+      }
+export type UnarchiveUserMutationHookResult = ReturnType<typeof useUnarchiveUserMutation>;
+export type UnarchiveUserMutationResult = Apollo.MutationResult<UnarchiveUserMutation>;
+export type UnarchiveUserMutationOptions = Apollo.BaseMutationOptions<UnarchiveUserMutation, UnarchiveUserMutationVariables>;
 export const LoginDocument = gql`
     query Login($data: LoginInput!) {
   login(data: $data) {

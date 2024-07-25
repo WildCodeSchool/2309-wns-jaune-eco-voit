@@ -4,11 +4,20 @@ import {
   useArchiveUserMutation,
   useListUsersQuery,
   UserEntity,
+  useUnarchiveUserMutation,
   useUpdateUserMutation,
 } from "@/types/graphql";
-import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import {
+  DataGrid,
+  GridColDef,
+  GridDeleteForeverIcon,
+  GridRenderCellParams,
+} from "@mui/x-data-grid";
 import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
+import { Tooltip } from "@mui/material";
+import { userStatusFrench } from "@/app/utils/generals";
+import { UserStatus } from "@/types/user";
+import HistoryIcon from "@mui/icons-material/History";
 
 const UsersAdmin = () => {
   const [users, setUsers] = useState<UserEntity[]>([]);
@@ -16,9 +25,9 @@ const UsersAdmin = () => {
   const { getUser: currentUser } = useContext(AuthContext);
 
   const {
-    data,
-    error,
-    loading,
+    data: usersData,
+    error: usersError,
+    loading: usersLoading,
     refetch: refetchUsers,
   } = useListUsersQuery({
     fetchPolicy: "network-only",
@@ -30,9 +39,6 @@ const UsersAdmin = () => {
       onCompleted: () => {
         refetchUsers();
       },
-      onError: (err) => {
-        console.log("err", err.message);
-      },
     });
 
   const [
@@ -42,19 +48,25 @@ const UsersAdmin = () => {
     onCompleted: () => {
       refetchUsers();
     },
-    onError: (err) => {
-      console.log("err", err.message);
+  });
+
+  const [
+    unarchiveUser,
+    { error: unarchiveUserError, loading: unarchiveUserLoading },
+  ] = useUnarchiveUserMutation({
+    onCompleted: () => {
+      refetchUsers();
     },
   });
 
   useEffect(() => {
-    if ((data?.listUsers, currentUser)) {
-      const filteredUsers = data?.listUsers.filter(
-        (user) => user.id !== currentUser && user.status !== "ARCHIVED"
+    if (usersData?.listUsers && currentUser) {
+      const filteredUsers = usersData?.listUsers.filter(
+        (user) => user.id !== currentUser
       );
       setUsers(filteredUsers as UserEntity[]);
     }
-  }, [data, currentUser]);
+  }, [usersData, currentUser]);
 
   const columns: GridColDef[] = [
     {
@@ -82,23 +94,35 @@ const UsersAdmin = () => {
       disableColumnMenu: true,
       editable: false,
       renderCell(params: GridRenderCellParams<UserEntity>) {
-        if (params.row.id !== currentUser)
-          return (
-            <select
-              className="w-full bg-primary"
-              defaultValue={params.row.role}
-              onChange={(e) => {
-                updateUser({
-                  variables: {
-                    data: { id: params.row.id, role: e.target.value },
-                  },
-                });
-              }}
-            >
-              <option value="USER">Utilisateur</option>
-              <option value="ADMIN">Administrateur</option>
-            </select>
-          );
+        if (updateUserError) return <div>Une erreur est survenue</div>;
+        if (updateUserLoading) return <CircularLoading size={30} />;
+        return params.row.id !== currentUser &&
+          params.row.status === "ACTIVE" ? (
+          <select
+            className="w-full bg-primary"
+            defaultValue={params.row.role}
+            onChange={(e) => {
+              updateUser({
+                variables: {
+                  data: { id: params.row.id, role: e.target.value },
+                },
+              });
+            }}
+          >
+            <option value="USER">Utilisateur</option>
+            <option value="ADMIN">Administrateur</option>
+          </select>
+        ) : (
+          "-"
+        );
+      },
+    },
+    {
+      field: "status",
+      headerName: "Statut",
+      width: 100,
+      renderCell(params) {
+        return userStatusFrench[params.row.status as UserStatus];
       },
     },
     {
@@ -111,24 +135,43 @@ const UsersAdmin = () => {
       disableColumnMenu: true,
       editable: false,
       renderCell: (params: GridRenderCellParams<UserEntity>) => {
-        return (
-          <DeleteForeverIcon
-            className="cursor-pointer"
-            onClick={() => {
-              archiveUser({
-                variables: {
-                  archiveUserId: params.row.id,
-                },
-              });
-            }}
-          />
+        if (archiveUserError || unarchiveUserError)
+          return <div>Une erreur est survenue</div>;
+        if (archiveUserLoading || unarchiveUserLoading)
+          return <CircularLoading size={30} />;
+        return params.row.status === "ACTIVE" ? (
+          <Tooltip title="Archiver l'utilisateur">
+            <GridDeleteForeverIcon
+              className="cursor-pointer"
+              onClick={() => {
+                archiveUser({
+                  variables: {
+                    archiveUserId: params.row.id,
+                  },
+                });
+              }}
+            />
+          </Tooltip>
+        ) : (
+          <Tooltip title="Restaurer l'utilisateur">
+            <HistoryIcon
+              className="cursor-pointer"
+              onClick={() => {
+                unarchiveUser({
+                  variables: {
+                    unarchiveUserId: params.row.id,
+                  },
+                });
+              }}
+            />
+          </Tooltip>
         );
       },
     },
   ];
 
-  if (loading) return <CircularLoading />;
-  if (error) return <div>Error</div>;
+  if (usersLoading) return <CircularLoading />;
+  if (usersError) return <div>Error</div>;
 
   return (
     <section className="users_admin">
@@ -136,7 +179,8 @@ const UsersAdmin = () => {
       <DataGrid
         columns={columns}
         rows={users || []}
-        paginationModel={{ page: 0, pageSize: 10 }}
+        paginationModel={{ pageSize: 25, page: 0 }}
+        className="bg-white"
       />
     </section>
   );
