@@ -73,8 +73,11 @@ export default function Home() {
         className="hidden lg:block"
       />
       <Box
-        className="h-full lg:h-fit flex flex-col lg:flex-row lg:justify-center bg-primary80 lg:bg-primary10 rounded-xl"
-        sx={{ width: { xs: "80%", lg: "100%" } }}
+        className="flex flex-col lg:flex-row lg:justify-center bg-primary80 lg:bg-primary10 rounded-xl"
+        sx={{
+          width: { xs: "80%", lg: "100%" },
+          height: { xs: "600px", lg: "fit-content" },
+        }}
       >
         <h4 className="text-center text-2xl text-white  lg:hidden font-black mt-16">
           Il faut rouler Cool
