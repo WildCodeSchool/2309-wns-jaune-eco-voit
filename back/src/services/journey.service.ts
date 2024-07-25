@@ -44,6 +44,8 @@ export default class JourneyService {
             relations: { user: true, bookings: true },
         })
 
+        assertDataExists(journey)
+
         return journey as JourneyEntity
     }
 
@@ -88,25 +90,13 @@ export default class JourneyService {
     }
 
     async listJourneysByUser(userId: string): Promise<JourneyEntity[]> {
-        const journeys = await this.db.find({
+        return await this.db.find({
             where: {
                 user: { id: userId },
             },
-            // relations: {
-            //     user: true,
-            //     // bookings: true
-            //  },
-            //  join: {
-            //     alias: 'j',
-            //     leftJoinAndSelect: {
-            //         "bookings": "j.bookings",
-            //         "user": "bookings.user"
-            //     }
-            //  }
 
             relations: ['user', 'bookings', 'bookings.user'],
         })
-        return journeys
     }
 
     async createJourney(data: CreateJourneyInput): Promise<JourneyEntity> {
