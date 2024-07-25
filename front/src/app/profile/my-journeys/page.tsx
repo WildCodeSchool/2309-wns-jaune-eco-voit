@@ -7,7 +7,7 @@ import TabContext from "@mui/lab/TabContext";
 import { TabList, TabPanel } from "@mui/lab";
 import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
 import { routes } from "@/app/lib/routes";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   useListBookingsByUserLazyQuery,
   useListJourneysByUserLazyQuery,
@@ -16,18 +16,26 @@ import MyJourneyCard from "@/app/components/MyJourney/MyJourneyCard";
 import MyBookingCard from "@/app/components/MyBooking/MyBookingCard";
 import OnPendingTab from "@/app/components/onPending/OnPending";
 
+export type MyJourneysTabs = "JOURNEYS" | "BOOKINGS" | "PENDING";
+
 export default function MyJourneys() {
+  const searchParams = useSearchParams();
+  const requestedTab = searchParams.get("tab");
+
   const router = useRouter();
 
   const { getUser: userId } = useContext(AuthContext);
 
-  const [tabDisplayed, setTabDisplayed] = useState<
-    "JOURNEYS" | "BOOKINGS" | "PENDING"
-  >("JOURNEYS");
+  const [tabDisplayed, setTabDisplayed] = useState<MyJourneysTabs>("JOURNEYS");
 
   const [
     getUserBookings,
-    { data: bookingData, loading: bookingLoading, error: bookingError, refetch: bookingRefetch },
+    {
+      data: bookingData,
+      loading: bookingLoading,
+      error: bookingError,
+      refetch: bookingRefetch,
+    },
   ] = useListBookingsByUserLazyQuery({ fetchPolicy: "network-only" }); // Lazy Query permet de créer une fonction quz l'on appelle quand on le veux
 
   const [
@@ -39,6 +47,12 @@ export default function MyJourneys() {
       refetch: journeysRefetch,
     },
   ] = useListJourneysByUserLazyQuery({ fetchPolicy: "network-only" });
+
+  useEffect(() => {
+    if (requestedTab) {
+      setTabDisplayed(requestedTab as MyJourneysTabs);
+    }
+  }, [requestedTab, setTabDisplayed]);
 
   useEffect(() => {
     if (userId) {
@@ -84,7 +98,7 @@ export default function MyJourneys() {
           className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
         >
           {journeysData?.listJourneysByUser &&
-            journeysData.listJourneysByUser.length > 0 ? (
+          journeysData.listJourneysByUser.length > 0 ? (
             [...journeysData.listJourneysByUser]
               .sort((a, b) => {
                 if (a.status === "PLANNED" && b.status !== "PLANNED") return -1;
