@@ -12,7 +12,7 @@ const Page = ({ params: { id: bookingId } }: { params: { id: string } }) => {
   const { getUser: userId } = useContext(AuthContext);
   const router = useRouter();
 
-  const { data: bookingData, loading: getBookingLoading } =
+  const { data: bookingData, loading: getBookingLoading, refetch: refetchBooking } =
     useFindBookingByIdQuery({
       variables: { findBookingById: bookingId },
     });
@@ -43,6 +43,7 @@ const Page = ({ params: { id: bookingId } }: { params: { id: string } }) => {
         onCompleteCancelBooking={() =>
           router.push(routes.journeysUser.pathname)
         }
+        bookingsRefetch={refetchBooking}
       />
     </div>
   );
