@@ -69,12 +69,11 @@ const AddressAutoComplete: FC<AddressAutoCompleteProps> = ({
   handleOnChange,
   isFirstElement,
 }) => {
-  const [options, setOptions] = useState<string[]>([]);
+  const [options, setOptions] = useState<Feature[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [apiResponse, setApiResponse] = useState<Feature[]>([]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const fetchSuggestions = useCallback(
     debounce(async (value: string) => {
       if (value.trim() === "") {
@@ -86,7 +85,7 @@ const AddressAutoComplete: FC<AddressAutoCompleteProps> = ({
       fetch(`/api/autocomplete?city=${encoded}`)
         .then((res) => res.json())
         .then((data: ApiResponse) => {
-          setOptions(data.map((feature) => feature.nom));
+          setOptions(data);
           setApiResponse(data);
           setLoading(false);
         });
@@ -112,8 +111,10 @@ const AddressAutoComplete: FC<AddressAutoCompleteProps> = ({
       return;
     }
 
-    const data = apiResponse.find((feature) => feature.nom === value);
+    // Extraire le nom de la ville à partir de la chaîne d'option sélectionnée
+    const cityName = value ? value.split(" (")[0] : "";
 
+    const data = apiResponse.find((feature) => feature.nom === cityName);
     if (data) {
       handleSelectedAddress(data);
     }
@@ -130,7 +131,9 @@ const AddressAutoComplete: FC<AddressAutoCompleteProps> = ({
           borderRadius: isFirstElement ? "32px 0 0 32px" : "0",
         }}
         freeSolo
-        options={options}
+        options={options.map(
+          (option) => `${option.nom} (${option.codesPostaux.join(", ")})`
+        )}
         onInputChange={(event, newInputValue) => setInputValue(newInputValue)}
         onChange={handleOptionChange}
         renderOption={(props, option) => {
