@@ -16,7 +16,7 @@ import { UserEntity } from './entities/user.entity'
 import { customAuthChecker } from './lib/authChecker'
 import JourneyMessageResolver from './resolvers/journeyMessage.resolver'
 import schedule from 'node-schedule'
-import { handleJourneysDone } from './utils/scheduler'
+import { handleBookingsNotPaid, handleJourneysDone } from './utils/scheduler'
 import RatingResolver from './resolvers/rating.resolver'
 import BookingService from './services/booking.service'
 import JourneyService from './services/journey.service'
@@ -118,7 +118,7 @@ async function main() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const jobJourneys = schedule.scheduleJob('*/20 * * * *', async function () {
         await handleJourneysDone()
-        // await handleBookingsNotPaid()
+        await handleBookingsNotPaid()
     })
 
     app.use(
