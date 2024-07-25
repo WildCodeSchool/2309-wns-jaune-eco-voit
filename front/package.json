@@ -28,6 +28,7 @@
     "@mui/x-date-pickers": "^6.19.6",
     "cookies-next": "^4.1.1",
     "dayjs": "^1.11.11",
+    "haversine-distance": "^1.2.3",
     "identity-obj-proxy": "^3.0.0",
     "jose": "^5.2.3",
     "js-cookie": "^3.0.5",

@@ -27,6 +27,7 @@ import { BookingStatus } from "@/types/booking";
 type MyBookingCardProps = {
   booking: ArrayElementType<ListBookingsByUserQuery["listBookingsByUser"]>;
   onCompleteCancelBooking: () => void;
+  bookingsRefetch: () => void;
 };
 
 const MyBookingCard = ({
@@ -50,6 +51,7 @@ const MyBookingCard = ({
     },
   },
   onCompleteCancelBooking,
+  bookingsRefetch,
 }: MyBookingCardProps) => {
   const router = useRouter();
 
@@ -103,9 +105,8 @@ const MyBookingCard = ({
 
   return (
     <div
-      className={`my_journey_card w-full flex p-4 rounded-md shadow-md ${
-        status === "REJECTED" || status === "CANCELLED" ? "opacity-70" : ""
-      }`}
+      className={`my_journey_card w-full flex p-4 rounded-md shadow-md ${status === "REJECTED" || status === "CANCELLED" ? "opacity-70" : ""
+        }`}
     >
       <div className="w-full flex flex-col gap-3">
         <div className="flex flex-col xs:flex-row w-full xs:justify-between gap-4">

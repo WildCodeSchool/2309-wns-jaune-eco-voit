@@ -1,4 +1,4 @@
-import { LessThanOrEqual, MoreThanOrEqual, Repository, Not } from 'typeorm'
+import { In, LessThanOrEqual, MoreThanOrEqual, Repository, Not } from 'typeorm'
 import datasource from '../db'
 import {
     JourneyEntity,
@@ -44,32 +44,40 @@ export default class JourneyService {
             relations: { user: true, bookings: true },
         })
 
+        assertDataExists(journey)
+
         return journey as JourneyEntity
     }
 
     async listJourneys(
         filters?: ListJourneysWithFilters
     ): Promise<JourneyEntity[]> {
-        const where: any = {
-            origin: filters?.origin,
-            destination: filters?.destination,
-            departureTime: filters?.departureTime
-                ? MoreThanOrEqual(filters.departureTime)
-                : undefined,
-            automaticAccept: filters?.automaticAccept,
-            availableSeats: filters?.availableSeats
-                ? MoreThanOrEqual(filters.availableSeats)
-                : undefined,
-        }
 
-        if (filters?.user?.id) {
-            where.user = { id: Not(filters.user.id) }
+        if (filters) {
+            const {
+                origins,
+                destinations,
+                automaticAccept,
+                availableSeats,
+                departureTime,
+                user
+            } = filters
+            
+            const where = {
+                    origin: In(origins),
+                    destination: In(destinations),
+                    departureTime: MoreThanOrEqual(departureTime),
+                    automaticAccept,
+                    availableSeats: MoreThanOrEqual(availableSeats),
+                  }
+     
+           if (user?.id) {
+            where.user = { id: Not(user.id) }
         }
-
-        return await this.db.find({
-            where,
-            relations: { user: true, bookings: true },
-        })
+            return await this.db.find({where},
+                relations: { user: true, bookings: true },
+            })
+        }
     }
 
     async listJourneysForScheduler(): Promise<JourneyEntity[]> {
@@ -85,26 +93,13 @@ export default class JourneyService {
     }
 
     async listJourneysByUser(userId: string): Promise<JourneyEntity[]> {
-        
-         const journeys = await this.db.find({
+        return await this.db.find({
             where: {
                 user: { id: userId },
             },
-            // relations: { 
-            //     user: true, 
-            //     // bookings: true
-            //  },
-            //  join: {
-            //     alias: 'j',
-            //     leftJoinAndSelect: {
-            //         "bookings": "j.bookings",
-            //         "user": "bookings.user"
-            //     }
-            //  }
 
-            relations: [ 'user', 'bookings', 'bookings.user' ],
+            relations: ['user', 'bookings', 'bookings.user'],
         })
-        return journeys
     }
 
     async createJourney(data: CreateJourneyInput): Promise<JourneyEntity> {

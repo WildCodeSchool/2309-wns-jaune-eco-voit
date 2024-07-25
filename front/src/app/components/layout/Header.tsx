@@ -16,6 +16,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { routes } from "@/app/lib/routes";
+import SearchIcon from '@mui/icons-material/Search';
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import DirectionsCarFilledOutlinedIcon from "@mui/icons-material/DirectionsCarFilledOutlined";
@@ -99,6 +100,25 @@ const Header = () => {
           <>
             <span
               className={
+                pathname === routes["home"].pathname
+                  ? "hidden"
+                  : "block"
+              }
+            >
+              <Button
+                variant="text"
+                className="flex items-center gap-4"
+                onClick={() =>
+                  router.push(routes["home"].pathname)
+                }
+              >
+                <SearchIcon />
+                <p className="font-medium text-sm ">Rechercher</p>
+              </Button>
+            </span>
+
+            <span
+              className={
                 pathname === routes["publish-journey"].pathname
                   ? "hidden"
                   : "block"
@@ -128,6 +148,7 @@ const Header = () => {
                 </IconButton>
               </div>
             </span>
+
             <Tooltip title="Profile">
               <IconButton
                 onClick={(e) => {
@@ -135,6 +156,7 @@ const Header = () => {
                 }}
                 color="inherit"
               >
+
                 <Avatar alt="profile picture" src={userPicture} />
               </IconButton>
             </Tooltip>

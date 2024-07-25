@@ -11,9 +11,10 @@ import { routes } from "@/app/lib/routes";
 import UpdateOrCreateJourney, {
   JourneyData,
 } from "@/app/components/JourneyCreateOrUpdate/UpdateOrCreate";
-import { ResponseError, ResponseGetItinerary } from "@/app/api/itinerary/route";
+import { ResponseGetItinerary } from "@/app/api/itinerary/route";
 import { getItinerary } from "@/app/utils/getItinerary";
 import { useCreateJourneyMutation } from "@/types/graphql";
+import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
 
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
@@ -25,10 +26,8 @@ const PublishJourney = () => {
 
   const [error, setError] = useState(false);
 
-  const [
-    createJourney,
-    { data: createJourneyData, error: createJourneyError },
-  ] = useCreateJourneyMutation();
+  const [createJourney, { loading: createJourneyLoading }] =
+    useCreateJourneyMutation();
 
   const [journeyData, setJourneyData] = useState<JourneyData>({
     origin: "",
@@ -109,6 +108,10 @@ const PublishJourney = () => {
         router.push(`${routes.journey.pathname}/${res?.createJourney.id}`),
     });
   };
+
+  if (createJourneyLoading) {
+    return <CircularLoading />;
+  }
 
   return (
     <UpdateOrCreateJourney
