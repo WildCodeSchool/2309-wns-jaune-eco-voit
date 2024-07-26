@@ -9,13 +9,15 @@ import {
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import AddressAutoComplete, { AddressResponse } from "./AddressAutoComplete";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { ListJourneysWithFilters } from "@/types/graphql";
 import { styled, useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import getNearByCities from "@/app/utils/getNearByCities";
+
+import { AuthContext } from "@/context/authContext";
 
 const StyledSelect = styled(Select)({
   "& .MuiOutlinedInput-root": {
@@ -41,6 +43,7 @@ const SearchBar = ({ onSearchJourneys }: SearchJourneysProps) => {
   const [availableSeats, setAvailableSeats] = useState<number>(1);
   const [warning, setWarning] = useState<string>("");
 
+  const { getUser: currentUser } = useContext(AuthContext);
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("lg"));
 
@@ -79,6 +82,7 @@ const SearchBar = ({ onSearchJourneys }: SearchJourneysProps) => {
         destinations: [...nearByDestinations, destinationCity],
         departureTime,
         availableSeats,
+        user: currentUser ? { id: currentUser } : undefined,
       });
 
       setWarning("");
@@ -89,12 +93,12 @@ const SearchBar = ({ onSearchJourneys }: SearchJourneysProps) => {
   };
 
   return (
-    <Stack gap={2} margin={2} className="h-14">
+    <Stack gap={2} margin={2} className="h-full lg:h-14">
       <Stack
         gap={2}
         margin={2}
         justifyContent={"center"}
-        className="lg:w-full flex justify-center bg-white lg:bg-primary10  p-4 lg:p-0 rounded-xl "
+        className="h-auto lg:w-full flex justify-center bg-white lg:bg-primary10  p-4 lg:p-0 rounded-xl "
       >
         <Box className="h-full lg:h-14 flex flex-col justify-center lg:flex-row">
           <AddressAutoComplete
