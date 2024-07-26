@@ -63,7 +63,16 @@ export default class JourneyService {
                 user
             } = filters
             
-            const where:any = {
+            type where = {
+                origin: string;
+                destination: string;
+                departureTime: string;
+                automaticAccept?: boolean;
+                availableSeats: number;
+                user?: {id: string};
+            }
+
+            const where:where = {
                     origin: In(origins),
                     destination: In(destinations),
                     departureTime: MoreThanOrEqual(departureTime),
