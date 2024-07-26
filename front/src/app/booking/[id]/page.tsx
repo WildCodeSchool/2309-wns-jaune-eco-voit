@@ -1,8 +1,10 @@
 "use client";
 
 import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
+import BookingErrorComponent from "@/app/errors/components/BookingErrorComponent";
+import { routes } from "@/app/lib/routes";
 import { useFindBookingByIdQuery } from "@/types/graphql";
-import { Stack, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -15,32 +17,17 @@ export default function Page({ params }: { params: { id: string } }) {
   });
 
   useEffect(() => {
-    if (!data) return;
+    if (!data?.findBookingById) return;
     setTimeout(() => {
-      router.push(`/profile/my-journeys?tab=BOOKINGS`);
+      router.push(`${routes["journeysUser"].pathname}?tab=BOOKINGS`);
     }, 1000);
   }, [data]);
 
-  if (error) {
-    return (
-      <Typography variant="h4" component="h1" align="center">
-        Erreur: {error.message}
-      </Typography>
-    );
-  }
+  if (error) return <BookingErrorComponent />;
 
   if (loading) return <CircularLoading />;
 
-  if (!data?.findBookingById) {
-    return (
-      <>
-        <Typography variant="h4" component="h1" align="center">
-          Réservation introuvable
-        </Typography>
-        <button>Retourne à l&eapos;accueil</button>
-      </>
-    );
-  }
+  if (!data?.findBookingById) return <BookingErrorComponent />;
 
   const { status } = data?.findBookingById;
 

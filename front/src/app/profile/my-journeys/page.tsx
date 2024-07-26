@@ -132,7 +132,14 @@ export default function MyJourneys() {
             bookingData?.listBookingsByUser.length > 0 &&
             [...bookingData.listBookingsByUser]
               .sort((a, b) => {
-                if (a.status === "ACCEPTED" && b.status !== "ACCEPTED")
+                if (
+                  (a.status === "ACCEPTED" ||
+                    a.status === "PENDING" ||
+                    a.status === "PAID") &&
+                  b.status !== "ACCEPTED" &&
+                  b.status !== "PENDING" &&
+                  b.status !== "PAID"
+                )
                   return -1;
                 if (b.status === "ACCEPTED" && a.status !== "ACCEPTED")
                   return 1;

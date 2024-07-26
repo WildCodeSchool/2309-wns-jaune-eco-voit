@@ -234,7 +234,17 @@ export default class BookingService {
             },
             user: { firstname: passengerFistname },
             nbPassenger,
+            status: bookingStatus,
         } = await this.findBookingById(id)
+
+        assertDataExists({ passengerFistname, nbPassenger, bookingStatus })
+
+        if (bookingStatus === 'ACCEPTED' || bookingStatus === 'PAID') {
+            await journeyService.updateAvailableSeats({
+                id: journeyId,
+                availableSeats: availableSeats + nbPassenger,
+            })
+        }
 
         const cancelledBooking = await this.updateBookingStatus({
             id,
@@ -242,11 +252,6 @@ export default class BookingService {
         })
 
         validateData(cancelledBooking)
-
-        await journeyService.updateAvailableSeats({
-            id: journeyId,
-            availableSeats: availableSeats + nbPassenger,
-        })
 
         sendEmailService.sendCancelledBookingEmail({
             recipient: driverEmail,
@@ -289,7 +294,10 @@ export default class BookingService {
             journey: { availableSeats, id: journeyId, origin, destination },
             user: { email },
             nbPassenger,
+            status: bookingStatus,
         } = await this.findBookingById(id)
+
+        assertDataExists({ email, nbPassenger, bookingStatus })
 
         await journeyService.updateAvailableSeats({
             id: journeyId,
