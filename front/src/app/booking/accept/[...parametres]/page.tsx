@@ -2,7 +2,7 @@
 import { useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "@/context/authContext";
-import { Button, Rating } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
 import JourneyCardHeader from "@/app/components/JourneyCard/JourneyCardHeader";
 import AvatarJourney from "@/app/components/Avatar/AvatarJouney";
@@ -13,6 +13,7 @@ import {
   useFindUserByIdLazyQuery,
   useRejectBookingMutation,
 } from "@/types/graphql";
+import { routes } from "@/app/lib/routes";
 
 const AcceptPage = ({
   params: {
@@ -52,6 +53,9 @@ const AcceptPage = ({
       },
       onCompleted: () => {
         setIsAccepted(true);
+        setTimeout(() => {
+          router.push(routes["home"].pathname);
+        }, 1000);
       },
     });
   };
@@ -63,6 +67,9 @@ const AcceptPage = ({
       },
       onCompleted: () => {
         setIsAccepted(false);
+        setTimeout(() => {
+          router.push(routes["home"].pathname);
+        }, 1000);
       },
     });
   };
@@ -78,12 +85,7 @@ const AcceptPage = ({
     return null;
   }
 
-  if (
-    bookingLoading ||
-    userLoading ||
-    acceptBookingLoading ||
-    rejectBookingLoading
-  ) {
+  if (bookingLoading || userLoading) {
     return <CircularLoading />;
   }
 
@@ -96,6 +98,7 @@ const AcceptPage = ({
         profilePicture: passengerProfilPicture,
       },
       status: bookingStatus,
+      nbPassenger,
     },
   } = bookingDatas;
 
@@ -116,26 +119,35 @@ const AcceptPage = ({
   }
 
   return (
-    <div className="flex flex-col gap-8 items-center justify-center">
-      <h2>{passengerFirstname} souhaite réserver votre trajet !</h2>
-      <div className="booking_infos flex flex-col items-center text-center">
-        <div className="flex flex-col gap-3 shadow-md py-6 px-10 rounded-lg">
-          <AvatarJourney
-            id={passengerId}
-            firstname={passengerFirstname}
-            profilePicture={passengerProfilPicture ?? undefined}
-          />
-          <JourneyCardHeader
-            departureTime={departureTime}
-            origin={origin}
-            destination={destination}
-          />
-        </div>
+    <div className="flex flex-col gap-12 items-center justify-center h-full py-8">
+      <h2 className="text-center">
+        {passengerFirstname} souhaite réserver {nbPassenger} place
+        {nbPassenger > 1 && "s"} sur votre trajet !
+      </h2>
+      <div className="booking_infos flex flex-col gap-3 shadow-md py-6 px-10 rounded-lg">
+        <AvatarJourney
+          id={passengerId}
+          firstname={passengerFirstname}
+          profilePicture={passengerProfilPicture ?? undefined}
+        />
+        <JourneyCardHeader
+          departureTime={departureTime}
+          origin={origin}
+          destination={destination}
+        />
       </div>
       {isAccepted === undefined ? (
-        <div className="flex flex-col gap-4 items-center">
-          <Button onClick={handleAccept}>Accepter</Button>
-          <Button onClick={handleReject}>Refuser</Button>
+        <div className="flex gap-4 items-center">
+          {acceptBookingLoading ? (
+            <CircularProgress />
+          ) : (
+            <Button onClick={handleAccept}>Accepter</Button>
+          )}
+          {rejectBookingLoading ? (
+            <CircularProgress />
+          ) : (
+            <Button onClick={handleReject}>Refuser</Button>
+          )}
         </div>
       ) : isAccepted === false ? (
         <div className="flex flex-col gap-4 items-center">

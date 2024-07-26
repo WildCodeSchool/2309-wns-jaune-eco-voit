@@ -3,14 +3,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/fr";
 dayjs.locale("fr");
 
-import {
-  Stack,
-  Typography,
-  Grid,
-  Divider,
-  CircularProgress,
-  TextField,
-} from "@mui/material";
+import { Stack, Typography, Grid, Divider, TextField } from "@mui/material";
 import AvatarJourney from "@/app/components/Avatar/AvatarJouney";
 import JourneyTimeline from "@/app/components/JourneyCard/JourneyTimeline";
 import { useContext, useState } from "react";
@@ -26,13 +19,15 @@ import {
   useFindJourneyByIdQuery,
   useFindUserByIdQuery,
 } from "@/types/graphql";
+import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
 
-export default function Page({ params }: { params: { id: string } }) {
+export default function JourneyPage({ params }: { params: { id: string } }) {
   const { id: journeyId } = params;
   const router = useRouter();
 
   const { getUser: userContextId } = useContext(AuthContext);
   const [nbPassenger, setNbPassenger] = useState(1);
+
   const {
     data: journeyData,
     loading: journeyLoading,
@@ -49,28 +44,28 @@ export default function Page({ params }: { params: { id: string } }) {
     },
   });
 
+  const isUserAllowedToAccessMessage = () => {
+    const isDriver = driver.id === userContextId;
+    const journeyBookingIds = bookings.map(({ id }) => id);
+
+    const isPassenger = userData?.findUserById.bookings?.some(({ id }) =>
+      journeyBookingIds.includes(id)
+    );
+
+    return isDriver || isPassenger;
+  };
+
+  const maxNbPassenger = (nb: number) =>
+    Math.max(1, Math.min(nb, availableSeats));
+
   if (journeyError) {
     router.push(`${routes["error"].pathname}`);
   }
 
-  if (journeyLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <CircularProgress />
-      </div>
-    );
-  }
+  if (journeyLoading) return <CircularLoading />;
 
   if (!journeyData) {
     return null;
-  }
-
-  function maxNbPassenger(nb: number) {
-    if (nb > 0) {
-      return nb > availableSeats ? availableSeats : nb;
-    } else {
-      return 1;
-    }
   }
 
   const {
@@ -85,18 +80,6 @@ export default function Page({ params }: { params: { id: string } }) {
       price,
     },
   } = journeyData;
-
-  const isUserAllowedToAccessMessage = () => {
-    const isDriver = driver.id === userContextId;
-
-    const journeyBookingIds = bookings.map(({ id }) => id);
-
-    const isPassenger = userData?.findUserById.bookings?.some(({ id }) =>
-      journeyBookingIds.some((journeyBookingId) => journeyBookingId === id)
-    );
-
-    return isDriver || isPassenger;
-  };
 
   return (
     <Stack className="h-full w-10/12 mx-auto">

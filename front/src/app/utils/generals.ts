@@ -9,7 +9,7 @@ export const gradeFrench: Record<Grade, string> = {
 };
 
 export const statusBookingFrench: Record<BookingStatus, string> = {
-  PENDING: "En attente",
+  PENDING: "En attente de validation",
   REJECTED: "Rejeté",
   CANCELLED: "Annulé",
   ACCEPTED: "Paiement en attente",

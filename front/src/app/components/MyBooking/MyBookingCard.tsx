@@ -10,7 +10,7 @@ import {
 } from "@mui/lab";
 import AvatarJourney from "../Avatar/AvatarJouney";
 import { Grade } from "@/types/user";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import Link from "next/link";
 import { routes } from "@/app/lib/routes";
 import TripOriginOutlinedIcon from "@mui/icons-material/TripOriginOutlined";
@@ -21,12 +21,11 @@ import {
   useCreatePaymentSessionLazyQuery,
 } from "@/types/graphql";
 import { useRouter } from "next/navigation";
-import CircularLoading from "../CircularLoading/CircularLoading";
 import { BookingStatus } from "@/types/booking";
 
 type MyBookingCardProps = {
   booking: ArrayElementType<ListBookingsByUserQuery["listBookingsByUser"]>;
-  onCompleteCancelBooking: () => void;
+  onCompleteCancelBooking?: () => void;
   bookingsRefetch: () => void;
 };
 
@@ -66,7 +65,8 @@ const MyBookingCard = ({
     cancelBooking({
       variables: { cancelBookingId: id },
       onCompleted: () => {
-        onCompleteCancelBooking();
+        onCompleteCancelBooking && onCompleteCancelBooking();
+        bookingsRefetch();
       },
     });
   };
@@ -83,10 +83,6 @@ const MyBookingCard = ({
       onCompleted(res) {
         router.push(res.createSession.url);
       },
-      onError(error) {
-        //TODO GERER L'ERREUR
-        console.log(error);
-      },
     });
   };
 
@@ -99,14 +95,11 @@ const MyBookingCard = ({
     status === "RATED" ||
     status === "PAID";
 
-  if (cancelBookingLoading) {
-    return <CircularLoading />;
-  }
-
   return (
     <div
-      className={`my_journey_card w-full flex p-4 rounded-md shadow-md ${status === "REJECTED" || status === "CANCELLED" ? "opacity-70" : ""
-        }`}
+      className={`my_booking_card w-auto flex p-4 rounded-md shadow-md ${
+        status === "REJECTED" || status === "CANCELLED" ? "opacity-70" : ""
+      }`}
     >
       <div className="w-full flex flex-col gap-3">
         <div className="flex flex-col xs:flex-row w-full xs:justify-between gap-4">
@@ -171,9 +164,12 @@ const MyBookingCard = ({
         />
         <div className="card_footer flex flex-col item-start xs:flex-row xs:justify-between xs:items-end gap-3">
           <div className="buttons flex gap-3">
-            {showCancelButton && (
-              <Button onClick={handleCancelBooking}>Annuler</Button>
-            )}
+            {showCancelButton &&
+              (cancelBookingLoading ? (
+                <CircularProgress />
+              ) : (
+                <Button onClick={handleCancelBooking}>Annuler</Button>
+              ))}
 
             {showPaymentButton && (
               <Button onClick={onLaunchPaymentSession}>Payer</Button>
