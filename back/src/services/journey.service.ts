@@ -62,29 +62,16 @@ export default class JourneyService {
                 departureTime,
                 user
             } = filters
-            
-            type where = {
-                origin: string;
-                destination: string;
-                departureTime: string;
-                automaticAccept?: boolean;
-                availableSeats: number;
-                user?: {id: string};
-            }
 
-            const where:where = {
+            return await this.db.find({
+                where:{
                     origin: In(origins),
                     destination: In(destinations),
                     departureTime: MoreThanOrEqual(departureTime),
                     automaticAccept,
                     availableSeats: MoreThanOrEqual(availableSeats),
-                  }
-     
-           if (user?.id) {
-            where.user = { id: Not(user.id) }
-            }
-            return await this.db.find({
-                where,
+                    user: user?.id ? { id: Not(user.id) } : undefined
+                  },
                 relations: { user: true, bookings: true },
             })
         }
