@@ -109,6 +109,7 @@ export type ListJourneysWithFilters = {
   departureTime: Scalars['DateTimeISO']['input'];
   destinations: Array<Scalars['String']['input']>;
   origins: Array<Scalars['String']['input']>;
+  user?: InputMaybe<PartialUserInput>;
 };
 
 export type LoginInput = {

@@ -1,4 +1,4 @@
-import { In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm'
+import { In, LessThanOrEqual, MoreThanOrEqual, Repository, Not } from 'typeorm'
 import datasource from '../db'
 import {
     JourneyEntity,
@@ -59,6 +59,7 @@ export default class JourneyService {
                 automaticAccept,
                 availableSeats,
                 departureTime,
+                user
             } = filters
             return await this.db.find({
                 where: {
@@ -67,6 +68,7 @@ export default class JourneyService {
                     departureTime: MoreThanOrEqual(departureTime),
                     automaticAccept,
                     availableSeats: MoreThanOrEqual(availableSeats),
+                    user: user?.id ? { id: Not(user.id) } : undefined
                 },
                 relations: { user: true, bookings: true },
             })
