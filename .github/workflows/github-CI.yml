@@ -71,7 +71,6 @@ jobs:
       - name: 🧐 Run backend tests
         env:
           DB_TEST_JEST_PORT: 5432
-          DB_TEST_JEST_HOST: db_test
         run: |
           cd ./back 
           npm i
