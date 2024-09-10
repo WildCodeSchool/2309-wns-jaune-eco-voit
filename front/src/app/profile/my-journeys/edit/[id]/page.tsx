@@ -22,7 +22,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const { id: journeyId } = params;
   const router = useRouter();
 
-  const { getUser: userContextId } = useContext(AuthContext);
+  const { userId } = useContext(AuthContext);
 
   const [error, setError] = useState(false);
 
@@ -157,7 +157,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <>
-      {userContextId !== driverId ? (
+      {userId !== driverId ? (
         <Typography
           variant="h4"
           component="h1"

@@ -19,7 +19,7 @@ const BookJourneyButton = ({
   journey,
   nbPassenger,
 }: BookJourneyButtonProps) => {
-  const { getUser: userId } = useContext(AuthContext);
+  const { userId } = useContext(AuthContext);
 
   const [errorMessage, setErrorMessage] = useState<string>("");
 

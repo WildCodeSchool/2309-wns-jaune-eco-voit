@@ -6,7 +6,7 @@ services:
     ports:
       - 4000:4000
 
-    # Décommenter cette ligne quand on veut lancer les tests en local
+    # Décommenter cette ligne quand on veut lancer les tests E2E en local
     # command: sh -c "npm run start:test"
 
     # persist les datas en dehors du container et les partage entre local et container

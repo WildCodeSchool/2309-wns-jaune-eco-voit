@@ -23,6 +23,7 @@ const RatingPage = ({
   const router = useRouter();
 
   const [bookingRate, setBookingRate] = useState("5");
+  const { userId } = useContext(AuthContext);
 
   const [
     findBookingById,
@@ -62,8 +63,6 @@ const RatingPage = ({
       },
     });
   };
-
-  const { getUser: userId } = useContext(AuthContext);
 
   useEffect(() => {
     (rateBookingError || userError || bookingError) &&

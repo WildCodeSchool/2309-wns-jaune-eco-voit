@@ -51,7 +51,7 @@ jobs:
     name: 👤 Run Tests Jest
     runs-on: ubuntu-latest
     services:
-      postgres:
+      db:
         image: postgres:latest
         env:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
@@ -64,14 +64,25 @@ jobs:
             --health-retries 5
         ports:
           - 5432:5432
+
+      db_test:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+        ports:
+          - 5435:5432
     steps:
       - name: 🗂️ Check out code
         uses: actions/checkout@v3
 
       - name: 🧐 Run backend tests
-        env:
-          DB_TEST_JEST_PORT: 5432
-          DB_TEST_JEST_HOST: db_test
         run: |
           cd ./back 
           npm i

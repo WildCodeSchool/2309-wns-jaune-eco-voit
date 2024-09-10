@@ -35,7 +35,6 @@ type MyJourneyCardProps = {
 const MyJourneyCard = ({
   journey: {
     departureTime,
-    arrivalTime,
     availableSeats,
     price,
     destination,
@@ -45,7 +44,7 @@ const MyJourneyCard = ({
     origin,
   },
   onCompleteCancelJourney,
-  journeysRefetch
+  journeysRefetch,
 }: MyJourneyCardProps) => {
   const router = useRouter();
 
@@ -58,7 +57,7 @@ const MyJourneyCard = ({
         data: { id, status: "CANCELLED" },
       },
       onCompleted: () => {
-        onCompleteCancelJourney()
+        onCompleteCancelJourney();
         journeysRefetch();
       },
     });
@@ -74,8 +73,9 @@ const MyJourneyCard = ({
 
   return (
     <div
-      className={`my_journey_card w-full flex p-4 rounded-md shadow-md ${status === "CANCELLED" && "opacity-50"
-        }`}
+      className={`my_journey_card w-full flex p-4 rounded-md shadow-md ${
+        status === "CANCELLED" && "opacity-50"
+      }`}
     >
       {" "}
       <div className="w-full flex flex-col gap-3">

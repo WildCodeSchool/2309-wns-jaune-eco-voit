@@ -65,11 +65,7 @@ export default class UserResolver {
         @Arg('data') data: LoginInput,
         @Ctx() { req, res, userService }: MyContext
     ) {
-        const result = await userService.login(data)
-
-        if (!result) throw new Error('Vérifiez vos informations')
-
-        const { user, token } = result
+        const { user, token } = await userService.login(data)
 
         const cookies = new Cookies(req, res)
 

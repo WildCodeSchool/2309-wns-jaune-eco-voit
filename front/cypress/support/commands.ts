@@ -15,7 +15,6 @@ Cypress.Commands.add("register", (email: string, password: string) => {
   cy.url().should("eq", "http://localhost:3002/auth/register");
 
   cy.findByRole("textbox", { name: "Email" }).type(email);
-  // Les textbox de mot de passe ont un role différent
   cy.findByLabelText("Mot de passe").type(password);
   cy.findByLabelText("Confirmez le mot de passe").type(password);
   cy.findByRole("textbox", { name: "Prénom" }).type("oliv");

@@ -22,7 +22,7 @@ import HistoryIcon from "@mui/icons-material/History";
 const UsersAdmin = () => {
   const [users, setUsers] = useState<UserEntity[]>([]);
 
-  const { getUser: currentUser } = useContext(AuthContext);
+  const { userId } = useContext(AuthContext);
 
   const {
     data: usersData,
@@ -60,13 +60,13 @@ const UsersAdmin = () => {
   });
 
   useEffect(() => {
-    if (usersData?.listUsers && currentUser) {
+    if (usersData?.listUsers && userId) {
       const filteredUsers = usersData?.listUsers.filter(
-        (user) => user.id !== currentUser
+        (user) => user.id !== userId
       );
       setUsers(filteredUsers as UserEntity[]);
     }
-  }, [usersData, currentUser]);
+  }, [usersData, userId]);
 
   const columns: GridColDef[] = [
     {
@@ -96,8 +96,7 @@ const UsersAdmin = () => {
       renderCell(params: GridRenderCellParams<UserEntity>) {
         if (updateUserError) return <div>Une erreur est survenue</div>;
         if (updateUserLoading) return <CircularLoading size={30} />;
-        return params.row.id !== currentUser &&
-          params.row.status === "ACTIVE" ? (
+        return params.row.id !== userId && params.row.status === "ACTIVE" ? (
           <select
             className="w-full bg-primary"
             defaultValue={params.row.role}

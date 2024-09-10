@@ -11,7 +11,7 @@ import BookingErrorComponent from "@/app/errors/components/BookingErrorComponent
 import { Typography } from "@mui/material";
 
 const Page = ({ params: { id: bookingId } }: { params: { id: string } }) => {
-  const { getUser: userId } = useContext(AuthContext);
+  const { userId } = useContext(AuthContext);
   const router = useRouter();
 
   const {

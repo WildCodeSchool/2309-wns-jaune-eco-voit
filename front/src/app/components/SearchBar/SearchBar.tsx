@@ -43,7 +43,7 @@ const SearchBar = ({ onSearchJourneys }: SearchJourneysProps) => {
   const [availableSeats, setAvailableSeats] = useState<number>(1);
   const [warning, setWarning] = useState<string>("");
 
-  const { getUser: currentUser } = useContext(AuthContext);
+  const { userId } = useContext(AuthContext);
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("lg"));
 
@@ -82,7 +82,7 @@ const SearchBar = ({ onSearchJourneys }: SearchJourneysProps) => {
         destinations: [...nearByDestinations, destinationCity],
         departureTime,
         availableSeats,
-        user: currentUser ? { id: currentUser } : undefined,
+        user: userId ? { id: userId } : undefined,
       });
 
       setWarning("");
