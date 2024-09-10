@@ -24,7 +24,7 @@ export default function MyJourneys() {
 
   const router = useRouter();
 
-  const { getUser: userId } = useContext(AuthContext);
+  const { userId } = useContext(AuthContext);
 
   const [tabDisplayed, setTabDisplayed] = useState<MyJourneysTabs>("JOURNEYS");
 

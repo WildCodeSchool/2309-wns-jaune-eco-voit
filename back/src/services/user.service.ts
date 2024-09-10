@@ -12,6 +12,7 @@ import argon2 from 'argon2'
 import { SignJWT } from 'jose'
 import BookingService from './booking.service'
 import JourneyService from './journey.service'
+
 export default class UserService {
     db: Repository<UserEntity>
 
@@ -45,8 +46,9 @@ export default class UserService {
     async login({
         email,
         password,
-    }: LoginInput): Promise<{ user: UserEntity; token: string } | null> {
+    }: LoginInput): Promise<{ user: UserEntity; token: string }> {
         const user = await this.findUserByEmailWitoutAsserting(email)
+        console.log(user)
 
         if (!user) {
             throw new Error('Vérifiez vos informations')

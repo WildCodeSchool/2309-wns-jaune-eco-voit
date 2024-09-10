@@ -30,11 +30,11 @@ export async function verify(token: string): Promise<Payload> {
 
 async function checkToken(token: string | undefined, request: NextRequest) {
   const prevLocation = request.nextUrl.pathname;
-  const currentRoute = findRouteByPathname(prevLocation);
+  const requestedRoute = findRouteByPathname(prevLocation);
   let response = NextResponse.next();
   if (!token) {
     //On redirige si la route est protégée
-    if (currentRoute && currentRoute.protected !== "PUBLIC") {
+    if (requestedRoute && requestedRoute.protected !== "PUBLIC") {
       response = NextResponse.redirect(
         new URL(
           `/auth/login?requestedURL=${request.nextUrl.pathname}`,
@@ -54,7 +54,7 @@ async function checkToken(token: string | undefined, request: NextRequest) {
 
     if (email && role && id) {
       //On vérifie que le role de l'utilisateur est "ADMIN" pour les routes "ADMIN"
-      if (currentRoute?.protected === "ADMIN" && role !== "ADMIN") {
+      if (requestedRoute?.protected === "ADMIN" && role !== "ADMIN") {
         response = NextResponse.redirect(
           new URL("/errors/unauthorized", request.url)
         ); // Créer une page "Access denied"

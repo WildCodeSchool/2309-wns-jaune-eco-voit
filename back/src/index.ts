@@ -46,15 +46,15 @@ export interface Payload {
     id: string
 }
 
-const app = express()
-const httpServer = http.createServer(app)
-
 const bookingService = new BookingService()
 const journeyService = new JourneyService()
 const sendEmailService = new SendEmailService()
 const userService = new UserService()
 const ratingService = new RatingService()
 const journeyMessageService = new JourneyMessageService()
+
+const app = express()
+const httpServer = http.createServer(app)
 
 const endpointSecret =
     'whsec_c3667380856ca80657b8b21c4909648a883766adf053a73868bec7ca206521b7'
@@ -107,19 +107,19 @@ async function main() {
         authChecker: customAuthChecker,
     })
 
-    const server = new ApolloServer({
-        schema,
-        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-    })
-
-    await server.start()
-
     // la variable job est necessaire pour créé le cron mais n'est jamais appelée a proprement parlé dans le code
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const jobJourneys = schedule.scheduleJob('*/20 * * * *', async function () {
         await handleJourneysDone()
         await handleBookingsNotPaid()
     })
+
+    const server = new ApolloServer({
+        schema,
+        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    })
+
+    await server.start()
 
     app.use(
         '/',
@@ -136,10 +136,7 @@ async function main() {
         }),
         express.json(),
 
-        // intégre Apollo Server à Express
         expressMiddleware(server, {
-            // On passe dans ce callback à chaque requête
-            // On retourne un objet contenant res et req à tous les resolvers
             context: async ({ req, res }) => {
                 let user: UserEntity | null = null
 

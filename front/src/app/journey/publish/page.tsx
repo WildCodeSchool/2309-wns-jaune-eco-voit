@@ -21,7 +21,7 @@ dayjs.extend(customParseFormat);
 dayjs.locale(fr);
 
 const PublishJourney = () => {
-  const { getUser: userId } = useContext(AuthContext);
+  const { userId } = useContext(AuthContext);
   const router = useRouter();
 
   const [error, setError] = useState(false);

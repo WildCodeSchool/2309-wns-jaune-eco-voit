@@ -35,7 +35,7 @@ const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [loggedUser, setLoggedUser] = useState<string>();
   const [userPicture, setUserPicture] = useState<string>();
-  const { getUser, updateUser } = useContext(AuthContext);
+  const { userId, updateUserId } = useContext(AuthContext);
 
   const [getUserDatas, { data, loading, error }] = useGetProfileLazyQuery({
     fetchPolicy: "network-only", // Used for first execution
@@ -50,19 +50,18 @@ const Header = () => {
 
   useEffect(() => {
     setLoggedUser(Cookies.get("id") ?? "");
-  }, [getUser]);
+  }, [userId]);
 
   useEffect(() => {
     const id = Cookies.get("id") ?? "";
-    if (!getUser && id) {
-      updateUser(id);
-      //s'il y a un id dans le cookie
-      //mais que le contexte ne continent pas d'utilisateur
-      //alors on l'update
+
+    if (!userId && id) {
+      updateUserId(id);
     }
+
     getUserDatas();
-    setLoggedUser(getUser?.toString());
-  }, [getUser, updateUser, getUserDatas]);
+    setLoggedUser(userId);
+  }, [userId, updateUserId, getUserDatas]);
 
   const handleCloseMenu = () => {
     setAnchorEl(null);

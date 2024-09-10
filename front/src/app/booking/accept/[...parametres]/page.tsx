@@ -23,7 +23,7 @@ const AcceptPage = ({
   params: { parametres: Array<string> };
 }) => {
   const router = useRouter();
-  const { getUser: userId } = useContext(AuthContext);
+  const { userId } = useContext(AuthContext);
   const [isAccepted, setIsAccepted] = useState<boolean>();
 
   const [

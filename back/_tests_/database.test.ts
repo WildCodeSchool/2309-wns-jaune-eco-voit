@@ -5,7 +5,7 @@ import BookingResolver from '../src/resolvers/booking.resolver'
 import { ApolloServer } from '@apollo/server'
 import assert from 'assert'
 
-import datasource from '../src/db_test_jest'
+import datasourceTest from '../src/db_test_jest'
 import initialDatasource from '../src/db'
 
 import UserService from '../src/services/user.service'
@@ -57,18 +57,18 @@ beforeAll(async () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (entity: EntityTarget<any>): Repository<any> => {
             if (entity === UserEntity) {
-                return datasource.getRepository(UserEntity)
+                return datasourceTest.getRepository(UserEntity)
             } else if (entity === JourneyEntity) {
-                return datasource.getRepository(JourneyEntity)
+                return datasourceTest.getRepository(JourneyEntity)
             } else if (entity === BookingEntity) {
-                return datasource.getRepository(BookingEntity)
+                return datasourceTest.getRepository(BookingEntity)
             } else {
                 throw new Error(`Unexpected entity: ${entity}`)
             }
         }
     )
 
-    await datasource.initialize()
+    await datasourceTest.initialize()
 
     const createUser = async (data: CreateUserInput) => {
         return server.executeOperation<ResponseRegisterData>(
@@ -122,7 +122,7 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
-    await datasource.dropDatabase()
+    await datasourceTest.dropDatabase()
 })
 
 describe('Test sur une base de donnée de test', () => {

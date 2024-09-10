@@ -31,7 +31,7 @@ function MyProfile() {
     nextFetchPolicy: "cache-first", // Used for subsequent executions
   });
 
-  const { getUser: userId } = useContext(AuthContext);
+  const { userId } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
   const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] =
     useState(false);
@@ -58,7 +58,7 @@ function MyProfile() {
     useUpdateUserPasswordMutation();
 
   const handleSave = () => {
-    if (!userId) return
+    if (!userId) return;
     updateUser({
       variables: { data: { ...updateInfos, id: userId } },
 
@@ -82,13 +82,12 @@ function MyProfile() {
 
   const handlePasswordSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!userId) return
+    if (!userId) return;
     if (newPassword !== confirmNewPassword) {
       setIsChangePasswordError(true);
       return;
     }
     updateUserPassword({
-
       variables: {
         data: { id: userId, newPassword, oldPassword },
       },
@@ -109,7 +108,6 @@ function MyProfile() {
   if (loading || !updateInfos) {
     return <CircularLoading />;
   }
-
 
   const { firstname, lastname, email, dateOfBirth, role, profilePicture } =
     updateInfos;

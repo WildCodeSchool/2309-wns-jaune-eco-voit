@@ -10,10 +10,12 @@ import CircularLoading from "@/app/components/CircularLoading/CircularLoading";
 function Logout() {
   const { contextLogout } = useContext(AuthContext);
   const router = useRouter();
-  const [logout, { loading }] = useLogoutLazyQuery();
+
+  const [logout, { loading }] = useLogoutLazyQuery({
+    onCompleted: () => contextLogout(),
+  });
 
   useEffect(() => {
-    contextLogout();
     logout();
     setTimeout(() => {
       router.push("/");

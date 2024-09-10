@@ -12,7 +12,7 @@ const UploadPofilePicture = ({
   profilePictureUrl?: string | null;
   onCloseEditPictureModal: () => void;
 }) => {
-  const { getUser: userId } = useContext(AuthContext);
+  const { userId } = useContext(AuthContext);
 
   const [updateProfilePicture] = useUpdateUserMutation({
     onCompleted: () => {

@@ -25,7 +25,7 @@ export default function JourneyPage({ params }: { params: { id: string } }) {
   const { id: journeyId } = params;
   const router = useRouter();
 
-  const { getUser: userContextId } = useContext(AuthContext);
+  const { userId } = useContext(AuthContext);
   const [nbPassenger, setNbPassenger] = useState(1);
 
   const {
@@ -40,12 +40,12 @@ export default function JourneyPage({ params }: { params: { id: string } }) {
 
   const { data: userData } = useFindUserByIdQuery({
     variables: {
-      findUserById: userContextId || "",
+      findUserById: userId || "",
     },
   });
 
   const isUserAllowedToAccessMessage = () => {
-    const isDriver = driver.id === userContextId;
+    const isDriver = driver.id === userId;
     const journeyBookingIds = bookings.map(({ id }) => id);
 
     const isPassenger = userData?.findUserById.bookings?.some(({ id }) =>
@@ -119,8 +119,8 @@ export default function JourneyPage({ params }: { params: { id: string } }) {
                 {availableSeats}
               </Typography>
             </Stack>
-            {userContextId &&
-            driver.id !== userContextId &&
+            {userId &&
+            driver.id !== userId &&
             availableSeats > 0 &&
             !tooLateToBook(departureTime) ? (
               <Stack
@@ -207,10 +207,10 @@ export default function JourneyPage({ params }: { params: { id: string } }) {
             />
           </Grid>
         </Grid>
-        {userContextId && isUserAllowedToAccessMessage() && (
+        {userId && isUserAllowedToAccessMessage() && (
           <Grid container spacing={2} alignItems="center" sx={{ mt: 4 }}>
             <Grid container spacing={2} alignItems="center" sx={{ marginY: 4 }}>
-              <JourneyMessages userId={userContextId} journeyId={journeyId} />
+              <JourneyMessages userId={userId} journeyId={journeyId} />
             </Grid>
           </Grid>
         )}

@@ -8,7 +8,7 @@ import { GetProfileDocument, useUpdateUserMutation } from "@/types/graphql";
 const UploadPicture = () => {
   const [preview, setPreview] = useState<string>("");
 
-  const { getUser: userId } = useContext(AuthContext);
+  const { userId } = useContext(AuthContext);
 
   const [updateProfilePicture] = useUpdateUserMutation({
     onCompleted: () => {

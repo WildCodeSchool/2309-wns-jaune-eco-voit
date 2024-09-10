@@ -4,7 +4,7 @@ console.log(process.env.DB_TEST_JEST_PORT)
 
 export default new DataSource({
     type: 'postgres',
-    host: 'localhost',
+    host: process.env.DB_TEST_JEST_HOST || 'localhost',
     port: process.env.DB_TEST_JEST_PORT
         ? parseInt(process.env.DB_TEST_JEST_PORT)
         : 5435,

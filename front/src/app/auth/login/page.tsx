@@ -15,11 +15,13 @@ const Login = () => {
   const searchParams = useSearchParams();
   const requestedURL = searchParams.get("requestedURL");
 
+  const { updateUserId } = useContext(AuthContext);
+
   const theme = useTheme();
   const router = useRouter();
   const [login] = useLoginLazyQuery({
     onCompleted(data) {
-      updateUser(data.login.id);
+      updateUserId(data.login.id);
       setTimeout(() => {
         router.push(requestedURL ?? routes.home.pathname);
       }, 1000);
@@ -30,8 +32,6 @@ const Login = () => {
   });
 
   const [loginError, setLoginError] = useState<string | null>(null);
-
-  const { updateUser } = useContext(AuthContext);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
